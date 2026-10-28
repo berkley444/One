@@ -65,6 +65,7 @@ function contrastPass() {
     let clipped = false;
     for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) { const o = getComputedStyle(a); if (o.overflowX !== 'visible' || o.overflowY !== 'visible') { const ar = a.getBoundingClientRect(); if (r.right <= ar.left + 1 || r.left >= ar.right - 1 || r.bottom <= ar.top + 1 || r.top >= ar.bottom - 1) { clipped = true; break; } } }
     if (clipped) continue;
+    { const cx = r.left + r.width / 2, cy = r.top + r.height / 2, top = document.elementFromPoint(cx, cy); if (top && top.closest('nav.dock') && !el.closest('nav.dock')) continue; } /* scrolled under the floating dock: not readable there, and the page has room to scroll clear of it */
     seen.add(el);
     const isSvg = el.namespaceURI && /svg/.test(el.namespaceURI) && el.tagName.toLowerCase() !== 'svg';
     const fgc = parse(isSvg ? cs.fill : cs.color); if (!fgc) { skipped++; continue; }

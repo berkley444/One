@@ -38,7 +38,7 @@
   --stf-sl:#5c6672; --stf-sl2:#8b95a1; --stf-tl:#4a525c; --stf-ink:#eceff3; --stf-fret:#ffc233;
   --c-tonic:#ffb81f; --c-tonic-fg:#1c1300; --c-nb:#2b6cb0; --c-rel:#3a4048; --c-maj:#1a1d21; --c-min:#131518; --c-off-fg:#aab2bc; --c-bg:#0b0d0f; --c-centre:#14171a; --c-line:#0b0d0f; --c-t3:#ffc233;
   --cd-line:#4a525c; --cd-str:#aab2bc; --cd-dot:#eef1f4; --cd-dot-fg:#101214; --cd-lab:#aab2bc; --cd-fn:#ffc233;
-  --bar-n:#7d8793; --ok:#2f8f55; --ok-bg:#12301f; --ok-ink:#7be0a4; --hook-bg:#1d1a0d; --hook-ink:#efe3bd; --code-ink:#d3d8de;
+  --bar-n:#9aa4b0; --ok:#2f8f55; --ok-bg:#12301f; --ok-ink:#7be0a4; --hook-bg:#1d1a0d; --hook-ink:#efe3bd; --code-ink:#d3d8de;
 }
 /* channel-strip colour tabs on the labels */
 .row .slot > .engr.sm::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0;background:var(--ch,#98a1ad);box-shadow:0 0 0 1px rgba(0,0,0,.5)}

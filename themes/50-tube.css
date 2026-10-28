@@ -38,7 +38,7 @@
   --stf-sl:#7a6c48; --stf-sl2:#a89868; --stf-tl:#5a4e34; --stf-ink:#f3e9cc; --stf-fret:#e8bf5a;
   --c-tonic:#e8bf5a; --c-tonic-fg:#1a1305; --c-nb:#8a3a22; --c-rel:#3a3226; --c-maj:#1b1713; --c-min:#12100d; --c-off-fg:#cdbd96; --c-bg:#0b0a09; --c-centre:#14110e; --c-line:#0b0a09; --c-t3:#e8bf5a;
   --cd-line:#5a4e34; --cd-str:#b9ab88; --cd-dot:#f3e9cc; --cd-dot-fg:#1a1305; --cd-lab:#cdbd96; --cd-fn:#e8bf5a;
-  --bar-n:#8f8060; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
+  --bar-n:#a89a76; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
 }
 h1{font-weight:700;text-shadow:0 2px 0 #000}
 h1::after{content:"";display:block;width:min(260px,70%);height:3px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#d1a94c 20%,#d1a94c 80%,transparent)}

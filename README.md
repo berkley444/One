@@ -22,6 +22,23 @@
 
 Panel controls: `PITCH` (A4 415–450) · `ROOT` · `SCALE` (major, natural/harmonic/melodic minor, major/minor pentatonic, blues, 5 more modes) · `TUNING` (standard, drop D, DADGAD, open G/D/E, half-step down, full-step down, 7-string, bass) · `MODE` · `TIME SIG` · `TONE` · `SPELLING` · tempo and volume knobs · metronome switch.
 
+## Themes
+
+The look is a setting: tap the **theme button** (top right of the header) or add `?theme=<id>` to the URL. The choice is remembered. **Silver Hi-Fi** (the original brushed-metal look) is the default.
+
+| Theme | Link | Look |
+|---|---|---|
+| Silver Hi-Fi (default) | [`?theme=silver`](https://berkley444.github.io/One/?theme=silver) | brushed aluminium, 1970s home stereo |
+| Studio Console | [`?theme=console`](https://berkley444.github.io/One/?theme=console) | charcoal mixing desk, coloured channel-strip caps, live LED level meter |
+| Boutique Pedal | [`?theme=pedal`](https://berkley444.github.io/One/?theme=pedal) | teal enamel stompbox, chicken-head knobs, jewel lamp |
+| Tube Amp | [`?theme=tube`](https://berkley444.github.io/One/?theme=tube) | black tolex, gold plate, cream chicken-head knobs, grille cloth |
+| Minimal Light | [`?theme=minimal`](https://berkley444.github.io/One/?theme=minimal) | flat iOS-style, segmented controls and steppers |
+| Minimal Dark | [`?theme=minimal-dark`](https://berkley444.github.io/One/?theme=minimal-dark) | the same on true black |
+| Modular Synth | [`?theme=synth`](https://berkley444.github.io/One/?theme=synth) | Eurorack panels, small knobs, patch jacks, mono labels, LED meter |
+| Vintage Wood | [`?theme=wood`](https://berkley444.github.io/One/?theme=wood) | walnut cabinet, brass knobs, paper label tags |
+
+Themes are plain CSS in [`themes/`](themes/README.md), pasted into `index.html` by `node tools/build-themes.js`. `node tools/theme-shots.js` and `node tools/contact-sheet.js` make the comparison screenshots.
+
 ## Run it
 
 Open `index.html` in a browser. That's it. No build step, no dependencies (fonts are optional via CDN).
@@ -36,7 +53,8 @@ node tests/theory.test.js     # theory + math tests (spelling, key signatures, c
 index.html                     the entire app (HTML + CSS + JS; theory lives in a <THEORY> block)
 manifest.webmanifest, sw.js    installable-app manifest and offline service worker
 icons/                         app icons (svg + png, maskable, apple-touch)
-tests/browser/                 headless-Chrome tests (smoke, practice, song, lessons, PWA/offline, axe) - see its README
+themes/                        theme CSS (one file per theme) + art; tools/ builds and screenshots them
+tests/browser/                 headless-Chrome tests (smoke, practice, song, lessons, PWA/offline, axe, themes) - see its README
 tests/theory.test.js           node tests; extracts the <THEORY> block from index.html
 .nojekyll                      serve as plain static files on GitHub Pages
 docs/

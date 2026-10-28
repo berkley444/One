@@ -37,7 +37,7 @@
   --stf-sl:#5a5d66; --stf-sl2:#8a8c94; --stf-tl:#44474e; --stf-ink:#ece9e0; --stf-fret:#ffa35c;
   --c-tonic:#ff6a2b; --c-tonic-fg:#1a0800; --c-nb:#1f6f8b; --c-nb-fg:#fff; --c-rel:#3d4046; --c-maj:#222328; --c-min:#18191c; --c-off-fg:#cfcdc4; --c-bg:#0f1012; --c-centre:#17181b; --c-line:#0f1012; --c-t3:#ff9a63;
   --cd-line:#5a5d66; --cd-str:#b8b6ac; --cd-dot:#ece9e0; --cd-dot-fg:#111; --cd-lab:#b8b6ac; --cd-fn:#ffa35c;
-  --bar-n:#8a8c94; --ok:#0b8a5a; --ok-bg:#0f2a20; --ok-ink:#6fe8b8; --hook-bg:#2a1a12; --hook-ink:#f1dfcf; --code-ink:#dcd9d0;
+  --bar-n:#a8a69c; --ok:#0b8a5a; --ok-bg:#0f2a20; --ok-ink:#6fe8b8; --hook-bg:#2a1a12; --hook-ink:#f1dfcf; --code-ink:#dcd9d0;
 }
 h1{font-weight:700;letter-spacing:.14em}
 h2{font-weight:700;font-size:21px;letter-spacing:.08em;align-items:center}
