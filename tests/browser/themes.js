@@ -16,7 +16,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const URL0 = process.env.BPGW_URL || 'http://localhost:8123/index.html';
 const ALL = ['silver', 'console', 'pedal', 'tube', 'minimal', 'minimal-dark', 'synth', 'wood'];
 const THEMES = (process.argv[2] || '').split(',').filter(Boolean).length ? process.argv[2].split(',') : ALL;
-const TABS = ['play', 'chord', 'circle', 'math', 'song', 'lessons', 'lessons-open', 'practice'];
+const TABS = ['play', 'chord', 'circle', 'math', 'song', 'lessons', 'lessons-open', 'practice', 'identify-done', 'quiz-checked', 'gate', 'gate-menu'];
 let checks = 0, bad = 0, soft = 0;
 const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
 
@@ -58,6 +58,7 @@ function contrastPass() {
     const tn = w.currentNode; const txt = tn.textContent.trim(); if (!txt) continue;
     const el = tn.parentElement; if (!el || seen.has(el)) continue;
     if (el.closest('[hidden],script,style,[aria-hidden="true"]')) { continue; }
+    if (document.body.classList.contains('gating') && !el.closest('#gate')) { continue; }   // the page behind the chord-unlock overlay is dimmed and inert
     const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none') continue;
     const r = el.getBoundingClientRect(); if (r.width <= 1.5 || r.height <= 1.5) continue;
     let op = 1; for (let e = el; e && e.nodeType === 1; e = e.parentElement) op *= parseFloat(getComputedStyle(e).opacity); if (op < .05) continue;
@@ -116,11 +117,11 @@ function swatchPass() {
       ok(await p.evaluate(i => (document.documentElement.getAttribute('data-theme') || 'silver') === i, id), `[${id} ${w}] ?theme= applied`);
       await p.evaluate(axeSrc);
       for (const tab of TABS) {
-        await p.evaluate(t => { if (t === 'lessons-open') { BPGW.setTab('lessons'); document.querySelector('[data-act="lopen"]').click(); } else if (t === 'practice') { BPGW.setTab('lessons'); const x = document.querySelector('[data-act="prtog"]'); x && x.click(); } else BPGW.setTab(t); }, tab);
+        await p.evaluate(t => { if (t === 'lessons-open') { BPGW.setTab('lessons'); document.querySelector('[data-act="lopen"]').click(); } else if (t === 'practice') { BPGW.setTab('lessons'); const x = document.querySelector('[data-act="prtog"]'); x && x.click(); } else if (t === 'identify-done') { BPGW.idExit && BPGW.idExit(); BPGW.setTab('play'); BPGW.idEnter(false); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.idPress(5, 0); BPGW.idPress(0, 0); BPGW.idPress(0, 0); } else if (t === 'quiz-checked') { BPGW.idExit(); BPGW.idEnter(true); [[1, 3], [2, 2], [3, 0], [4, 1], [5, 2]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.quizCheck(); } else if (t === 'gate') { BPGW.idExit(); BPGW.gateOpen(true); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.gatePress(s, f)); } else if (t === 'gate-menu') { BPGW.gateClose(); document.querySelector('#gateBtn').click(); } else { if (!document.querySelector('#gatePanel').hidden) document.querySelector('#gateBtn').click(); BPGW.gateClose(); BPGW.idExit(); BPGW.setTab(t); } }, tab);
         await sleep(200);
         const lay = await p.evaluate(layoutPass);
         ok(lay.sw <= lay.cw + 1 && !lay.out.length, `[${id} ${w}/${tab}] no overflow (scrollWidth ${lay.sw}/${lay.cw}) ${lay.out.join('; ')}`);
-        const ax = await p.evaluate(async () => { const x = await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } }); return x.violations.map(v => { if (v.id === 'label-content-name-mismatch') v.nodes = v.nodes.filter(n => !/^<(div|g) class="(pk|lcol|cdiag)[ "]/.test(n.html)); return v; }).filter(v => v.nodes.length).map(v => v.id + ' x' + v.nodes.length + ' ' + v.nodes[0].target.join(' ')); });
+        const ax = await p.evaluate(async () => { const x = await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } }); return x.violations.map(v => { if (v.id === 'label-content-name-mismatch') v.nodes = v.nodes.filter(n => !/^<(div|g) class="(pk|lcol|cdiag|idc)[ "]/.test(n.html)); return v; }).filter(v => v.nodes.length).map(v => v.id + ' x' + v.nodes.length + ' ' + v.nodes[0].target.join(' ')); });
         ok(!ax.length, `[${id} ${w}/${tab}] axe: ${ax.join(' | ')}`);
         const c = await p.evaluate(contrastPass);
         const worst = c.bad.sort((a, b2) => a.r - b2.r);
