@@ -1,8 +1,9 @@
 # NEXT — done / next
 
-Updated 2026-10-28 (Minimal Light default, Identify chord).
+Updated 2026-10-28 (Minimal Light default, Clear / Identify chord, Chord Quiz, optional chord unlock).
 
 ## Done
+- [x] **Clear / Identify chord, Chord Quiz, chord unlock (2026-10-28):** `Theory.identifyChord` / `gradeChordAttempt` / `quizAnswer` (in the `<THEORY>` block), a shared note-placing fretboard (`id=` hash, `bpgw.v3`), identify panel with alternatives / intervals / piano, a graded quiz with score and streak, and an optional off-by-default "fun gate, not security" unlock pop-up. Tests: theory (every quality x root x inversion round-trip), `tests/browser/identify.js` (real clicks and touch taps, phone + desktop, all themes), axe and themes extended.
 - [x] **Theme system (2026-10-28):** Theme picker + `?theme=` + eight themes (Minimal Light is now the default; Silver Hi-Fi, Studio Console, Boutique Pedal, Tube Amp, Minimal Light / Dark, Modular Synth, Vintage Wood); `tests/browser/themes.js` (axe + contrast + overflow + finger colours for every theme x phone/desktop x 8 views). See `themes/README.md`.
 - [x] **Polish (2026-10-28, slice 4):** installable PWA + offline (manifest, service worker, icons, install button, 53-check browser test), axe-core 351 → 0, CLS 0.11 → 0.009, keyboard piano / fretboard, skip link / landmarks / live region, reduced-motion / contrast / forced-colors
 - [x] **MIDI play-along + Practice (2026-10-28, slice 1):** Web MIDI input, on-screen/computer-key fallback, Practice toggle with live scoring; 168k theory checks
@@ -26,6 +27,7 @@ Updated 2026-10-28 (Minimal Light default, Identify chord).
 - [x] Docs: spec, decisions, postmortem, how to work with agents
 
 ## Next (in order)
+**Identify / quiz follow-ups:** a rootless-voicing mode (guess the root from a shell), 'listen and name' (play a chord, pick its name), quiz by ear, a daily-chord streak, per-chord stats (which qualities you miss), MIDI-keyboard input into the identify panel, and a left-handed board. Test on a real phone.
 **Theme follow-ups:** wait for Jeremy's pick after he has tried them for a day, then (a) ✅ done 2026-10-28: Minimal Light is the default for new visitors, Silver is one tap away, (b) delete or merge the losers rather than carry eight forever, (c) polish the winner on a real phone and on iOS Safari (the screenshots are headless Chrome), (d) self-host the fonts of the winner so the first paint is identical offline, (e) bring Silver's ~570 decorative low-contrast labels up to AA if Silver stays.
 **Song generator follow-ups (v2):** note lengths in the tab; a bass line and a drum pattern; sevenths and borrowed chords; a 'lock this section, re-roll the melody' button; export to MIDI / MusicXML; lyrics syllable grid; a 'slow practice' mode that plays the melody with a count-in and lights the tab column.
 **Lessons follow-ups:** timed (rhythm) exercises with a metronome count-in; more lessons (minor scales, seventh chords, the 12 major keys' fingerings, rhythm reading, a second song); a key signature on the staff; an 'ear' mode that plays a note and asks you to find it; a printable lesson sheet.

@@ -20,7 +20,7 @@ const BASE=process.env.BPGW_BASE||'http://localhost:8123/';
   ok(m.icons.some(i=>i.sizes==='192x192'&&i.purpose==='any') && m.icons.some(i=>i.sizes==='512x512'&&i.purpose==='any') && m.icons.some(i=>i.purpose==='maskable'),'manifest: 192, 512 and a maskable icon');
   const sizes=await q(async(icons)=>{const out=[];for(const i of icons){if(!/png$/.test(i.src))continue;const im=new Image();im.src=i.src;await im.decode();out.push([i.src,i.sizes,im.naturalWidth+'x'+im.naturalHeight]);}return out;},m.icons);
   ok(sizes.length===3 && sizes.every(s=>s[1]===s[2]),'icon PNGs decode at their declared sizes ('+sizes.map(s=>s[2]).join(', ')+')');
-  ok(await q(()=>!!document.querySelector('link[rel=apple-touch-icon]') && document.querySelector('meta[name=theme-color]').content==='#050506' && !!document.querySelector('meta[name=apple-mobile-web-app-capable]')),'apple-touch-icon, theme-color, iOS web-app meta present');
+  ok(await q(()=>!!document.querySelector('link[rel=apple-touch-icon]') && document.querySelector('meta[name=theme-color]').content==='#f2f2f7' && !!document.querySelector('meta[name=apple-mobile-web-app-capable]')),'apple-touch-icon, theme-color, iOS web-app meta present');
   ok(await q(async()=>{const r=await fetch('icons/apple-touch-icon.png');const bl=await createImageBitmap(await r.blob());return bl.width===180}),'apple-touch-icon is 180×180');
   // shortcuts hashes resolve to real tabs
   ok(m.shortcuts.every(s=>/^\.\/#(lessons|song)$/.test(s.url)),'manifest shortcuts point at real tabs');

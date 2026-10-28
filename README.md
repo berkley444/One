@@ -20,6 +20,10 @@
 | **ƒ(x) MATH** | `f(n) = 440 × 2^(n/12)` with `n` worked out step by step; every note of the scale vs. just intonation; open strings; fret-by-fret frequencies. |
 | **SONG** | Time signature + tempo + metronome, and a **Generate progression** button: 4–8 bars in the key, played back. |
 
+### Clear it and name your chord
+
+On the fretboard toolbar, **✎ Clear / Identify** wipes the board so you can place notes yourself: tap a fret to place a note (one per string, tap again to remove), tap the left column to cycle open ○ / muted ×. The app names the chord as you go (root, quality, bass, inversion, other names, interval for two notes), shows note names and intervals on the dots, and can show it on the piano. **? Chord Quiz** gives you a chord name and grades what you place (missing / extra notes explained, score and streak saved). The lock icon in the header turns on an optional *chord unlock* pop-up (**just for fun, not security**, off by default).
+
 Panel controls: `PITCH` (A4 415–450) · `ROOT` · `SCALE` (major, natural/harmonic/melodic minor, major/minor pentatonic, blues, 5 more modes) · `TUNING` (standard, drop D, DADGAD, open G/D/E, half-step down, full-step down, 7-string, bass) · `MODE` · `TIME SIG` · `TONE` · `SPELLING` · tempo and volume knobs · metronome switch.
 
 ## Themes
@@ -56,7 +60,7 @@ index.html                     the entire app (HTML + CSS + JS; theory lives in 
 manifest.webmanifest, sw.js    installable-app manifest and offline service worker
 icons/                         app icons (svg + png, maskable, apple-touch)
 themes/                        theme CSS (one file per theme) + art; tools/ builds and screenshots them
-tests/browser/                 headless-Chrome tests (smoke, practice, song, lessons, PWA/offline, axe, themes) - see its README
+tests/browser/                 headless-Chrome tests (smoke, practice, song, lessons, identify/quiz/unlock, PWA/offline, axe, themes) - see its README
 tests/theory.test.js           node tests; extracts the <THEORY> block from index.html
 .nojekyll                      serve as plain static files on GitHub Pages
 docs/

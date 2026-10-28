@@ -5153,7 +5153,8 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
     navigator.serviceWorker.register('sw.js').then(reg => {
       reg.addEventListener('updatefound', () => {
         const nw = reg.installing; if (!nw) return;
-        nw.addEventListener('statechange', () => { if (nw.state === 'activated' && (hadController || PWA.offlineReady)) { PWA.updated = true; pwaPaint(); announce('A new version is ready. Use Reload now.'); } });
+        const firstInstall = !reg.active && !hadController;                      // nothing was active when this worker started installing: this is the first visit, not an update
+        nw.addEventListener('statechange', () => { if (nw.state === 'activated' && !firstInstall) { PWA.updated = true; pwaPaint(); announce('A new version is ready. Use Reload now.'); } });
       });
       return navigator.serviceWorker.ready;
     }).then(() => { PWA.offlineReady = true; pwaPaint(); }).catch(() => {});

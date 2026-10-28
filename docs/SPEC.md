@@ -6,7 +6,7 @@
 ## What it is
 
 A guitar app that **teaches the theory under the notes** — and, as a second act, **bridges guitar to piano**.
-It is *not* a song engine, not a tab player, and not a game. It is a tutorial: pick a key, a scale, a tuning, and *see and hear* what it is made of.
+It is *not* a song engine, not a tab player, and not a game (the Chord Quiz is practice with feedback, not points-chasing; the chord unlock is a toy that is off by default). It is a tutorial: pick a key, a scale, a tuning, and *see and hear* what it is made of.
 
 ## The look
 
@@ -41,6 +41,9 @@ Taken from the original app (see `screenshots/gm_original.png`):
 13. **Song generator** (2026-10-28) — key + scale + time signature + tuning + idea number → intro/verse/chorus/bridge with chords, strum patterns by meter, a scale-tone melody, guitar tab, piano fingering and playback.
 14. **Lessons** (2026-10-28) — the LEARN tab: 7 lessons / 33 short parts that teach the guitar-to-piano bridge (finger numbers, five-finger position, C major scale, triads and inversions, reading the staff from tab, Wheel in the Sky intro simplified and full). Each part has text, a guitar-bridge note, the exercise on a staff with tab, **Hear it**, and Practice (MIDI / on-screen keys / computer keys) with progress saved on the device.
 15. **Installable & accessible** (2026-10-28) — works offline after the first visit and can be installed to a home screen / desktop (manifest + service worker); keyboard-operable piano and fretboard, skip link, landmarks, screen-reader names, live announcements, reduced-motion / high-contrast support; zero axe-core violations.
+16. **Clear / Identify chord** (2026-10-28) — `✎ Clear / Identify` on the fretboard toolbar clears the board and lets you place notes yourself (tap frets; the left column cycles open ○ / muted ×; one note per string; tap again to remove). The app names the chord live: root, quality, and bass / inversion / slash, with other honest names and a note-and-interval breakdown on the dots; two notes give the interval; unmatched notes are listed. **Show on piano** and **▶ Hear it** work on what you placed. Works in every tuning, with mouse, touch and keyboard, in every theme; the placement is shareable in the URL hash (`id=`) and remembered in `bpgw.v3`.
+17. **Chord Quiz** (2026-10-28) — a target chord name (open majors/minors → sevenths → slash chords → all 50 qualities), any voicing or a chosen position; you place the notes and press Check. Graded on pitch classes (plus the bass for slash chords and the position if asked), with the missing and extra notes explained, Hint, Show answer, Next, and a score / streak / best streak kept in localStorage.
+18. **Chord unlock** (2026-10-28, optional, **off by default**) — a pop-up fretboard that asks the visitor to play a chosen chord to come in, once per browser session. **A fun gate, not security**: the site is a public static page, so it only asks a question; it is switched on and off from the lock icon in the header, and "Show me" always lets you in.
 
 ## In his words
 
