@@ -1,0 +1,191 @@
+/* Generic theme engine. Every selector here is prefixed with html[data-theme] by tools/build-themes.js, so it only runs when a non-default
+   theme is active. Each rule reads semantic variables (see 00-defaults.raw.css); a theme file sets them and adds structural overrides. */
+html{background:var(--bg)}
+body{background:var(--page);color:var(--ink);font-family:var(--sans)}
+h1{font-family:var(--hfont);letter-spacing:var(--h1-ls);text-transform:var(--h1-tt);color:var(--h1,var(--ink))}
+h1 small{color:var(--dim);font-family:var(--sans)}
+h2{font-family:var(--hfont);color:var(--h2);text-transform:var(--h1-tt)}
+h2 small{color:var(--h2s)} h2 .ctx{color:var(--h2c)}
+.hint,.legend,.pianolab,.plegend,.poscap{color:var(--dim)} .poscap b{color:var(--ink)}
+footer,footer a{color:var(--dim)} footer a{text-decoration:underline}
+.skip{background:var(--ink);color:var(--bg)}
+
+/* ---- the control panel ---- */
+.metal{background:var(--panel);border-color:var(--panel-bd);border-radius:var(--panel-r);box-shadow:var(--panel-sh);color:var(--panel-ink)}
+.engr,.engr.sm{font-family:var(--lab-font);color:var(--panel-ink);text-shadow:var(--engr-sh)}
+.engr.sm{color:var(--panel-ink2)}
+.engr .soft{font-family:var(--sans)}
+.power .led{background:var(--led-off);box-shadow:var(--led-off-sh)}
+.power.on .led{background:var(--led-on);box-shadow:var(--led-on-sh);animation:none}
+.drum{background:var(--drum-bg);box-shadow:var(--drum-sh);border-radius:var(--drum-r)}
+.drum::before{background:var(--drum-line);opacity:var(--drum-line-o)}
+.drum .val{background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor;color:var(--drum-ink);font-family:var(--drum-font)}
+.drum .edge{background:var(--edge-bg)}
+.drum .edge::after{content:"";display:none;position:absolute;top:50%;left:50%;width:7px;height:7px;border:solid var(--edge-ink);border-width:2px 2px 0 0;margin:-4px 0 0 -2px;transform:rotate(-135deg)}
+.drum .edge.r::after{transform:rotate(45deg);margin-left:-5px}
+.knob .cap{background:var(--knob-bg);box-shadow:var(--knob-sh)}
+.knob .cap::before{background:var(--cap-hi)}
+.knob .cap i{background:var(--ind);box-shadow:var(--ind-sh)}
+.knob .ticks line{stroke:var(--tick)!important}
+.knob::before{content:none}
+.knobread{color:var(--knobread);text-shadow:none}
+.toggle{background:var(--tog-bg);box-shadow:var(--tog-sh)}
+.toggle::after{background:var(--tog-thumb)}
+.toggle.on{background:var(--tog-on)}
+.midistat{color:var(--panel-ink2)} .midistat.good{color:var(--ok-p)} .midistat.warn{color:var(--warn-p)}
+.lspeed{color:var(--panel-ink);font-family:var(--lab-font)}
+.meter{display:none}
+
+/* ---- surfaces ---- */
+.card,.pfc,.lcard{background:var(--card);border-color:var(--card-bd);border-radius:var(--card-r)}
+.cc,.bar,.sbar{background:var(--raise);border-color:var(--raise-bd);border-radius:var(--raise-r)}
+.cc:hover{border-color:var(--raise-bd-h)}
+.cc.sel{border-color:var(--accent-bd);box-shadow:0 0 0 1px var(--accent-bd) inset}
+.cc .nm,.bar .nm,.sbar .nm,.pfc .top b{color:var(--ink)}
+.cc .rn,.bar .rn,.sbar .rn,.pfc .rn,.ptitle,.pinfo .ptit,.sechead h3,.lcard h3{color:var(--amber)}
+.cc .nt,.bar .nt,.ro .k,.field label,.slab,.vc .fr,.vc .vn,.postab .ptitle,.pinfo .ptit span,.postab .sn,.lcount,details.det summary,.pfc .ln .h,.lmeta{color:var(--dim)}
+.cc .fn{color:var(--lab)} .qlab,.slab .soft{color:var(--lab)}
+.bar .num,.sbar .num{color:var(--bar-n)}
+.bar .beats i{background:var(--step-off)}
+.bar.now,.sbar.now{border-color:var(--accent-bd);background:var(--now-bg);box-shadow:var(--now-sh)}
+.bar.now .beats i.on{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.ro,.vc,.postab,.pdetail,.worked,code.chart,pre.tabtxt{background:var(--inset);border-color:var(--inset-bd);box-shadow:var(--inset-sh)}
+.ro .v,.postab,.postab .fn2 b,.pfr i,.worked,code.chart,pre.tabtxt{color:var(--inset-ink)}
+.ro .v{color:var(--ink)}
+.worked,code.chart,pre.tabtxt{color:var(--code-ink)}
+.worked b,.postab .ptitle i,.postab .fn2 i,.pfing i,.eq .n{color:var(--amber)}
+.worked i,.eq .a{color:var(--hr-txt)}
+.postab > div{border-bottom-color:var(--hair)}
+.pfr i{background:var(--chip);border-color:var(--chip-bd)} .pfr i.x{color:var(--mute)}
+.vc:hover{border-color:var(--amber)} .vc.sel{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)} .vc.sel .vn{color:var(--amber)}
+.eq small,.lintro p,.lpart p{color:var(--ink2)} .eq small{color:var(--dim)}
+.lintro p b,.lpart h3{color:var(--ink)}
+.pat span,.sig span,.fchip,.lchip,.lnum,.sl,.mn,.mbar{background:var(--chip);border-color:var(--chip-bd)}
+.fchip,.lchip{color:var(--ink3)} .lnum{color:var(--ink2)} .fsep{color:var(--mute)}
+.fchip.now{background:var(--amber);color:var(--on-amber);border-color:var(--amber);box-shadow:var(--now-sh)}
+.lchip.on{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
+.lchip.ok{border-color:var(--ok);color:var(--ok-ink)}
+.lcard.done{border-color:var(--ok)} .lcard.done .lnum{background:var(--ok);color:#fff}
+.lcard p{color:var(--ink3)}
+.lbadge{background:var(--ok-bg);color:var(--ok-ink)}
+.lhook{background:var(--hook-bg);color:var(--hook-ink);border-left-color:var(--amber)} .lhook b{color:var(--amber)}
+.lprog{background:var(--step-off)} .lall{color:var(--ink3)}
+.pat span.W{color:var(--hr-txt)} .pat span.H{color:var(--t-root-txt)} .pat span.WH{color:var(--amber)}
+.sl{background:var(--inset)} .sl em{color:var(--lab)} .sl b{color:var(--faint)} .sl.hit{background:var(--chip);border-color:var(--chip-bd)} .sl.hit b{color:var(--ink)} .sl.dn b{color:var(--amber)}
+.mbar{background:none;border-color:transparent;border-left:2px solid var(--chip-bd)}
+.mn{color:var(--mute);background:var(--inset);border-color:var(--inset-bd)} .mn.ct{color:var(--ink);background:var(--ok-bg);border-color:var(--ok)}
+.songnow{color:var(--amber)}
+.pfc .ln{color:var(--ink2)}
+.field select{background:var(--chip);border-color:var(--chip-bd);color:var(--ink)}
+table.t th{background:var(--card);color:var(--dim);border-bottom-color:var(--hair2)}
+table.t td{border-bottom-color:var(--hair)}
+table.t .play{border-color:var(--btn-bd);color:var(--amber)}
+.tablewrap{border-color:var(--card-bd)}
+.worked{color:var(--ink2)}
+details.det{border-top-color:var(--hair)}
+.prac{border-top-color:var(--hair)}
+.nowline{border-top-color:var(--hair)}
+
+/* ---- buttons ---- */
+.btn{background:var(--btn-bg);border-color:var(--btn-bd);color:var(--btn-ink);border-radius:var(--btn-r);box-shadow:var(--btn-sh)}
+.btn:hover{border-color:var(--btn-bd-h)}
+.btn.pri{background:var(--pri-bg);border-color:var(--pri-bd);color:var(--pri-ink)}
+.seg{background:var(--seg-bg);border-color:var(--seg-bd);border-radius:var(--seg-r)} .seg button{color:var(--dim)} .seg button.on{background:var(--seg-on);color:var(--seg-on-ink)}
+.chip,.pos,.pcontrol .btn.tog:not(.on),.lprac .pc-prac>.btn:not(.tog),.lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
+.lspeed .seg button{box-shadow:none}
+.pcontrol .btn.tog:not(.on),.pcontrol .pc-play .btn:not(.pri),.pc-prac .btn:not(.tog),.pcontrol .pc-prac .btn{border-color:var(--key-bd)}
+.pcontrol .pc-play .btn:not(.pri){background:var(--key-bg);color:var(--key-ink);box-shadow:var(--key-sh)}
+.pos:hover{border-color:var(--accent-bd)}
+.chip.on,.lspeed .seg button.on:not(.x){background:var(--on-bg);border-color:var(--on-bd);color:var(--on-ink);box-shadow:var(--on-sh)}
+.pos.on,.btn.tog.on,.lprac .pc-prac>.btn:not(.tog).on,.lspeed .seg button.on{background:var(--sel-bg);border-color:var(--sel-bd);color:var(--sel-ink);box-shadow:var(--sel-sh)}
+.pos.on span{color:var(--sel-sub)}
+.btn.tog.midi.on{color:var(--sel-ink);border-color:var(--inp);box-shadow:0 0 0 1px var(--inp)}
+.btn.tog:not(.on){color:var(--key-ink)}
+.pcontrol .btn.tog:not(.on){color:var(--key-ink)}
+.btn.tog.on{color:var(--sel-ink)}
+
+/* ---- dock ---- */
+nav.dock{background:var(--dock-bg);border-color:var(--dock-bd);box-shadow:var(--dock-sh);border-radius:var(--dock-r)}
+nav.dock button{color:var(--dock-ink);border-radius:var(--dock-item-r)}
+nav.dock button.on{background:var(--dock-on);color:var(--dock-on-ink)}
+
+/* ---- fretboard ---- */
+.fbwrap{border-color:var(--fbwrap-bd);background:var(--fbwrap-bg);border-radius:var(--fbwrap-r)}
+.fbp{fill:var(--fb-wood)} .fbg{fill:none;stroke:var(--fb-grain);stroke-width:1.1}
+.fbwood{fill:var(--fb-wood)}
+.fbi{fill:var(--fb-inlay);stroke:var(--fb-inlay-bd)}
+.fbf{stroke:var(--fb-fret)} .fbn{stroke:var(--fb-nut)} .fb-str{stroke:var(--fb-str)}
+.fbnum{fill:var(--fb-num)!important} .fbnum.hi{fill:var(--fb-numhi)!important} .fbo{fill:var(--fb-open)!important} .fbx{fill:var(--t-root-txt)!important}
+.dot{font-family:var(--dot-font)} .dot text{font-family:var(--dot-font)}
+.dot circle{stroke:var(--dot-ring)} .dot.in circle{stroke:var(--dot-in)}
+.dot.ctx circle{fill:var(--ctx-bg);stroke:var(--ctx-bd)} .dot.ctx text{fill:var(--ctx-fg)!important}
+.dot[data-tone="root"] circle{fill:var(--t-root)} .dot[data-tone="root"] text{fill:var(--t-root-fg)!important}
+.dot[data-tone="third"] circle{fill:var(--t-third)} .dot[data-tone="third"] text{fill:var(--t-third-fg)!important}
+.dot[data-tone="fifth"] circle{fill:var(--t-fifth)} .dot[data-tone="fifth"] text{fill:var(--t-fifth-fg)!important}
+.dot[data-tone="seventh"] circle{fill:var(--t-seventh)} .dot[data-tone="seventh"] text{fill:var(--t-seventh-fg)!important}
+.dot[data-tone="ext"] circle{fill:var(--t-ext)} .dot[data-tone="ext"] text{fill:var(--t-ext-fg)!important}
+.dot[data-tone="scale"] circle{fill:var(--t-scale)} .dot[data-tone="scale"] text{fill:var(--t-scale-fg)!important}
+.dot.root text{fill:var(--t-root-fg)!important}
+.legend i[data-tone="root"],.pk .pip[data-tone="root"]{background:var(--t-root)!important}
+.legend i[data-tone="third"],.pk .pip[data-tone="third"]{background:var(--t-third)!important}
+.legend i[data-tone="fifth"],.pk .pip[data-tone="fifth"]{background:var(--t-fifth)!important}
+.legend i[data-tone="seventh"],.pk .pip[data-tone="seventh"]{background:var(--t-seventh)!important}
+.legend i[data-tone="ext"],.pk .pip[data-tone="ext"]{background:var(--t-ext)!important}
+.legend i[data-tone="scale"],.pk .pip[data-tone="scale"]{background:var(--t-scale)!important}
+.legend i.lg-in{border-color:var(--dot-in)!important;background:var(--ctx-bg)!important} .legend i.lg-off{background:var(--mute)!important}
+
+/* ---- piano ---- */
+.pianowrap{border-color:var(--pk-wrap-bd);background:var(--pk-wrap-bg);border-radius:var(--pk-wrap-r)}
+.pk.w{background:var(--pk-w);border-color:var(--pk-w-bd);box-shadow:var(--pk-w-sh);border-radius:var(--pk-w-r)}
+.pk.b{background:var(--pk-b);border-color:var(--pk-b-bd);box-shadow:var(--pk-b-sh);border-radius:var(--pk-b-r)}
+.pk.lit.w{background:var(--pk-lit-w)} .pk.lit.b{background:var(--pk-lit-b)}
+.pk .nm{color:var(--pk-nm)} .pk .nm.root{color:var(--pk-nm-root)} .pk.b .nm{color:var(--pk-bnm)} .pk.b .nm.root{color:var(--pk-bnm-root)}
+.pk .oct{color:var(--pk-oct)} .pk .strlab{color:var(--pk-str)} .pk .str{border-top-color:var(--pk-str)}
+.pk .fd.R{background:var(--h-r);color:var(--h-r-fg)} .pk .fd.L{background:var(--h-l);color:var(--h-l-fg)}
+.pk .fd.root{box-shadow:0 0 0 2px var(--ring-root),0 1px 3px rgba(0,0,0,.55)}
+.pk.now{box-shadow:inset 0 0 0 3px var(--now),0 0 16px 3px var(--now)}
+.plegend b.hR{background:var(--h-r);color:var(--h-r-fg)} .plegend b.hL{background:var(--h-l);color:var(--h-l-fg)} .plegend .rr{box-shadow:0 0 0 2px var(--ring-root)}
+.piano.practicing .pk.target{box-shadow:inset 0 0 0 3px var(--now),0 0 16px 3px var(--now)}
+.piano.practicing .pk.hit{box-shadow:inset 0 0 0 3px var(--good),0 0 14px 3px var(--good)}
+
+/* ---- the readout (LCD) ---- */
+.pread{background:var(--lcd-bg);border-color:var(--lcd-bd);box-shadow:var(--lcd-sh);color:var(--lcd-ink)}
+.pread .ptitle{color:var(--lcd-hi)} .pread .phand{color:var(--lcd-dim)} .pread .pdesc{color:var(--lcd-ink2)}
+.pread .pfing{color:var(--lcd-ink);font-family:var(--lcd-font)} .pread .pfing i{color:var(--lcd-hi)}
+.pread .hR{color:var(--hr-txt)} .pread .hL{color:var(--hl-txt)} .pread .sepd{color:var(--lcd-dim)}
+.nowline{color:var(--lcd-dim)} .nowline.live{color:var(--now-fg)}
+.prhead{color:var(--now-fg)} .prtime,.prscore,.prkeys,.prlab{color:var(--lcd-dim)} .prtarget{color:var(--lcd-ink)} .prres{color:var(--lcd-dim)}
+.prres.good,.prscore .good,.prscore b.good,.pn.R b{color:var(--good)} .prres.bad,.prscore .bad,.prscore b.bad{color:var(--bad)} .pn.L b{color:var(--hl-txt)}
+.pn{background:var(--chip)}
+
+/* ---- chord diagram + circle of fifths ---- */
+.cdl{stroke:var(--cd-line)} .cdn{stroke:var(--cd-nut)} .cds{stroke:var(--cd-str)} .cdb{fill:var(--cd-dot)}
+.cdd circle{fill:var(--cd-dot)} .cdd text{fill:var(--cd-dot-fg)!important} .cdd.root circle{fill:var(--t-root)} .cdd.root text{fill:var(--t-root-fg)!important}
+.cdo{stroke:var(--cd-dot)} .cdo.root{stroke:var(--t-root)}
+.cdx{fill:var(--dim)!important} .cdnm{fill:var(--cd-lab)!important} .cdnm.root{fill:var(--t-root-txt)!important} .cdfn{fill:var(--cd-fn)!important}
+.cfb{fill:var(--c-bg)} .cfc{fill:var(--c-centre);stroke:var(--c-line)}
+.cft1{fill:var(--c-t1)!important} .cft2{fill:var(--c-t2)!important} .cft3{fill:var(--c-t3)!important}
+.wedge path{stroke:var(--c-line)}
+.wedge[data-r="tonic"] path,.circlewrap i[data-r="tonic"]{fill:var(--c-tonic)} .wedge[data-r="tonic"] text{fill:var(--c-tonic-fg)!important}
+.wedge[data-r="nb"] path{fill:var(--c-nb)} .wedge[data-r="nb"] text{fill:var(--c-nb-fg)!important}
+.wedge[data-r="rel"] path{fill:var(--c-rel)} .wedge[data-r="rel"] text{fill:var(--c-rel-fg)!important}
+.wedge[data-r="maj"] path{fill:var(--c-maj)} .wedge[data-r="min"] path{fill:var(--c-min)} .wedge[data-r="maj"] text,.wedge[data-r="min"] text{fill:var(--c-off-fg)!important}
+.legend i[data-r="tonic"]{background:var(--c-tonic)!important} .legend i[data-r="nb"]{background:var(--c-nb)!important} .legend i[data-r="rel"]{background:var(--c-rel)!important}
+
+/* ---- lessons staff ---- */
+.stf .sl{stroke:var(--stf-sl)} .stf .sl.led,.stf .sl.bar{stroke:var(--stf-sl2)} .stf .sl.tl{stroke:var(--stf-tl)}
+.stf .clef,.stf .acc,.stf .nh{fill:var(--stf-ink)} .stf .stem{stroke:var(--stf-ink)} .stf .nh{stroke:var(--card)}
+.stf .tablab,.stf .rowlab{fill:var(--dim)} .stf .tbg{fill:var(--card)} .stf .fret{fill:var(--stf-fret)} .stf .nmrow{fill:var(--ink2)}
+.stf .frow.R,.stf .rowlab.R{fill:var(--hr-txt)} .stf .frow.L,.stf .rowlab.L{fill:var(--hl-txt)}
+.stf .lcol.done .nh{fill:var(--good)} .stf .lcol.done .stem{stroke:var(--good)}
+.stf .lcol.cur .nh,.stf .lcol.hear .nh{fill:var(--now)} .stf .lcol.cur .stem,.stf .lcol.hear .stem{stroke:var(--now)}
+.stf .lcol.cur .lhl,.stf .lcol.hear .lhl{stroke:var(--now)}
+
+/* ---- header: theme button ---- */
+.pwa .pst{color:var(--dim)}
+
+.poshead .engr{color:var(--lab);text-shadow:none}
+.engr .soft{opacity:.92}
+.chip small,.chip.rt small{opacity:.9}
+.pos span,.pos.on span{opacity:1}
+.wedge text{opacity:1!important}

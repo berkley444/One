@@ -1,0 +1,47 @@
+/* Theme variables with their Silver Hi-Fi values. A theme overrides what it needs; anything it leaves out falls back to these.
+   (Silver itself never sets data-theme, so none of the engine rules below apply to it: the base stylesheet is untouched.) */
+:root,[data-theme]{
+  --page:radial-gradient(1200px 500px at 50% -120px,#17171c 0,#050506 70%) no-repeat,#050506;
+  --hfont:var(--cond); --lab-font:var(--cond); --h1-ls:.06em; --h1-tt:uppercase;
+  --h2:#4a4c54; --h2s:#33353b; --h2c:#6a6c75;
+  --ink2:#cfd0d6; --ink3:#a8aab3; --mute:#7d808a; --lab:#8f919a;
+  --on-amber:#1a0f02; --accent-bd:var(--amber);
+  --card:#0c0c0f; --card-bd:#1d1d23; --card-r:14px;
+  --inset:#08080a; --inset-bd:#1f1f25; --inset-ink:#fff; --inset-sh:none;
+  --raise:linear-gradient(180deg,#17171c,#0e0e12); --raise-bd:#26262d; --raise-bd-h:#6b6d79; --raise-r:12px;
+  --chip:#17171c; --chip-bd:#2a2a31; --hair:#1d1d22; --hair2:#2a2a31;
+  --now-bg:linear-gradient(180deg,#2d2008,#14100a); --now-sh:0 0 18px rgba(240,160,53,.35); --step-off:#26262d;
+  --panel:linear-gradient(180deg,#f1f2f5,#8c8e95); --panel-bd:#5c5e66; --panel-r:16px; --panel-sh:0 8px 22px rgba(0,0,0,.6);
+  --panel-ink:#2c2d31; --panel-ink2:#3b3c41; --engr-sh:0 1px 0 rgba(255,255,255,.7); --ok-p:#14662d; --warn-p:#8a2a20;
+  --led-off:#5a3410; --led-off-sh:0 0 0 2px rgba(0,0,0,.35) inset,0 1px 0 rgba(255,255,255,.6);
+  --led-on:radial-gradient(circle at 35% 30%,#ffd9a0,#ff9a1f 55%,#c76400); --led-on-sh:0 0 0 1px rgba(0,0,0,.4),0 0 8px 3px rgba(255,150,30,.85),0 0 22px 6px rgba(255,140,20,.45);
+  --drum-bg:linear-gradient(180deg,#0b0b0d,#232327 48%,#09090b); --drum-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 8px 14px rgba(0,0,0,.9),inset 0 -6px 10px rgba(0,0,0,.7); --drum-r:9px;
+  --drum-ink:#e9eaee; --drum-line:linear-gradient(90deg,transparent,#b8733a 15%,#e0a368 50%,#b8733a 85%,transparent); --drum-line-o:.7; --drum-font:var(--sans);
+  --edge-bg:repeating-linear-gradient(180deg,#8d8f96 0 2px,#3a3b40 2px 4px); --edge-ink:#fff;
+  --knob-bg:conic-gradient(from 20deg,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6); --knob-sh:0 4px 7px rgba(0,0,0,.6),0 0 0 2px #2b2c30,0 1px 0 rgba(255,255,255,.5) inset;
+  --cap-hi:radial-gradient(circle at 36% 30%,rgba(255,255,255,.65),rgba(0,0,0,.28) 85%); --ind:#d9770a; --ind-sh:0 0 4px rgba(255,140,20,.8); --tick:#3b3c41; --arc:#f0a035; --arc-off:rgba(0,0,0,.18); --knobread:#222;
+  --tog-bg:linear-gradient(180deg,#0b0b0d,#2a2a2f); --tog-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 4px 8px #000; --tog-on:linear-gradient(180deg,#5b3208,#a9650f); --tog-thumb:linear-gradient(180deg,#fafafb,#8d8f96);
+  --btn-bg:linear-gradient(180deg,#2b2c32,#18181c); --btn-bd:#34353d; --btn-bd-h:#52535e; --btn-ink:#e9eaee; --btn-r:9px; --btn-sh:none;
+  --pri-bg:linear-gradient(180deg,#d98c27,#a8650d); --pri-bd:#e5a14a; --pri-ink:#1a0f02;
+  --key-bg:linear-gradient(180deg,#e9eaee,#a9abb2); --key-bd:#5a5b62; --key-ink:#26272b; --key-sh:0 1px 0 rgba(255,255,255,.6) inset,0 2px 3px rgba(0,0,0,.5); --key-r:8px;
+  --on-bg:linear-gradient(180deg,#ffbd62,#d77f12); --on-bd:#7a4403; --on-ink:#1a0f02; --on-sh:0 0 12px rgba(255,150,30,.55),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#2a2b31,#0b0b0e); --sel-bd:var(--amber); --sel-ink:#fff; --sel-sub:var(--amber); --sel-sh:0 0 0 1px var(--amber),0 0 12px rgba(240,160,53,.35);
+  --seg-bg:#111115; --seg-bd:#26262d; --seg-on:#2a2b31; --seg-on-ink:#fff; --seg-r:9px;
+  --dock-bg:rgba(24,24,28,.86); --dock-bd:#34353d; --dock-ink:#aeb0b8; --dock-on:#2a2b31; --dock-on-ink:#6aa5ff; --dock-sh:0 10px 30px rgba(0,0,0,.7); --dock-r:30px; --dock-item-r:24px;
+  --fbwrap-bd:#e5c98a; --fbwrap-bg:#000; --fbwrap-r:12px;
+  --fb-wood:#0b0b0e; --fb-grain:rgba(0,0,0,0); --fb-fret:#55565e; --fb-nut:#e9e1c6; --fb-str:#c4c4c8; --fb-inlay:#17171c; --fb-inlay-bd:none; --fb-num:#5a5c65; --fb-numhi:#aeb0b8; --fb-open:#3d3f47;
+  --ctx-bg:#0b0b0e; --ctx-bd:#4b4d56; --ctx-fg:#7d808a; --dot-ring:#000; --dot-in:#fff; --dot-font:var(--sans);
+  --t-root:#e8463e; --t-root-fg:#fff; --t-root-txt:#e8463e;
+  --t-third:#f0b43c; --t-third-fg:#2a1a00; --t-fifth:#58c75a; --t-fifth-fg:#06210a; --t-seventh:#4a86e8; --t-seventh-fg:#fff; --t-ext:#a06be0; --t-ext-fg:#fff; --t-scale:#58c75a; --t-scale-fg:#06210a;
+  --h-r:#3fcf6e; --h-r-fg:#04210f; --h-l:#4f8dff; --h-l-fg:#fff; --hr-txt:#3fcf6e; --hl-txt:#6aa0ff; --ring-root:#e8463e;
+  --now:#ffd54a; --now-fg:#ffd54a; --inp:#c45bff; --good:#3fcf6e; --bad:#ff6a60;
+  --pk-wrap-bd:#e5c98a; --pk-wrap-bg:#000; --pk-wrap-r:12px;
+  --pk-w:linear-gradient(180deg,#f4f4f1,#fff 70%,#d9d9d4); --pk-w-bd:#111; --pk-w-sh:0 2px 0 #aaa; --pk-w-r:0 0 5px 5px; --pk-lit-w:linear-gradient(180deg,#fff9dc,#fff0b0 70%,#eadb98);
+  --pk-b:linear-gradient(180deg,#2d2d31,#000); --pk-b-bd:#000; --pk-b-sh:0 2px 3px rgba(0,0,0,.8); --pk-b-r:0 0 4px 4px; --pk-lit-b:linear-gradient(180deg,#3d3d48,#0d0d14);
+  --pk-nm:#2a2b31; --pk-nm-root:#d6342c; --pk-bnm:#fff; --pk-bnm-root:#ff8b84; --pk-oct:#6f6f6b; --pk-str:var(--amber);
+  --lcd-bg:#08080a; --lcd-bd:#000; --lcd-sh:inset 0 3px 8px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.5); --lcd-ink:#fff; --lcd-ink2:#a8aab3; --lcd-hi:#f0a035; --lcd-dim:#8b8d96; --lcd-font:var(--mono);
+  --stf-sl:#6c6e78; --stf-sl2:#9a9ca6; --stf-tl:#55575f; --stf-ink:#e9eaee; --stf-fret:#ffd54a;
+  --c-tonic:#c77d12; --c-tonic-fg:#1a0f02; --c-nb:#2f5fa8; --c-nb-fg:#fff; --c-rel:#3a3d49; --c-rel-fg:#fff; --c-maj:#17181d; --c-min:#101115; --c-off-fg:#9ea0a9; --c-bg:#08080a; --c-centre:#0c0c0f; --c-line:#000; --c-t1:#e9eaee; --c-t2:#8b8d96; --c-t3:#f0a035;
+  --cd-line:#4a4c54; --cd-nut:#e9e1c6; --cd-str:#b4b5bb; --cd-dot:#e9eaee; --cd-dot-fg:#101114; --cd-lab:#9a9ca5; --cd-fn:#f0b43c;
+  --bar-n:#555862; --ok:#2f7d33; --ok-bg:#10301a; --ok-ink:#8fe3a8; --hook-bg:#17130b; --hook-ink:#e8d9bd; --code-ink:#d8d9de;
+}

@@ -1,0 +1,82 @@
+/* Modular Synth — a Eurorack case: bone anodised panels with black mono print, orange accent, small dark knobs with printed scale
+   ticks, OLED-style readouts, square corners and patch-point jacks next to every control. */
+:theme{
+  --sans:"Space Grotesk","Inter",system-ui,sans-serif; --cond:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#17181b; --ink:#ece9e0; --dim:#a9a79d; --faint:#a3a198; --amber:#ff7a3d; --green:#3be0a8; --red:#ff5a6a; --gold:#cfcdc4; --blue:#4fa8ff; --violet:#d18bff; --engrave:#111;
+  --page:repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 48px),linear-gradient(180deg,#1f2024 0,#17181b 420px) no-repeat,#17181b;
+  --hfont:var(--sans); --lab-font:var(--mono); --drum-font:var(--mono); --lcd-font:var(--mono); --h1-ls:.06em;
+  --h2:#cfcdc4; --h2s:#a9a79d; --h2c:#b8b6ac; --ink2:#dcd9d0; --ink3:#b8b6ac; --mute:#a9a79d; --lab:#b8b6ac; --on-amber:#1a0800;
+  --card:#1f2024; --card-bd:#34363c; --card-r:3px; --inset:#0f1012; --inset-bd:#34363c; --inset-ink:#ece9e0;
+  --raise:linear-gradient(180deg,#2a2c31,#222328); --raise-bd:#3d4046; --raise-bd-h:#ff7a3d; --raise-r:3px; --chip:#2a2c31; --chip-bd:#44474e; --hair:#2a2c31; --hair2:#3d4046;
+  --now-bg:#3a2216; --now-sh:0 0 0 1px #ff7a3d,0 0 14px rgba(255,106,43,.35); --step-off:#3d4046;
+  --panel:linear-gradient(180deg,#ecebe4,#e0ded5); --panel-bd:#0a0a0b; --panel-r:3px;
+  --panel-sh:0 0 0 1px #000,0 0 0 3px #26272b,0 12px 26px rgba(0,0,0,.6);
+  --panel-ink:#111; --panel-ink2:#2a2a2e; --engr-sh:none; --ok-p:#0b6a40; --warn-p:#a8142a;
+  --led-off:#6a2a1a; --led-off-sh:0 0 0 1px #000; --led-on:#ff5a1f; --led-on-sh:0 0 0 1px #000,0 0 10px 3px rgba(255,90,31,.7);
+  --drum-bg:#0c0d0f; --drum-sh:0 0 0 1px #000,0 0 0 2px #cfcdc4,0 0 0 3px #000,inset 0 0 14px rgba(255,120,40,.1); --drum-r:2px; --drum-ink:#ffa35c; --drum-line-o:0;
+  --edge-bg:#26272b; --edge-ink:#e8e6df;
+  --knob-bg:@art(synth-knob); --knob-sh:none; --ind:#ff6a2b; --ind-sh:none; --tick:#111; --knobread:#111;
+  --tog-bg:#17181b; --tog-sh:0 0 0 1px #000,0 0 0 2px #bdbbb1; --tog-on:#ff6a2b; --tog-thumb:linear-gradient(180deg,#ecebe4,#a9a79d);
+  --btn-bg:#2a2c31; --btn-bd:#000; --btn-bd-h:#ff7a3d; --btn-ink:#ece9e0; --btn-r:3px; --btn-sh:0 2px 0 #000;
+  --pri-bg:#ff6a2b; --pri-bd:#000; --pri-ink:#1a0800;
+  --key-bg:#d3d1c7; --key-bd:#111; --key-ink:#111; --key-sh:0 2px 0 #111; --key-r:3px;
+  --on-bg:#ff6a2b; --on-bd:#111; --on-ink:#1a0800; --on-sh:0 2px 0 #111,0 0 10px rgba(255,106,43,.5);
+  --sel-bg:#111; --sel-bd:#000; --sel-ink:#ffa35c; --sel-sub:#ffa35c; --sel-sh:0 2px 0 #000,0 0 0 1px #ff6a2b;
+  --seg-bg:#17181b; --seg-bd:#44474e; --seg-on:#ff6a2b; --seg-on-ink:#1a0800; --seg-r:2px;
+  --dock-bg:#121315; --dock-bd:#cfcdc4; --dock-ink:#cfcdc4; --dock-on:#ff6a2b; --dock-on-ink:#1a0800; --dock-sh:0 0 0 1px #000,0 10px 26px rgba(0,0,0,.7); --dock-r:4px; --dock-item-r:2px;
+  --fbwrap-bd:#cfcdc4; --fbwrap-bg:#0c0d0f; --fbwrap-r:3px;
+  --fb-wood:#101114; --fb-grain:rgba(0,0,0,0); --fb-fret:#5a5d66; --fb-nut:#cfcdc4; --fb-str:#a3a5ad; --fb-inlay:#2b2d33; --fb-inlay-bd:#44474e; --fb-num:#a3a5ad; --fb-numhi:#ece9e0; --fb-open:#b8b6ac;
+  --ctx-bg:#0c0d0f; --ctx-bd:#6a6d76; --ctx-fg:#b8b6ac; --dot-ring:#000; --dot-in:#ffa35c;
+  --t-root:#ff4d5e; --t-root-fg:#1a0004; --t-root-txt:#ff7a86; --t-third:#ffd23f; --t-third-fg:#241a00; --t-fifth:#3be0a8; --t-fifth-fg:#00241a; --t-seventh:#4fa8ff; --t-seventh-fg:#001a33; --t-ext:#d18bff; --t-ext-fg:#210a33; --t-scale:#3be0a8; --t-scale-fg:#00241a;
+  --h-r:#9be05a; --h-r-fg:#1a2a00; --h-l:#4fa8ff; --h-l-fg:#001a33; --hr-txt:#9be05a; --hl-txt:#7dbfff; --ring-root:#ff4d5e; --now:#ff7a3d; --now-fg:#ff9a63; --inp:#d18bff; --good:#3be0a8; --bad:#ff7a86;
+  --pk-wrap-bd:#cfcdc4; --pk-wrap-bg:#0c0d0f; --pk-wrap-r:3px;
+  --pk-w:linear-gradient(180deg,#e4e2d9,#f2f1ea); --pk-w-bd:#0a0a0b; --pk-w-sh:0 2px 0 #77756c; --pk-w-r:0 0 2px 2px; --pk-lit-w:linear-gradient(180deg,#ffe0c4,#ffb27a);
+  --pk-b:linear-gradient(180deg,#26272b,#0b0b0c); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#8a4a2a,#3a1d10);
+  --pk-nm:#111; --pk-nm-root:#a8142a; --pk-bnm-root:#ff9aa4; --pk-oct:#5a5d66; --pk-str:#ff7a3d;
+  --lcd-bg:#0c0d0f; --lcd-bd:#000; --lcd-sh:0 0 0 1px #000,0 0 0 2px #cfcdc4,inset 0 0 16px rgba(255,120,40,.08); --lcd-ink:#ece9e0; --lcd-ink2:#cfcdc4; --lcd-hi:#ffa35c; --lcd-dim:#a9a79d;
+  --stf-sl:#5a5d66; --stf-sl2:#8a8c94; --stf-tl:#44474e; --stf-ink:#ece9e0; --stf-fret:#ffa35c;
+  --c-tonic:#ff6a2b; --c-tonic-fg:#1a0800; --c-nb:#1f6f8b; --c-nb-fg:#fff; --c-rel:#3d4046; --c-maj:#222328; --c-min:#18191c; --c-off-fg:#cfcdc4; --c-bg:#0f1012; --c-centre:#17181b; --c-line:#0f1012; --c-t3:#ff9a63;
+  --cd-line:#5a5d66; --cd-str:#b8b6ac; --cd-dot:#ece9e0; --cd-dot-fg:#111; --cd-lab:#b8b6ac; --cd-fn:#ffa35c;
+  --bar-n:#8a8c94; --ok:#0b8a5a; --ok-bg:#0f2a20; --ok-ink:#6fe8b8; --hook-bg:#2a1a12; --hook-ink:#f1dfcf; --code-ink:#dcd9d0;
+}
+h1{font-weight:700;letter-spacing:.14em}
+h2{font-weight:700;font-size:21px;letter-spacing:.08em;align-items:center}
+h2::before{content:"";width:10px;height:10px;background:var(--amber);flex:none;box-shadow:0 0 8px rgba(255,106,43,.6)}
+.card,.pfc,.lcard{border-top:2px solid #cfcdc4}
+.metal{overflow:hidden}
+.metal::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(circle at 12px 12px,#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at calc(100% - 12px) 12px,#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at 12px calc(100% - 12px),#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at calc(100% - 12px) calc(100% - 12px),#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px)}
+.engr{font-weight:600;letter-spacing:.14em;font-size:11px;text-transform:uppercase}
+.engr.sm{font-weight:600;letter-spacing:.1em;font-size:10px}
+.slot{position:relative}
+.slot>.engr.sm{padding-right:16px}
+.slot::after{content:"";position:absolute;right:1px;top:-1px;width:11px;height:11px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#050505 0 2.4px,#8a887e 2.9px 4px,var(--jk,#ff6a2b) 4.4px 5.5px,transparent 5.9px)}
+#row1 .slot:nth-child(2n){--jk:#4fa8ff}
+#row1 .slot:nth-child(3n){--jk:#e0b020}
+#row2 .slot{--jk:#2fbf8f}
+#row2 .slot:nth-child(2){--jk:#4fa8ff}
+.drum .val{font-weight:600;font-size:14px;letter-spacing:0;text-transform:none}
+.drum.small .val{font-size:13px}
+.drum .val.long{font-size:12px}.drum .val.xl{font-size:10.5px}
+.drum .edge::after{display:block}
+.drum .edge.l{border-right:1px solid #000;box-shadow:none}.drum .edge.r{border-left:1px solid #000;box-shadow:none}
+.drum .edge:hover{background:#ff6a2b;color:#1a0800}
+.knob{width:62px;height:62px}
+.knob .cap{inset:11px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.45))}
+.knob .cap i{display:none}
+.knob:focus-visible{box-shadow:0 0 0 3px #1a56d6}
+.knobread{font-weight:600;font-size:11px;letter-spacing:.06em}
+.toggle{width:44px;height:22px;border-radius:2px}
+.toggle::after{border-radius:1px}
+.power .led{width:12px;height:12px;border-radius:2px}
+.meter{display:inline-flex;gap:2px;align-items:stretch;height:16px;padding:3px;background:#0c0d0f;box-shadow:0 0 0 1px #000,0 0 0 2px #cfcdc4}
+.meter i{display:block;width:5px;background:#2b2d33}
+.meter i.on{background:#ff6a2b;box-shadow:0 0 5px rgba(255,106,43,.8)}
+.meter i.on:nth-child(n+11){background:#ffd23f}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.btn:active,.pos:active,.chip:active{transform:translateY(2px);box-shadow:none}
+.pos,.chip{font-family:var(--sans)}
+nav.dock{border-width:1px}
+nav.dock button{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.fbwrap,.pianowrap{border-width:3px}

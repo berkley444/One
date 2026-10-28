@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <title>Big Pear Guitar Works — guitar theory, math & piano bridge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506">
+<meta name="theme-color" content="#050506" id="metaTheme">
+<script>/* theme before first paint: ?theme= wins, then the saved choice; Silver Hi-Fi (the default) sets nothing */
+(function(){try{var m=/[?&]theme=([\w-]+)/.exec(location.search),id=m?m[1].toLowerCase():localStorage.getItem("bpgw.theme");if(id&&id!=="silver"&&/^[a-z-]+$/.test(id))document.documentElement.setAttribute("data-theme",id)}catch(e){}})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -22,6 +24,7 @@
   --green:#58c75a; --green-d:#2f7d33; --red:#e8463e; --gold:#e5c98a; --amber:#f0a035; --blue:#4a86e8; --violet:#a06be0;
   --panel-hi:#e4e5e9; --panel-lo:#8f9198;
   --engrave:#2c2d31;
+  --t-root:#e8463e;--t-root-txt:#e8463e;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --cond:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -203,7 +206,7 @@ table.t tr.in td{background:rgba(88,199,90,.08)}
 table.t tr.root td{background:rgba(232,70,62,.14)}
 table.t tr:hover td{background:rgba(255,255,255,.05)}
 table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:var(--amber);cursor:pointer;padding:1px 7px}
-.tablewrap{max-height:520px;overflow:auto;border:1px solid #1d1d23;border-radius:10px}
+.tablewrap{position:relative;max-height:520px;overflow:auto;border:1px solid #1d1d23;border-radius:10px}
 .voic{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .vc{background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:8px;text-align:center;cursor:pointer}
 .vc:hover{border-color:var(--amber)}
@@ -267,7 +270,7 @@ details.det[open] summary{margin-bottom:8px}
 .eq small{display:block;font:500 12px var(--sans);color:var(--dim);letter-spacing:.04em;margin-top:6px}
 .worked{font:14px/1.9 var(--mono);color:#cfd0d6;background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:pre}
 .worked b{color:var(--amber);font-weight:600}.worked i{color:var(--green);font-style:normal}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid2>*{min-width:0}
 @media (max-width:760px){.grid2{grid-template-columns:1fr}}
 .pat{display:flex;gap:4px;flex-wrap:nowrap}
 .pat span{flex:1 1 0;min-width:0;max-width:56px;text-align:center;background:#17171c;border:1px solid #2a2a31;border-radius:8px;padding:6px 0;font:700 14px var(--mono)}
@@ -462,16 +465,994 @@ body:not(.ready) footer,body:not(.ready) nav.dock{visibility:hidden}   /* no vis
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media (forced-colors:active){.pk:focus-visible,:focus-visible{outline-color:Highlight}}
 </style>
+<style id="themes">
+/*THEMES:BEGIN*/
+/* ===== 00-defaults.raw.css ===== */
+/* Theme variables with their Silver Hi-Fi values. A theme overrides what it needs; anything it leaves out falls back to these.
+   (Silver itself never sets data-theme, so none of the engine rules below apply to it: the base stylesheet is untouched.) */
+:root,[data-theme]{
+  --page:radial-gradient(1200px 500px at 50% -120px,#17171c 0,#050506 70%) no-repeat,#050506;
+  --hfont:var(--cond); --lab-font:var(--cond); --h1-ls:.06em; --h1-tt:uppercase;
+  --h2:#4a4c54; --h2s:#33353b; --h2c:#6a6c75;
+  --ink2:#cfd0d6; --ink3:#a8aab3; --mute:#7d808a; --lab:#8f919a;
+  --on-amber:#1a0f02; --accent-bd:var(--amber);
+  --card:#0c0c0f; --card-bd:#1d1d23; --card-r:14px;
+  --inset:#08080a; --inset-bd:#1f1f25; --inset-ink:#fff; --inset-sh:none;
+  --raise:linear-gradient(180deg,#17171c,#0e0e12); --raise-bd:#26262d; --raise-bd-h:#6b6d79; --raise-r:12px;
+  --chip:#17171c; --chip-bd:#2a2a31; --hair:#1d1d22; --hair2:#2a2a31;
+  --now-bg:linear-gradient(180deg,#2d2008,#14100a); --now-sh:0 0 18px rgba(240,160,53,.35); --step-off:#26262d;
+  --panel:linear-gradient(180deg,#f1f2f5,#8c8e95); --panel-bd:#5c5e66; --panel-r:16px; --panel-sh:0 8px 22px rgba(0,0,0,.6);
+  --panel-ink:#2c2d31; --panel-ink2:#3b3c41; --engr-sh:0 1px 0 rgba(255,255,255,.7); --ok-p:#14662d; --warn-p:#8a2a20;
+  --led-off:#5a3410; --led-off-sh:0 0 0 2px rgba(0,0,0,.35) inset,0 1px 0 rgba(255,255,255,.6);
+  --led-on:radial-gradient(circle at 35% 30%,#ffd9a0,#ff9a1f 55%,#c76400); --led-on-sh:0 0 0 1px rgba(0,0,0,.4),0 0 8px 3px rgba(255,150,30,.85),0 0 22px 6px rgba(255,140,20,.45);
+  --drum-bg:linear-gradient(180deg,#0b0b0d,#232327 48%,#09090b); --drum-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 8px 14px rgba(0,0,0,.9),inset 0 -6px 10px rgba(0,0,0,.7); --drum-r:9px;
+  --drum-ink:#e9eaee; --drum-line:linear-gradient(90deg,transparent,#b8733a 15%,#e0a368 50%,#b8733a 85%,transparent); --drum-line-o:.7; --drum-font:var(--sans);
+  --edge-bg:repeating-linear-gradient(180deg,#8d8f96 0 2px,#3a3b40 2px 4px); --edge-ink:#fff;
+  --knob-bg:conic-gradient(from 20deg,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6); --knob-sh:0 4px 7px rgba(0,0,0,.6),0 0 0 2px #2b2c30,0 1px 0 rgba(255,255,255,.5) inset;
+  --cap-hi:radial-gradient(circle at 36% 30%,rgba(255,255,255,.65),rgba(0,0,0,.28) 85%); --ind:#d9770a; --ind-sh:0 0 4px rgba(255,140,20,.8); --tick:#3b3c41; --arc:#f0a035; --arc-off:rgba(0,0,0,.18); --knobread:#222;
+  --tog-bg:linear-gradient(180deg,#0b0b0d,#2a2a2f); --tog-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 4px 8px #000; --tog-on:linear-gradient(180deg,#5b3208,#a9650f); --tog-thumb:linear-gradient(180deg,#fafafb,#8d8f96);
+  --btn-bg:linear-gradient(180deg,#2b2c32,#18181c); --btn-bd:#34353d; --btn-bd-h:#52535e; --btn-ink:#e9eaee; --btn-r:9px; --btn-sh:none;
+  --pri-bg:linear-gradient(180deg,#d98c27,#a8650d); --pri-bd:#e5a14a; --pri-ink:#1a0f02;
+  --key-bg:linear-gradient(180deg,#e9eaee,#a9abb2); --key-bd:#5a5b62; --key-ink:#26272b; --key-sh:0 1px 0 rgba(255,255,255,.6) inset,0 2px 3px rgba(0,0,0,.5); --key-r:8px;
+  --on-bg:linear-gradient(180deg,#ffbd62,#d77f12); --on-bd:#7a4403; --on-ink:#1a0f02; --on-sh:0 0 12px rgba(255,150,30,.55),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#2a2b31,#0b0b0e); --sel-bd:var(--amber); --sel-ink:#fff; --sel-sub:var(--amber); --sel-sh:0 0 0 1px var(--amber),0 0 12px rgba(240,160,53,.35);
+  --seg-bg:#111115; --seg-bd:#26262d; --seg-on:#2a2b31; --seg-on-ink:#fff; --seg-r:9px;
+  --dock-bg:rgba(24,24,28,.86); --dock-bd:#34353d; --dock-ink:#aeb0b8; --dock-on:#2a2b31; --dock-on-ink:#6aa5ff; --dock-sh:0 10px 30px rgba(0,0,0,.7); --dock-r:30px; --dock-item-r:24px;
+  --fbwrap-bd:#e5c98a; --fbwrap-bg:#000; --fbwrap-r:12px;
+  --fb-wood:#0b0b0e; --fb-grain:rgba(0,0,0,0); --fb-fret:#55565e; --fb-nut:#e9e1c6; --fb-str:#c4c4c8; --fb-inlay:#17171c; --fb-inlay-bd:none; --fb-num:#5a5c65; --fb-numhi:#aeb0b8; --fb-open:#3d3f47;
+  --ctx-bg:#0b0b0e; --ctx-bd:#4b4d56; --ctx-fg:#7d808a; --dot-ring:#000; --dot-in:#fff; --dot-font:var(--sans);
+  --t-root:#e8463e; --t-root-fg:#fff; --t-root-txt:#e8463e;
+  --t-third:#f0b43c; --t-third-fg:#2a1a00; --t-fifth:#58c75a; --t-fifth-fg:#06210a; --t-seventh:#4a86e8; --t-seventh-fg:#fff; --t-ext:#a06be0; --t-ext-fg:#fff; --t-scale:#58c75a; --t-scale-fg:#06210a;
+  --h-r:#3fcf6e; --h-r-fg:#04210f; --h-l:#4f8dff; --h-l-fg:#fff; --hr-txt:#3fcf6e; --hl-txt:#6aa0ff; --ring-root:#e8463e;
+  --now:#ffd54a; --now-fg:#ffd54a; --inp:#c45bff; --good:#3fcf6e; --bad:#ff6a60;
+  --pk-wrap-bd:#e5c98a; --pk-wrap-bg:#000; --pk-wrap-r:12px;
+  --pk-w:linear-gradient(180deg,#f4f4f1,#fff 70%,#d9d9d4); --pk-w-bd:#111; --pk-w-sh:0 2px 0 #aaa; --pk-w-r:0 0 5px 5px; --pk-lit-w:linear-gradient(180deg,#fff9dc,#fff0b0 70%,#eadb98);
+  --pk-b:linear-gradient(180deg,#2d2d31,#000); --pk-b-bd:#000; --pk-b-sh:0 2px 3px rgba(0,0,0,.8); --pk-b-r:0 0 4px 4px; --pk-lit-b:linear-gradient(180deg,#3d3d48,#0d0d14);
+  --pk-nm:#2a2b31; --pk-nm-root:#d6342c; --pk-bnm:#fff; --pk-bnm-root:#ff8b84; --pk-oct:#6f6f6b; --pk-str:var(--amber);
+  --lcd-bg:#08080a; --lcd-bd:#000; --lcd-sh:inset 0 3px 8px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.5); --lcd-ink:#fff; --lcd-ink2:#a8aab3; --lcd-hi:#f0a035; --lcd-dim:#8b8d96; --lcd-font:var(--mono);
+  --stf-sl:#6c6e78; --stf-sl2:#9a9ca6; --stf-tl:#55575f; --stf-ink:#e9eaee; --stf-fret:#ffd54a;
+  --c-tonic:#c77d12; --c-tonic-fg:#1a0f02; --c-nb:#2f5fa8; --c-nb-fg:#fff; --c-rel:#3a3d49; --c-rel-fg:#fff; --c-maj:#17181d; --c-min:#101115; --c-off-fg:#9ea0a9; --c-bg:#08080a; --c-centre:#0c0c0f; --c-line:#000; --c-t1:#e9eaee; --c-t2:#8b8d96; --c-t3:#f0a035;
+  --cd-line:#4a4c54; --cd-nut:#e9e1c6; --cd-str:#b4b5bb; --cd-dot:#e9eaee; --cd-dot-fg:#101114; --cd-lab:#9a9ca5; --cd-fn:#f0b43c;
+  --bar-n:#555862; --ok:#2f7d33; --ok-bg:#10301a; --ok-ink:#8fe3a8; --hook-bg:#17130b; --hook-ink:#e8d9bd; --code-ink:#d8d9de;
+}
+
+/* ===== 10-engine.css ===== */
+/* Generic theme engine. Every selector here is prefixed with html[data-theme] by tools/build-themes.js, so it only runs when a non-default
+   theme is active. Each rule reads semantic variables (see 00-defaults.raw.css); a theme file sets them and adds structural overrides. */
+html[data-theme]{background:var(--bg)}
+html[data-theme] body{background:var(--page);color:var(--ink);font-family:var(--sans)}
+html[data-theme] h1{font-family:var(--hfont);letter-spacing:var(--h1-ls);text-transform:var(--h1-tt);color:var(--h1,var(--ink))}
+html[data-theme] h1 small{color:var(--dim);font-family:var(--sans)}
+html[data-theme] h2{font-family:var(--hfont);color:var(--h2);text-transform:var(--h1-tt)}
+html[data-theme] h2 small{color:var(--h2s)}
+html[data-theme] h2 .ctx{color:var(--h2c)}
+html[data-theme] .hint,html[data-theme] .legend,html[data-theme] .pianolab,html[data-theme] .plegend,html[data-theme] .poscap{color:var(--dim)}
+html[data-theme] .poscap b{color:var(--ink)}
+html[data-theme] footer,html[data-theme] footer a{color:var(--dim)}
+html[data-theme] footer a{text-decoration:underline}
+html[data-theme] .skip{background:var(--ink);color:var(--bg)}
+/* ---- the control panel ---- */
+html[data-theme] .metal{background:var(--panel);border-color:var(--panel-bd);border-radius:var(--panel-r);box-shadow:var(--panel-sh);color:var(--panel-ink)}
+html[data-theme] .engr,html[data-theme] .engr.sm{font-family:var(--lab-font);color:var(--panel-ink);text-shadow:var(--engr-sh)}
+html[data-theme] .engr.sm{color:var(--panel-ink2)}
+html[data-theme] .engr .soft{font-family:var(--sans)}
+html[data-theme] .power .led{background:var(--led-off);box-shadow:var(--led-off-sh)}
+html[data-theme] .power.on .led{background:var(--led-on);box-shadow:var(--led-on-sh);animation:none}
+html[data-theme] .drum{background:var(--drum-bg);box-shadow:var(--drum-sh);border-radius:var(--drum-r)}
+html[data-theme] .drum::before{background:var(--drum-line);opacity:var(--drum-line-o)}
+html[data-theme] .drum .val{background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:currentColor;color:var(--drum-ink);font-family:var(--drum-font)}
+html[data-theme] .drum .edge{background:var(--edge-bg)}
+html[data-theme] .drum .edge::after{content:"";display:none;position:absolute;top:50%;left:50%;width:7px;height:7px;border:solid var(--edge-ink);border-width:2px 2px 0 0;margin:-4px 0 0 -2px;transform:rotate(-135deg)}
+html[data-theme] .drum .edge.r::after{transform:rotate(45deg);margin-left:-5px}
+html[data-theme] .knob .cap{background:var(--knob-bg);box-shadow:var(--knob-sh)}
+html[data-theme] .knob .cap::before{background:var(--cap-hi)}
+html[data-theme] .knob .cap i{background:var(--ind);box-shadow:var(--ind-sh)}
+html[data-theme] .knob .ticks line{stroke:var(--tick)!important}
+html[data-theme] .knob::before{content:none}
+html[data-theme] .knobread{color:var(--knobread);text-shadow:none}
+html[data-theme] .toggle{background:var(--tog-bg);box-shadow:var(--tog-sh)}
+html[data-theme] .toggle::after{background:var(--tog-thumb)}
+html[data-theme] .toggle.on{background:var(--tog-on)}
+html[data-theme] .midistat{color:var(--panel-ink2)}
+html[data-theme] .midistat.good{color:var(--ok-p)}
+html[data-theme] .midistat.warn{color:var(--warn-p)}
+html[data-theme] .lspeed{color:var(--panel-ink);font-family:var(--lab-font)}
+html[data-theme] .meter{display:none}
+/* ---- surfaces ---- */
+html[data-theme] .card,html[data-theme] .pfc,html[data-theme] .lcard{background:var(--card);border-color:var(--card-bd);border-radius:var(--card-r)}
+html[data-theme] .cc,html[data-theme] .bar,html[data-theme] .sbar{background:var(--raise);border-color:var(--raise-bd);border-radius:var(--raise-r)}
+html[data-theme] .cc:hover{border-color:var(--raise-bd-h)}
+html[data-theme] .cc.sel{border-color:var(--accent-bd);box-shadow:0 0 0 1px var(--accent-bd) inset}
+html[data-theme] .cc .nm,html[data-theme] .bar .nm,html[data-theme] .sbar .nm,html[data-theme] .pfc .top b{color:var(--ink)}
+html[data-theme] .cc .rn,html[data-theme] .bar .rn,html[data-theme] .sbar .rn,html[data-theme] .pfc .rn,html[data-theme] .ptitle,html[data-theme] .pinfo .ptit,html[data-theme] .sechead h3,html[data-theme] .lcard h3{color:var(--amber)}
+html[data-theme] .cc .nt,html[data-theme] .bar .nt,html[data-theme] .ro .k,html[data-theme] .field label,html[data-theme] .slab,html[data-theme] .vc .fr,html[data-theme] .vc .vn,html[data-theme] .postab .ptitle,html[data-theme] .pinfo .ptit span,html[data-theme] .postab .sn,html[data-theme] .lcount,html[data-theme] details.det summary,html[data-theme] .pfc .ln .h,html[data-theme] .lmeta{color:var(--dim)}
+html[data-theme] .cc .fn{color:var(--lab)}
+html[data-theme] .qlab,html[data-theme] .slab .soft{color:var(--lab)}
+html[data-theme] .bar .num,html[data-theme] .sbar .num{color:var(--bar-n)}
+html[data-theme] .bar .beats i{background:var(--step-off)}
+html[data-theme] .bar.now,html[data-theme] .sbar.now{border-color:var(--accent-bd);background:var(--now-bg);box-shadow:var(--now-sh)}
+html[data-theme] .bar.now .beats i.on{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+html[data-theme] .ro,html[data-theme] .vc,html[data-theme] .postab,html[data-theme] .pdetail,html[data-theme] .worked,html[data-theme] code.chart,html[data-theme] pre.tabtxt{background:var(--inset);border-color:var(--inset-bd);box-shadow:var(--inset-sh)}
+html[data-theme] .ro .v,html[data-theme] .postab,html[data-theme] .postab .fn2 b,html[data-theme] .pfr i,html[data-theme] .worked,html[data-theme] code.chart,html[data-theme] pre.tabtxt{color:var(--inset-ink)}
+html[data-theme] .ro .v{color:var(--ink)}
+html[data-theme] .worked,html[data-theme] code.chart,html[data-theme] pre.tabtxt{color:var(--code-ink)}
+html[data-theme] .worked b,html[data-theme] .postab .ptitle i,html[data-theme] .postab .fn2 i,html[data-theme] .pfing i,html[data-theme] .eq .n{color:var(--amber)}
+html[data-theme] .worked i,html[data-theme] .eq .a{color:var(--hr-txt)}
+html[data-theme] .postab > div{border-bottom-color:var(--hair)}
+html[data-theme] .pfr i{background:var(--chip);border-color:var(--chip-bd)}
+html[data-theme] .pfr i.x{color:var(--mute)}
+html[data-theme] .vc:hover{border-color:var(--amber)}
+html[data-theme] .vc.sel{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+html[data-theme] .vc.sel .vn{color:var(--amber)}
+html[data-theme] .eq small,html[data-theme] .lintro p,html[data-theme] .lpart p{color:var(--ink2)}
+html[data-theme] .eq small{color:var(--dim)}
+html[data-theme] .lintro p b,html[data-theme] .lpart h3{color:var(--ink)}
+html[data-theme] .pat span,html[data-theme] .sig span,html[data-theme] .fchip,html[data-theme] .lchip,html[data-theme] .lnum,html[data-theme] .sl,html[data-theme] .mn,html[data-theme] .mbar{background:var(--chip);border-color:var(--chip-bd)}
+html[data-theme] .fchip,html[data-theme] .lchip{color:var(--ink3)}
+html[data-theme] .lnum{color:var(--ink2)}
+html[data-theme] .fsep{color:var(--mute)}
+html[data-theme] .fchip.now{background:var(--amber);color:var(--on-amber);border-color:var(--amber);box-shadow:var(--now-sh)}
+html[data-theme] .lchip.on{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
+html[data-theme] .lchip.ok{border-color:var(--ok);color:var(--ok-ink)}
+html[data-theme] .lcard.done{border-color:var(--ok)}
+html[data-theme] .lcard.done .lnum{background:var(--ok);color:#fff}
+html[data-theme] .lcard p{color:var(--ink3)}
+html[data-theme] .lbadge{background:var(--ok-bg);color:var(--ok-ink)}
+html[data-theme] .lhook{background:var(--hook-bg);color:var(--hook-ink);border-left-color:var(--amber)}
+html[data-theme] .lhook b{color:var(--amber)}
+html[data-theme] .lprog{background:var(--step-off)}
+html[data-theme] .lall{color:var(--ink3)}
+html[data-theme] .pat span.W{color:var(--hr-txt)}
+html[data-theme] .pat span.H{color:var(--t-root-txt)}
+html[data-theme] .pat span.WH{color:var(--amber)}
+html[data-theme] .sl{background:var(--inset)}
+html[data-theme] .sl em{color:var(--lab)}
+html[data-theme] .sl b{color:var(--faint)}
+html[data-theme] .sl.hit{background:var(--chip);border-color:var(--chip-bd)}
+html[data-theme] .sl.hit b{color:var(--ink)}
+html[data-theme] .sl.dn b{color:var(--amber)}
+html[data-theme] .mbar{background:none;border-color:transparent;border-left:2px solid var(--chip-bd)}
+html[data-theme] .mn{color:var(--mute);background:var(--inset);border-color:var(--inset-bd)}
+html[data-theme] .mn.ct{color:var(--ink);background:var(--ok-bg);border-color:var(--ok)}
+html[data-theme] .songnow{color:var(--amber)}
+html[data-theme] .pfc .ln{color:var(--ink2)}
+html[data-theme] .field select{background:var(--chip);border-color:var(--chip-bd);color:var(--ink)}
+html[data-theme] table.t th{background:var(--card);color:var(--dim);border-bottom-color:var(--hair2)}
+html[data-theme] table.t td{border-bottom-color:var(--hair)}
+html[data-theme] table.t .play{border-color:var(--btn-bd);color:var(--amber)}
+html[data-theme] .tablewrap{border-color:var(--card-bd)}
+html[data-theme] .worked{color:var(--ink2)}
+html[data-theme] details.det{border-top-color:var(--hair)}
+html[data-theme] .prac{border-top-color:var(--hair)}
+html[data-theme] .nowline{border-top-color:var(--hair)}
+/* ---- buttons ---- */
+html[data-theme] .btn{background:var(--btn-bg);border-color:var(--btn-bd);color:var(--btn-ink);border-radius:var(--btn-r);box-shadow:var(--btn-sh)}
+html[data-theme] .btn:hover{border-color:var(--btn-bd-h)}
+html[data-theme] .btn.pri{background:var(--pri-bg);border-color:var(--pri-bd);color:var(--pri-ink)}
+html[data-theme] .seg{background:var(--seg-bg);border-color:var(--seg-bd);border-radius:var(--seg-r)}
+html[data-theme] .seg button{color:var(--dim)}
+html[data-theme] .seg button.on{background:var(--seg-on);color:var(--seg-on-ink)}
+html[data-theme] .chip,html[data-theme] .pos,html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .lprac .pc-prac>.btn:not(.tog),html[data-theme] .lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
+html[data-theme] .lspeed .seg button{box-shadow:none}
+html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .pcontrol .pc-play .btn:not(.pri),html[data-theme] .pc-prac .btn:not(.tog),html[data-theme] .pcontrol .pc-prac .btn{border-color:var(--key-bd)}
+html[data-theme] .pcontrol .pc-play .btn:not(.pri){background:var(--key-bg);color:var(--key-ink);box-shadow:var(--key-sh)}
+html[data-theme] .pos:hover{border-color:var(--accent-bd)}
+html[data-theme] .chip.on,html[data-theme] .lspeed .seg button.on:not(.x){background:var(--on-bg);border-color:var(--on-bd);color:var(--on-ink);box-shadow:var(--on-sh)}
+html[data-theme] .pos.on,html[data-theme] .btn.tog.on,html[data-theme] .lprac .pc-prac>.btn:not(.tog).on,html[data-theme] .lspeed .seg button.on{background:var(--sel-bg);border-color:var(--sel-bd);color:var(--sel-ink);box-shadow:var(--sel-sh)}
+html[data-theme] .pos.on span{color:var(--sel-sub)}
+html[data-theme] .btn.tog.midi.on{color:var(--sel-ink);border-color:var(--inp);box-shadow:0 0 0 1px var(--inp)}
+html[data-theme] .btn.tog:not(.on){color:var(--key-ink)}
+html[data-theme] .pcontrol .btn.tog:not(.on){color:var(--key-ink)}
+html[data-theme] .btn.tog.on{color:var(--sel-ink)}
+/* ---- dock ---- */
+html[data-theme] nav.dock{background:var(--dock-bg);border-color:var(--dock-bd);box-shadow:var(--dock-sh);border-radius:var(--dock-r)}
+html[data-theme] nav.dock button{color:var(--dock-ink);border-radius:var(--dock-item-r)}
+html[data-theme] nav.dock button.on{background:var(--dock-on);color:var(--dock-on-ink)}
+/* ---- fretboard ---- */
+html[data-theme] .fbwrap{border-color:var(--fbwrap-bd);background:var(--fbwrap-bg);border-radius:var(--fbwrap-r)}
+html[data-theme] .fbp{fill:var(--fb-wood)}
+html[data-theme] .fbg{fill:none;stroke:var(--fb-grain);stroke-width:1.1}
+html[data-theme] .fbwood{fill:var(--fb-wood)}
+html[data-theme] .fbi{fill:var(--fb-inlay);stroke:var(--fb-inlay-bd)}
+html[data-theme] .fbf{stroke:var(--fb-fret)}
+html[data-theme] .fbn{stroke:var(--fb-nut)}
+html[data-theme] .fb-str{stroke:var(--fb-str)}
+html[data-theme] .fbnum{fill:var(--fb-num)!important}
+html[data-theme] .fbnum.hi{fill:var(--fb-numhi)!important}
+html[data-theme] .fbo{fill:var(--fb-open)!important}
+html[data-theme] .fbx{fill:var(--t-root-txt)!important}
+html[data-theme] .dot{font-family:var(--dot-font)}
+html[data-theme] .dot text{font-family:var(--dot-font)}
+html[data-theme] .dot circle{stroke:var(--dot-ring)}
+html[data-theme] .dot.in circle{stroke:var(--dot-in)}
+html[data-theme] .dot.ctx circle{fill:var(--ctx-bg);stroke:var(--ctx-bd)}
+html[data-theme] .dot.ctx text{fill:var(--ctx-fg)!important}
+html[data-theme] .dot[data-tone="root"] circle{fill:var(--t-root)}
+html[data-theme] .dot[data-tone="root"] text{fill:var(--t-root-fg)!important}
+html[data-theme] .dot[data-tone="third"] circle{fill:var(--t-third)}
+html[data-theme] .dot[data-tone="third"] text{fill:var(--t-third-fg)!important}
+html[data-theme] .dot[data-tone="fifth"] circle{fill:var(--t-fifth)}
+html[data-theme] .dot[data-tone="fifth"] text{fill:var(--t-fifth-fg)!important}
+html[data-theme] .dot[data-tone="seventh"] circle{fill:var(--t-seventh)}
+html[data-theme] .dot[data-tone="seventh"] text{fill:var(--t-seventh-fg)!important}
+html[data-theme] .dot[data-tone="ext"] circle{fill:var(--t-ext)}
+html[data-theme] .dot[data-tone="ext"] text{fill:var(--t-ext-fg)!important}
+html[data-theme] .dot[data-tone="scale"] circle{fill:var(--t-scale)}
+html[data-theme] .dot[data-tone="scale"] text{fill:var(--t-scale-fg)!important}
+html[data-theme] .dot.root text{fill:var(--t-root-fg)!important}
+html[data-theme] .legend i[data-tone="root"],html[data-theme] .pk .pip[data-tone="root"]{background:var(--t-root)!important}
+html[data-theme] .legend i[data-tone="third"],html[data-theme] .pk .pip[data-tone="third"]{background:var(--t-third)!important}
+html[data-theme] .legend i[data-tone="fifth"],html[data-theme] .pk .pip[data-tone="fifth"]{background:var(--t-fifth)!important}
+html[data-theme] .legend i[data-tone="seventh"],html[data-theme] .pk .pip[data-tone="seventh"]{background:var(--t-seventh)!important}
+html[data-theme] .legend i[data-tone="ext"],html[data-theme] .pk .pip[data-tone="ext"]{background:var(--t-ext)!important}
+html[data-theme] .legend i[data-tone="scale"],html[data-theme] .pk .pip[data-tone="scale"]{background:var(--t-scale)!important}
+html[data-theme] .legend i.lg-in{border-color:var(--dot-in)!important;background:var(--ctx-bg)!important}
+html[data-theme] .legend i.lg-off{background:var(--mute)!important}
+/* ---- piano ---- */
+html[data-theme] .pianowrap{border-color:var(--pk-wrap-bd);background:var(--pk-wrap-bg);border-radius:var(--pk-wrap-r)}
+html[data-theme] .pk.w{background:var(--pk-w);border-color:var(--pk-w-bd);box-shadow:var(--pk-w-sh);border-radius:var(--pk-w-r)}
+html[data-theme] .pk.b{background:var(--pk-b);border-color:var(--pk-b-bd);box-shadow:var(--pk-b-sh);border-radius:var(--pk-b-r)}
+html[data-theme] .pk.lit.w{background:var(--pk-lit-w)}
+html[data-theme] .pk.lit.b{background:var(--pk-lit-b)}
+html[data-theme] .pk .nm{color:var(--pk-nm)}
+html[data-theme] .pk .nm.root{color:var(--pk-nm-root)}
+html[data-theme] .pk.b .nm{color:var(--pk-bnm)}
+html[data-theme] .pk.b .nm.root{color:var(--pk-bnm-root)}
+html[data-theme] .pk .oct{color:var(--pk-oct)}
+html[data-theme] .pk .strlab{color:var(--pk-str)}
+html[data-theme] .pk .str{border-top-color:var(--pk-str)}
+html[data-theme] .pk .fd.R{background:var(--h-r);color:var(--h-r-fg)}
+html[data-theme] .pk .fd.L{background:var(--h-l);color:var(--h-l-fg)}
+html[data-theme] .pk .fd.root{box-shadow:0 0 0 2px var(--ring-root),0 1px 3px rgba(0,0,0,.55)}
+html[data-theme] .pk.now{box-shadow:inset 0 0 0 3px var(--now),0 0 16px 3px var(--now)}
+html[data-theme] .plegend b.hR{background:var(--h-r);color:var(--h-r-fg)}
+html[data-theme] .plegend b.hL{background:var(--h-l);color:var(--h-l-fg)}
+html[data-theme] .plegend .rr{box-shadow:0 0 0 2px var(--ring-root)}
+html[data-theme] .piano.practicing .pk.target{box-shadow:inset 0 0 0 3px var(--now),0 0 16px 3px var(--now)}
+html[data-theme] .piano.practicing .pk.hit{box-shadow:inset 0 0 0 3px var(--good),0 0 14px 3px var(--good)}
+/* ---- the readout (LCD) ---- */
+html[data-theme] .pread{background:var(--lcd-bg);border-color:var(--lcd-bd);box-shadow:var(--lcd-sh);color:var(--lcd-ink)}
+html[data-theme] .pread .ptitle{color:var(--lcd-hi)}
+html[data-theme] .pread .phand{color:var(--lcd-dim)}
+html[data-theme] .pread .pdesc{color:var(--lcd-ink2)}
+html[data-theme] .pread .pfing{color:var(--lcd-ink);font-family:var(--lcd-font)}
+html[data-theme] .pread .pfing i{color:var(--lcd-hi)}
+html[data-theme] .pread .hR{color:var(--hr-txt)}
+html[data-theme] .pread .hL{color:var(--hl-txt)}
+html[data-theme] .pread .sepd{color:var(--lcd-dim)}
+html[data-theme] .nowline{color:var(--lcd-dim)}
+html[data-theme] .nowline.live{color:var(--now-fg)}
+html[data-theme] .prhead{color:var(--now-fg)}
+html[data-theme] .prtime,html[data-theme] .prscore,html[data-theme] .prkeys,html[data-theme] .prlab{color:var(--lcd-dim)}
+html[data-theme] .prtarget{color:var(--lcd-ink)}
+html[data-theme] .prres{color:var(--lcd-dim)}
+html[data-theme] .prres.good,html[data-theme] .prscore .good,html[data-theme] .prscore b.good,html[data-theme] .pn.R b{color:var(--good)}
+html[data-theme] .prres.bad,html[data-theme] .prscore .bad,html[data-theme] .prscore b.bad{color:var(--bad)}
+html[data-theme] .pn.L b{color:var(--hl-txt)}
+html[data-theme] .pn{background:var(--chip)}
+/* ---- chord diagram + circle of fifths ---- */
+html[data-theme] .cdl{stroke:var(--cd-line)}
+html[data-theme] .cdn{stroke:var(--cd-nut)}
+html[data-theme] .cds{stroke:var(--cd-str)}
+html[data-theme] .cdb{fill:var(--cd-dot)}
+html[data-theme] .cdd circle{fill:var(--cd-dot)}
+html[data-theme] .cdd text{fill:var(--cd-dot-fg)!important}
+html[data-theme] .cdd.root circle{fill:var(--t-root)}
+html[data-theme] .cdd.root text{fill:var(--t-root-fg)!important}
+html[data-theme] .cdo{stroke:var(--cd-dot)}
+html[data-theme] .cdo.root{stroke:var(--t-root)}
+html[data-theme] .cdx{fill:var(--dim)!important}
+html[data-theme] .cdnm{fill:var(--cd-lab)!important}
+html[data-theme] .cdnm.root{fill:var(--t-root-txt)!important}
+html[data-theme] .cdfn{fill:var(--cd-fn)!important}
+html[data-theme] .cfb{fill:var(--c-bg)}
+html[data-theme] .cfc{fill:var(--c-centre);stroke:var(--c-line)}
+html[data-theme] .cft1{fill:var(--c-t1)!important}
+html[data-theme] .cft2{fill:var(--c-t2)!important}
+html[data-theme] .cft3{fill:var(--c-t3)!important}
+html[data-theme] .wedge path{stroke:var(--c-line)}
+html[data-theme] .wedge[data-r="tonic"] path,html[data-theme] .circlewrap i[data-r="tonic"]{fill:var(--c-tonic)}
+html[data-theme] .wedge[data-r="tonic"] text{fill:var(--c-tonic-fg)!important}
+html[data-theme] .wedge[data-r="nb"] path{fill:var(--c-nb)}
+html[data-theme] .wedge[data-r="nb"] text{fill:var(--c-nb-fg)!important}
+html[data-theme] .wedge[data-r="rel"] path{fill:var(--c-rel)}
+html[data-theme] .wedge[data-r="rel"] text{fill:var(--c-rel-fg)!important}
+html[data-theme] .wedge[data-r="maj"] path{fill:var(--c-maj)}
+html[data-theme] .wedge[data-r="min"] path{fill:var(--c-min)}
+html[data-theme] .wedge[data-r="maj"] text,html[data-theme] .wedge[data-r="min"] text{fill:var(--c-off-fg)!important}
+html[data-theme] .legend i[data-r="tonic"]{background:var(--c-tonic)!important}
+html[data-theme] .legend i[data-r="nb"]{background:var(--c-nb)!important}
+html[data-theme] .legend i[data-r="rel"]{background:var(--c-rel)!important}
+/* ---- lessons staff ---- */
+html[data-theme] .stf .sl{stroke:var(--stf-sl)}
+html[data-theme] .stf .sl.led,html[data-theme] .stf .sl.bar{stroke:var(--stf-sl2)}
+html[data-theme] .stf .sl.tl{stroke:var(--stf-tl)}
+html[data-theme] .stf .clef,html[data-theme] .stf .acc,html[data-theme] .stf .nh{fill:var(--stf-ink)}
+html[data-theme] .stf .stem{stroke:var(--stf-ink)}
+html[data-theme] .stf .nh{stroke:var(--card)}
+html[data-theme] .stf .tablab,html[data-theme] .stf .rowlab{fill:var(--dim)}
+html[data-theme] .stf .tbg{fill:var(--card)}
+html[data-theme] .stf .fret{fill:var(--stf-fret)}
+html[data-theme] .stf .nmrow{fill:var(--ink2)}
+html[data-theme] .stf .frow.R,html[data-theme] .stf .rowlab.R{fill:var(--hr-txt)}
+html[data-theme] .stf .frow.L,html[data-theme] .stf .rowlab.L{fill:var(--hl-txt)}
+html[data-theme] .stf .lcol.done .nh{fill:var(--good)}
+html[data-theme] .stf .lcol.done .stem{stroke:var(--good)}
+html[data-theme] .stf .lcol.cur .nh,html[data-theme] .stf .lcol.hear .nh{fill:var(--now)}
+html[data-theme] .stf .lcol.cur .stem,html[data-theme] .stf .lcol.hear .stem{stroke:var(--now)}
+html[data-theme] .stf .lcol.cur .lhl,html[data-theme] .stf .lcol.hear .lhl{stroke:var(--now)}
+/* ---- header: theme button ---- */
+html[data-theme] .pwa .pst{color:var(--dim)}
+html[data-theme] .poshead .engr{color:var(--lab);text-shadow:none}
+html[data-theme] .engr .soft{opacity:.92}
+html[data-theme] .chip small,html[data-theme] .chip.rt small{opacity:.9}
+html[data-theme] .pos span,html[data-theme] .pos.on span{opacity:1}
+html[data-theme] .wedge text{opacity:1!important}
+
+/* ===== 20-picker.raw.css ===== */
+/* Theme picker (every theme, including Silver, uses these; colours come from the active theme's variables) */
+header{position:relative}
+.themebtn{position:absolute;right:0;top:0;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0;
+  background:var(--btn-bg);border:1px solid var(--btn-bd);color:var(--btn-ink);box-shadow:var(--btn-sh)}
+.themebtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.themebtn svg circle{fill:currentColor;stroke:none}
+.themebtn:hover{border-color:var(--btn-bd-h)}
+.themebtn[aria-expanded="true"]{border-color:var(--amber);color:var(--amber)}
+.themepanel{position:fixed;z-index:80;left:50%;top:calc(58px + env(safe-area-inset-top));transform:translateX(-50%);width:min(660px,calc(100vw - 16px));max-height:calc(100vh - 74px - env(safe-area-inset-top));max-height:calc(100dvh - 74px - env(safe-area-inset-top));overflow:auto;overscroll-behavior:contain;
+  background:var(--card);border:1px solid var(--card-bd);border-radius:16px;padding:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);color:var(--ink)}
+.themepanel[hidden]{display:none}
+.tpHead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tpHead b{font:700 20px var(--hfont,var(--cond));letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.tpHead span{flex:1 1 220px;font:500 12px/1.4 var(--sans);color:var(--dim)}
+.tpHead code{font:600 11px var(--mono);background:var(--chip);border:1px solid var(--chip-bd);border-radius:4px;padding:0 4px;color:var(--ink2)}
+.tpGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+@media (min-width:560px){.tpGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+.tpCard{display:flex;flex-direction:column;align-items:stretch;gap:5px;text-align:left;padding:7px;background:var(--chip);border:1px solid var(--chip-bd);border-radius:12px;color:var(--ink);cursor:pointer;font-family:var(--sans)}
+.tpCard:hover{border-color:var(--btn-bd-h)}
+.tpCard.on{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber)}
+.tpName{font:700 13px/1.2 var(--sans);color:var(--ink);padding:0 2px}
+.tpNote{font:500 11px/1.35 var(--sans);color:var(--ink3);padding:0 2px}
+.tp{display:flex;flex-direction:column;gap:4px;height:92px;padding:6px;border-radius:8px;background:var(--bg);background-image:var(--tp-bgi,none);border:1px solid rgba(128,128,128,.35);overflow:hidden;pointer-events:none}
+.tp-panel{display:flex;align-items:center;gap:5px;height:34px;padding:0 6px;border-radius:6px;background:var(--panel);border:1px solid var(--panel-bd);flex:none}
+.tp-k{display:block;width:20px;height:20px;border-radius:50%;background:var(--knob-bg);background-size:100% 100%;box-shadow:var(--knob-sh);flex:none;transform:rotate(-30deg)}
+.tp-k:nth-child(2){transform:rotate(50deg)}
+.tp-d{display:block;flex:1;height:16px;border-radius:4px;background:var(--drum-bg);box-shadow:var(--drum-sh);position:relative;min-width:12px}
+.tp-d::after{content:"";position:absolute;left:30%;right:30%;top:7px;height:2px;border-radius:1px;background:var(--drum-ink)}
+.tp-b{display:block;width:13px;height:16px;border-radius:3px;background:var(--key-bg);border:1px solid var(--key-bd);flex:none}
+.tp-b.on{background:var(--on-bg);border-color:var(--on-bd)}
+.tp-fb{display:flex;align-items:center;justify-content:space-around;height:22px;border-radius:4px;background:var(--fb-wood);border:1px solid rgba(128,128,128,.3);flex:none;position:relative;overflow:hidden}
+.tp-fb::before{content:"";position:absolute;left:8px;right:8px;top:50%;height:1px;background:var(--fb-str)}
+.tp-fb i{display:block;width:11px;height:11px;border-radius:50%;position:relative;border:1px solid var(--dot-ring)}
+.tp-fb .r{background:var(--t-root)}
+.tp-fb .a{background:var(--t-third)}
+.tp-fb .g{background:var(--t-fifth)}
+.tp-fb .b{background:var(--t-seventh)}
+.tp-keys{display:flex;gap:1px;flex:1;min-height:0;padding:0 2px;border-radius:0 0 4px 4px;background:var(--pk-wrap-bg)}
+.tp-keys i{flex:1;background:var(--pk-w);border:1px solid var(--pk-w-bd);border-radius:0 0 3px 3px;margin-top:2px}
+.tp-keys i.l{background:var(--pk-lit-w);box-shadow:inset 0 -6px 0 var(--h-r)}
+.tp-keys i.m{box-shadow:inset 0 -6px 0 var(--h-l)}
+.meter{display:none}
+
+/* ===== 25-silver.css ===== */
+[data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}
+
+/* ===== 30-console.css ===== */
+/* Studio Console — a charcoal mixing desk: colour-coded channel strips, rubber-capped knobs with LED value rings, a live LED meter,
+   chunky lit buttons, white-on-black readouts. Accent = SSL-style yellow. */
+[data-theme="console"]{
+  --bg:#0f1113; --ink:#eceff3; --dim:#98a1ad; --faint:#8b95a1; --amber:#ffc233; --green:#3ddc84; --red:#ff5a52; --gold:#d8dde3; --blue:#4da3ff; --violet:#c58bff; --engrave:#1c1f23;
+  --page:linear-gradient(180deg,#1d2024 0,#121416 380px,#0f1113 100%) no-repeat,#0f1113;
+  --drum-font:var(--mono);
+  --h2:#9aa4b0; --h2s:#8b95a1; --h2c:#a9b2bd; --ink2:#d3d8de; --ink3:#aab2bc; --mute:#8c95a1; --lab:#9aa3ae; --on-amber:#1c1300;
+  --card:#171a1d; --card-bd:#2a2f35; --card-r:8px; --inset:#0b0d0f; --inset-bd:#262b31; --inset-ink:#f4f6f8;
+  --raise:linear-gradient(180deg,#22262b,#1a1d21); --raise-bd:#30363d; --raise-bd-h:#5c6672; --raise-r:8px; --chip:#22262b; --chip-bd:#343b43; --hair:#23282d; --hair2:#30363d;
+  --now-bg:linear-gradient(180deg,#3a2f0c,#1c1807); --now-sh:0 0 16px rgba(255,194,51,.3); --step-off:#2d333a;
+  --panel:linear-gradient(180deg,#2f3439,#23272b); --panel-bd:#0a0b0c; --panel-r:10px;
+  --panel-sh:0 1px 0 rgba(255,255,255,.09) inset,0 -2px 6px rgba(0,0,0,.4) inset,0 12px 26px rgba(0,0,0,.55);
+  --panel-ink:#dde2e8; --panel-ink2:#b3bbc5; --engr-sh:0 -1px 0 rgba(0,0,0,.6); --ok-p:#6fe8a6; --warn-p:#ff9a93;
+  --led-off:#14301f; --led-off-sh:0 0 0 2px #0a0b0c,0 1px 0 rgba(255,255,255,.12);
+  --led-on:radial-gradient(circle at 35% 30%,#d4ffe6,#3ddc84 50%,#14a352); --led-on-sh:0 0 0 2px #0a0b0c,0 0 10px 3px rgba(61,220,132,.7);
+  --drum-bg:#090b0c; --drum-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.1),inset 0 2px 8px #000; --drum-r:4px; --drum-ink:#f4f6f8; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#444b53,#2e343a); --edge-ink:#d5dbe2;
+  --knob-bg:radial-gradient(circle at 50% 36%,#ff8d86,#ff5a52 72%); --knob-sh:0 0 0 3px #0c0e10,0 5px 8px rgba(0,0,0,.6);
+  --cap-hi:repeating-radial-gradient(circle,transparent 0 3px,rgba(0,0,0,.14) 3px 4px); --ind:#fff; --ind-sh:none; --tick:#7d8793; --knobread:#dde2e8;
+  --tog-bg:#090b0c; --tog-sh:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.1),inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#a87800,#ffc233); --tog-thumb:linear-gradient(180deg,#f2f4f6,#99a1ab);
+  --btn-bg:linear-gradient(180deg,#3d444b,#2b3036); --btn-bd:#0f1214; --btn-bd-h:#7b8794; --btn-ink:#eceff3; --btn-r:6px; --btn-sh:0 2px 0 #0a0c0d,0 1px 0 rgba(255,255,255,.12) inset;
+  --pri-bg:linear-gradient(180deg,#ffd45e,#f0a800); --pri-bd:#7a5400; --pri-ink:#1c1300;
+  --key-bg:linear-gradient(180deg,#464d55,#31373d); --key-bd:#0f1214; --key-ink:#eef1f4; --key-sh:0 2px 0 #0a0c0d,0 1px 0 rgba(255,255,255,.14) inset; --key-r:6px;
+  --on-bg:linear-gradient(180deg,#ffd45e,#f0a800); --on-bd:#7a5400; --on-ink:#1c1300; --on-sh:0 0 12px rgba(255,190,40,.55),0 2px 0 #5a3d00;
+  --sel-bg:linear-gradient(180deg,#5fe3ea,#1bb7bf); --sel-bd:#0a5d62; --sel-ink:#031d1f; --sel-sub:#05343a; --sel-sh:0 0 12px rgba(40,220,230,.5),0 2px 0 #0a4f54;
+  --seg-bg:#0b0d0f; --seg-bd:#2a2f35; --seg-on:#3b4148; --seg-r:6px;
+  --dock-bg:rgba(26,29,33,.92); --dock-bd:#343b43; --dock-ink:#b3bbc5; --dock-on:#2f353b; --dock-on-ink:#ffc233; --dock-sh:0 10px 28px rgba(0,0,0,.7); --dock-r:14px; --dock-item-r:9px;
+  --fbwrap-bd:#0b0d0f; --fbwrap-bg:#0b0d0f; --fbwrap-r:6px;
+  --fb-wood:#1b1411; --fb-fret:#aab1ba; --fb-nut:#d8d2c0; --fb-str:#c3c8d0; --fb-inlay:#3c434a; --fb-num:#8b95a1; --fb-numhi:#c5ccd5; --fb-open:#a3acb7;
+  --ctx-bg:#14110f; --ctx-bd:#5a636e; --ctx-fg:#b3bbc5; --dot-ring:#000; --dot-in:#fff;
+  --t-root:#ff5a52; --t-root-fg:#1b0504; --t-root-txt:#ff7a73; --t-third:#ffc233; --t-third-fg:#1f1500; --t-fifth:#3ddc84; --t-fifth-fg:#04200f; --t-seventh:#4da3ff; --t-seventh-fg:#021a33; --t-ext:#c58bff; --t-ext-fg:#1b0636; --t-scale:#3ddc84; --t-scale-fg:#04200f;
+  --h-r:#3ddc84; --h-r-fg:#04200f; --h-l:#4da3ff; --h-l-fg:#021a33; --hr-txt:#5ee29a; --hl-txt:#7db8ff; --ring-root:#ff5a52; --now:#ffc233; --now-fg:#ffc233; --inp:#c58bff; --good:#3ddc84; --bad:#ff7a73;
+  --pk-wrap-bd:#0b0d0f; --pk-wrap-bg:#0b0d0f; --pk-wrap-r:6px;
+  --pk-w:linear-gradient(180deg,#e6eaee,#f8fafb 70%,#cfd5db); --pk-w-bd:#0b0d0f; --pk-w-sh:0 2px 0 #6f7882; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#fff0b8,#ffe083 70%,#e8c860);
+  --pk-b:linear-gradient(180deg,#32373d,#0b0c0d); --pk-lit-b:linear-gradient(180deg,#5c6470,#1a1d21);
+  --pk-nm:#22262b; --pk-nm-root:#b3140c; --pk-bnm-root:#ff9a94; --pk-oct:#59626c; --pk-str:#ffc233;
+  --lcd-bg:#070809; --lcd-bd:#000; --lcd-sh:inset 0 2px 8px #000,0 1px 0 rgba(255,255,255,.1); --lcd-ink:#f4f6f8; --lcd-ink2:#aab2bc; --lcd-hi:#ffc233; --lcd-dim:#98a1ad;
+  --stf-sl:#5c6672; --stf-sl2:#8b95a1; --stf-tl:#4a525c; --stf-ink:#eceff3; --stf-fret:#ffc233;
+  --c-tonic:#ffb81f; --c-tonic-fg:#1c1300; --c-nb:#2b6cb0; --c-rel:#3a4048; --c-maj:#1a1d21; --c-min:#131518; --c-off-fg:#aab2bc; --c-bg:#0b0d0f; --c-centre:#14171a; --c-line:#0b0d0f; --c-t3:#ffc233;
+  --cd-line:#4a525c; --cd-str:#aab2bc; --cd-dot:#eef1f4; --cd-dot-fg:#101214; --cd-lab:#aab2bc; --cd-fn:#ffc233;
+  --bar-n:#7d8793; --ok:#2f8f55; --ok-bg:#12301f; --ok-ink:#7be0a4; --hook-bg:#1d1a0d; --hook-ink:#efe3bd; --code-ink:#d3d8de;
+}
+/* channel-strip colour tabs on the labels */
+html[data-theme="console"] .row .slot > .engr.sm::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0;background:var(--ch,#98a1ad);box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+html[data-theme="console"] #row1 .slot:nth-child(1),html[data-theme="console"] #row2 .slot:nth-child(1){--ch:#ff5a52}
+html[data-theme="console"] #row1 .slot:nth-child(2),html[data-theme="console"] #row2 .slot:nth-child(2){--ch:#ffc233}
+html[data-theme="console"] #row1 .slot:nth-child(3),html[data-theme="console"] #row2 .slot:nth-child(3){--ch:#3ddc84}
+html[data-theme="console"] #row1 .slot:nth-child(4),html[data-theme="console"] #row2 .slot:nth-child(4){--ch:#4da3ff}
+html[data-theme="console"] #row1 .slot:nth-child(5),html[data-theme="console"] #row2 .slot:nth-child(5){--ch:#c58bff}
+html[data-theme="console"] #row2 .slot:nth-child(6){--ch:#ff8a3d}
+html[data-theme="console"] .metal{overflow:hidden}
+html[data-theme="console"] .metal::after{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#ff5a52 0 25%,#ffc233 25% 50%,#3ddc84 50% 75%,#4da3ff 75%);pointer-events:none}
+html[data-theme="console"] .panel-top{margin-top:2px}
+html[data-theme="console"] .drum .val{font-size:15px;font-weight:600;letter-spacing:0}
+html[data-theme="console"] .drum.small .val{font-size:14px}
+html[data-theme="console"] .drum .val.long{font-size:12.5px}
+html[data-theme="console"] .drum .val.xl{font-size:11px}
+html[data-theme="console"] .drum .edge::after{display:block}
+html[data-theme="console"] .drum .edge.l{border-right:1px solid #000;box-shadow:none}
+html[data-theme="console"] .drum .edge.r{border-left:1px solid #000;box-shadow:none}
+html[data-theme="console"] .drum .edge:hover{filter:brightness(1.25)}
+/* knobs: coloured rubber caps with an LED ring that fills with the value */
+html[data-theme="console"] .knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--cc) 0,var(--cc) calc(var(--f,.5) * 270deg),rgba(255,255,255,.14) calc(var(--f,.5) * 270deg),rgba(255,255,255,.14) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 80%,#000 82%);mask:radial-gradient(circle closest-side,transparent 80%,#000 82%)}
+html[data-theme="console"] .knob .ticks{display:none}
+html[data-theme="console"] .knob .cap{background:radial-gradient(circle at 50% 34%,var(--cc2),var(--cc) 74%);box-shadow:0 0 0 3px #0c0e10,0 6px 8px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.35) inset}
+html[data-theme="console"] .knob .cap i{width:3px;height:13px;margin-left:-1.5px;top:4px;border-radius:1.5px}
+html[data-theme="console"] #knob-tempo{--cc:#ff5a52;--cc2:#ff9a94}
+html[data-theme="console"] #knob-vol{--cc:#3ddc84;--cc2:#8cf0b9}
+html[data-theme="console"] .knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+html[data-theme="console"] .knobread{font-weight:600}
+html[data-theme="console"] .meter{display:inline-flex;gap:2px;align-items:stretch;height:18px;padding:3px 4px;background:#090b0c;border-radius:4px;box-shadow:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.1)}
+html[data-theme="console"] .meter i{display:block;width:6px;border-radius:1px;background:#2b3138}
+html[data-theme="console"] .meter i:first-child{background:#1f5a3a}
+html[data-theme="console"] .meter i.on{background:#3ddc84;box-shadow:0 0 5px rgba(61,220,132,.8)}
+html[data-theme="console"] .meter i.on:nth-child(n+9){background:#ffc233;box-shadow:0 0 5px rgba(255,194,51,.8)}
+html[data-theme="console"] .meter i.on:nth-child(n+11){background:#ff5a52;box-shadow:0 0 5px rgba(255,90,82,.8)}
+html[data-theme="console"] .power .led{width:12px;height:12px}
+html[data-theme="console"] h2{font-size:24px;align-items:center}
+html[data-theme="console"] h2::before{content:"";width:6px;height:22px;border-radius:2px;background:var(--amber);flex:none}
+html[data-theme="console"] .pcontrol .pread{border-radius:6px}
+html[data-theme="console"] .card{border-top:2px solid #3b4148}
+html[data-theme="console"] .btn.pri{box-shadow:0 2px 0 #5a3d00,0 1px 0 rgba(255,255,255,.4) inset}
+html[data-theme="console"] .btn:active,html[data-theme="console"] .pos:active,html[data-theme="console"] .chip:active{transform:translateY(2px);box-shadow:none}
+
+/* ===== 40-pedal.css ===== */
+/* Boutique Pedal — a turquoise enamel stompbox on a dark purple stage: fat black knurled knobs with cream pointers, cream label-plate
+   selectors, a chrome-bezelled ruby jewel lamp, candy-coloured chunky keys with a hard drop shadow. Rubik for the screen-print. */
+[data-theme="pedal"]{
+  --bg:#150f27; --ink:#fff4dc; --dim:#b9aedc; --faint:#8a7fb3; --amber:#ffd43b; --green:#37e0b0; --red:#ff4d6d; --gold:#ffd43b; --blue:#7c8cff; --violet:#c08bff; --engrave:#052a27;
+  --sans:"Rubik",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; --cond:"Rubik",var(--sans); --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --page:radial-gradient(900px 440px at 50% -90px,#33265f 0,#150f27 78%) no-repeat,#150f27;
+  --hfont:"Rubik",var(--sans); --lab-font:"Rubik",var(--sans); --h1-ls:.04em; --drum-font:"Rubik",var(--sans);
+  --h2:#c9bff0; --h2s:#b9aedc; --h2c:#d3caf3; --ink2:#efe6ff; --ink3:#cfc5ee; --mute:#b0a5d6; --lab:#b9aedc; --on-amber:#2b2000;
+  --card:#231a40; --card-bd:#463a80; --card-r:18px; --inset:#150f27; --inset-bd:#3a2f6b; --inset-ink:#fff4dc;
+  --raise:#2c2250; --raise-bd:#4a3d85; --raise-bd-h:#ffd43b; --raise-r:16px; --chip:#2c2250; --chip-bd:#4a3d85; --hair:#352a5e; --hair2:#463a80;
+  --now-bg:linear-gradient(180deg,#4a3a10,#2a2108); --now-sh:0 0 0 2px #ffd43b; --step-off:#3a2f6b;
+  --panel:linear-gradient(180deg,#27d6c3 0,#15b3a3 100%); --panel-bd:#06433d; --panel-r:24px;
+  --panel-sh:0 4px 0 rgba(255,255,255,.35) inset,0 -5px 0 rgba(0,0,0,.16) inset,0 9px 0 #06433d,0 16px 26px rgba(0,0,0,.55);
+  --panel-ink:#052a27; --panel-ink2:#052a27; --engr-sh:none; --ok-p:#04371c; --warn-p:#6b0a1c;
+  --led-off:radial-gradient(circle at 35% 30%,#8a3a4a,#4a0a1a 70%); --led-off-sh:0 0 0 3px #ece4d0,0 0 0 5px #7d7560,0 2px 4px 5px rgba(0,0,0,.35);
+  --led-on:radial-gradient(circle at 36% 28%,#fff 0 7%,#ffb3c0 12%,#ff2f55 48%,#9c0a28); --led-on-sh:0 0 0 3px #ece4d0,0 0 0 5px #7d7560,0 0 16px 8px rgba(255,47,85,.7);
+  --drum-bg:#fff1cf; --drum-sh:0 0 0 3px #06433d,0 4px 0 3px #06433d; --drum-r:12px; --drum-ink:#22150a; --drum-line-o:0; --edge-bg:#0b4a44; --edge-ink:#fff1cf;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='g' cx='36%25' cy='28%25' r='80%25'%3E%3Cstop offset='0' stop-color='%236a6a78'/%3E%3Cstop offset='.5' stop-color='%232a2a33'/%3E%3Cstop offset='1' stop-color='%230c0c11'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%2309090d'/%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%2333333e' stroke-width='7' stroke-dasharray='2.4 2.4'/%3E%3Ccircle cx='50' cy='50' r='39' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='50' r='39' fill='none' stroke='%23000' stroke-opacity='.55' stroke-width='1.5'/%3E%3Cellipse cx='40' cy='32' rx='16' ry='9' fill='%23fff' fill-opacity='.1' transform='rotate(-30 40 32)'/%3E%3Crect x='45.5' y='4' width='9' height='36' rx='4.5' fill='%23fff4d8'/%3E%3C/svg%3E"); --knob-sh:0 5px 0 rgba(0,0,0,.28),0 9px 10px rgba(0,0,0,.35); --ind:#fff4d8; --tick:#06433d; --knobread:#052a27;
+  --tog-bg:#06433d; --tog-sh:0 3px 0 #04302b; --tog-on:#ff4d6d; --tog-thumb:linear-gradient(180deg,#fffaf0,#e3d3a8);
+  --btn-bg:#3b2f6b; --btn-bd:#5b4aa0; --btn-bd-h:#ffd43b; --btn-ink:#fff4dc; --btn-r:12px; --btn-sh:0 3px 0 #0e0820;
+  --pri-bg:#ffd43b; --pri-bd:#b88f00; --pri-ink:#2b2000;
+  --key-bg:linear-gradient(180deg,#fff9e8,#ffe9b5); --key-bd:#06433d; --key-ink:#2b1a00; --key-sh:0 3px 0 #06433d; --key-r:12px;
+  --on-bg:#ff6f91; --on-bd:#06433d; --on-ink:#2b0010; --on-sh:0 3px 0 #06433d;
+  --sel-bg:#ffd43b; --sel-bd:#06433d; --sel-ink:#2b2000; --sel-sub:#2b2000; --sel-sh:0 3px 0 #06433d,0 0 0 2px #fff4dc inset;
+  --seg-bg:#150f27; --seg-bd:#463a80; --seg-on:#ffd43b; --seg-on-ink:#2b2000; --seg-r:12px;
+  --dock-bg:rgba(35,26,64,.95); --dock-bd:#5b4aa0; --dock-ink:#d3caf3; --dock-on:#ffd43b; --dock-on-ink:#2b2000; --dock-sh:0 6px 0 #0e0820,0 14px 26px rgba(0,0,0,.6); --dock-r:24px; --dock-item-r:18px;
+  --fbwrap-bd:#19c3b1; --fbwrap-bg:#150f27; --fbwrap-r:16px;
+  --fb-wood:#f1dca3; --fb-fret:#8f8776; --fb-nut:#b8a468; --fb-str:#675d49; --fb-inlay:#2b1f10; --fb-num:#c9bff0; --fb-numhi:#fff4dc; --fb-open:#3a2f1a;
+  --ctx-bg:#fff7de; --ctx-bd:#7a6a44; --ctx-fg:#4a3c20; --dot-ring:#1b1233; --dot-in:#1b1233; --dot-font:"Rubik",var(--sans);
+  --t-root:#e0143c; --t-root-fg:#fff; --t-root-txt:#ff7d94; --t-third:#ff9500; --t-third-fg:#2a1500; --t-fifth:#12a36a; --t-fifth-fg:#04281a; --t-seventh:#2f5bff; --t-seventh-fg:#fff; --t-ext:#9b3dff; --t-ext-fg:#fff; --t-scale:#12a36a; --t-scale-fg:#04281a;
+  --h-r:#00d1a0; --h-r-fg:#00281d; --h-l:#7c8cff; --h-l-fg:#0a0f40; --hr-txt:#37e0b0; --hl-txt:#a3afff; --ring-root:#ff4d6d; --now:#ffd43b; --now-fg:#ffd43b; --inp:#c08bff; --good:#37e0b0; --bad:#ff7d94;
+  --pk-wrap-bd:#19c3b1; --pk-wrap-bg:#150f27; --pk-wrap-r:16px;
+  --pk-w:linear-gradient(180deg,#fffaf0,#fff2d3); --pk-w-bd:#1b1233; --pk-w-sh:0 4px 0 #bba67c; --pk-w-r:0 0 9px 9px; --pk-lit-w:linear-gradient(180deg,#ffe58a,#ffd43b);
+  --pk-b:linear-gradient(180deg,#3a2a6b,#1b1233); --pk-b-bd:#0d0820; --pk-b-sh:0 4px 0 #0d0820; --pk-b-r:0 0 7px 7px; --pk-lit-b:linear-gradient(180deg,#6a54b0,#35286a);
+  --pk-nm:#2b1a00; --pk-nm-root:#b00028; --pk-bnm-root:#ff9fb0; --pk-oct:#6b5c3a; --pk-str:#ffd43b;
+  --lcd-bg:#150f27; --lcd-bd:#06433d; --lcd-sh:0 0 0 2px #0b4a44 inset; --lcd-ink:#fff4dc; --lcd-ink2:#d3caf3; --lcd-hi:#ffd43b; --lcd-dim:#b9aedc;
+  --stf-sl:#8a7fb3; --stf-sl2:#b9aedc; --stf-tl:#6a5fa0; --stf-ink:#fff4dc; --stf-fret:#ffd43b;
+  --c-tonic:#ffd43b; --c-tonic-fg:#2b2000; --c-nb:#6a4cff; --c-rel:#463a80; --c-maj:#2c2250; --c-min:#1d1538; --c-off-fg:#cfc5ee; --c-bg:#150f27; --c-centre:#231a40; --c-line:#150f27; --c-t3:#ffd43b;
+  --cd-line:#6a5fa0; --cd-str:#b9aedc; --cd-dot:#fff4dc; --cd-dot-fg:#1b1233; --cd-lab:#cfc5ee; --cd-fn:#ffd43b;
+  --bar-n:#9a8fc4; --ok:#1f9d6b; --ok-bg:#12382c; --ok-ink:#7ff0c6; --hook-bg:#2d2548; --hook-ink:#fff4dc; --code-ink:#efe6ff;
+}
+html[data-theme="pedal"] body{font-weight:500}
+html[data-theme="pedal"] h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:24px;text-shadow:3px 3px 0 #0b0719}
+html[data-theme="pedal"] h2{font-weight:800;text-shadow:3px 3px 0 #0b0719}
+html[data-theme="pedal"] .card,html[data-theme="pedal"] .lcard,html[data-theme="pedal"] .pfc{border-width:2px}
+html[data-theme="pedal"] .card,html[data-theme="pedal"] .cc,html[data-theme="pedal"] .bar,html[data-theme="pedal"] .sbar{box-shadow:0 4px 0 #0d0820}
+html[data-theme="pedal"] .metal{background:radial-gradient(rgba(255,255,255,.22) 1px,transparent 1.5px) 0 0/8px 8px,var(--panel);border-width:3px}
+html[data-theme="pedal"] .engr{font-weight:800;letter-spacing:.14em}
+html[data-theme="pedal"] .engr.sm{font-weight:700;letter-spacing:.12em}
+html[data-theme="pedal"] .drum{border:0;margin:3px 3px 5px}
+html[data-theme="pedal"] .drum .val{font-weight:700;font-size:17px}
+html[data-theme="pedal"] .drum .edge{border:0;width:19px;border-radius:0}
+html[data-theme="pedal"] .drum .edge.l{border-radius:9px 0 0 9px}
+html[data-theme="pedal"] .drum .edge.r{border-radius:0 9px 9px 0}
+html[data-theme="pedal"] .drum .edge::after{display:block;border-width:3px 3px 0 0;width:8px;height:8px}
+html[data-theme="pedal"] .drum .edge:active{filter:brightness(1.4)}
+html[data-theme="pedal"] .knob{width:74px;height:74px}
+html[data-theme="pedal"] .knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat}
+html[data-theme="pedal"] .knob .cap::before{background:none}
+html[data-theme="pedal"] .knob .cap i{display:none}
+html[data-theme="pedal"] .knobread{font-weight:700;font-size:13px;margin-top:0}
+html[data-theme="pedal"] .power{gap:9px}
+html[data-theme="pedal"] .power .led{width:16px;height:16px}
+html[data-theme="pedal"] .toggle{height:32px;width:58px;border-radius:16px}
+html[data-theme="pedal"] .toggle::after{top:3px;left:3px;width:26px;height:26px;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+html[data-theme="pedal"] .toggle.on::after{transform:translateX(26px)}
+html[data-theme="pedal"] .btn{font-weight:700}
+html[data-theme="pedal"] .btn:active,html[data-theme="pedal"] .pos:active,html[data-theme="pedal"] .chip:active{transform:translateY(3px);box-shadow:none}
+html[data-theme="pedal"] .pos{font-family:var(--sans)}
+html[data-theme="pedal"] .pos b{font-weight:800}
+html[data-theme="pedal"] .chip{font-weight:800}
+html[data-theme="pedal"] nav.dock button{font-weight:800}
+html[data-theme="pedal"] .fbwrap,html[data-theme="pedal"] .pianowrap{border-width:4px}
+html[data-theme="pedal"] .pk.w{border-width:2px}
+html[data-theme="pedal"] .dot circle{stroke-width:1.5}
+html[data-theme="pedal"] .pread{border-width:2px}
+html[data-theme="pedal"] .cc.sel{box-shadow:0 0 0 2px var(--amber) inset,0 4px 0 #0d0820}
+
+/* ===== 50-tube.css ===== */
+/* Tube Amp — black tolex, a brushed-gold control plate with gold piping, cream chicken-head knobs, a ruby pilot lamp, brass-edged
+   black selector windows and a grille-cloth dock. Oswald for the engraving, Josefin Sans for the headings. */
+[data-theme="tube"]{
+  --bg:#0b0a09; --ink:#f3e9cc; --dim:#b9ab88; --faint:#a1925f; --amber:#e8bf5a; --green:#8fd16b; --red:#e2553d; --gold:#e8bf5a; --blue:#6aa6d9; --violet:#c79adf; --engrave:#1a1305;
+  --cond:"Oswald","Arial Narrow",Arial,sans-serif;
+  --page:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Crect width='12' height='12' fill='%230f0d0b'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='11' y='6' width='1' height='1' fill='%232a2520'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='0' y='6' width='1' height='1' fill='%230a0908'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%230a0908'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='10' y='4' width='1' height='1' fill='%230a0908'/%3E%3Crect x='3' y='2' width='1' height='1' fill='%230a0908'/%3E%3Crect x='4' y='10' width='1' height='1' fill='%230a0908'/%3E%3Crect x='1' y='9' width='1' height='1' fill='%230a0908'/%3E%3Crect x='10' y='6' width='1' height='1' fill='%2324201b'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%232a2520'/%3E%3Crect x='4' y='1' width='1' height='1' fill='%230a0908'/%3E%3Crect x='0' y='4' width='1' height='1' fill='%230a0908'/%3E%3Crect x='8' y='3' width='1' height='1' fill='%232a2520'/%3E%3Crect x='6' y='9' width='1' height='1' fill='%230a0908'/%3E%3Crect x='6' y='7' width='1' height='1' fill='%2324201b'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%230a0908'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='7' y='10' width='1' height='1' fill='%230a0908'/%3E%3Crect x='8' y='8' width='1' height='1' fill='%232a2520'/%3E%3Crect x='11' y='5' width='1' height='1' fill='%2324201b'/%3E%3Crect x='10' y='3' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%232a2520'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%230a0908'/%3E%3Crect x='6' y='11' width='1' height='1' fill='%230a0908'/%3E%3Crect x='10' y='8' width='1' height='1' fill='%2324201b'/%3E%3Crect x='5' y='1' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='11' y='3' width='1' height='1' fill='%230a0908'/%3E%3Crect x='9' y='9' width='1' height='1' fill='%2324201b'/%3E%3Crect x='1' y='5' width='1' height='1' fill='%2324201b'/%3E%3Crect x='4' y='7' width='1' height='1' fill='%231e1b17'/%3E%3Crect x='0' y='5' width='1' height='1' fill='%231e1b17'/%3E%3C/svg%3E") 0 0/12px 12px,radial-gradient(1000px 520px at 50% -120px,rgba(60,48,30,.55) 0,rgba(0,0,0,0) 70%) no-repeat,#0b0a09;
+  --hfont:"Josefin Sans","Oswald",sans-serif; --lab-font:"Oswald","Arial Narrow",sans-serif; --h1-ls:.12em; --drum-font:var(--sans);
+  --h2:#d3bc83; --h2s:#b9ab88; --h2c:#cdbd96; --ink2:#e8dcb9; --ink3:#c9bb97; --mute:#b0a281; --lab:#b9ab88; --on-amber:#1a1305;
+  --card:#14110e; --card-bd:#4a3c18; --card-r:6px; --inset:#0b0a09; --inset-bd:#3a2f14; --inset-ink:#f6e7b8;
+  --raise:linear-gradient(180deg,#221d17,#15120f); --raise-bd:#4a3c18; --raise-bd-h:#e8bf5a; --raise-r:5px; --chip:#221d17; --chip-bd:#4a3c18; --hair:#2a2418; --hair2:#3a2f14;
+  --now-bg:linear-gradient(180deg,#3a2c0c,#1a1408); --now-sh:0 0 14px rgba(232,191,90,.3); --step-off:#33291a;
+  --panel:repeating-linear-gradient(90deg,rgba(255,255,255,.15) 0 1px,rgba(0,0,0,.05) 1px 2px,rgba(255,255,255,0) 2px 4px),linear-gradient(180deg,#e2c982,#c3a35a 55%,#d6b96f);
+  --panel-bd:#3d2f10; --panel-r:5px; --panel-sh:0 0 0 3px #0b0a09,0 0 0 5px #d1a94c,0 0 0 7px #0b0a09,0 16px 28px rgba(0,0,0,.75);
+  --panel-ink:#1a1305; --panel-ink2:#1a1305; --engr-sh:0 1px 0 rgba(255,255,255,.4); --ok-p:#14501a; --warn-p:#7a1608;
+  --led-off:radial-gradient(circle at 35% 30%,#7a3a2a,#3a0e06 70%); --led-off-sh:0 0 0 2px #7a6224,0 0 0 4px #1a1305;
+  --led-on:radial-gradient(circle at 36% 28%,#fff0d8 0 6%,#ffb27a 14%,#ff4a1f 52%,#8a1400); --led-on-sh:0 0 0 2px #7a6224,0 0 0 4px #1a1305,0 0 14px 6px rgba(255,90,40,.65);
+  --drum-bg:#0d0b09; --drum-sh:0 0 0 2px #2a2008,0 0 0 3px #e0bd62,0 3px 5px 3px rgba(0,0,0,.4); --drum-r:3px; --drum-ink:#f6e7b8; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#dcbc6a,#9b7a2c); --edge-ink:#1a1305;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='c' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23fbf3d6'/%3E%3Cstop offset='.6' stop-color='%23e9dbad'/%3E%3Cstop offset='1' stop-color='%23bfa96b'/%3E%3C/linearGradient%3E%3CradialGradient id='d' cx='40%25' cy='35%25' r='70%25'%3E%3Cstop offset='0' stop-color='%23fff9e6'/%3E%3Cstop offset='1' stop-color='%23d9c88f'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cellipse cx='50' cy='56' rx='36' ry='36' fill='%23000' fill-opacity='.35' transform='translate(2 4)'/%3E%3Cpath d='M50 3 L68 36 A36 36 0 1 1 32 36 Z' fill='url(%23c)' stroke='%237d6a34' stroke-width='2' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='58' r='22' fill='url(%23d)' stroke='%23a8935a' stroke-width='1.5'/%3E%3Ccircle cx='50' cy='58' r='12' fill='none' stroke='%23a8935a' stroke-opacity='.6'/%3E%3Cpath d='M50 9 L50 40' stroke='%23241d10' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#241d10; --ind-sh:none; --tick:#1a1305; --knobread:#1a1305;
+  --tog-bg:#0d0b09; --tog-sh:0 0 0 2px #7a6224,0 0 0 3px #1a1305,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a6a1c,#e8bf5a); --tog-thumb:linear-gradient(180deg,#fbfbf6,#9a9890);
+  --btn-bg:linear-gradient(180deg,#2c2723,#14110e); --btn-bd:#8a6d2c; --btn-bd-h:#e8bf5a; --btn-ink:#f3e9cc; --btn-r:4px; --btn-sh:0 1px 0 rgba(255,255,255,.08) inset,0 2px 3px rgba(0,0,0,.5);
+  --pri-bg:linear-gradient(180deg,#f2d67f,#c49a38); --pri-bd:#6b5115; --pri-ink:#1a1305;
+  --key-bg:linear-gradient(180deg,#f5ecd0,#d8c892); --key-bd:#3d2f10; --key-ink:#1a1305; --key-sh:0 1px 0 rgba(255,255,255,.5) inset,0 2px 3px rgba(0,0,0,.5); --key-r:4px;
+  --on-bg:linear-gradient(180deg,#ffd68a,#f0a030); --on-bd:#6b3d08; --on-ink:#1a1000; --on-sh:0 0 12px rgba(255,170,50,.55),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#2c2723,#0d0b09); --sel-bd:#e8bf5a; --sel-ink:#f6e7b8; --sel-sub:#e8bf5a; --sel-sh:0 0 0 1px #e8bf5a,0 0 10px rgba(232,191,90,.3);
+  --seg-bg:#14110e; --seg-bd:#4a3c18; --seg-on:#3a3118; --seg-on-ink:#f6e7b8; --seg-r:4px;
+  --dock-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%232c1c11'/%3E%3Cpath d='M0 4H8M4 0V8' stroke='%234a3220' stroke-width='1.6'/%3E%3Cpath d='M0 0H8M0 8H8M0 0V8M8 0V8' stroke='%231a0f08' stroke-width='.8'/%3E%3C/svg%3E") 0 0/8px 8px,#2c1c11; --dock-bd:#d1a94c; --dock-ink:#efe0b6; --dock-on:#e8bf5a; --dock-on-ink:#1a1305; --dock-sh:0 0 0 2px #0b0a09,0 12px 26px rgba(0,0,0,.75); --dock-r:10px; --dock-item-r:6px;
+  --fbwrap-bd:#c9a24a; --fbwrap-bg:#0b0a09; --fbwrap-r:6px;
+  --fb-wood:#33190e; --fb-grain:rgba(10,3,0,.5); --fb-fret:#cfc8b4; --fb-nut:#efe6c8; --fb-str:#d9d2bd; --fb-inlay:#eadfc0; --fb-inlay-bd:#8d7b45; --fb-num:#b9ab88; --fb-numhi:#f3e9cc; --fb-open:#c0b18b;
+  --ctx-bg:#1d120a; --ctx-bd:#8d7b45; --ctx-fg:#d8c9a0; --dot-ring:#000; --dot-in:#fff8dc;
+  --t-root:#c9301d; --t-root-fg:#fff; --t-root-txt:#f0705a; --t-third:#f0b43c; --t-third-fg:#2a1a00; --t-fifth:#8fd16b; --t-fifth-fg:#0e2205; --t-seventh:#5e9bd6; --t-seventh-fg:#06182a; --t-ext:#b98ad6; --t-ext-fg:#1d0a2b; --t-scale:#8fd16b; --t-scale-fg:#0e2205;
+  --h-r:#7ad37e; --h-r-fg:#052b0a; --h-l:#6aa6ff; --h-l-fg:#04183a; --hr-txt:#8fe093; --hl-txt:#8bbcff; --ring-root:#e2553d; --now:#f2c85c; --now-fg:#f2c85c; --inp:#c79adf; --good:#8fd16b; --bad:#f0705a;
+  --pk-wrap-bd:#c9a24a; --pk-wrap-bg:#0b0a09; --pk-wrap-r:6px;
+  --pk-w:linear-gradient(180deg,#f2e7c6,#fbf3da 70%,#dccb9a); --pk-w-bd:#2a2008; --pk-w-sh:0 2px 0 #a89868; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe9a0,#f2c85c 70%,#d9a93c);
+  --pk-b:linear-gradient(180deg,#2d261e,#0c0907); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#5a4a2a,#1d150b);
+  --pk-nm:#2a1c08; --pk-nm-root:#a3200f; --pk-bnm-root:#ff9d88; --pk-oct:#6a5c3a; --pk-str:#e8bf5a;
+  --lcd-bg:#0b0a09; --lcd-bd:#3d2f10; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #8a6d2c; --lcd-ink:#f6e7b8; --lcd-ink2:#cdbd96; --lcd-hi:#e8bf5a; --lcd-dim:#b9ab88;
+  --stf-sl:#7a6c48; --stf-sl2:#a89868; --stf-tl:#5a4e34; --stf-ink:#f3e9cc; --stf-fret:#e8bf5a;
+  --c-tonic:#e8bf5a; --c-tonic-fg:#1a1305; --c-nb:#8a3a22; --c-rel:#3a3226; --c-maj:#1b1713; --c-min:#12100d; --c-off-fg:#cdbd96; --c-bg:#0b0a09; --c-centre:#14110e; --c-line:#0b0a09; --c-t3:#e8bf5a;
+  --cd-line:#5a4e34; --cd-str:#b9ab88; --cd-dot:#f3e9cc; --cd-dot-fg:#1a1305; --cd-lab:#cdbd96; --cd-fn:#e8bf5a;
+  --bar-n:#8f8060; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
+}
+html[data-theme="tube"] h1{font-weight:700;text-shadow:0 2px 0 #000}
+html[data-theme="tube"] h1::after{content:"";display:block;width:min(260px,70%);height:3px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#d1a94c 20%,#d1a94c 80%,transparent)}
+html[data-theme="tube"] h2{font-weight:700;letter-spacing:.1em;border-bottom:2px solid #6b5522;padding-bottom:5px}
+html[data-theme="tube"] .card,html[data-theme="tube"] .pfc,html[data-theme="tube"] .lcard{box-shadow:0 0 0 2px #0b0a09,0 0 0 3px #7a6224}
+html[data-theme="tube"] .pread{box-shadow:var(--lcd-sh)}
+html[data-theme="tube"] .metal::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at 9px 9px,#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 9px,#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at 9px calc(100% - 9px),#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#6b5522 0 3px,transparent 3.6px)}
+html[data-theme="tube"] .engr{font-weight:600;letter-spacing:.18em}
+html[data-theme="tube"] .engr.sm{font-weight:500;letter-spacing:.14em}
+html[data-theme="tube"] .drum .val{font-weight:600;letter-spacing:.02em}
+html[data-theme="tube"] .drum .edge{width:17px;border:0}
+html[data-theme="tube"] .drum .edge::after{display:block}
+html[data-theme="tube"] .drum .edge.l{border-right:1px solid #3d2f10;box-shadow:none}
+html[data-theme="tube"] .drum .edge.r{border-left:1px solid #3d2f10;box-shadow:none}
+html[data-theme="tube"] .knob{width:84px;height:84px}
+html[data-theme="tube"] .knob .cap{inset:16px;background:none;box-shadow:none}
+html[data-theme="tube"] .knob .cap::before{inset:-9px;border-radius:0;background:var(--knob-bg) center/100% 100% no-repeat;filter:drop-shadow(0 4px 3px rgba(0,0,0,.45))}
+html[data-theme="tube"] .knob .cap i{display:none}
+html[data-theme="tube"] .power .led{width:15px;height:15px}
+html[data-theme="tube"] .power{gap:10px}
+html[data-theme="tube"] .toggle{width:56px}
+html[data-theme="tube"] .toggle.on::after{transform:translateX(26px)}
+html[data-theme="tube"] .btn{letter-spacing:.06em}
+html[data-theme="tube"] .btn:active,html[data-theme="tube"] .pos:active,html[data-theme="tube"] .chip:active{transform:translateY(1px)}
+html[data-theme="tube"] nav.dock{border-width:2px}
+html[data-theme="tube"] nav.dock button{font-family:"Oswald",sans-serif;letter-spacing:.14em;font-weight:500}
+html[data-theme="tube"] .fbwrap,html[data-theme="tube"] .pianowrap{border-width:4px;border-style:double}
+html[data-theme="tube"] .dot circle{stroke-width:1.2}
+
+/* ===== 60-minimal.css ===== */
+/*@also minimal-dark*/
+/* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
+   iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
+   65-minimal-dark.css only swaps the variables. */
+[data-theme="minimal"]{
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:var(--sans);
+  --bg:#f2f2f7; --ink:#1c1c1e; --dim:#5f5f66; --faint:#6b6b73; --amber:#0a5fd1; --green:#17692e; --red:#d12c2c; --gold:#6b6b73; --blue:#0a5fd1; --violet:#7a35c4; --engrave:#1c1c1e;
+  --page:#f2f2f7; --hfont:var(--sans); --lab-font:var(--sans); --drum-font:var(--sans); --h1-ls:-.01em; --h1-tt:none; --lcd-font:var(--mono);
+  --h2:#1c1c1e; --h2s:#5f5f66; --h2c:#5f5f66; --ink2:#3a3a3c; --ink3:#55555b; --mute:#5f5f66; --lab:#5f5f66; --on-amber:#fff;
+  --card:#fff; --card-bd:#e5e5ea; --card-r:16px; --inset:#f2f2f7; --inset-bd:#e5e5ea; --inset-ink:#1c1c1e;
+  --raise:#fff; --raise-bd:#e0e0e6; --raise-bd-h:#0a5fd1; --raise-r:12px; --chip:#e9e9ee; --chip-bd:#d8d8de; --hair:#ececf0; --hair2:#d8d8de;
+  --now-bg:#e6effd; --now-sh:0 0 0 2px #0a5fd1; --step-off:#d1d1d6;
+  --panel:#fff; --panel-bd:#e5e5ea; --panel-r:22px; --panel-sh:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(0,0,0,.08);
+  --panel-ink:#1c1c1e; --panel-ink2:#5f5f66; --engr-sh:none; --ok-p:#17692e; --warn-p:#c4271d;
+  --led-off:#c7c7cc; --led-off-sh:none; --led-on:#34c759; --led-on-sh:0 0 0 4px rgba(52,199,89,.25);
+  --drum-bg:#f2f2f7; --drum-sh:0 0 0 1px #e0e0e6; --drum-r:12px; --drum-ink:#1c1c1e; --drum-line-o:0;
+  --edge-bg:transparent; --edge-ink:#0a5fd1;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #d8d8de,0 3px 8px rgba(0,0,0,.16); --ind:#0a5fd1; --ind-sh:none; --tick:#8a8a92; --knobread:#1c1c1e;
+  --tog-bg:#d1d1d6; --tog-sh:none; --tog-on:#34c759; --tog-thumb:#fff;
+  --btn-bg:#e9e9ee; --btn-bd:transparent; --btn-bd-h:#0a5fd1; --btn-ink:#0a5fd1; --btn-r:10px; --btn-sh:none;
+  --pri-bg:#0a5fd1; --pri-bd:#0a5fd1; --pri-ink:#fff;
+  --key-bg:#f2f2f7; --key-bd:#dcdce2; --key-ink:#1c1c1e; --key-sh:none; --key-r:10px;
+  --on-bg:#0a5fd1; --on-bd:#0a5fd1; --on-ink:#fff; --on-sh:none;
+  --sel-bg:#0a5fd1; --sel-bd:#0a5fd1; --sel-ink:#fff; --sel-sub:#fff; --sel-sh:none;
+  --seg-bg:#e3e3e8; --seg-bd:transparent; --seg-on:#fff; --seg-on-ink:#1c1c1e; --seg-r:10px;
+  --dock-bg:rgba(255,255,255,.86); --dock-bd:rgba(0,0,0,.08); --dock-ink:#5f5f66; --dock-on:#e6effd; --dock-on-ink:#0a5fd1; --dock-sh:0 8px 30px rgba(0,0,0,.16); --dock-r:22px; --dock-item-r:14px;
+  --fbwrap-bd:#dcdce2; --fbwrap-bg:#fff; --fbwrap-r:14px;
+  --fb-wood:#f6f1e6; --fb-grain:rgba(0,0,0,0); --fb-fret:#c9c3b4; --fb-nut:#8e8878; --fb-str:#8a8a92; --fb-inlay:#ddd6c4; --fb-inlay-bd:#ddd6c4; --fb-num:#6b6b73; --fb-numhi:#1c1c1e; --fb-open:#5f5f66;
+  --ctx-bg:#fff; --ctx-bd:#a8a8b0; --ctx-fg:#5f5f66; --dot-ring:rgba(0,0,0,.28); --dot-in:#1c1c1e;
+  --t-root:#d12c2c; --t-root-fg:#fff; --t-root-txt:#c4271d; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#17692e; --t-fifth-fg:#fff; --t-seventh:#0a5fd1; --t-seventh-fg:#fff; --t-ext:#8e3bd8; --t-ext-fg:#fff; --t-scale:#17692e; --t-scale-fg:#fff;
+  --h-r:#17692e; --h-r-fg:#fff; --h-l:#0a5fd1; --h-l-fg:#fff; --hr-txt:#17692e; --hl-txt:#0a5fd1; --ring-root:#d12c2c; --now:#0a5fd1; --now-fg:#0a5fd1; --inp:#7a35c4; --good:#17692e; --bad:#c4271d;
+  --pk-wrap-bd:#dcdce2; --pk-wrap-bg:#fff; --pk-wrap-r:14px;
+  --pk-w:#fff; --pk-w-bd:#c7c7cc; --pk-w-sh:none; --pk-w-r:0 0 8px 8px; --pk-lit-w:#cfe1ff;
+  --pk-b:#1c1c1e; --pk-b-bd:#1c1c1e; --pk-lit-b:#3b5fa0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#c4271d; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#0a5fd1;
+  --lcd-bg:#f2f2f7; --lcd-bd:#e5e5ea; --lcd-sh:none; --lcd-ink:#1c1c1e; --lcd-ink2:#3a3a3c; --lcd-hi:#0a5fd1; --lcd-dim:#5f5f66;
+  --stf-sl:#b0b0b8; --stf-sl2:#8a8a92; --stf-tl:#c7c7cc; --stf-ink:#1c1c1e; --stf-fret:#0a5fd1;
+  --c-tonic:#0a5fd1; --c-tonic-fg:#fff; --c-nb:#cfe1ff; --c-nb-fg:#0a3d8f; --c-rel:#e3e3e8; --c-maj:#f2f2f7; --c-min:#e9e9ee; --c-off-fg:#4a4a50; --c-rel-fg:#3a3a3c; --c-t1:#1c1c1e; --c-t2:#5f5f66; --c-bg:#fff; --c-centre:#f2f2f7; --c-line:#fff; --c-t3:#0a5fd1;
+  --cd-line:#c7c7cc; --cd-str:#8a8a92; --cd-dot:#1c1c1e; --cd-dot-fg:#fff; --cd-lab:#5f5f66; --cd-fn:#0a5fd1;
+  --bar-n:#6b6b73; --ok:#17692e; --ok-bg:#e3f4e8; --ok-ink:#17692e; --hook-bg:#eef4ff; --hook-ink:#1c3d73; --code-ink:#1c1c1e;
+}
+html[data-theme="minimal"] h1{font-weight:800;font-size:26px}
+html[data-theme="minimal"] h2{font-weight:800;font-size:22px;letter-spacing:-.01em}
+html[data-theme="minimal"] .card,html[data-theme="minimal"] .pfc,html[data-theme="minimal"] .lcard{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+html[data-theme="minimal"] .engr{font-weight:600;letter-spacing:.06em;font-size:11px}
+html[data-theme="minimal"] .engr.sm{font-weight:600;letter-spacing:.07em;font-size:10px}
+html[data-theme="minimal"] .panel-top .engr{font-size:12px}
+html[data-theme="minimal"] .metal::before,html[data-theme="minimal"] .metal::after{display:none}
+/* stepper fields */
+html[data-theme="minimal"] .drum .val{inset:0 28px;font-weight:600;font-size:15px;letter-spacing:0}
+html[data-theme="minimal"] .drum.small .val{font-size:14px}
+html[data-theme="minimal"] .drum .val.long{font-size:12.5px}
+html[data-theme="minimal"] .drum .val.xl{font-size:11px}
+html[data-theme="minimal"] .drum .edge{width:28px;border:0;box-shadow:none}
+html[data-theme="minimal"] .drum .edge::after{display:block}
+html[data-theme="minimal"] .drum .edge:hover{background:rgba(10,95,209,.1)}
+html[data-theme="minimal"] .drum::before,html[data-theme="minimal"] .drum::after{display:none}
+/* knobs: flat dial + accent arc */
+html[data-theme="minimal"] .knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 86%);mask:radial-gradient(circle closest-side,transparent 84%,#000 86%)}
+html[data-theme="minimal"] .knob .ticks{display:none}
+html[data-theme="minimal"] .knob .cap{inset:10px}
+html[data-theme="minimal"] .knob .cap i{width:3px;height:9px;margin-left:-1.5px;top:4px;border-radius:2px}
+html[data-theme="minimal"] .knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+html[data-theme="minimal"] .knobread{font-weight:600}
+/* iOS switch */
+html[data-theme="minimal"] .toggle{width:51px;height:31px;border-radius:16px}
+html[data-theme="minimal"] .toggle::after{top:2px;left:2px;width:27px;height:27px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+html[data-theme="minimal"] .toggle.on::after{transform:translateX(20px)}
+html[data-theme="minimal"] .power .led{width:10px;height:10px}
+html[data-theme="minimal"] .btn{font-weight:600}
+html[data-theme="minimal"] .btn:active,html[data-theme="minimal"] .pos:active,html[data-theme="minimal"] .chip:active{opacity:.7}
+html[data-theme="minimal"] .seg button.on{box-shadow:0 1px 3px rgba(0,0,0,.22);font-weight:700}
+html[data-theme="minimal"] nav.dock{backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+html[data-theme="minimal"] nav.dock button{font-weight:600}
+html[data-theme="minimal"] .fbwrap,html[data-theme="minimal"] .pianowrap{border-width:1px}
+
+/* ===== 60-minimal.css (shared with minimal-dark) ===== */
+/*@also minimal-dark*/
+/* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
+   iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
+   65-minimal-dark.css only swaps the variables. */
+[data-theme="minimal-dark"]{
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:var(--sans);
+  --bg:#f2f2f7; --ink:#1c1c1e; --dim:#5f5f66; --faint:#6b6b73; --amber:#0a5fd1; --green:#17692e; --red:#d12c2c; --gold:#6b6b73; --blue:#0a5fd1; --violet:#7a35c4; --engrave:#1c1c1e;
+  --page:#f2f2f7; --hfont:var(--sans); --lab-font:var(--sans); --drum-font:var(--sans); --h1-ls:-.01em; --h1-tt:none; --lcd-font:var(--mono);
+  --h2:#1c1c1e; --h2s:#5f5f66; --h2c:#5f5f66; --ink2:#3a3a3c; --ink3:#55555b; --mute:#5f5f66; --lab:#5f5f66; --on-amber:#fff;
+  --card:#fff; --card-bd:#e5e5ea; --card-r:16px; --inset:#f2f2f7; --inset-bd:#e5e5ea; --inset-ink:#1c1c1e;
+  --raise:#fff; --raise-bd:#e0e0e6; --raise-bd-h:#0a5fd1; --raise-r:12px; --chip:#e9e9ee; --chip-bd:#d8d8de; --hair:#ececf0; --hair2:#d8d8de;
+  --now-bg:#e6effd; --now-sh:0 0 0 2px #0a5fd1; --step-off:#d1d1d6;
+  --panel:#fff; --panel-bd:#e5e5ea; --panel-r:22px; --panel-sh:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(0,0,0,.08);
+  --panel-ink:#1c1c1e; --panel-ink2:#5f5f66; --engr-sh:none; --ok-p:#17692e; --warn-p:#c4271d;
+  --led-off:#c7c7cc; --led-off-sh:none; --led-on:#34c759; --led-on-sh:0 0 0 4px rgba(52,199,89,.25);
+  --drum-bg:#f2f2f7; --drum-sh:0 0 0 1px #e0e0e6; --drum-r:12px; --drum-ink:#1c1c1e; --drum-line-o:0;
+  --edge-bg:transparent; --edge-ink:#0a5fd1;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #d8d8de,0 3px 8px rgba(0,0,0,.16); --ind:#0a5fd1; --ind-sh:none; --tick:#8a8a92; --knobread:#1c1c1e;
+  --tog-bg:#d1d1d6; --tog-sh:none; --tog-on:#34c759; --tog-thumb:#fff;
+  --btn-bg:#e9e9ee; --btn-bd:transparent; --btn-bd-h:#0a5fd1; --btn-ink:#0a5fd1; --btn-r:10px; --btn-sh:none;
+  --pri-bg:#0a5fd1; --pri-bd:#0a5fd1; --pri-ink:#fff;
+  --key-bg:#f2f2f7; --key-bd:#dcdce2; --key-ink:#1c1c1e; --key-sh:none; --key-r:10px;
+  --on-bg:#0a5fd1; --on-bd:#0a5fd1; --on-ink:#fff; --on-sh:none;
+  --sel-bg:#0a5fd1; --sel-bd:#0a5fd1; --sel-ink:#fff; --sel-sub:#fff; --sel-sh:none;
+  --seg-bg:#e3e3e8; --seg-bd:transparent; --seg-on:#fff; --seg-on-ink:#1c1c1e; --seg-r:10px;
+  --dock-bg:rgba(255,255,255,.86); --dock-bd:rgba(0,0,0,.08); --dock-ink:#5f5f66; --dock-on:#e6effd; --dock-on-ink:#0a5fd1; --dock-sh:0 8px 30px rgba(0,0,0,.16); --dock-r:22px; --dock-item-r:14px;
+  --fbwrap-bd:#dcdce2; --fbwrap-bg:#fff; --fbwrap-r:14px;
+  --fb-wood:#f6f1e6; --fb-grain:rgba(0,0,0,0); --fb-fret:#c9c3b4; --fb-nut:#8e8878; --fb-str:#8a8a92; --fb-inlay:#ddd6c4; --fb-inlay-bd:#ddd6c4; --fb-num:#6b6b73; --fb-numhi:#1c1c1e; --fb-open:#5f5f66;
+  --ctx-bg:#fff; --ctx-bd:#a8a8b0; --ctx-fg:#5f5f66; --dot-ring:rgba(0,0,0,.28); --dot-in:#1c1c1e;
+  --t-root:#d12c2c; --t-root-fg:#fff; --t-root-txt:#c4271d; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#17692e; --t-fifth-fg:#fff; --t-seventh:#0a5fd1; --t-seventh-fg:#fff; --t-ext:#8e3bd8; --t-ext-fg:#fff; --t-scale:#17692e; --t-scale-fg:#fff;
+  --h-r:#17692e; --h-r-fg:#fff; --h-l:#0a5fd1; --h-l-fg:#fff; --hr-txt:#17692e; --hl-txt:#0a5fd1; --ring-root:#d12c2c; --now:#0a5fd1; --now-fg:#0a5fd1; --inp:#7a35c4; --good:#17692e; --bad:#c4271d;
+  --pk-wrap-bd:#dcdce2; --pk-wrap-bg:#fff; --pk-wrap-r:14px;
+  --pk-w:#fff; --pk-w-bd:#c7c7cc; --pk-w-sh:none; --pk-w-r:0 0 8px 8px; --pk-lit-w:#cfe1ff;
+  --pk-b:#1c1c1e; --pk-b-bd:#1c1c1e; --pk-lit-b:#3b5fa0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#c4271d; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#0a5fd1;
+  --lcd-bg:#f2f2f7; --lcd-bd:#e5e5ea; --lcd-sh:none; --lcd-ink:#1c1c1e; --lcd-ink2:#3a3a3c; --lcd-hi:#0a5fd1; --lcd-dim:#5f5f66;
+  --stf-sl:#b0b0b8; --stf-sl2:#8a8a92; --stf-tl:#c7c7cc; --stf-ink:#1c1c1e; --stf-fret:#0a5fd1;
+  --c-tonic:#0a5fd1; --c-tonic-fg:#fff; --c-nb:#cfe1ff; --c-nb-fg:#0a3d8f; --c-rel:#e3e3e8; --c-maj:#f2f2f7; --c-min:#e9e9ee; --c-off-fg:#4a4a50; --c-rel-fg:#3a3a3c; --c-t1:#1c1c1e; --c-t2:#5f5f66; --c-bg:#fff; --c-centre:#f2f2f7; --c-line:#fff; --c-t3:#0a5fd1;
+  --cd-line:#c7c7cc; --cd-str:#8a8a92; --cd-dot:#1c1c1e; --cd-dot-fg:#fff; --cd-lab:#5f5f66; --cd-fn:#0a5fd1;
+  --bar-n:#6b6b73; --ok:#17692e; --ok-bg:#e3f4e8; --ok-ink:#17692e; --hook-bg:#eef4ff; --hook-ink:#1c3d73; --code-ink:#1c1c1e;
+}
+html[data-theme="minimal-dark"] h1{font-weight:800;font-size:26px}
+html[data-theme="minimal-dark"] h2{font-weight:800;font-size:22px;letter-spacing:-.01em}
+html[data-theme="minimal-dark"] .card,html[data-theme="minimal-dark"] .pfc,html[data-theme="minimal-dark"] .lcard{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+html[data-theme="minimal-dark"] .engr{font-weight:600;letter-spacing:.06em;font-size:11px}
+html[data-theme="minimal-dark"] .engr.sm{font-weight:600;letter-spacing:.07em;font-size:10px}
+html[data-theme="minimal-dark"] .panel-top .engr{font-size:12px}
+html[data-theme="minimal-dark"] .metal::before,html[data-theme="minimal-dark"] .metal::after{display:none}
+/* stepper fields */
+html[data-theme="minimal-dark"] .drum .val{inset:0 28px;font-weight:600;font-size:15px;letter-spacing:0}
+html[data-theme="minimal-dark"] .drum.small .val{font-size:14px}
+html[data-theme="minimal-dark"] .drum .val.long{font-size:12.5px}
+html[data-theme="minimal-dark"] .drum .val.xl{font-size:11px}
+html[data-theme="minimal-dark"] .drum .edge{width:28px;border:0;box-shadow:none}
+html[data-theme="minimal-dark"] .drum .edge::after{display:block}
+html[data-theme="minimal-dark"] .drum .edge:hover{background:rgba(10,95,209,.1)}
+html[data-theme="minimal-dark"] .drum::before,html[data-theme="minimal-dark"] .drum::after{display:none}
+/* knobs: flat dial + accent arc */
+html[data-theme="minimal-dark"] .knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 86%);mask:radial-gradient(circle closest-side,transparent 84%,#000 86%)}
+html[data-theme="minimal-dark"] .knob .ticks{display:none}
+html[data-theme="minimal-dark"] .knob .cap{inset:10px}
+html[data-theme="minimal-dark"] .knob .cap i{width:3px;height:9px;margin-left:-1.5px;top:4px;border-radius:2px}
+html[data-theme="minimal-dark"] .knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+html[data-theme="minimal-dark"] .knobread{font-weight:600}
+/* iOS switch */
+html[data-theme="minimal-dark"] .toggle{width:51px;height:31px;border-radius:16px}
+html[data-theme="minimal-dark"] .toggle::after{top:2px;left:2px;width:27px;height:27px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+html[data-theme="minimal-dark"] .toggle.on::after{transform:translateX(20px)}
+html[data-theme="minimal-dark"] .power .led{width:10px;height:10px}
+html[data-theme="minimal-dark"] .btn{font-weight:600}
+html[data-theme="minimal-dark"] .btn:active,html[data-theme="minimal-dark"] .pos:active,html[data-theme="minimal-dark"] .chip:active{opacity:.7}
+html[data-theme="minimal-dark"] .seg button.on{box-shadow:0 1px 3px rgba(0,0,0,.22);font-weight:700}
+html[data-theme="minimal-dark"] nav.dock{backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+html[data-theme="minimal-dark"] nav.dock button{font-weight:600}
+html[data-theme="minimal-dark"] .fbwrap,html[data-theme="minimal-dark"] .pianowrap{border-width:1px}
+
+/* ===== 65-minimal-dark.css ===== */
+/* Minimal Dark — true-black iOS dark mode. Structure comes from 60-minimal.css (@also); this file only swaps the variables. */
+[data-theme="minimal-dark"]{
+  --bg:#000; --ink:#f2f2f7; --dim:#a1a1a8; --faint:#8e8e96; --amber:#5aa9ff; --green:#4ddc7a; --red:#ff6b61; --gold:#a1a1a8; --blue:#5aa9ff; --violet:#c58bff; --engrave:#f2f2f7;
+  --page:#000;
+  --h2:#f2f2f7; --h2s:#a1a1a8; --h2c:#a1a1a8; --ink2:#d8d8de; --ink3:#b4b4bc; --mute:#a1a1a8; --lab:#a1a1a8; --on-amber:#00132b;
+  --card:#1c1c1e; --card-bd:#2c2c2e; --inset:#0b0b0c; --inset-bd:#2c2c2e; --inset-ink:#f2f2f7;
+  --raise:#1c1c1e; --raise-bd:#3a3a3c; --raise-bd-h:#5aa9ff; --chip:#2c2c2e; --chip-bd:#3a3a3c; --hair:#2c2c2e; --hair2:#3a3a3c;
+  --now-bg:#12263f; --now-sh:0 0 0 2px #5aa9ff; --step-off:#3a3a3c;
+  --panel:#1c1c1e; --panel-bd:#2c2c2e; --panel-sh:0 10px 30px rgba(0,0,0,.6);
+  --panel-ink:#f2f2f7; --panel-ink2:#a1a1a8; --ok-p:#4ddc7a; --warn-p:#ff8a80;
+  --led-off:#48484a; --led-on:#30d158; --led-on-sh:0 0 0 4px rgba(48,209,88,.25);
+  --drum-bg:#0b0b0c; --drum-sh:0 0 0 1px #3a3a3c; --drum-ink:#f2f2f7; --edge-ink:#5aa9ff;
+  --knob-bg:#3a3a3c; --knob-sh:0 0 0 1px #48484a,0 3px 8px rgba(0,0,0,.6); --ind:#5aa9ff; --tick:#8e8e96; --knobread:#f2f2f7;
+  --tog-bg:#48484a; --tog-on:#30d158; --tog-thumb:#fff;
+  --btn-bg:#2c2c2e; --btn-ink:#5aa9ff; --btn-bd-h:#5aa9ff;
+  --pri-bg:#5aa9ff; --pri-bd:#5aa9ff; --pri-ink:#00132b;
+  --key-bg:#2c2c2e; --key-bd:#3a3a3c; --key-ink:#f2f2f7;
+  --on-bg:#5aa9ff; --on-bd:#5aa9ff; --on-ink:#00132b;
+  --sel-bg:#5aa9ff; --sel-bd:#5aa9ff; --sel-ink:#00132b; --sel-sub:#0a2c55;
+  --seg-bg:#2c2c2e; --seg-on:#636366; --seg-on-ink:#fff;
+  --dock-bg:rgba(28,28,30,.88); --dock-bd:rgba(255,255,255,.1); --dock-ink:#a1a1a8; --dock-on:#12263f; --dock-on-ink:#5aa9ff; --dock-sh:0 8px 30px rgba(0,0,0,.7);
+  --fbwrap-bd:#3a3a3c; --fbwrap-bg:#000;
+  --fb-wood:#1c1c1e; --fb-fret:#55555a; --fb-nut:#9a9aa2; --fb-str:#a1a1a8; --fb-inlay:#3a3a3c; --fb-inlay-bd:#3a3a3c; --fb-num:#a1a1a8; --fb-numhi:#f2f2f7; --fb-open:#b4b4bc;
+  --ctx-bg:#000; --ctx-bd:#636366; --ctx-fg:#b4b4bc; --dot-ring:rgba(0,0,0,.55); --dot-in:#fff;
+  --t-root:#ff6b61; --t-root-fg:#1a0300; --t-root-txt:#ff8a80; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#4ddc7a; --t-fifth-fg:#052b12; --t-seventh:#5aa9ff; --t-seventh-fg:#00132b; --t-ext:#c58bff; --t-ext-fg:#1b0636; --t-scale:#4ddc7a; --t-scale-fg:#052b12;
+  --h-r:#4ddc7a; --h-r-fg:#052b12; --h-l:#5aa9ff; --h-l-fg:#00132b; --hr-txt:#4ddc7a; --hl-txt:#7db8ff; --ring-root:#ff6b61; --now:#5aa9ff; --now-fg:#5aa9ff; --inp:#c58bff; --good:#4ddc7a; --bad:#ff8a80;
+  --pk-wrap-bd:#3a3a3c; --pk-wrap-bg:#000;
+  --pk-w:#f2f2f7; --pk-w-bd:#3a3a3c; --pk-lit-w:#9fcaff; --pk-b:#2c2c2e; --pk-b-bd:#000; --pk-lit-b:#2f6cc0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#b3140c; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#5aa9ff;
+  --lcd-bg:#0b0b0c; --lcd-bd:#2c2c2e; --lcd-ink:#f2f2f7; --lcd-ink2:#d8d8de; --lcd-hi:#5aa9ff; --lcd-dim:#a1a1a8;
+  --stf-sl:#636366; --stf-sl2:#8e8e96; --stf-tl:#48484a; --stf-ink:#f2f2f7; --stf-fret:#5aa9ff;
+  --c-tonic:#5aa9ff; --c-tonic-fg:#00132b; --c-nb:#1f4a85; --c-nb-fg:#d6e6ff; --c-rel:#3a3a3c; --c-maj:#1c1c1e; --c-min:#141416; --c-off-fg:#b4b4bc; --c-rel-fg:#fff; --c-t1:#f2f2f7; --c-t2:#a1a1a8; --c-bg:#000; --c-centre:#1c1c1e; --c-line:#000; --c-t3:#5aa9ff;
+  --cd-line:#636366; --cd-str:#a1a1a8; --cd-dot:#f2f2f7; --cd-dot-fg:#1c1c1e; --cd-lab:#a1a1a8; --cd-fn:#5aa9ff;
+  --bar-n:#a1a1a8; --ok:#30d158; --ok-bg:#12301f; --ok-ink:#7be0a4; --hook-bg:#12263f; --hook-ink:#d6e6ff; --code-ink:#d8d8de;
+}
+html[data-theme="minimal-dark"] .card,html[data-theme="minimal-dark"] .pfc,html[data-theme="minimal-dark"] .lcard{box-shadow:none}
+html[data-theme="minimal-dark"] .knob::before{background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) 270deg,transparent 270deg)}
+html[data-theme="minimal-dark"] .drum .edge:hover{background:rgba(90,169,255,.15)}
+html[data-theme="minimal-dark"] .seg button.on{box-shadow:none}
+
+/* ===== 70-synth.css ===== */
+/* Modular Synth — a Eurorack case: bone anodised panels with black mono print, orange accent, small dark knobs with printed scale
+   ticks, OLED-style readouts, square corners and patch-point jacks next to every control. */
+[data-theme="synth"]{
+  --sans:"Space Grotesk","Inter",system-ui,sans-serif; --cond:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#17181b; --ink:#ece9e0; --dim:#a9a79d; --faint:#a3a198; --amber:#ff7a3d; --green:#3be0a8; --red:#ff5a6a; --gold:#cfcdc4; --blue:#4fa8ff; --violet:#d18bff; --engrave:#111;
+  --page:repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 48px),linear-gradient(180deg,#1f2024 0,#17181b 420px) no-repeat,#17181b;
+  --hfont:var(--sans); --lab-font:var(--mono); --drum-font:var(--mono); --lcd-font:var(--mono); --h1-ls:.06em;
+  --h2:#cfcdc4; --h2s:#a9a79d; --h2c:#b8b6ac; --ink2:#dcd9d0; --ink3:#b8b6ac; --mute:#a9a79d; --lab:#b8b6ac; --on-amber:#1a0800;
+  --card:#1f2024; --card-bd:#34363c; --card-r:3px; --inset:#0f1012; --inset-bd:#34363c; --inset-ink:#ece9e0;
+  --raise:linear-gradient(180deg,#2a2c31,#222328); --raise-bd:#3d4046; --raise-bd-h:#ff7a3d; --raise-r:3px; --chip:#2a2c31; --chip-bd:#44474e; --hair:#2a2c31; --hair2:#3d4046;
+  --now-bg:#3a2216; --now-sh:0 0 0 1px #ff7a3d,0 0 14px rgba(255,106,43,.35); --step-off:#3d4046;
+  --panel:linear-gradient(180deg,#ecebe4,#e0ded5); --panel-bd:#0a0a0b; --panel-r:3px;
+  --panel-sh:0 0 0 1px #000,0 0 0 3px #26272b,0 12px 26px rgba(0,0,0,.6);
+  --panel-ink:#111; --panel-ink2:#2a2a2e; --engr-sh:none; --ok-p:#0b6a40; --warn-p:#a8142a;
+  --led-off:#6a2a1a; --led-off-sh:0 0 0 1px #000; --led-on:#ff5a1f; --led-on-sh:0 0 0 1px #000,0 0 10px 3px rgba(255,90,31,.7);
+  --drum-bg:#0c0d0f; --drum-sh:0 0 0 1px #000,0 0 0 2px #cfcdc4,0 0 0 3px #000,inset 0 0 14px rgba(255,120,40,.1); --drum-r:2px; --drum-ink:#ffa35c; --drum-line-o:0;
+  --edge-bg:#26272b; --edge-ink:#e8e6df;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='s' cx='40%25' cy='30%25' r='80%25'%3E%3Cstop offset='0' stop-color='%235b5e66'/%3E%3Cstop offset='.6' stop-color='%232b2d33'/%3E%3Cstop offset='1' stop-color='%2317181c'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%230a0a0c'/%3E%3Ccircle cx='50' cy='50' r='44' fill='url(%23s)'/%3E%3Ccircle cx='50' cy='50' r='44' fill='none' stroke='%23000' stroke-opacity='.6' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='30' fill='%23202227' stroke='%233b3e46' stroke-width='2'/%3E%3Crect x='46' y='6' width='8' height='30' rx='2' fill='%23ff6a2b'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#ff6a2b; --ind-sh:none; --tick:#111; --knobread:#111;
+  --tog-bg:#17181b; --tog-sh:0 0 0 1px #000,0 0 0 2px #bdbbb1; --tog-on:#ff6a2b; --tog-thumb:linear-gradient(180deg,#ecebe4,#a9a79d);
+  --btn-bg:#2a2c31; --btn-bd:#000; --btn-bd-h:#ff7a3d; --btn-ink:#ece9e0; --btn-r:3px; --btn-sh:0 2px 0 #000;
+  --pri-bg:#ff6a2b; --pri-bd:#000; --pri-ink:#1a0800;
+  --key-bg:#d3d1c7; --key-bd:#111; --key-ink:#111; --key-sh:0 2px 0 #111; --key-r:3px;
+  --on-bg:#ff6a2b; --on-bd:#111; --on-ink:#1a0800; --on-sh:0 2px 0 #111,0 0 10px rgba(255,106,43,.5);
+  --sel-bg:#111; --sel-bd:#000; --sel-ink:#ffa35c; --sel-sub:#ffa35c; --sel-sh:0 2px 0 #000,0 0 0 1px #ff6a2b;
+  --seg-bg:#17181b; --seg-bd:#44474e; --seg-on:#ff6a2b; --seg-on-ink:#1a0800; --seg-r:2px;
+  --dock-bg:#121315; --dock-bd:#cfcdc4; --dock-ink:#cfcdc4; --dock-on:#ff6a2b; --dock-on-ink:#1a0800; --dock-sh:0 0 0 1px #000,0 10px 26px rgba(0,0,0,.7); --dock-r:4px; --dock-item-r:2px;
+  --fbwrap-bd:#cfcdc4; --fbwrap-bg:#0c0d0f; --fbwrap-r:3px;
+  --fb-wood:#101114; --fb-grain:rgba(0,0,0,0); --fb-fret:#5a5d66; --fb-nut:#cfcdc4; --fb-str:#a3a5ad; --fb-inlay:#2b2d33; --fb-inlay-bd:#44474e; --fb-num:#a3a5ad; --fb-numhi:#ece9e0; --fb-open:#b8b6ac;
+  --ctx-bg:#0c0d0f; --ctx-bd:#6a6d76; --ctx-fg:#b8b6ac; --dot-ring:#000; --dot-in:#ffa35c;
+  --t-root:#ff4d5e; --t-root-fg:#1a0004; --t-root-txt:#ff7a86; --t-third:#ffd23f; --t-third-fg:#241a00; --t-fifth:#3be0a8; --t-fifth-fg:#00241a; --t-seventh:#4fa8ff; --t-seventh-fg:#001a33; --t-ext:#d18bff; --t-ext-fg:#210a33; --t-scale:#3be0a8; --t-scale-fg:#00241a;
+  --h-r:#9be05a; --h-r-fg:#1a2a00; --h-l:#4fa8ff; --h-l-fg:#001a33; --hr-txt:#9be05a; --hl-txt:#7dbfff; --ring-root:#ff4d5e; --now:#ff7a3d; --now-fg:#ff9a63; --inp:#d18bff; --good:#3be0a8; --bad:#ff7a86;
+  --pk-wrap-bd:#cfcdc4; --pk-wrap-bg:#0c0d0f; --pk-wrap-r:3px;
+  --pk-w:linear-gradient(180deg,#e4e2d9,#f2f1ea); --pk-w-bd:#0a0a0b; --pk-w-sh:0 2px 0 #77756c; --pk-w-r:0 0 2px 2px; --pk-lit-w:linear-gradient(180deg,#ffe0c4,#ffb27a);
+  --pk-b:linear-gradient(180deg,#26272b,#0b0b0c); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#8a4a2a,#3a1d10);
+  --pk-nm:#111; --pk-nm-root:#a8142a; --pk-bnm-root:#ff9aa4; --pk-oct:#5a5d66; --pk-str:#ff7a3d;
+  --lcd-bg:#0c0d0f; --lcd-bd:#000; --lcd-sh:0 0 0 1px #000,0 0 0 2px #cfcdc4,inset 0 0 16px rgba(255,120,40,.08); --lcd-ink:#ece9e0; --lcd-ink2:#cfcdc4; --lcd-hi:#ffa35c; --lcd-dim:#a9a79d;
+  --stf-sl:#5a5d66; --stf-sl2:#8a8c94; --stf-tl:#44474e; --stf-ink:#ece9e0; --stf-fret:#ffa35c;
+  --c-tonic:#ff6a2b; --c-tonic-fg:#1a0800; --c-nb:#1f6f8b; --c-nb-fg:#fff; --c-rel:#3d4046; --c-maj:#222328; --c-min:#18191c; --c-off-fg:#cfcdc4; --c-bg:#0f1012; --c-centre:#17181b; --c-line:#0f1012; --c-t3:#ff9a63;
+  --cd-line:#5a5d66; --cd-str:#b8b6ac; --cd-dot:#ece9e0; --cd-dot-fg:#111; --cd-lab:#b8b6ac; --cd-fn:#ffa35c;
+  --bar-n:#8a8c94; --ok:#0b8a5a; --ok-bg:#0f2a20; --ok-ink:#6fe8b8; --hook-bg:#2a1a12; --hook-ink:#f1dfcf; --code-ink:#dcd9d0;
+}
+html[data-theme="synth"] h1{font-weight:700;letter-spacing:.14em}
+html[data-theme="synth"] h2{font-weight:700;font-size:21px;letter-spacing:.08em;align-items:center}
+html[data-theme="synth"] h2::before{content:"";width:10px;height:10px;background:var(--amber);flex:none;box-shadow:0 0 8px rgba(255,106,43,.6)}
+html[data-theme="synth"] .card,html[data-theme="synth"] .pfc,html[data-theme="synth"] .lcard{border-top:2px solid #cfcdc4}
+html[data-theme="synth"] .metal{overflow:hidden}
+html[data-theme="synth"] .metal::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(circle at 12px 12px,#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at calc(100% - 12px) 12px,#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at 12px calc(100% - 12px),#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px),radial-gradient(circle at calc(100% - 12px) calc(100% - 12px),#7a786f 0 2.6px,#2a2a2d 3px 4px,transparent 4.4px)}
+html[data-theme="synth"] .engr{font-weight:600;letter-spacing:.14em;font-size:11px;text-transform:uppercase}
+html[data-theme="synth"] .engr.sm{font-weight:600;letter-spacing:.1em;font-size:10px}
+html[data-theme="synth"] .slot{position:relative}
+html[data-theme="synth"] .slot>.engr.sm{padding-right:16px}
+html[data-theme="synth"] .slot::after{content:"";position:absolute;right:1px;top:-1px;width:11px;height:11px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#050505 0 2.4px,#8a887e 2.9px 4px,var(--jk,#ff6a2b) 4.4px 5.5px,transparent 5.9px)}
+html[data-theme="synth"] #row1 .slot:nth-child(2n){--jk:#4fa8ff}
+html[data-theme="synth"] #row1 .slot:nth-child(3n){--jk:#e0b020}
+html[data-theme="synth"] #row2 .slot{--jk:#2fbf8f}
+html[data-theme="synth"] #row2 .slot:nth-child(2){--jk:#4fa8ff}
+html[data-theme="synth"] .drum .val{font-weight:600;font-size:14px;letter-spacing:0;text-transform:none}
+html[data-theme="synth"] .drum.small .val{font-size:13px}
+html[data-theme="synth"] .drum .val.long{font-size:12px}
+html[data-theme="synth"] .drum .val.xl{font-size:10.5px}
+html[data-theme="synth"] .drum .edge::after{display:block}
+html[data-theme="synth"] .drum .edge.l{border-right:1px solid #000;box-shadow:none}
+html[data-theme="synth"] .drum .edge.r{border-left:1px solid #000;box-shadow:none}
+html[data-theme="synth"] .drum .edge:hover{background:#ff6a2b;color:#1a0800}
+html[data-theme="synth"] .knob{width:62px;height:62px}
+html[data-theme="synth"] .knob .cap{inset:11px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.45))}
+html[data-theme="synth"] .knob .cap i{display:none}
+html[data-theme="synth"] .knob:focus-visible{box-shadow:0 0 0 3px #1a56d6}
+html[data-theme="synth"] .knobread{font-weight:600;font-size:11px;letter-spacing:.06em}
+html[data-theme="synth"] .toggle{width:44px;height:22px;border-radius:2px}
+html[data-theme="synth"] .toggle::after{border-radius:1px}
+html[data-theme="synth"] .power .led{width:12px;height:12px;border-radius:2px}
+html[data-theme="synth"] .meter{display:inline-flex;gap:2px;align-items:stretch;height:16px;padding:3px;background:#0c0d0f;box-shadow:0 0 0 1px #000,0 0 0 2px #cfcdc4}
+html[data-theme="synth"] .meter i{display:block;width:5px;background:#2b2d33}
+html[data-theme="synth"] .meter i.on{background:#ff6a2b;box-shadow:0 0 5px rgba(255,106,43,.8)}
+html[data-theme="synth"] .meter i.on:nth-child(n+11){background:#ffd23f}
+html[data-theme="synth"] .btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+html[data-theme="synth"] .btn:active,html[data-theme="synth"] .pos:active,html[data-theme="synth"] .chip:active{transform:translateY(2px);box-shadow:none}
+html[data-theme="synth"] .pos,html[data-theme="synth"] .chip{font-family:var(--sans)}
+html[data-theme="synth"] nav.dock{border-width:1px}
+html[data-theme="synth"] nav.dock button{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+html[data-theme="synth"] .fbwrap,html[data-theme="synth"] .pianowrap{border-width:3px}
+
+/* ===== 80-wood.css ===== */
+/* Vintage Wood — a walnut cabinet with brass fittings: knurled brass knobs, cream paper dial windows and label strips,
+   oxblood selection, Playfair Display for the engraving. */
+[data-theme="wood"]{
+  --sans:"Alegreya Sans","Segoe UI",Roboto,sans-serif; --cond:"Playfair Display",Georgia,serif;
+  --bg:#1a0f08; --ink:#f4e8cc; --dim:#cdb98f; --faint:#a89268; --amber:#e8bf5a; --green:#9bd07a; --red:#e8705a; --gold:#e8bf5a; --blue:#7fb1de; --violet:#d3a0cf; --engrave:#3a2410;
+  --page:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='420'%3E%3Cdefs%3E%3Cfilter id='w' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.085' numOctaves='4' stitchTiles='stitch' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.04 0 0 0 0 0.01 0 0 0 -2.2 1.35'/%3E%3C/filter%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%234b2a17'/%3E%3Cstop offset='.5' stop-color='%2340220f'/%3E%3Cstop offset='1' stop-color='%234a2915'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='420' fill='url(%23g)'/%3E%3Crect width='640' height='420' filter='url(%23w)'/%3E%3C/svg%3E") 0 0/640px 420px,#3f220f;
+  --hfont:"Playfair Display",Georgia,serif; --lab-font:"Playfair Display",Georgia,serif; --drum-font:"Playfair Display",Georgia,serif; --h1-ls:.04em; --h1-tt:none;
+  --h2:#f1dfb4; --h2s:#cdb98f; --h2c:#d8c79f; --ink2:#eadbb8; --ink3:#d1bf96; --mute:#cdb98f; --lab:#d1bf96; --on-amber:#2b1706;
+  --card:#2a170c; --card-bd:#6a4a22; --card-r:6px; --inset:#1d1008; --inset-bd:#5a3a1c; --inset-ink:#f6e8c6;
+  --raise:linear-gradient(180deg,#3a2212,#2d1a0d); --raise-bd:#6a4a22; --raise-bd-h:#e8bf5a; --raise-r:5px; --chip:#3a2212; --chip-bd:#6a4a22; --hair:#3a2412; --hair2:#573a1c;
+  --now-bg:linear-gradient(180deg,#5a3a14,#3a2410); --now-sh:0 0 0 1px #e8bf5a,0 0 14px rgba(232,191,90,.3); --step-off:#5a4328;
+  --panel:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260'%3E%3Cdefs%3E%3Cfilter id='w' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.14' numOctaves='4' stitchTiles='stitch' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.06 0 0 0 0 0.02 0 0 0 -2.4 1.4'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='520' height='260' fill='%236a3d1e'/%3E%3Crect width='520' height='260' filter='url(%23w)'/%3E%3C/svg%3E") 0 0/520px 260px,#6a3d1e; --panel-bd:#1d1008; --panel-r:6px;
+  --panel-sh:0 0 0 2px #b8893a,0 0 0 4px #2a170a,0 14px 28px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,220,150,.18);
+  --panel-ink:#3a2410; --panel-ink2:#f1e3c4; --engr-sh:none; --ok-p:#b6ec96; --warn-p:#ffb4a4;
+  --led-off:radial-gradient(circle at 36% 30%,#8a3b22,#3a1208 70%); --led-off-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a;
+  --led-on:radial-gradient(circle at 36% 28%,#fff1d0 0 6%,#ffc060 16%,#ff7a1a 54%,#9a3a00); --led-on-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,0 0 14px 5px rgba(255,150,40,.6);
+  --drum-bg:linear-gradient(180deg,#efe0bd,#e4d1a3); --drum-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,inset 0 2px 6px rgba(80,50,10,.4); --drum-r:4px; --drum-ink:#3a2410; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#e9c982,#b88a3c); --edge-ink:#2b1706;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='b' cx='36%25' cy='28%25' r='85%25'%3E%3Cstop offset='0' stop-color='%23fbe9b0'/%3E%3Cstop offset='.45' stop-color='%23d1a24a'/%3E%3Cstop offset='1' stop-color='%236e4a14'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%232a170a'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23b8893a' stroke-width='6' stroke-dasharray='1.8 1.8'/%3E%3Ccircle cx='50' cy='50' r='40' fill='url(%23b)' stroke='%234a300c' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='27' fill='none' stroke='%236e4a14' stroke-opacity='.5' stroke-width='1.5'/%3E%3Cellipse cx='40' cy='34' rx='16' ry='8' fill='%23fff' fill-opacity='.28' transform='rotate(-30 40 34)'/%3E%3Crect x='47' y='9' width='6' height='24' rx='3' fill='%232a170a'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#2a170a; --ind-sh:none; --tick:#f1e3c4; --knobread:#f6ead0;
+  --tog-bg:#1d1008; --tog-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a6420,#e8bf5a); --tog-thumb:linear-gradient(180deg,#f8e7b8,#b88a3c);
+  --btn-bg:linear-gradient(180deg,#ecd08a,#b88a3c); --btn-bd:#4a300c; --btn-bd-h:#fff2c4; --btn-ink:#2b1706; --btn-r:4px; --btn-sh:0 2px 0 #2a170a,0 1px 0 rgba(255,255,255,.5) inset;
+  --pri-bg:linear-gradient(180deg,#9a3420,#6a1c0e); --pri-bd:#2a0a04; --pri-ink:#f8e9c6;
+  --key-bg:linear-gradient(180deg,#f1e3c4,#dcc89b); --key-bd:#4a300c; --key-ink:#3a2410; --key-sh:0 2px 0 #2a170a; --key-r:4px;
+  --on-bg:linear-gradient(180deg,#f8d98a,#d8a43a); --on-bd:#4a300c; --on-ink:#2b1706; --on-sh:0 2px 0 #2a170a,0 0 12px rgba(255,200,90,.5);
+  --sel-bg:linear-gradient(180deg,#9a3420,#6a1c0e); --sel-bd:#2a0a04; --sel-ink:#f8e9c6; --sel-sub:#f1d8a0; --sel-sh:0 2px 0 #2a0a04,0 0 0 1px #e8bf5a;
+  --seg-bg:#1d1008; --seg-bd:#6a4a22; --seg-on:#6a1c0e; --seg-on-ink:#f8e9c6; --seg-r:4px;
+  --dock-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260'%3E%3Cdefs%3E%3Cfilter id='w' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.14' numOctaves='4' stitchTiles='stitch' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.06 0 0 0 0 0.02 0 0 0 -2.4 1.4'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='520' height='260' fill='%236a3d1e'/%3E%3Crect width='520' height='260' filter='url(%23w)'/%3E%3C/svg%3E") 0 0/520px 260px,#5a3218; --dock-bd:#b8893a; --dock-ink:#f1e3c4; --dock-on:linear-gradient(180deg,#f0d086,#c9983c); --dock-on-ink:#2b1706; --dock-sh:0 0 0 2px #2a170a,0 12px 26px rgba(0,0,0,.7); --dock-r:8px; --dock-item-r:4px;
+  --fbwrap-bd:#b8893a; --fbwrap-bg:#1d1008; --fbwrap-r:8px;
+  --fb-wood:#2b150a; --fb-grain:rgba(255,200,140,.1); --fb-fret:#c9a24a; --fb-nut:#efe3c2; --fb-str:#d8c9a2; --fb-inlay:#efe5cd; --fb-inlay-bd:#9a8a60; --fb-num:#d1bf96; --fb-numhi:#f6ead0; --fb-open:#cdb98f;
+  --ctx-bg:#1d1008; --ctx-bd:#9a8458; --ctx-fg:#d8c79f; --dot-ring:#1a0c04; --dot-in:#fff4d0;
+  --t-root:#c4361f; --t-root-fg:#fff; --t-root-txt:#f0866e; --t-third:#e8b030; --t-third-fg:#2a1a00; --t-fifth:#8cc46a; --t-fifth-fg:#0b1d06; --t-seventh:#6a9fd0; --t-seventh-fg:#06182a; --t-ext:#c18bbd; --t-ext-fg:#2a0a28; --t-scale:#8cc46a; --t-scale-fg:#0b1d06;
+  --h-r:#8cc46a; --h-r-fg:#0b1d06; --h-l:#5f9be0; --h-l-fg:#06182a; --hr-txt:#a8dc88; --hl-txt:#8fbbe6; --ring-root:#e8705a; --now:#f2c85c; --now-fg:#f2c85c; --inp:#d3a0cf; --good:#9bd07a; --bad:#f0866e;
+  --pk-wrap-bd:#b8893a; --pk-wrap-bg:#1d1008; --pk-wrap-r:8px;
+  --pk-w:linear-gradient(180deg,#e7d7ae,#f3e8c6 70%,#d6c18c); --pk-w-bd:#2a170a; --pk-w-sh:0 2px 0 #8d7a4a; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe6a0,#efc060 70%,#d9a93c);
+  --pk-b:linear-gradient(180deg,#2b1a10,#0a0603); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#6a4a22,#2a1a0b);
+  --pk-nm:#3a2410; --pk-nm-root:#a3200f; --pk-bnm-root:#ffa592; --pk-oct:#6a5632; --pk-str:#e8bf5a;
+  --lcd-bg:#1d1008; --lcd-bd:#5a3a1c; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #b8893a; --lcd-ink:#f6ead0; --lcd-ink2:#d8c79f; --lcd-hi:#e8bf5a; --lcd-dim:#cdb98f;
+  --stf-sl:#7a6240; --stf-sl2:#a89268; --stf-tl:#5a4630; --stf-ink:#f4e8cc; --stf-fret:#e8bf5a;
+  --c-tonic:#e8bf5a; --c-tonic-fg:#2b1706; --c-nb:#8a3420; --c-rel:#5a4328; --c-maj:#2f1c0e; --c-min:#231409; --c-off-fg:#d8c79f; --c-bg:#1d1008; --c-centre:#2a170c; --c-line:#1d1008; --c-t3:#e8bf5a;
+  --cd-line:#7a6240; --cd-str:#cdb98f; --cd-dot:#f4e8cc; --cd-dot-fg:#2a170c; --cd-lab:#d1bf96; --cd-fn:#e8bf5a;
+  --bar-n:#a89268; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#3a2410; --hook-ink:#f6e8c6; --code-ink:#eadbb8;
+}
+html[data-theme="wood"] h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.55);font-size:25px}
+html[data-theme="wood"] h1::after{content:"❦";display:block;margin-top:2px;font-size:15px;color:#e8bf5a;letter-spacing:0;font-weight:400;line-height:1}
+html[data-theme="wood"] h2{font-weight:700;font-style:italic;font-size:26px;border-bottom:1px solid #b8893a;padding-bottom:4px}
+html[data-theme="wood"] .card,html[data-theme="wood"] .pfc,html[data-theme="wood"] .lcard{box-shadow:0 0 0 1px #1d1008,0 6px 14px rgba(0,0,0,.35),0 1px 0 rgba(255,220,150,.12) inset}
+/* paper label strips */
+html[data-theme="wood"] .engr{font-weight:700;letter-spacing:.14em;font-size:11px}
+html[data-theme="wood"] .panel-top .engr,html[data-theme="wood"] .pcontrol .engr.sm,html[data-theme="wood"] .power .engr{background:linear-gradient(180deg,#f1e3c4,#e0cc9e);color:#3a2410;padding:2px 8px 1px;border-radius:2px;box-shadow:0 1px 1px rgba(0,0,0,.5),0 0 0 1px rgba(74,48,12,.7);width:fit-content}
+html[data-theme="wood"] .pcontrol .engr.sm{display:block;margin:0 0 6px 2px;font-size:10px;letter-spacing:.12em}
+html[data-theme="wood"] .drum .val{font-weight:700;font-size:15px;letter-spacing:.01em}
+html[data-theme="wood"] .drum.small .val{font-size:14px}
+html[data-theme="wood"] .drum .val.long{font-size:12.5px}
+html[data-theme="wood"] .drum .val.xl{font-size:11px}
+html[data-theme="wood"] .drum .edge{width:17px}
+html[data-theme="wood"] .drum .edge::after{display:block}
+html[data-theme="wood"] .drum .edge.l{border-right:1px solid #4a300c;box-shadow:none}
+html[data-theme="wood"] .drum .edge.r{border-left:1px solid #4a300c;box-shadow:none}
+html[data-theme="wood"] .knob{width:72px;height:72px}
+html[data-theme="wood"] .knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5))}
+html[data-theme="wood"] .knob .cap i{display:none}
+html[data-theme="wood"] .knob:focus-visible{box-shadow:0 0 0 3px #7fb1de}
+html[data-theme="wood"] .knobread{font-weight:700;font-size:11px}
+html[data-theme="wood"] .toggle{width:54px}
+html[data-theme="wood"] .toggle.on::after{transform:translateX(24px)}
+html[data-theme="wood"] .power .led{width:15px;height:15px}
+html[data-theme="wood"] .btn{font-family:var(--cond);font-weight:700;letter-spacing:.03em}
+html[data-theme="wood"] .btn:active,html[data-theme="wood"] .pos:active,html[data-theme="wood"] .chip:active{transform:translateY(2px);box-shadow:none}
+html[data-theme="wood"] .pos,html[data-theme="wood"] .chip{font-weight:700}
+html[data-theme="wood"] nav.dock{border-width:2px}
+html[data-theme="wood"] nav.dock button{font-family:var(--cond);font-style:italic;font-weight:700;letter-spacing:.02em}
+html[data-theme="wood"] .fbwrap,html[data-theme="wood"] .pianowrap{border-width:4px;border-style:double}
+html[data-theme="wood"] .dot circle{stroke-width:1.2}
+html[data-theme="wood"] body,html[data-theme="wood"] .drum .val,html[data-theme="wood"] .knobread,html[data-theme="wood"] .btn,html[data-theme="wood"] .pos,html[data-theme="wood"] .chip,html[data-theme="wood"] nav.dock button,html[data-theme="wood"] h1,html[data-theme="wood"] h2{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
+html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+
+/*THEMES:END*/
+</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
-  <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1></header>
+  <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
+    <button class="themebtn" id="themeBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="themePanel" title="Change the look"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.6" cy="11" r="1.2"/><circle cx="10.4" cy="7.2" r="1.2"/><circle cx="15" cy="7.4" r="1.2"/></svg></button>
+    <div class="themepanel" id="themePanel" role="dialog" aria-label="Choose a theme" hidden></div>
+  </header>
 
   <!-- ===== MUSIC CONTROL PANEL ===== -->
   <section class="metal panel" aria-label="Music control">
     <div class="panel-top">
       <span class="engr">Music Control</span>
+      <span class="meter" id="meter" aria-hidden="true"></span>
       <button class="power on" id="power" aria-pressed="true" title="Sound on / off"><span class="engr sm">Power</span><span class="led"></span></button>
     </div>
     <div class="row" id="row1"></div>
@@ -1776,7 +2757,7 @@ S.metro = false;                                   // never auto-start a click t
    SOUND — WebAudio. Three voices: Karplus-Strong pluck, soft electric-piano keys, mellow synth.
    ================================================================ */
 const Snd = (() => {
-  let ctx = null, master = null, dest = null; const cache = new Map();
+  let ctx = null, master = null, dest = null, an = null, anBuf = null; const cache = new Map();
   const out = () => dest || master;
   function ensure() {
     if (!ctx) {
@@ -1787,6 +2768,7 @@ const Snd = (() => {
       const comp = ctx.createDynamicsCompressor();
       comp.threshold.value = -14; comp.ratio.value = 4;
       master.connect(comp); comp.connect(ctx.destination);
+      an = ctx.createAnalyser(); an.fftSize = 512; comp.connect(an);
       applyVol();
     }
     if (ctx.state === 'suspended') ctx.resume();
@@ -1862,7 +2844,9 @@ const Snd = (() => {
   function newBus() { if (!ensure()) return null; const g = ctx.createGain(); g.connect(master); return g; }
   function setBus(g) { dest = g || null; }
   function killBus(g) { if (!g) return; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setTargetAtTime(0, ctx.currentTime, 0.015); setTimeout(() => { try { g.disconnect(); } catch (e) {} }, 250); } catch (e) {} }
-  return { ensure, note, chord, click, now, newBus, setBus, killBus, applyVol, get ctx() { return ctx; } };
+  // Output level 0..1 (RMS of what is leaving the master), for the LED meters some themes show.
+  function level() { if (!an) return 0; if (!anBuf) anBuf = new Float32Array(an.fftSize); an.getFloatTimeDomainData(anBuf); let q = 0; for (let i = 0; i < anBuf.length; i++) q += anBuf[i] * anBuf[i]; return Math.min(1, Math.sqrt(q / anBuf.length) * 3.2); }
+  return { ensure, note, chord, click, now, newBus, setBus, killBus, applyVol, level, get ctx() { return ctx; } };
 })();
 
 /* ================================================================
@@ -1961,27 +2945,27 @@ function applyHash() {
 
 /* ---------- which notes are lit? ---------- */
 const RED = '#e8463e', GREEN = '#58c75a', AMBER = '#f0b43c', BLUE = '#4a86e8', VIOLET = '#a06be0';
-function toneStyle(deg, isRoot) {
-  if (isRoot) return { bg: RED, fg: '#fff' };
-  if (deg === 5) return { bg: GREEN, fg: '#06210a' };
-  if (deg === 7) return { bg: BLUE, fg: '#fff' };
-  if (deg === 3 || deg === 2 || deg === 4) return { bg: AMBER, fg: '#2a1a00' };
-  return { bg: VIOLET, fg: '#fff' };
+function toneStyle(deg, isRoot) {                      // tone = the role of the note, so a theme can recolour it (see data-tone in the CSS)
+  if (isRoot) return { bg: RED, fg: '#fff', tone: 'root' };
+  if (deg === 5) return { bg: GREEN, fg: '#06210a', tone: 'fifth' };
+  if (deg === 7) return { bg: BLUE, fg: '#fff', tone: 'seventh' };
+  if (deg === 3 || deg === 2 || deg === 4) return { bg: AMBER, fg: '#2a1a00', tone: 'third' };
+  return { bg: VIOLET, fg: '#fff', tone: 'ext' };
 }
 function activeNotes() {
   const map = new Map();
   if (S.mode === 'chord') {
     keyNotes().forEach(n => map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), ctx: true }));
-    curChord().tones.forEach(t => { const st = toneStyle(t.deg, t.semis === 0); map.set(t.pc, { name: t.name, label: T.dotLabel(t.label), bg: st.bg, fg: st.fg, root: t.semis === 0 }); });
+    curChord().tones.forEach(t => { const st = toneStyle(t.deg, t.semis === 0); map.set(t.pc, { name: t.name, label: T.dotLabel(t.label), bg: st.bg, fg: st.fg, tone: st.tone, root: t.semis === 0 }); });
   } else {
-    keyNotes().forEach(n => { const r = n.semis === 0; map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), bg: r ? RED : GREEN, fg: r ? '#fff' : '#06210a', root: r }); });
+    keyNotes().forEach(n => { const r = n.semis === 0; map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), bg: r ? RED : GREEN, fg: r ? '#fff' : '#06210a', tone: r ? 'root' : 'scale', root: r }); });
   }
   return map;
 }
 function legendHTML() {
-  const pick = SEL ? `<span><i style="border:2px solid #fff;background:#333"></i>in this position</span><span><i style="background:#555;width:6px;height:6px;vertical-align:1px"></i>dimmed = outside it</span>` : '';
-  if (S.mode === 'chord') return pick + `<span><i style="background:${RED}"></i>root</span><span><i style="background:${AMBER}"></i>3rd / sus</span><span><i style="background:${GREEN}"></i>5th</span><span><i style="background:${BLUE}"></i>7th</span><span><i style="background:${VIOLET}"></i>6th / 9th / 11th / 13th</span><span><i style="border:1.5px solid #666"></i>other notes in key</span>`;
-  return pick + `<span><i style="background:${RED}"></i>root</span><span><i style="background:${GREEN}"></i>scale note</span>`;
+  const pick = SEL ? `<span><i class="lg-in" style="border:2px solid #fff;background:#333"></i>in this position</span><span><i class="lg-off" style="background:#555;width:6px;height:6px;vertical-align:1px"></i>dimmed = outside it</span>` : '';
+  if (S.mode === 'chord') return pick + `<span><i data-tone="root" style="background:${RED}"></i>root</span><span><i data-tone="third" style="background:${AMBER}"></i>3rd / sus</span><span><i data-tone="fifth" style="background:${GREEN}"></i>5th</span><span><i data-tone="seventh" style="background:${BLUE}"></i>7th</span><span><i data-tone="ext" style="background:${VIOLET}"></i>6th / 9th / 11th / 13th</span><span><i class="lg-ctx" style="border:1.5px solid #666"></i>other notes in key</span>`;
+  return pick + `<span><i data-tone="root" style="background:${RED}"></i>root</span><span><i data-tone="scale" style="background:${GREEN}"></i>scale note</span>`;
 }
 
 /* ================================================================
@@ -2038,7 +3022,7 @@ function mkKnob(sel, o) {
   el.innerHTML = `<svg class="ticks" viewBox="0 0 100 100">${ticks}</svg><div class="cap"><i></i></div>`;
   const cap = $('.cap', el);
   const frac = () => (o.get() - o.min) / (o.max - o.min);
-  const sync = () => { cap.style.transform = `rotate(${-135 + 270 * frac()}deg)`; el.setAttribute('aria-valuemin', o.min); el.setAttribute('aria-valuemax', o.max); el.setAttribute('aria-valuenow', o.get()); el.setAttribute('aria-valuetext', o.fmt(o.get())); };
+  const sync = () => { cap.style.transform = `rotate(${-135 + 270 * frac()}deg)`; el.style.setProperty('--f', frac().toFixed(3)); el.setAttribute('aria-valuemin', o.min); el.setAttribute('aria-valuemax', o.max); el.setAttribute('aria-valuenow', o.get()); el.setAttribute('aria-valuetext', o.fmt(o.get())); };
   el.__sync = sync;
   const setV = v => { v = Math.max(o.min, Math.min(o.max, Math.round(v / o.step) * o.step)); o.set(+v.toFixed(3)); sync(); o.after && o.after(); };
   let y0 = 0, v0 = 0, drag = false;
@@ -2053,7 +3037,9 @@ function mkKnob(sel, o) {
 /* ================================================================
    INSTRUMENTS: fretboard + piano
    ================================================================ */
-const UI = { fbScroll: null, piScroll: null };
+const UI = { fbScroll: null, piScroll: null, gid: 0 };
+// Faint horizontal wood-grain lines for themes that fill the fretboard with a grain (see .fbwood in the theme CSS). Deterministic.
+function grainPaths(h) { let o = '', x = 7; for (let i = 0; i < 17; i++) { x = (x * 73 + 41) % 257; const y = (i + 0.5) * h / 17 + ((x % 7) - 3) * 0.6, w = 0.6 + (x % 5) * 0.35; o += `<path class="fbg" d="M0 ${y.toFixed(1)}c60 ${(x % 9) - 4} 120 ${4 - (x % 7)} 260 ${((x * 3) % 5) - 2}" stroke-width="${w.toFixed(2)}" fill="none" opacity="${(0.35 + (x % 6) / 10).toFixed(2)}"/>`; } return o; }
 const FRETS = 15;
 function fretboardSVG() {
   const t = curTuning(), n = t.strings.length, act = activeNotes();
@@ -2063,11 +3049,13 @@ function fretboardSVG() {
   const yRow = si => top + (n - 1 - si) * gap;
   const mid = top + gap * (n - 1) / 2;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="Fretboard, frets 0 to ${FRETS}, ${t.name} tuning. Arrow keys move between notes, Enter plays.">`;
-  s += `<rect x="${nutX}" y="${top - 12}" width="${W - nutX - 8}" height="${gap * (n - 1) + 24}" fill="#0b0b0e"/>`;
-  [3, 5, 7, 9, 15].forEach(f => { s += `<circle cx="${(fx(f - 1) + fx(f)) / 2}" cy="${mid}" r="8" fill="#17171c"/>`; });
-  [-1, 1].forEach(k => { s += `<circle cx="${(fx(11) + fx(12)) / 2}" cy="${mid + k * gap * (n - 1) / 4}" r="8" fill="#17171c"/>`; });
-  for (let f = 1; f <= FRETS; f++) s += `<line x1="${fx(f)}" y1="${top - 12}" x2="${fx(f)}" y2="${top + gap * (n - 1) + 12}" stroke="#55565e" stroke-width="2"/>`;
-  s += `<line x1="${nutX}" y1="${top - 13}" x2="${nutX}" y2="${top + gap * (n - 1) + 13}" stroke="#e9e1c6" stroke-width="6"/>`;
+  const gid = 'fbg' + (++UI.gid);                                    // per-render id: a theme can fill the board with this grain pattern
+  s += `<defs><pattern id="${gid}" width="260" height="${gap * (n - 1) + 24}" patternUnits="userSpaceOnUse" patternTransform="translate(0 ${top - 12})"><rect class="fbp" width="260" height="${gap * (n - 1) + 24}"/>${grainPaths(gap * (n - 1) + 24)}</pattern></defs>`;
+  s += `<rect class="fbwood" style="--fbg:url(#${gid})" x="${nutX}" y="${top - 12}" width="${W - nutX - 8}" height="${gap * (n - 1) + 24}" fill="#0b0b0e"/>`;
+  [3, 5, 7, 9, 15].forEach(f => { s += `<circle class="fbi" cx="${(fx(f - 1) + fx(f)) / 2}" cy="${mid}" r="8" fill="#17171c"/>`; });
+  [-1, 1].forEach(k => { s += `<circle class="fbi" cx="${(fx(11) + fx(12)) / 2}" cy="${mid + k * gap * (n - 1) / 4}" r="8" fill="#17171c"/>`; });
+  for (let f = 1; f <= FRETS; f++) s += `<line class="fbf" x1="${fx(f)}" y1="${top - 12}" x2="${fx(f)}" y2="${top + gap * (n - 1) + 12}" stroke="#55565e" stroke-width="2"/>`;
+  s += `<line class="fbn" x1="${nutX}" y1="${top - 13}" x2="${nutX}" y2="${top + gap * (n - 1) + 13}" stroke="#e9e1c6" stroke-width="6"/>`;
   t.strings.forEach((m, si) => { const y = yRow(si); s += `<line class="fb-str" x1="${nutX - 4}" y1="${y}" x2="${W - 8}" y2="${y}" stroke-width="${(0.9 + (n - 1 - si) * 0.0 + (1 - si / (n - 1)) * 2.2).toFixed(2)}"/>`; });
   const lm = LM();
   const dotA = (midi, si, f) => ` data-si="${si}" data-f="${f}" role="button" tabindex="-1" aria-label="${T.midiName(midi, t.flats)}, string ${n - si}, ${f ? 'fret ' + f : 'open'}"`;
@@ -2077,21 +3065,21 @@ function fretboardSVG() {
     const inSel = !SEL || SEL.map.has(si + ':' + f);
     if (!inSel) {                                     // outside the picked position: a faint pip, still tappable
       if (a.ctx) return '';
-      return `<g class="dot off" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="4.5" fill="${a.bg}" fill-opacity=".3" stroke="none"/></g>`;
+      return `<g class="dot off" data-tone="${a.tone}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="4.5" fill="${a.bg}" fill-opacity=".3" stroke="none"/></g>`;
     }
     const fin = SEL ? SEL.map.get(si + ':' + f) : 0;
     const lbl = lm === 'notes' ? a.name : lm === 'intervals' ? a.label : lm === 'fingers' ? (fin ? String(fin) : 'o') : '';
     const cls = SEL ? ' in' : '';
     if (a.ctx) return `<g class="dot ctx${cls}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 5 : 10}" fill="#0b0b0e" stroke="#4b4d56" stroke-width="1.4"/><text x="${cx}" y="${cy}" style="fill:#7d808a;font-size:9.5px">${esc(lbl)}</text></g>`;
-    return `<g class="dot${a.root ? ' root' : ''}${cls}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 8 : 12.5}" fill="${a.bg}"/><text x="${cx}" y="${cy}" style="fill:${a.fg}">${esc(lbl)}</text></g>`;
+    return `<g class="dot${a.root ? ' root' : ''}${cls}" data-tone="${a.tone}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 8 : 12.5}" fill="${a.bg}"/><text x="${cx}" y="${cy}" style="fill:${a.fg}">${esc(lbl)}</text></g>`;
   };
   let minFr = 99;
   t.strings.forEach((m, si) => {
     const y = yRow(si);
-    if (SEL && SEL.muted.has(si)) s += `<text x="44" y="${y}" style="fill:#e8463e;font:700 18px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`;
+    if (SEL && SEL.muted.has(si)) s += `<text x="44" y="${y}" class="fbx" style="fill:#e8463e;font:700 18px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`;
     else {
       const open = dot(44, y, m, si, 0);
-      s += open || `<text x="44" y="${y}" style="fill:#3d3f47;font:600 11px var(--sans);text-anchor:middle;dominant-baseline:central">${T.pcName(m, t.flats)}</text>`;
+      s += open || `<text class="fbo" x="44" y="${y}" style="fill:#3d3f47;font:600 11px var(--sans);text-anchor:middle;dominant-baseline:central">${T.pcName(m, t.flats)}</text>`;
     }
     for (let f = 1; f <= FRETS; f++) {
       s += dot((fx(f - 1) + fx(f)) / 2, y, m + f, si, f);
@@ -2100,8 +3088,8 @@ function fretboardSVG() {
   });
   if (SEL && SEL.kind === 'scale') minFr = Math.max(1, SEL.p.minFret);
   UI.focusFrac = SEL && minFr < 99 ? fx(Math.max(0, minFr - 1.4)) / W : null;
-  for (let f = 1; f <= FRETS; f++) s += `<text x="${(fx(f - 1) + fx(f)) / 2}" y="${H - 12}" style="fill:${[3,5,7,9,12,15].includes(f) ? '#aeb0b8' : '#5a5c65'};font:600 12px var(--sans);text-anchor:middle">${f}</text>`;
-  s += `<text x="44" y="${H - 12}" style="fill:#5a5c65;font:600 11px var(--sans);text-anchor:middle">open</text></svg>`;
+  for (let f = 1; f <= FRETS; f++) s += `<text class="fbnum${[3,5,7,9,12,15].includes(f) ? ' hi' : ''}" x="${(fx(f - 1) + fx(f)) / 2}" y="${H - 12}" style="fill:${[3,5,7,9,12,15].includes(f) ? '#aeb0b8' : '#5a5c65'};font:600 12px var(--sans);text-anchor:middle">${f}</text>`;
+  s += `<text class="fbnum" x="44" y="${H - 12}" style="fill:#5a5c65;font:600 11px var(--sans);text-anchor:middle">open</text></svg>`;
   return s;
 }
 const isBlackPc = pc => [1, 3, 6, 8, 10].includes(pc);
@@ -2220,7 +3208,7 @@ function pianoHTML() {
       const two = ds.length > 1;
       if (!two) inner += `<span aria-hidden="true" class="nm${ds[0].root ? ' root' : ''}">${esc(ds[0].name)}</span>`;
       inner += ds.filter(n => n.finger).map((n, i) => `<span aria-hidden="true" class="fd ${n.hand}${n.root ? ' root' : ''}${two ? ' two' + i : ''}" title="${HAND_ABBR[n.hand]} finger ${n.finger}">${n.finger}</span>`).join('');
-    } else if (a && !a.ctx) inner += `<span class="pip" style="background:${a.bg}"></span>`;
+    } else if (a && !a.ctx) inner += `<span class="pip" data-tone="${a.tone}" style="background:${a.bg}"></span>`;
     else if (a && a.ctx) inner += `<span class="pip ctx"></span>`;
     if (!black && pc === 0) inner += `<span class="oct" aria-hidden="true">C${midi / 12 - 1}</span>`;
     const nm = T.midiName(midi), fin = ds ? ds.filter(n => n.finger).map(n => `${HAND_ABBR[n.hand]} finger ${n.finger}`).join(' and ') : '';
@@ -2505,7 +3493,7 @@ function scaleReadoutHTML() {
   const sigTxt = !sig ? '—' : sig.count === 0 ? 'no ♯ or ♭' : `${sig.count}${sig.type} (${sig.accidentals.join(' ')})`;
   const sigNote = sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? ` <span style="font-size:11px;color:var(--dim)">as ${esc(sig.parent)} major</span>` : '';
   return `<div class="readout">
-    <div class="ro" style="grid-column:span 2"><div class="k">${esc(keyTitle())}</div><div class="v big">${k.map(n => `<span style="color:${n.semis === 0 ? RED : '#e9eaee'}">${esc(n.name)}</span>`).join(' ')}</div></div>
+    <div class="ro" style="grid-column:span 2"><div class="k">${esc(keyTitle())}</div><div class="v big">${k.map(n => `<span style="color:${n.semis === 0 ? 'var(--t-root-txt)' : 'var(--ink)'}">${esc(n.name)}</span>`).join(' ')}</div></div>
     <div class="ro"><div class="k">Formula</div><div class="v" style="font-size:16px;letter-spacing:.02em;word-spacing:.1em">${k.map(n => esc(n.label)).join(' ')}</div></div>
     <div class="ro"><div class="k">Key signature</div><div class="v" style="font:600 18px var(--sans)">${esc(sigTxt)}${sigNote}</div></div>
     <div class="ro" style="grid-column:span 2"><div class="k">Step pattern</div><div class="pat" style="margin-top:6px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div></div>
@@ -2566,27 +3554,27 @@ function chordDiagramSVG(v, tuning, chord) {
   const toneAt = i => chord.tones.find(t => t.pc === ((v.midi[i] % 12) + 12) % 12);
   const LIGHT = '#eceef2';
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(chord.name)} chord diagram, frets ${v.frets.map(f => f < 0 ? 'x' : f).join(' ')}">`;
-  for (let r = 0; r <= rows; r++) s += `<line x1="${left}" x2="${left + gap * (n - 1)}" y1="${top + r * rh}" y2="${top + r * rh}" stroke="#4a4c54" stroke-width="1.2"/>`;
-  if (start === 1) s += `<line x1="${left - 1}" x2="${left + gap * (n - 1) + 1}" y1="${top}" y2="${top}" stroke="#e9e1c6" stroke-width="5"/>`;
-  for (let i = 0; i < n; i++) s += `<line x1="${X(i)}" x2="${X(i)}" y1="${top}" y2="${top + rows * rh}" stroke="#b4b5bb" stroke-width="${(1.9 - i * 0.18 * (6 / n)).toFixed(2)}"/>`;
-  if (start > 1) s += `<text x="${left - 9}" y="${top + rh / 2}" style="fill:#f0b43c;font:800 15px var(--sans);text-anchor:end;dominant-baseline:central">${start}</text><text x="${left - 9}" y="${top + rh / 2 + 13}" style="fill:#8b8d96;font:600 8px var(--sans);text-anchor:end">fret</text>`;
+  for (let r = 0; r <= rows; r++) s += `<line class="cdl" x1="${left}" x2="${left + gap * (n - 1)}" y1="${top + r * rh}" y2="${top + r * rh}" stroke="#4a4c54" stroke-width="1.2"/>`;
+  if (start === 1) s += `<line class="cdn" x1="${left - 1}" x2="${left + gap * (n - 1) + 1}" y1="${top}" y2="${top}" stroke="#e9e1c6" stroke-width="5"/>`;
+  for (let i = 0; i < n; i++) s += `<line class="cds" x1="${X(i)}" x2="${X(i)}" y1="${top}" y2="${top + rows * rh}" stroke="#b4b5bb" stroke-width="${(1.9 - i * 0.18 * (6 / n)).toFixed(2)}"/>`;
+  if (start > 1) s += `<text class="cdfn" x="${left - 9}" y="${top + rh / 2}" style="fill:#f0b43c;font:800 15px var(--sans);text-anchor:end;dominant-baseline:central">${start}</text><text class="cdx" x="${left - 9}" y="${top + rh / 2 + 13}" style="fill:#8b8d96;font:600 8px var(--sans);text-anchor:end">fret</text>`;
   const rootAt = i => { const tn = toneAt(i); return tn && tn.semis === 0; };
   if (v.barre) {
     const b = v.barre;
-    s += `<rect x="${X(b.from) - R}" y="${Y(b.fret) - R}" width="${X(b.to) - X(b.from) + 2 * R}" height="${2 * R}" rx="${R}" fill="${LIGHT}" fill-opacity=".92"/>`;
+    s += `<rect class="cdb" x="${X(b.from) - R}" y="${Y(b.fret) - R}" width="${X(b.to) - X(b.from) + 2 * R}" height="${2 * R}" rx="${R}" fill="${LIGHT}" fill-opacity=".92"/>`;
   }
   v.frets.forEach((f, i) => {
-    if (f < 0) { s += `<text x="${X(i)}" y="${top - 16}" style="fill:#8b8d96;font:700 15px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`; return; }
-    if (f === 0) { s += `<circle cx="${X(i)}" cy="${top - 16}" r="5.5" fill="none" stroke="${rootAt(i) ? RED : LIGHT}" stroke-width="2.2"/>`; return; }
+    if (f < 0) { s += `<text class="cdx" x="${X(i)}" y="${top - 16}" style="fill:#8b8d96;font:700 15px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`; return; }
+    if (f === 0) { s += `<circle class="cdo${rootAt(i) ? ' root' : ''}" cx="${X(i)}" cy="${top - 16}" r="5.5" fill="none" stroke="${rootAt(i) ? RED : LIGHT}" stroke-width="2.2"/>`; return; }
     const inBar = v.barre && f === v.barre.fret && i >= v.barre.from && i <= v.barre.to;
     const root = rootAt(i), y = Y(f);
     if (inBar && !root && i !== v.barre.from) return;                     // hidden under the bar
-    s += `<circle cx="${X(i)}" cy="${y}" r="${R}" fill="${root ? RED : LIGHT}"/><text x="${X(i)}" y="${y + 0.5}" style="fill:${root ? '#fff' : '#101114'};font:800 ${R > 10 ? 14 : 12}px var(--sans);text-anchor:middle;dominant-baseline:central">${v.fingers[i] || ''}</text>`;
+    s += `<g class="cdd${root ? ' root' : ''}"><circle cx="${X(i)}" cy="${y}" r="${R}" fill="${root ? RED : LIGHT}"/><text x="${X(i)}" y="${y + 0.5}" style="fill:${root ? '#fff' : '#101114'};font:800 ${R > 10 ? 14 : 12}px var(--sans);text-anchor:middle;dominant-baseline:central">${v.fingers[i] || ''}</text></g>`;
   });
   v.frets.forEach((f, i) => {
     if (f < 0) return;
     const tn = toneAt(i);
-    s += `<text x="${X(i)}" y="${top + rows * rh + 19}" style="fill:${tn && tn.semis === 0 ? RED : '#9a9ca5'};font:700 11px var(--sans);text-anchor:middle">${esc(tn ? tn.name : '')}</text>`;
+    s += `<text class="cdnm${tn && tn.semis === 0 ? ' root' : ''}" x="${X(i)}" y="${top + rows * rh + 19}" style="fill:${tn && tn.semis === 0 ? RED : '#9a9ca5'};font:700 11px var(--sans);text-anchor:middle">${esc(tn ? tn.name : '')}</text>`;
   });
   return s + '</svg>';
 }
@@ -2604,7 +3592,7 @@ function chordPosBlockHTML() {
       <div class="ptit">${esc(ch.name)} <span>position ${S.chordPos + 1} of ${ps.length}</span></div>
       <div class="pfr">${v.frets.map(f => (f < 0 ? '<i class="x">x</i>' : `<i>${f}</i>`)).join('')}</div>
       <div class="hint">${v.base === 0 ? 'Open position' : 'Frets ' + v.base + '–' + v.top}${v.barre ? ` · barre fret ${v.barre.fret}` : ''} · ${v.fingerCount} finger${v.fingerCount === 1 ? '' : 's'} · bass ${esc(bt ? bt.name : '')} (${bt ? (bt.label === '1' ? 'root' : esc(bt.label)) : ''})${omitted.length ? ` · leaves out the ${esc(omitted.join(', '))}` : ''}</div>
-      <div class="hint" style="margin-top:4px">Fingers: 1 index · 2 middle · 3 ring · 4 little. <span style="color:${RED}">Red</span> = root.</div>
+      <div class="hint" style="margin-top:4px">Fingers: 1 index · 2 middle · 3 ring · 4 little. <span style="color:var(--t-root-txt)">Red</span> = root.</div>
       <div class="toolbar" style="margin:10px 0 0"><button class="btn pri sm" data-act="vstrum">▶ Strum</button><button class="btn sm" data-act="varp">Arpeggio</button><button class="btn sm" data-act="vblock">Block</button></div>
     </div></div>`;
   return `<div class="posblock">
@@ -2634,8 +3622,8 @@ function renderChord() {
   return `
   <h2>Chord Builder <span class="ctx">pick a root and a quality — one tap each</span></h2>
   <div class="card">
-    <div class="engr sm" style="color:#8b8d96;margin-bottom:6px">Root</div><div class="rootstrip">${rootChips}</div>
-    <div class="engr sm" style="color:#8b8d96;margin:14px 0 2px">Quality <span style="text-transform:none;letter-spacing:0;font-weight:500">· ${T.CHORD_ORDER.length} chord types</span></div>${qGroups}
+    <div class="engr sm" style="color:var(--dim);margin-bottom:6px">Root</div><div class="rootstrip">${rootChips}</div>
+    <div class="engr sm" style="color:var(--dim);margin:14px 0 2px">Quality <span style="text-transform:none;letter-spacing:0;font-weight:500">· ${T.CHORD_ORDER.length} chord types</span></div>${qGroups}
     <div class="readout" style="margin-top:14px">
       <div class="ro"><div class="k">Chord</div><div class="v big">${esc(ch.name)}</div><div class="hint">${esc(ch.root)} ${esc(ch.qualityName)}</div></div>
       <div class="ro"><div class="k">Formula</div><div class="v big" style="word-spacing:.08em">${esc(ch.formula)}</div><div class="hint">${ch.tones.map(x => x.semis).join(' · ')} semitones above the root</div></div>
@@ -2667,35 +3655,35 @@ function circleSVG() {
   const role = (i, r) => {                        // returns {fill, tx, rn}
     const d = ((i - pos) + 12) % 12;
     if (!minorKey) {
-      if (r === 'maj') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'I' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'IV' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'V' }; }
-      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'vi' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'ii' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'iii' }; }
+      if (r === 'maj') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'I', r: 'tonic' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'IV', r: 'nb' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'V', r: 'nb' }; }
+      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'vi', r: 'rel' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'ii', r: 'rel' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'iii', r: 'rel' }; }
     } else {
-      if (r === 'min') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'i' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'iv' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'v' }; }
-      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'III' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'VI' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'VII' }; }
+      if (r === 'min') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'i', r: 'tonic' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'iv', r: 'nb' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'v', r: 'nb' }; }
+      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'III', r: 'rel' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'VI', r: 'rel' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'VII', r: 'rel' }; }
     }
-    return { f: r === 'maj' ? '#17181d' : '#101115', t: '#9ea0a9', rn: '' };
+    return { f: r === 'maj' ? '#17181d' : '#101115', t: '#9ea0a9', rn: '', r: r === 'maj' ? 'maj' : 'min' };
   };
-  let s = `<svg viewBox="0 0 400 400" role="img" aria-label="Circle of fifths"><circle cx="200" cy="200" r="196" fill="#08080a"/>`;
+  let s = `<svg viewBox="0 0 400 400" role="img" aria-label="Circle of fifths"><circle class="cfb" cx="200" cy="200" r="196" fill="#08080a"/>`;
   C.forEach((k, i) => {
     const a = -90 + 30 * i, a0 = a - 14.6, a1 = a + 14.6, rad = a * Math.PI / 180;
     const P = (r, dy = 0) => `x="${(200 + r * Math.cos(rad)).toFixed(1)}" y="${(200 + r * Math.sin(rad) + dy).toFixed(1)}"`;
     const ro = role(i, 'maj'), ri = role(i, 'min');
     const mj = k.alt ? `${k.major}` : k.major;
-    s += `<g class="wedge" data-act="circ" data-ring="maj" data-pos="${i}"><title>${esc(k.major)} major${k.alt ? ' / ' + esc(k.alt[0]) : ''} — ${k.sig.count ? k.sig.count + k.sig.type : 'no sharps or flats'}</title>
+    s += `<g class="wedge" data-r="${ro.r}" data-act="circ" data-ring="maj" data-pos="${i}"><title>${esc(k.major)} major${k.alt ? ' / ' + esc(k.alt[0]) : ''} — ${k.sig.count ? k.sig.count + k.sig.type : 'no sharps or flats'}</title>
       <path d="${sectorPath(192, 130, a0, a1)}" fill="${ro.f}" stroke="#000" stroke-width="2"/>
       <text ${P(163, k.alt ? -4 : 0)} style="fill:${ro.t};font:700 21px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(mj)}</text>
       ${k.alt ? `<text ${P(150, 8)} style="fill:${ro.t};opacity:.7;font:600 10px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(k.alt[0])}</text>` : ''}
       ${ro.rn ? `<text ${P(182, 0)} style="fill:${ro.t};opacity:.85;font:700 9px var(--sans);text-anchor:middle;dominant-baseline:central">${ro.rn}</text>` : ''}</g>`;
-    s += `<g class="wedge" data-act="circ" data-ring="min" data-pos="${i}"><title>${esc(k.minor)} minor${k.alt ? ' / ' + esc(k.alt[1]) + 'm' : ''}</title>
+    s += `<g class="wedge" data-r="${ri.r}" data-act="circ" data-ring="min" data-pos="${i}"><title>${esc(k.minor)} minor${k.alt ? ' / ' + esc(k.alt[1]) + 'm' : ''}</title>
       <path d="${sectorPath(128, 84, a0, a1)}" fill="${ri.f}" stroke="#000" stroke-width="2"/>
       <text ${P(108, 0)} style="fill:${ri.t};font:700 15px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(k.minor)}m</text>
       ${ri.rn ? `<text ${P(93, 0)} style="fill:${ri.t};opacity:.85;font:700 8.5px var(--sans);text-anchor:middle;dominant-baseline:central">${ri.rn}</text>` : ''}</g>`;
   });
   const sig = T.signatureFor(keyName(), S.scale);
-  s += `<circle cx="200" cy="200" r="80" fill="#0c0c0f" stroke="#000" stroke-width="2"/>
-    <text x="200" y="176" style="fill:#e9eaee;font:700 24px var(--cond);text-anchor:middle;letter-spacing:.04em">${esc(keyName())}</text>
-    <text x="200" y="198" style="fill:#8b8d96;font:600 11px var(--sans);text-anchor:middle;letter-spacing:.1em">${esc(T.SCALES[S.scale].name.toUpperCase())}</text>
-    <text x="200" y="228" style="fill:#f0a035;font:700 30px var(--sans);text-anchor:middle">${sig ? (sig.count ? sig.count + sig.type : '0') : ''}</text></svg>`;
+  s += `<circle class="cfc" cx="200" cy="200" r="80" fill="#0c0c0f" stroke="#000" stroke-width="2"/>
+    <text class="cft1" x="200" y="176" style="fill:#e9eaee;font:700 24px var(--cond);text-anchor:middle;letter-spacing:.04em">${esc(keyName())}</text>
+    <text class="cft2" x="200" y="198" style="fill:#8b8d96;font:600 11px var(--sans);text-anchor:middle;letter-spacing:.1em">${esc(T.SCALES[S.scale].name.toUpperCase())}</text>
+    <text class="cft3" x="200" y="228" style="fill:#f0a035;font:700 30px var(--sans);text-anchor:middle">${sig ? (sig.count ? sig.count + sig.type : '0') : ''}</text></svg>`;
   return s;
 }
 function renderCircle() {
@@ -2708,10 +3696,10 @@ function renderCircle() {
   return `<h2>Circle of Fifths <span class="ctx">tap a key</span></h2>
   <div class="circlewrap">
     <div>${circleSVG()}
-      <div class="legend" style="justify-content:center;margin-top:8px"><span><i style="background:#c77d12"></i>tonic</span><span><i style="background:#2f5fa8"></i>IV &amp; V (neighbours)</span><span><i style="background:#3a3d49"></i>relative minors / majors in key</span></div></div>
+      <div class="legend" style="justify-content:center;margin-top:8px"><span><i data-r="tonic" style="background:#c77d12"></i>tonic</span><span><i data-r="nb" style="background:#2f5fa8"></i>IV &amp; V (neighbours)</span><span><i data-r="rel" style="background:#3a3d49"></i>relative minors / majors in key</span></div></div>
     <div>
       <div class="card">
-        <div class="engr sm" style="color:#8b8d96">Key signature</div>
+        <div class="engr sm" style="color:var(--dim)">Key signature</div>
         <div class="v" style="font:700 36px var(--cond);margin:2px 0 6px">${sig ? (sig.count ? `${sig.count} ${sig.type === '♯' ? 'sharp' : 'flat'}${sig.count > 1 ? 's' : ''}` : 'no sharps or flats') : '—'}</div>
         <div class="sig">${sig && sig.accidentals.length ? sig.accidentals.map(a => `<span>${nm(a)}</span>`).join('') : '<span style="color:var(--dim)">all natural</span>'}</div>
         ${sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? `<div class="hint" style="margin-top:8px">${esc(keyTitle())} borrows the signature of ${esc(sig.parent)} major.${S.scale === 'harmonicMinor' ? ' Raise the 7th by a semitone on top of it.' : S.scale === 'melodicMinor' ? ' Raise the 6th and 7th going up.' : ''}</div>` : ''}
@@ -3274,7 +4262,7 @@ document.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) { const m = e.target.closest('[data-midi]'); if (m) { if (m.classList.contains('pk')) tapNote(+m.dataset.midi); else playMidi(+m.dataset.midi); } return; }
   const v = act.dataset.v, A = act.dataset.act;
-  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed'].includes(A)) UI.piFocus = true;
+  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed', 'theme', 'themeclose'].includes(A)) UI.piFocus = true;
   switch (A) {
     case 'tab': setTab(v); break;
     case 'labels': S.labels = v; render(); save(); break;
@@ -3359,6 +4347,8 @@ document.addEventListener('click', e => {
       (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => { act.textContent = 'Copied ✓'; setTimeout(() => { act.textContent = 'Copy chart'; }, 1400); }).catch(() => { act.textContent = 'Select & copy ↓'; });
       break;
     }
+    case 'theme': setTheme(v, { announce: true }); break;
+    case 'themeclose': themeOpen(false); break;
     case 'install': pwaInstall(); break;
     case 'reloadapp': location.reload(); break;
     case 'power': break;
@@ -3488,15 +4478,96 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   });
 }
 
+
+/* ================================================================
+   THEMES — "Silver Hi-Fi" is the default and sets nothing. Every other theme is a block of CSS custom properties plus
+   per-theme control styling in <style id="themes"> (authored in themes/*.css and assembled by tools/build-themes.js).
+   The choice is saved in localStorage ("bpgw.theme") and can be forced with ?theme=<id>.
+   ================================================================ */
+const THEMES = [
+  { id: 'silver',       name: 'Silver Hi-Fi',   note: 'The original: brushed aluminium, drum selectors, a glowing power lamp.', color: '#050506' },
+  { id: 'console',      name: 'Studio Console', note: 'Charcoal mixing desk, colour-coded channel caps, a live LED meter.', color: '#17191c', meter: true },
+  { id: 'pedal',        name: 'Boutique Pedal', note: 'Chunky enamel stompbox, fat pointer knobs, a jewel lamp.', color: '#1b1630', fonts: 'family=Rubik:wght@400;500;600;700;800&family=Bowlby+One' },
+  { id: 'tube',         name: 'Tube Amp',       note: 'Black tolex, cream chicken-head knobs, gold plate, grille cloth.', color: '#0d0c0b', fonts: 'family=Josefin+Sans:wght@600;700&family=Oswald:wght@400;500;600' },
+  { id: 'minimal',      name: 'Minimal Light',  note: 'Flat and airy, iOS-style segmented controls.', color: '#f2f2f7', fonts: 'family=Inter:wght@500;600;700;800' },
+  { id: 'minimal-dark', name: 'Minimal Dark',   note: 'The same flat controls on true black.', color: '#000000', fonts: 'family=Inter:wght@500;600;700;800' },
+  { id: 'synth',        name: 'Modular Synth',  note: 'Eurorack panels, small knobs, mono labels, patch points.', color: '#101114', meter: true, fonts: 'family=IBM+Plex+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;700' },
+  { id: 'wood',         name: 'Vintage Wood',   note: 'Walnut cabinet, brass fittings, warm paper labels.', color: '#1a0f08', fonts: 'family=Playfair+Display:wght@600;700;800&family=Alegreya+Sans:wght@500;700;800' },
+];
+const THEME_KEY = 'bpgw.theme';
+const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];
+const curThemeId = () => document.documentElement.getAttribute('data-theme') || 'silver';
+function themePreviewHTML(id) {
+  return `<span class="tp" data-theme="${id}" aria-hidden="true"><span class="tp-panel"><i class="tp-k"></i><i class="tp-k"></i><b class="tp-d"></b><u class="tp-b"></u><u class="tp-b on"></u></span><span class="tp-fb"><i class="r"></i><i class="a"></i><i class="g"></i><i class="b"></i></span><span class="tp-keys"><i></i><i></i><i class="l"></i><i></i><i class="m"></i><i></i><i></i></span></span>`;
+}
+function themePanelHTML() {
+  const cur = curThemeId();
+  return `<div class="tpHead"><b>Theme</b><span>Pick a look. It is saved on this device; add <code>?theme=</code> to a link to share one.</span><button class="btn sm" data-act="themeclose" aria-label="Close theme picker">Done</button></div>
+    <div class="tpGrid" role="radiogroup" aria-label="Theme">${THEMES.map(t => `<button class="tpCard${t.id === cur ? ' on' : ''}" role="radio" aria-checked="${t.id === cur}" data-act="theme" data-v="${t.id}" aria-label="${esc(t.name)}. ${esc(t.note)}">${themePreviewHTML(t.id)}<span class="tpName">${esc(t.name)}</span><span class="tpNote">${esc(t.note)}</span></button>`).join('')}</div>`;
+}
+function setTheme(id, opts = {}) {
+  const t = themeOf(id); id = t.id;
+  const root = document.documentElement;
+  if (id === 'silver') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', id);
+  const meta = $('#metaTheme'); if (meta) meta.setAttribute('content', t.color);
+  if (t.fonts && !document.getElementById('font-' + id)) {
+    const l = document.createElement('link'); l.id = 'font-' + id; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?' + t.fonts + '&display=swap'; document.head.appendChild(l);
+  }
+  if (!opts.noSave) {
+    try { localStorage.setItem(THEME_KEY, id); } catch (e) {}
+    try { const u = new URL(location.href); u.searchParams.set('theme', id); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) {}
+  }
+  Meter.sync(); themePanelPaint();
+  if (opts.announce) announce(t.name + ' theme');
+}
+function themePanelPaint() {
+  const p = $('#themePanel'); if (!p || p.hidden) return;
+  const cur = curThemeId();
+  $$('.tpCard', p).forEach(b => { const on = b.dataset.v === cur; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+}
+function themeOpen(open) {
+  const p = $('#themePanel'), b = $('#themeBtn'); if (!p) return;
+  if (open === undefined) open = p.hidden;
+  if (open) { p.innerHTML = themePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const on = $('.tpCard.on', p) || $('.tpCard', p); if (on) on.focus({ preventScroll: true }); }
+  else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
+}
+// LED meter (Studio Console, Modular Synth): follows the real output level; costs nothing when the theme has no meter.
+const Meter = {
+  n: 12, raf: 0, lit: -1, hold: 0, el: null,
+  sync() {
+    const want = !!themeOf(curThemeId()).meter;
+    this.el = $('#meter');
+    if (this.el && !this.el.firstChild) this.el.innerHTML = '<i></i>'.repeat(this.n);
+    if (want && !this.raf && !document.hidden) this.raf = requestAnimationFrame(() => this.tick());
+    if (!want && this.raf) { cancelAnimationFrame(this.raf); this.raf = 0; }
+  },
+  tick() {
+    this.raf = 0;
+    if (!themeOf(curThemeId()).meter || document.hidden) return;
+    const lv = Snd.level(), want = Math.round(lv * this.n), now = performance.now();
+    if (want >= this.lit) { this.lit = want; this.hold = now; } else if (now - this.hold > 70) { this.lit = Math.max(want, this.lit - 1); this.hold = now; }
+    if (this.lit !== this._shown && this.el) { const k = this.el.children; for (let i = 0; i < k.length; i++) k[i].classList.toggle('on', i < this.lit); this._shown = this.lit; }
+    this.raf = requestAnimationFrame(() => this.tick());
+  },
+};
+document.addEventListener('visibilitychange', () => Meter.sync());
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#themePanel').hidden) { themeOpen(false); } });
+document.addEventListener('click', e => {
+  const p = $('#themePanel'); if (!p || p.hidden) return;
+  if (!e.target.closest('#themePanel') && !e.target.closest('#themeBtn')) themeOpen(false);
+});
+$('#themeBtn').addEventListener('click', () => themeOpen());
+
 /* ---------- boot ---------- */
 applyHash();
 buildDock();
 buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
+setTheme(THEMES.some(t => t.id === curThemeId()) ? curThemeId() : 'silver', { noSave: true });
 UI.booted = true; pwaPaint(); document.body.classList.add('ready');
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
+window.BPGW = { THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>
 </body>
 </html>

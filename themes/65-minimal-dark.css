@@ -1,0 +1,39 @@
+/* Minimal Dark — true-black iOS dark mode. Structure comes from 60-minimal.css (@also); this file only swaps the variables. */
+:theme{
+  --bg:#000; --ink:#f2f2f7; --dim:#a1a1a8; --faint:#8e8e96; --amber:#5aa9ff; --green:#4ddc7a; --red:#ff6b61; --gold:#a1a1a8; --blue:#5aa9ff; --violet:#c58bff; --engrave:#f2f2f7;
+  --page:#000;
+  --h2:#f2f2f7; --h2s:#a1a1a8; --h2c:#a1a1a8; --ink2:#d8d8de; --ink3:#b4b4bc; --mute:#a1a1a8; --lab:#a1a1a8; --on-amber:#00132b;
+  --card:#1c1c1e; --card-bd:#2c2c2e; --inset:#0b0b0c; --inset-bd:#2c2c2e; --inset-ink:#f2f2f7;
+  --raise:#1c1c1e; --raise-bd:#3a3a3c; --raise-bd-h:#5aa9ff; --chip:#2c2c2e; --chip-bd:#3a3a3c; --hair:#2c2c2e; --hair2:#3a3a3c;
+  --now-bg:#12263f; --now-sh:0 0 0 2px #5aa9ff; --step-off:#3a3a3c;
+  --panel:#1c1c1e; --panel-bd:#2c2c2e; --panel-sh:0 10px 30px rgba(0,0,0,.6);
+  --panel-ink:#f2f2f7; --panel-ink2:#a1a1a8; --ok-p:#4ddc7a; --warn-p:#ff8a80;
+  --led-off:#48484a; --led-on:#30d158; --led-on-sh:0 0 0 4px rgba(48,209,88,.25);
+  --drum-bg:#0b0b0c; --drum-sh:0 0 0 1px #3a3a3c; --drum-ink:#f2f2f7; --edge-ink:#5aa9ff;
+  --knob-bg:#3a3a3c; --knob-sh:0 0 0 1px #48484a,0 3px 8px rgba(0,0,0,.6); --ind:#5aa9ff; --tick:#8e8e96; --knobread:#f2f2f7;
+  --tog-bg:#48484a; --tog-on:#30d158; --tog-thumb:#fff;
+  --btn-bg:#2c2c2e; --btn-ink:#5aa9ff; --btn-bd-h:#5aa9ff;
+  --pri-bg:#5aa9ff; --pri-bd:#5aa9ff; --pri-ink:#00132b;
+  --key-bg:#2c2c2e; --key-bd:#3a3a3c; --key-ink:#f2f2f7;
+  --on-bg:#5aa9ff; --on-bd:#5aa9ff; --on-ink:#00132b;
+  --sel-bg:#5aa9ff; --sel-bd:#5aa9ff; --sel-ink:#00132b; --sel-sub:#0a2c55;
+  --seg-bg:#2c2c2e; --seg-on:#636366; --seg-on-ink:#fff;
+  --dock-bg:rgba(28,28,30,.88); --dock-bd:rgba(255,255,255,.1); --dock-ink:#a1a1a8; --dock-on:#12263f; --dock-on-ink:#5aa9ff; --dock-sh:0 8px 30px rgba(0,0,0,.7);
+  --fbwrap-bd:#3a3a3c; --fbwrap-bg:#000;
+  --fb-wood:#1c1c1e; --fb-fret:#55555a; --fb-nut:#9a9aa2; --fb-str:#a1a1a8; --fb-inlay:#3a3a3c; --fb-inlay-bd:#3a3a3c; --fb-num:#a1a1a8; --fb-numhi:#f2f2f7; --fb-open:#b4b4bc;
+  --ctx-bg:#000; --ctx-bd:#636366; --ctx-fg:#b4b4bc; --dot-ring:rgba(0,0,0,.55); --dot-in:#fff;
+  --t-root:#ff6b61; --t-root-fg:#1a0300; --t-root-txt:#ff8a80; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#4ddc7a; --t-fifth-fg:#052b12; --t-seventh:#5aa9ff; --t-seventh-fg:#00132b; --t-ext:#c58bff; --t-ext-fg:#1b0636; --t-scale:#4ddc7a; --t-scale-fg:#052b12;
+  --h-r:#4ddc7a; --h-r-fg:#052b12; --h-l:#5aa9ff; --h-l-fg:#00132b; --hr-txt:#4ddc7a; --hl-txt:#7db8ff; --ring-root:#ff6b61; --now:#5aa9ff; --now-fg:#5aa9ff; --inp:#c58bff; --good:#4ddc7a; --bad:#ff8a80;
+  --pk-wrap-bd:#3a3a3c; --pk-wrap-bg:#000;
+  --pk-w:#f2f2f7; --pk-w-bd:#3a3a3c; --pk-lit-w:#9fcaff; --pk-b:#2c2c2e; --pk-b-bd:#000; --pk-lit-b:#2f6cc0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#b3140c; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#5aa9ff;
+  --lcd-bg:#0b0b0c; --lcd-bd:#2c2c2e; --lcd-ink:#f2f2f7; --lcd-ink2:#d8d8de; --lcd-hi:#5aa9ff; --lcd-dim:#a1a1a8;
+  --stf-sl:#636366; --stf-sl2:#8e8e96; --stf-tl:#48484a; --stf-ink:#f2f2f7; --stf-fret:#5aa9ff;
+  --c-tonic:#5aa9ff; --c-tonic-fg:#00132b; --c-nb:#1f4a85; --c-nb-fg:#d6e6ff; --c-rel:#3a3a3c; --c-maj:#1c1c1e; --c-min:#141416; --c-off-fg:#b4b4bc; --c-rel-fg:#fff; --c-t1:#f2f2f7; --c-t2:#a1a1a8; --c-bg:#000; --c-centre:#1c1c1e; --c-line:#000; --c-t3:#5aa9ff;
+  --cd-line:#636366; --cd-str:#a1a1a8; --cd-dot:#f2f2f7; --cd-dot-fg:#1c1c1e; --cd-lab:#a1a1a8; --cd-fn:#5aa9ff;
+  --bar-n:#a1a1a8; --ok:#30d158; --ok-bg:#12301f; --ok-ink:#7be0a4; --hook-bg:#12263f; --hook-ink:#d6e6ff; --code-ink:#d8d8de;
+}
+.card,.pfc,.lcard{box-shadow:none}
+.knob::before{background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) 270deg,transparent 270deg)}
+.drum .edge:hover{background:rgba(90,169,255,.15)}
+.seg button.on{box-shadow:none}

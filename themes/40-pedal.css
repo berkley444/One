@@ -1,0 +1,72 @@
+/* Boutique Pedal — a turquoise enamel stompbox on a dark purple stage: fat black knurled knobs with cream pointers, cream label-plate
+   selectors, a chrome-bezelled ruby jewel lamp, candy-coloured chunky keys with a hard drop shadow. Rubik for the screen-print. */
+:theme{
+  --bg:#150f27; --ink:#fff4dc; --dim:#b9aedc; --faint:#8a7fb3; --amber:#ffd43b; --green:#37e0b0; --red:#ff4d6d; --gold:#ffd43b; --blue:#7c8cff; --violet:#c08bff; --engrave:#052a27;
+  --sans:"Rubik",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; --cond:"Rubik",var(--sans); --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --page:radial-gradient(900px 440px at 50% -90px,#33265f 0,#150f27 78%) no-repeat,#150f27;
+  --hfont:"Rubik",var(--sans); --lab-font:"Rubik",var(--sans); --h1-ls:.04em; --drum-font:"Rubik",var(--sans);
+  --h2:#c9bff0; --h2s:#b9aedc; --h2c:#d3caf3; --ink2:#efe6ff; --ink3:#cfc5ee; --mute:#b0a5d6; --lab:#b9aedc; --on-amber:#2b2000;
+  --card:#231a40; --card-bd:#463a80; --card-r:18px; --inset:#150f27; --inset-bd:#3a2f6b; --inset-ink:#fff4dc;
+  --raise:#2c2250; --raise-bd:#4a3d85; --raise-bd-h:#ffd43b; --raise-r:16px; --chip:#2c2250; --chip-bd:#4a3d85; --hair:#352a5e; --hair2:#463a80;
+  --now-bg:linear-gradient(180deg,#4a3a10,#2a2108); --now-sh:0 0 0 2px #ffd43b; --step-off:#3a2f6b;
+  --panel:linear-gradient(180deg,#27d6c3 0,#15b3a3 100%); --panel-bd:#06433d; --panel-r:24px;
+  --panel-sh:0 4px 0 rgba(255,255,255,.35) inset,0 -5px 0 rgba(0,0,0,.16) inset,0 9px 0 #06433d,0 16px 26px rgba(0,0,0,.55);
+  --panel-ink:#052a27; --panel-ink2:#052a27; --engr-sh:none; --ok-p:#04371c; --warn-p:#6b0a1c;
+  --led-off:radial-gradient(circle at 35% 30%,#8a3a4a,#4a0a1a 70%); --led-off-sh:0 0 0 3px #ece4d0,0 0 0 5px #7d7560,0 2px 4px 5px rgba(0,0,0,.35);
+  --led-on:radial-gradient(circle at 36% 28%,#fff 0 7%,#ffb3c0 12%,#ff2f55 48%,#9c0a28); --led-on-sh:0 0 0 3px #ece4d0,0 0 0 5px #7d7560,0 0 16px 8px rgba(255,47,85,.7);
+  --drum-bg:#fff1cf; --drum-sh:0 0 0 3px #06433d,0 4px 0 3px #06433d; --drum-r:12px; --drum-ink:#22150a; --drum-line-o:0; --edge-bg:#0b4a44; --edge-ink:#fff1cf;
+  --knob-bg:@art(pedal-knob); --knob-sh:0 5px 0 rgba(0,0,0,.28),0 9px 10px rgba(0,0,0,.35); --ind:#fff4d8; --tick:#06433d; --knobread:#052a27;
+  --tog-bg:#06433d; --tog-sh:0 3px 0 #04302b; --tog-on:#ff4d6d; --tog-thumb:linear-gradient(180deg,#fffaf0,#e3d3a8);
+  --btn-bg:#3b2f6b; --btn-bd:#5b4aa0; --btn-bd-h:#ffd43b; --btn-ink:#fff4dc; --btn-r:12px; --btn-sh:0 3px 0 #0e0820;
+  --pri-bg:#ffd43b; --pri-bd:#b88f00; --pri-ink:#2b2000;
+  --key-bg:linear-gradient(180deg,#fff9e8,#ffe9b5); --key-bd:#06433d; --key-ink:#2b1a00; --key-sh:0 3px 0 #06433d; --key-r:12px;
+  --on-bg:#ff6f91; --on-bd:#06433d; --on-ink:#2b0010; --on-sh:0 3px 0 #06433d;
+  --sel-bg:#ffd43b; --sel-bd:#06433d; --sel-ink:#2b2000; --sel-sub:#2b2000; --sel-sh:0 3px 0 #06433d,0 0 0 2px #fff4dc inset;
+  --seg-bg:#150f27; --seg-bd:#463a80; --seg-on:#ffd43b; --seg-on-ink:#2b2000; --seg-r:12px;
+  --dock-bg:rgba(35,26,64,.95); --dock-bd:#5b4aa0; --dock-ink:#d3caf3; --dock-on:#ffd43b; --dock-on-ink:#2b2000; --dock-sh:0 6px 0 #0e0820,0 14px 26px rgba(0,0,0,.6); --dock-r:24px; --dock-item-r:18px;
+  --fbwrap-bd:#19c3b1; --fbwrap-bg:#150f27; --fbwrap-r:16px;
+  --fb-wood:#f1dca3; --fb-fret:#8f8776; --fb-nut:#b8a468; --fb-str:#675d49; --fb-inlay:#2b1f10; --fb-num:#c9bff0; --fb-numhi:#fff4dc; --fb-open:#3a2f1a;
+  --ctx-bg:#fff7de; --ctx-bd:#7a6a44; --ctx-fg:#4a3c20; --dot-ring:#1b1233; --dot-in:#1b1233; --dot-font:"Rubik",var(--sans);
+  --t-root:#e0143c; --t-root-fg:#fff; --t-root-txt:#ff7d94; --t-third:#ff9500; --t-third-fg:#2a1500; --t-fifth:#12a36a; --t-fifth-fg:#04281a; --t-seventh:#2f5bff; --t-seventh-fg:#fff; --t-ext:#9b3dff; --t-ext-fg:#fff; --t-scale:#12a36a; --t-scale-fg:#04281a;
+  --h-r:#00d1a0; --h-r-fg:#00281d; --h-l:#7c8cff; --h-l-fg:#0a0f40; --hr-txt:#37e0b0; --hl-txt:#a3afff; --ring-root:#ff4d6d; --now:#ffd43b; --now-fg:#ffd43b; --inp:#c08bff; --good:#37e0b0; --bad:#ff7d94;
+  --pk-wrap-bd:#19c3b1; --pk-wrap-bg:#150f27; --pk-wrap-r:16px;
+  --pk-w:linear-gradient(180deg,#fffaf0,#fff2d3); --pk-w-bd:#1b1233; --pk-w-sh:0 4px 0 #bba67c; --pk-w-r:0 0 9px 9px; --pk-lit-w:linear-gradient(180deg,#ffe58a,#ffd43b);
+  --pk-b:linear-gradient(180deg,#3a2a6b,#1b1233); --pk-b-bd:#0d0820; --pk-b-sh:0 4px 0 #0d0820; --pk-b-r:0 0 7px 7px; --pk-lit-b:linear-gradient(180deg,#6a54b0,#35286a);
+  --pk-nm:#2b1a00; --pk-nm-root:#b00028; --pk-bnm-root:#ff9fb0; --pk-oct:#6b5c3a; --pk-str:#ffd43b;
+  --lcd-bg:#150f27; --lcd-bd:#06433d; --lcd-sh:0 0 0 2px #0b4a44 inset; --lcd-ink:#fff4dc; --lcd-ink2:#d3caf3; --lcd-hi:#ffd43b; --lcd-dim:#b9aedc;
+  --stf-sl:#8a7fb3; --stf-sl2:#b9aedc; --stf-tl:#6a5fa0; --stf-ink:#fff4dc; --stf-fret:#ffd43b;
+  --c-tonic:#ffd43b; --c-tonic-fg:#2b2000; --c-nb:#6a4cff; --c-rel:#463a80; --c-maj:#2c2250; --c-min:#1d1538; --c-off-fg:#cfc5ee; --c-bg:#150f27; --c-centre:#231a40; --c-line:#150f27; --c-t3:#ffd43b;
+  --cd-line:#6a5fa0; --cd-str:#b9aedc; --cd-dot:#fff4dc; --cd-dot-fg:#1b1233; --cd-lab:#cfc5ee; --cd-fn:#ffd43b;
+  --bar-n:#9a8fc4; --ok:#1f9d6b; --ok-bg:#12382c; --ok-ink:#7ff0c6; --hook-bg:#2d2548; --hook-ink:#fff4dc; --code-ink:#efe6ff;
+}
+body{font-weight:500}
+h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:24px;text-shadow:3px 3px 0 #0b0719}
+h2{font-weight:800;text-shadow:3px 3px 0 #0b0719}
+.card,.lcard,.pfc{border-width:2px}
+.card,.cc,.bar,.sbar{box-shadow:0 4px 0 #0d0820}
+.metal{background:radial-gradient(rgba(255,255,255,.22) 1px,transparent 1.5px) 0 0/8px 8px,var(--panel);border-width:3px}
+.engr{font-weight:800;letter-spacing:.14em}
+.engr.sm{font-weight:700;letter-spacing:.12em}
+.drum{border:0;margin:3px 3px 5px}
+.drum .val{font-weight:700;font-size:17px}
+.drum .edge{border:0;width:19px;border-radius:0}
+.drum .edge.l{border-radius:9px 0 0 9px}.drum .edge.r{border-radius:0 9px 9px 0}
+.drum .edge::after{display:block;border-width:3px 3px 0 0;width:8px;height:8px}
+.drum .edge:active{filter:brightness(1.4)}
+.knob{width:74px;height:74px}
+.knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat}
+.knob .cap::before{background:none}
+.knob .cap i{display:none}
+.knobread{font-weight:700;font-size:13px;margin-top:0}
+.power{gap:9px}.power .led{width:16px;height:16px}
+.toggle{height:32px;width:58px;border-radius:16px}.toggle::after{top:3px;left:3px;width:26px;height:26px;box-shadow:0 2px 0 rgba(0,0,0,.35)}.toggle.on::after{transform:translateX(26px)}
+.btn{font-weight:700}
+.btn:active,.pos:active,.chip:active{transform:translateY(3px);box-shadow:none}
+.pos{font-family:var(--sans)}.pos b{font-weight:800}
+.chip{font-weight:800}
+nav.dock button{font-weight:800}
+.fbwrap,.pianowrap{border-width:4px}
+.pk.w{border-width:2px}
+.dot circle{stroke-width:1.5}
+.pread{border-width:2px}
+.cc.sel{box-shadow:0 0 0 2px var(--amber) inset,0 4px 0 #0d0820}

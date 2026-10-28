@@ -1,0 +1,68 @@
+/* Tube Amp — black tolex, a brushed-gold control plate with gold piping, cream chicken-head knobs, a ruby pilot lamp, brass-edged
+   black selector windows and a grille-cloth dock. Oswald for the engraving, Josefin Sans for the headings. */
+:theme{
+  --bg:#0b0a09; --ink:#f3e9cc; --dim:#b9ab88; --faint:#a1925f; --amber:#e8bf5a; --green:#8fd16b; --red:#e2553d; --gold:#e8bf5a; --blue:#6aa6d9; --violet:#c79adf; --engrave:#1a1305;
+  --cond:"Oswald","Arial Narrow",Arial,sans-serif;
+  --page:@art(tolex) 0 0/12px 12px,radial-gradient(1000px 520px at 50% -120px,rgba(60,48,30,.55) 0,rgba(0,0,0,0) 70%) no-repeat,#0b0a09;
+  --hfont:"Josefin Sans","Oswald",sans-serif; --lab-font:"Oswald","Arial Narrow",sans-serif; --h1-ls:.12em; --drum-font:var(--sans);
+  --h2:#d3bc83; --h2s:#b9ab88; --h2c:#cdbd96; --ink2:#e8dcb9; --ink3:#c9bb97; --mute:#b0a281; --lab:#b9ab88; --on-amber:#1a1305;
+  --card:#14110e; --card-bd:#4a3c18; --card-r:6px; --inset:#0b0a09; --inset-bd:#3a2f14; --inset-ink:#f6e7b8;
+  --raise:linear-gradient(180deg,#221d17,#15120f); --raise-bd:#4a3c18; --raise-bd-h:#e8bf5a; --raise-r:5px; --chip:#221d17; --chip-bd:#4a3c18; --hair:#2a2418; --hair2:#3a2f14;
+  --now-bg:linear-gradient(180deg,#3a2c0c,#1a1408); --now-sh:0 0 14px rgba(232,191,90,.3); --step-off:#33291a;
+  --panel:repeating-linear-gradient(90deg,rgba(255,255,255,.15) 0 1px,rgba(0,0,0,.05) 1px 2px,rgba(255,255,255,0) 2px 4px),linear-gradient(180deg,#e2c982,#c3a35a 55%,#d6b96f);
+  --panel-bd:#3d2f10; --panel-r:5px; --panel-sh:0 0 0 3px #0b0a09,0 0 0 5px #d1a94c,0 0 0 7px #0b0a09,0 16px 28px rgba(0,0,0,.75);
+  --panel-ink:#1a1305; --panel-ink2:#1a1305; --engr-sh:0 1px 0 rgba(255,255,255,.4); --ok-p:#14501a; --warn-p:#7a1608;
+  --led-off:radial-gradient(circle at 35% 30%,#7a3a2a,#3a0e06 70%); --led-off-sh:0 0 0 2px #7a6224,0 0 0 4px #1a1305;
+  --led-on:radial-gradient(circle at 36% 28%,#fff0d8 0 6%,#ffb27a 14%,#ff4a1f 52%,#8a1400); --led-on-sh:0 0 0 2px #7a6224,0 0 0 4px #1a1305,0 0 14px 6px rgba(255,90,40,.65);
+  --drum-bg:#0d0b09; --drum-sh:0 0 0 2px #2a2008,0 0 0 3px #e0bd62,0 3px 5px 3px rgba(0,0,0,.4); --drum-r:3px; --drum-ink:#f6e7b8; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#dcbc6a,#9b7a2c); --edge-ink:#1a1305;
+  --knob-bg:@art(tube-knob); --knob-sh:none; --ind:#241d10; --ind-sh:none; --tick:#1a1305; --knobread:#1a1305;
+  --tog-bg:#0d0b09; --tog-sh:0 0 0 2px #7a6224,0 0 0 3px #1a1305,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a6a1c,#e8bf5a); --tog-thumb:linear-gradient(180deg,#fbfbf6,#9a9890);
+  --btn-bg:linear-gradient(180deg,#2c2723,#14110e); --btn-bd:#8a6d2c; --btn-bd-h:#e8bf5a; --btn-ink:#f3e9cc; --btn-r:4px; --btn-sh:0 1px 0 rgba(255,255,255,.08) inset,0 2px 3px rgba(0,0,0,.5);
+  --pri-bg:linear-gradient(180deg,#f2d67f,#c49a38); --pri-bd:#6b5115; --pri-ink:#1a1305;
+  --key-bg:linear-gradient(180deg,#f5ecd0,#d8c892); --key-bd:#3d2f10; --key-ink:#1a1305; --key-sh:0 1px 0 rgba(255,255,255,.5) inset,0 2px 3px rgba(0,0,0,.5); --key-r:4px;
+  --on-bg:linear-gradient(180deg,#ffd68a,#f0a030); --on-bd:#6b3d08; --on-ink:#1a1000; --on-sh:0 0 12px rgba(255,170,50,.55),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#2c2723,#0d0b09); --sel-bd:#e8bf5a; --sel-ink:#f6e7b8; --sel-sub:#e8bf5a; --sel-sh:0 0 0 1px #e8bf5a,0 0 10px rgba(232,191,90,.3);
+  --seg-bg:#14110e; --seg-bd:#4a3c18; --seg-on:#3a3118; --seg-on-ink:#f6e7b8; --seg-r:4px;
+  --dock-bg:@art(grille) 0 0/8px 8px,#2c1c11; --dock-bd:#d1a94c; --dock-ink:#efe0b6; --dock-on:#e8bf5a; --dock-on-ink:#1a1305; --dock-sh:0 0 0 2px #0b0a09,0 12px 26px rgba(0,0,0,.75); --dock-r:10px; --dock-item-r:6px;
+  --fbwrap-bd:#c9a24a; --fbwrap-bg:#0b0a09; --fbwrap-r:6px;
+  --fb-wood:#33190e; --fb-grain:rgba(10,3,0,.5); --fb-fret:#cfc8b4; --fb-nut:#efe6c8; --fb-str:#d9d2bd; --fb-inlay:#eadfc0; --fb-inlay-bd:#8d7b45; --fb-num:#b9ab88; --fb-numhi:#f3e9cc; --fb-open:#c0b18b;
+  --ctx-bg:#1d120a; --ctx-bd:#8d7b45; --ctx-fg:#d8c9a0; --dot-ring:#000; --dot-in:#fff8dc;
+  --t-root:#c9301d; --t-root-fg:#fff; --t-root-txt:#f0705a; --t-third:#f0b43c; --t-third-fg:#2a1a00; --t-fifth:#8fd16b; --t-fifth-fg:#0e2205; --t-seventh:#5e9bd6; --t-seventh-fg:#06182a; --t-ext:#b98ad6; --t-ext-fg:#1d0a2b; --t-scale:#8fd16b; --t-scale-fg:#0e2205;
+  --h-r:#7ad37e; --h-r-fg:#052b0a; --h-l:#6aa6ff; --h-l-fg:#04183a; --hr-txt:#8fe093; --hl-txt:#8bbcff; --ring-root:#e2553d; --now:#f2c85c; --now-fg:#f2c85c; --inp:#c79adf; --good:#8fd16b; --bad:#f0705a;
+  --pk-wrap-bd:#c9a24a; --pk-wrap-bg:#0b0a09; --pk-wrap-r:6px;
+  --pk-w:linear-gradient(180deg,#f2e7c6,#fbf3da 70%,#dccb9a); --pk-w-bd:#2a2008; --pk-w-sh:0 2px 0 #a89868; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe9a0,#f2c85c 70%,#d9a93c);
+  --pk-b:linear-gradient(180deg,#2d261e,#0c0907); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#5a4a2a,#1d150b);
+  --pk-nm:#2a1c08; --pk-nm-root:#a3200f; --pk-bnm-root:#ff9d88; --pk-oct:#6a5c3a; --pk-str:#e8bf5a;
+  --lcd-bg:#0b0a09; --lcd-bd:#3d2f10; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #8a6d2c; --lcd-ink:#f6e7b8; --lcd-ink2:#cdbd96; --lcd-hi:#e8bf5a; --lcd-dim:#b9ab88;
+  --stf-sl:#7a6c48; --stf-sl2:#a89868; --stf-tl:#5a4e34; --stf-ink:#f3e9cc; --stf-fret:#e8bf5a;
+  --c-tonic:#e8bf5a; --c-tonic-fg:#1a1305; --c-nb:#8a3a22; --c-rel:#3a3226; --c-maj:#1b1713; --c-min:#12100d; --c-off-fg:#cdbd96; --c-bg:#0b0a09; --c-centre:#14110e; --c-line:#0b0a09; --c-t3:#e8bf5a;
+  --cd-line:#5a4e34; --cd-str:#b9ab88; --cd-dot:#f3e9cc; --cd-dot-fg:#1a1305; --cd-lab:#cdbd96; --cd-fn:#e8bf5a;
+  --bar-n:#8f8060; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
+}
+h1{font-weight:700;text-shadow:0 2px 0 #000}
+h1::after{content:"";display:block;width:min(260px,70%);height:3px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#d1a94c 20%,#d1a94c 80%,transparent)}
+h2{font-weight:700;letter-spacing:.1em;border-bottom:2px solid #6b5522;padding-bottom:5px}
+.card,.pfc,.lcard{box-shadow:0 0 0 2px #0b0a09,0 0 0 3px #7a6224}
+.pread{box-shadow:var(--lcd-sh)}
+.metal::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at 9px 9px,#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) 9px,#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at 9px calc(100% - 9px),#6b5522 0 3px,transparent 3.6px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#6b5522 0 3px,transparent 3.6px)}
+.engr{font-weight:600;letter-spacing:.18em}
+.engr.sm{font-weight:500;letter-spacing:.14em}
+.drum .val{font-weight:600;letter-spacing:.02em}
+.drum .edge{width:17px;border:0}
+.drum .edge::after{display:block}
+.drum .edge.l{border-right:1px solid #3d2f10;box-shadow:none}.drum .edge.r{border-left:1px solid #3d2f10;box-shadow:none}
+.knob{width:84px;height:84px}
+.knob .cap{inset:16px;background:none;box-shadow:none}
+.knob .cap::before{inset:-9px;border-radius:0;background:var(--knob-bg) center/100% 100% no-repeat;filter:drop-shadow(0 4px 3px rgba(0,0,0,.45))}
+.knob .cap i{display:none}
+.power .led{width:15px;height:15px}
+.power{gap:10px}
+.toggle{width:56px}.toggle.on::after{transform:translateX(26px)}
+.btn{letter-spacing:.06em}
+.btn:active,.pos:active,.chip:active{transform:translateY(1px)}
+nav.dock{border-width:2px}
+nav.dock button{font-family:"Oswald",sans-serif;letter-spacing:.14em;font-weight:500}
+.fbwrap,.pianowrap{border-width:4px;border-style:double}
+.dot circle{stroke-width:1.2}

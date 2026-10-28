@@ -1,0 +1,75 @@
+/*@also minimal-dark*/
+/* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
+   iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
+   65-minimal-dark.css only swaps the variables. */
+:theme{
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:var(--sans);
+  --bg:#f2f2f7; --ink:#1c1c1e; --dim:#5f5f66; --faint:#6b6b73; --amber:#0a5fd1; --green:#17692e; --red:#d12c2c; --gold:#6b6b73; --blue:#0a5fd1; --violet:#7a35c4; --engrave:#1c1c1e;
+  --page:#f2f2f7; --hfont:var(--sans); --lab-font:var(--sans); --drum-font:var(--sans); --h1-ls:-.01em; --h1-tt:none; --lcd-font:var(--mono);
+  --h2:#1c1c1e; --h2s:#5f5f66; --h2c:#5f5f66; --ink2:#3a3a3c; --ink3:#55555b; --mute:#5f5f66; --lab:#5f5f66; --on-amber:#fff;
+  --card:#fff; --card-bd:#e5e5ea; --card-r:16px; --inset:#f2f2f7; --inset-bd:#e5e5ea; --inset-ink:#1c1c1e;
+  --raise:#fff; --raise-bd:#e0e0e6; --raise-bd-h:#0a5fd1; --raise-r:12px; --chip:#e9e9ee; --chip-bd:#d8d8de; --hair:#ececf0; --hair2:#d8d8de;
+  --now-bg:#e6effd; --now-sh:0 0 0 2px #0a5fd1; --step-off:#d1d1d6;
+  --panel:#fff; --panel-bd:#e5e5ea; --panel-r:22px; --panel-sh:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(0,0,0,.08);
+  --panel-ink:#1c1c1e; --panel-ink2:#5f5f66; --engr-sh:none; --ok-p:#17692e; --warn-p:#c4271d;
+  --led-off:#c7c7cc; --led-off-sh:none; --led-on:#34c759; --led-on-sh:0 0 0 4px rgba(52,199,89,.25);
+  --drum-bg:#f2f2f7; --drum-sh:0 0 0 1px #e0e0e6; --drum-r:12px; --drum-ink:#1c1c1e; --drum-line-o:0;
+  --edge-bg:transparent; --edge-ink:#0a5fd1;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #d8d8de,0 3px 8px rgba(0,0,0,.16); --ind:#0a5fd1; --ind-sh:none; --tick:#8a8a92; --knobread:#1c1c1e;
+  --tog-bg:#d1d1d6; --tog-sh:none; --tog-on:#34c759; --tog-thumb:#fff;
+  --btn-bg:#e9e9ee; --btn-bd:transparent; --btn-bd-h:#0a5fd1; --btn-ink:#0a5fd1; --btn-r:10px; --btn-sh:none;
+  --pri-bg:#0a5fd1; --pri-bd:#0a5fd1; --pri-ink:#fff;
+  --key-bg:#f2f2f7; --key-bd:#dcdce2; --key-ink:#1c1c1e; --key-sh:none; --key-r:10px;
+  --on-bg:#0a5fd1; --on-bd:#0a5fd1; --on-ink:#fff; --on-sh:none;
+  --sel-bg:#0a5fd1; --sel-bd:#0a5fd1; --sel-ink:#fff; --sel-sub:#fff; --sel-sh:none;
+  --seg-bg:#e3e3e8; --seg-bd:transparent; --seg-on:#fff; --seg-on-ink:#1c1c1e; --seg-r:10px;
+  --dock-bg:rgba(255,255,255,.86); --dock-bd:rgba(0,0,0,.08); --dock-ink:#5f5f66; --dock-on:#e6effd; --dock-on-ink:#0a5fd1; --dock-sh:0 8px 30px rgba(0,0,0,.16); --dock-r:22px; --dock-item-r:14px;
+  --fbwrap-bd:#dcdce2; --fbwrap-bg:#fff; --fbwrap-r:14px;
+  --fb-wood:#f6f1e6; --fb-grain:rgba(0,0,0,0); --fb-fret:#c9c3b4; --fb-nut:#8e8878; --fb-str:#8a8a92; --fb-inlay:#ddd6c4; --fb-inlay-bd:#ddd6c4; --fb-num:#6b6b73; --fb-numhi:#1c1c1e; --fb-open:#5f5f66;
+  --ctx-bg:#fff; --ctx-bd:#a8a8b0; --ctx-fg:#5f5f66; --dot-ring:rgba(0,0,0,.28); --dot-in:#1c1c1e;
+  --t-root:#d12c2c; --t-root-fg:#fff; --t-root-txt:#c4271d; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#17692e; --t-fifth-fg:#fff; --t-seventh:#0a5fd1; --t-seventh-fg:#fff; --t-ext:#8e3bd8; --t-ext-fg:#fff; --t-scale:#17692e; --t-scale-fg:#fff;
+  --h-r:#17692e; --h-r-fg:#fff; --h-l:#0a5fd1; --h-l-fg:#fff; --hr-txt:#17692e; --hl-txt:#0a5fd1; --ring-root:#d12c2c; --now:#0a5fd1; --now-fg:#0a5fd1; --inp:#7a35c4; --good:#17692e; --bad:#c4271d;
+  --pk-wrap-bd:#dcdce2; --pk-wrap-bg:#fff; --pk-wrap-r:14px;
+  --pk-w:#fff; --pk-w-bd:#c7c7cc; --pk-w-sh:none; --pk-w-r:0 0 8px 8px; --pk-lit-w:#cfe1ff;
+  --pk-b:#1c1c1e; --pk-b-bd:#1c1c1e; --pk-lit-b:#3b5fa0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#c4271d; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#0a5fd1;
+  --lcd-bg:#f2f2f7; --lcd-bd:#e5e5ea; --lcd-sh:none; --lcd-ink:#1c1c1e; --lcd-ink2:#3a3a3c; --lcd-hi:#0a5fd1; --lcd-dim:#5f5f66;
+  --stf-sl:#b0b0b8; --stf-sl2:#8a8a92; --stf-tl:#c7c7cc; --stf-ink:#1c1c1e; --stf-fret:#0a5fd1;
+  --c-tonic:#0a5fd1; --c-tonic-fg:#fff; --c-nb:#cfe1ff; --c-nb-fg:#0a3d8f; --c-rel:#e3e3e8; --c-maj:#f2f2f7; --c-min:#e9e9ee; --c-off-fg:#4a4a50; --c-rel-fg:#3a3a3c; --c-t1:#1c1c1e; --c-t2:#5f5f66; --c-bg:#fff; --c-centre:#f2f2f7; --c-line:#fff; --c-t3:#0a5fd1;
+  --cd-line:#c7c7cc; --cd-str:#8a8a92; --cd-dot:#1c1c1e; --cd-dot-fg:#fff; --cd-lab:#5f5f66; --cd-fn:#0a5fd1;
+  --bar-n:#6b6b73; --ok:#17692e; --ok-bg:#e3f4e8; --ok-ink:#17692e; --hook-bg:#eef4ff; --hook-ink:#1c3d73; --code-ink:#1c1c1e;
+}
+h1{font-weight:800;font-size:26px}
+h2{font-weight:800;font-size:22px;letter-spacing:-.01em}
+.card,.pfc,.lcard{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.engr{font-weight:600;letter-spacing:.06em;font-size:11px}
+.engr.sm{font-weight:600;letter-spacing:.07em;font-size:10px}
+.panel-top .engr{font-size:12px}
+.metal::before,.metal::after{display:none}
+/* stepper fields */
+.drum .val{inset:0 28px;font-weight:600;font-size:15px;letter-spacing:0}
+.drum.small .val{font-size:14px}
+.drum .val.long{font-size:12.5px}.drum .val.xl{font-size:11px}
+.drum .edge{width:28px;border:0;box-shadow:none}
+.drum .edge::after{display:block}
+.drum .edge:hover{background:rgba(10,95,209,.1)}
+.drum::before,.drum::after{display:none}
+/* knobs: flat dial + accent arc */
+.knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 86%);mask:radial-gradient(circle closest-side,transparent 84%,#000 86%)}
+.knob .ticks{display:none}
+.knob .cap{inset:10px}
+.knob .cap i{width:3px;height:9px;margin-left:-1.5px;top:4px;border-radius:2px}
+.knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+.knobread{font-weight:600}
+/* iOS switch */
+.toggle{width:51px;height:31px;border-radius:16px}
+.toggle::after{top:2px;left:2px;width:27px;height:27px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.toggle.on::after{transform:translateX(20px)}
+.power .led{width:10px;height:10px}
+.btn{font-weight:600}.btn:active,.pos:active,.chip:active{opacity:.7}
+.seg button.on{box-shadow:0 1px 3px rgba(0,0,0,.22);font-weight:700}
+nav.dock{backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+nav.dock button{font-weight:600}
+.fbwrap,.pianowrap{border-width:1px}

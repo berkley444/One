@@ -1,0 +1,72 @@
+/* Vintage Wood — a walnut cabinet with brass fittings: knurled brass knobs, cream paper dial windows and label strips,
+   oxblood selection, Playfair Display for the engraving. */
+:theme{
+  --sans:"Alegreya Sans","Segoe UI",Roboto,sans-serif; --cond:"Playfair Display",Georgia,serif;
+  --bg:#1a0f08; --ink:#f4e8cc; --dim:#cdb98f; --faint:#a89268; --amber:#e8bf5a; --green:#9bd07a; --red:#e8705a; --gold:#e8bf5a; --blue:#7fb1de; --violet:#d3a0cf; --engrave:#3a2410;
+  --page:@art(walnut) 0 0/640px 420px,#3f220f;
+  --hfont:"Playfair Display",Georgia,serif; --lab-font:"Playfair Display",Georgia,serif; --drum-font:"Playfair Display",Georgia,serif; --h1-ls:.04em; --h1-tt:none;
+  --h2:#f1dfb4; --h2s:#cdb98f; --h2c:#d8c79f; --ink2:#eadbb8; --ink3:#d1bf96; --mute:#cdb98f; --lab:#d1bf96; --on-amber:#2b1706;
+  --card:#2a170c; --card-bd:#6a4a22; --card-r:6px; --inset:#1d1008; --inset-bd:#5a3a1c; --inset-ink:#f6e8c6;
+  --raise:linear-gradient(180deg,#3a2212,#2d1a0d); --raise-bd:#6a4a22; --raise-bd-h:#e8bf5a; --raise-r:5px; --chip:#3a2212; --chip-bd:#6a4a22; --hair:#3a2412; --hair2:#573a1c;
+  --now-bg:linear-gradient(180deg,#5a3a14,#3a2410); --now-sh:0 0 0 1px #e8bf5a,0 0 14px rgba(232,191,90,.3); --step-off:#5a4328;
+  --panel:@art(walnut-panel) 0 0/520px 260px,#6a3d1e; --panel-bd:#1d1008; --panel-r:6px;
+  --panel-sh:0 0 0 2px #b8893a,0 0 0 4px #2a170a,0 14px 28px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,220,150,.18);
+  --panel-ink:#3a2410; --panel-ink2:#f1e3c4; --engr-sh:none; --ok-p:#b6ec96; --warn-p:#ffb4a4;
+  --led-off:radial-gradient(circle at 36% 30%,#8a3b22,#3a1208 70%); --led-off-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a;
+  --led-on:radial-gradient(circle at 36% 28%,#fff1d0 0 6%,#ffc060 16%,#ff7a1a 54%,#9a3a00); --led-on-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,0 0 14px 5px rgba(255,150,40,.6);
+  --drum-bg:linear-gradient(180deg,#efe0bd,#e4d1a3); --drum-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,inset 0 2px 6px rgba(80,50,10,.4); --drum-r:4px; --drum-ink:#3a2410; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#e9c982,#b88a3c); --edge-ink:#2b1706;
+  --knob-bg:@art(wood-knob); --knob-sh:none; --ind:#2a170a; --ind-sh:none; --tick:#f1e3c4; --knobread:#f6ead0;
+  --tog-bg:#1d1008; --tog-sh:0 0 0 2px #b8893a,0 0 0 3.5px #2a170a,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a6420,#e8bf5a); --tog-thumb:linear-gradient(180deg,#f8e7b8,#b88a3c);
+  --btn-bg:linear-gradient(180deg,#ecd08a,#b88a3c); --btn-bd:#4a300c; --btn-bd-h:#fff2c4; --btn-ink:#2b1706; --btn-r:4px; --btn-sh:0 2px 0 #2a170a,0 1px 0 rgba(255,255,255,.5) inset;
+  --pri-bg:linear-gradient(180deg,#9a3420,#6a1c0e); --pri-bd:#2a0a04; --pri-ink:#f8e9c6;
+  --key-bg:linear-gradient(180deg,#f1e3c4,#dcc89b); --key-bd:#4a300c; --key-ink:#3a2410; --key-sh:0 2px 0 #2a170a; --key-r:4px;
+  --on-bg:linear-gradient(180deg,#f8d98a,#d8a43a); --on-bd:#4a300c; --on-ink:#2b1706; --on-sh:0 2px 0 #2a170a,0 0 12px rgba(255,200,90,.5);
+  --sel-bg:linear-gradient(180deg,#9a3420,#6a1c0e); --sel-bd:#2a0a04; --sel-ink:#f8e9c6; --sel-sub:#f1d8a0; --sel-sh:0 2px 0 #2a0a04,0 0 0 1px #e8bf5a;
+  --seg-bg:#1d1008; --seg-bd:#6a4a22; --seg-on:#6a1c0e; --seg-on-ink:#f8e9c6; --seg-r:4px;
+  --dock-bg:@art(walnut-panel) 0 0/520px 260px,#5a3218; --dock-bd:#b8893a; --dock-ink:#f1e3c4; --dock-on:linear-gradient(180deg,#f0d086,#c9983c); --dock-on-ink:#2b1706; --dock-sh:0 0 0 2px #2a170a,0 12px 26px rgba(0,0,0,.7); --dock-r:8px; --dock-item-r:4px;
+  --fbwrap-bd:#b8893a; --fbwrap-bg:#1d1008; --fbwrap-r:8px;
+  --fb-wood:#2b150a; --fb-grain:rgba(255,200,140,.1); --fb-fret:#c9a24a; --fb-nut:#efe3c2; --fb-str:#d8c9a2; --fb-inlay:#efe5cd; --fb-inlay-bd:#9a8a60; --fb-num:#d1bf96; --fb-numhi:#f6ead0; --fb-open:#cdb98f;
+  --ctx-bg:#1d1008; --ctx-bd:#9a8458; --ctx-fg:#d8c79f; --dot-ring:#1a0c04; --dot-in:#fff4d0;
+  --t-root:#c4361f; --t-root-fg:#fff; --t-root-txt:#f0866e; --t-third:#e8b030; --t-third-fg:#2a1a00; --t-fifth:#8cc46a; --t-fifth-fg:#0b1d06; --t-seventh:#6a9fd0; --t-seventh-fg:#06182a; --t-ext:#c18bbd; --t-ext-fg:#2a0a28; --t-scale:#8cc46a; --t-scale-fg:#0b1d06;
+  --h-r:#8cc46a; --h-r-fg:#0b1d06; --h-l:#5f9be0; --h-l-fg:#06182a; --hr-txt:#a8dc88; --hl-txt:#8fbbe6; --ring-root:#e8705a; --now:#f2c85c; --now-fg:#f2c85c; --inp:#d3a0cf; --good:#9bd07a; --bad:#f0866e;
+  --pk-wrap-bd:#b8893a; --pk-wrap-bg:#1d1008; --pk-wrap-r:8px;
+  --pk-w:linear-gradient(180deg,#e7d7ae,#f3e8c6 70%,#d6c18c); --pk-w-bd:#2a170a; --pk-w-sh:0 2px 0 #8d7a4a; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe6a0,#efc060 70%,#d9a93c);
+  --pk-b:linear-gradient(180deg,#2b1a10,#0a0603); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#6a4a22,#2a1a0b);
+  --pk-nm:#3a2410; --pk-nm-root:#a3200f; --pk-bnm-root:#ffa592; --pk-oct:#6a5632; --pk-str:#e8bf5a;
+  --lcd-bg:#1d1008; --lcd-bd:#5a3a1c; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #b8893a; --lcd-ink:#f6ead0; --lcd-ink2:#d8c79f; --lcd-hi:#e8bf5a; --lcd-dim:#cdb98f;
+  --stf-sl:#7a6240; --stf-sl2:#a89268; --stf-tl:#5a4630; --stf-ink:#f4e8cc; --stf-fret:#e8bf5a;
+  --c-tonic:#e8bf5a; --c-tonic-fg:#2b1706; --c-nb:#8a3420; --c-rel:#5a4328; --c-maj:#2f1c0e; --c-min:#231409; --c-off-fg:#d8c79f; --c-bg:#1d1008; --c-centre:#2a170c; --c-line:#1d1008; --c-t3:#e8bf5a;
+  --cd-line:#7a6240; --cd-str:#cdb98f; --cd-dot:#f4e8cc; --cd-dot-fg:#2a170c; --cd-lab:#d1bf96; --cd-fn:#e8bf5a;
+  --bar-n:#a89268; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#3a2410; --hook-ink:#f6e8c6; --code-ink:#eadbb8;
+}
+h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.55);font-size:25px}
+h1::after{content:"❦";display:block;margin-top:2px;font-size:15px;color:#e8bf5a;letter-spacing:0;font-weight:400;line-height:1}
+h2{font-weight:700;font-style:italic;font-size:26px;border-bottom:1px solid #b8893a;padding-bottom:4px}
+.card,.pfc,.lcard{box-shadow:0 0 0 1px #1d1008,0 6px 14px rgba(0,0,0,.35),0 1px 0 rgba(255,220,150,.12) inset}
+/* paper label strips */
+.engr{font-weight:700;letter-spacing:.14em;font-size:11px}
+.panel-top .engr,.pcontrol .engr.sm,.power .engr{background:linear-gradient(180deg,#f1e3c4,#e0cc9e);color:#3a2410;padding:2px 8px 1px;border-radius:2px;box-shadow:0 1px 1px rgba(0,0,0,.5),0 0 0 1px rgba(74,48,12,.7);width:fit-content}
+.pcontrol .engr.sm{display:block;margin:0 0 6px 2px;font-size:10px;letter-spacing:.12em}
+.drum .val{font-weight:700;font-size:15px;letter-spacing:.01em}
+.drum.small .val{font-size:14px}
+.drum .val.long{font-size:12.5px}.drum .val.xl{font-size:11px}
+.drum .edge{width:17px}
+.drum .edge::after{display:block}
+.drum .edge.l{border-right:1px solid #4a300c;box-shadow:none}.drum .edge.r{border-left:1px solid #4a300c;box-shadow:none}
+.knob{width:72px;height:72px}
+.knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5))}
+.knob .cap i{display:none}
+.knob:focus-visible{box-shadow:0 0 0 3px #7fb1de}
+.knobread{font-weight:700;font-size:11px}
+.toggle{width:54px}.toggle.on::after{transform:translateX(24px)}
+.power .led{width:15px;height:15px}
+.btn{font-family:var(--cond);font-weight:700;letter-spacing:.03em}
+.btn:active,.pos:active,.chip:active{transform:translateY(2px);box-shadow:none}
+.pos,.chip{font-weight:700}
+nav.dock{border-width:2px}
+nav.dock button{font-family:var(--cond);font-style:italic;font-weight:700;letter-spacing:.02em}
+.fbwrap,.pianowrap{border-width:4px;border-style:double}
+.dot circle{stroke-width:1.2}
+body,.drum .val,.knobread,.btn,.pos,.chip,nav.dock button,h1,h2{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
+.lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)}
