@@ -34,6 +34,9 @@ node tests/theory.test.js     # theory + math tests (spelling, key signatures, c
 
 ```
 index.html                     the entire app (HTML + CSS + JS; theory lives in a <THEORY> block)
+manifest.webmanifest, sw.js    installable-app manifest and offline service worker
+icons/                         app icons (svg + png, maskable, apple-touch)
+tests/browser/                 headless-Chrome tests (smoke, practice, song, lessons, PWA/offline, axe) - see its README
 tests/theory.test.js           node tests; extracts the <THEORY> block from index.html
 .nojekyll                      serve as plain static files on GitHub Pages
 docs/

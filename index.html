@@ -5,6 +5,13 @@
 <title>Big Pear Guitar Works — guitar theory, math & piano bridge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Big Pear">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Pick a root, a scale and a tuning. See the notes on a fretboard and a piano, the math behind them (f = 440 × 2^(n/12)), the chords, the circle of fifths — and generate a progression.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +32,7 @@ body{min-height:100vh;padding:calc(10px + env(safe-area-inset-top)) 12px calc(11
   background:radial-gradient(1200px 500px at 50% -120px,#17171c 0,#050506 70%) no-repeat,var(--bg)}
 .wrap{max-width:1120px;margin:0 auto}
 h1{font:600 22px/1.1 var(--cond);letter-spacing:.06em;text-align:center;margin:6px 0 12px;text-transform:uppercase}
-h1 small{display:block;font:500 11px var(--sans);letter-spacing:.14em;color:var(--dim);margin-top:4px}
+h1 small{display:block;font:500 12px var(--sans);letter-spacing:.14em;color:var(--dim);margin-top:4px}
 h2{font:700 26px/1 var(--cond);letter-spacing:.04em;color:#4a4c54;margin:26px 2px 10px;text-transform:uppercase;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 h2 small{font:600 12px var(--sans);letter-spacing:.1em;color:#33353b}
 h2 .ctx{color:#6a6c75;font:600 12px var(--sans);letter-spacing:.12em}
@@ -42,9 +49,9 @@ button{font:inherit;color:inherit}
   color:var(--engrave);position:relative}
 .panel{padding:12px 14px 14px}
 .panel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.engr{font:700 12px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--engrave);text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.engr{font:700 12px/1.25 var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--engrave);text-shadow:0 1px 0 rgba(255,255,255,.7)}
 .engr.sm{font-size:10px;letter-spacing:.18em;color:#3b3c41}
-.power{display:flex;align-items:center;gap:7px;cursor:pointer;background:none;border:0;padding:4px 6px;border-radius:8px}
+.power{display:flex;align-items:center;justify-content:flex-end;min-width:100px;gap:7px;cursor:pointer;background:none;border:0;padding:4px 6px;border-radius:8px}
 .power .led{width:11px;height:11px;border-radius:50%;background:#5a3410;box-shadow:0 0 0 2px rgba(0,0,0,.35) inset,0 1px 0 rgba(255,255,255,.6)}
 .power.on .led{background:radial-gradient(circle at 35% 30%,#ffd9a0,#ff9a1f 55%,#c76400);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 8px 3px rgba(255,150,30,.85),0 0 22px 6px rgba(255,140,20,.45);animation:glow 2.6s ease-in-out infinite}
 @keyframes glow{50%{box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 6px 2px rgba(255,150,30,.7),0 0 14px 3px rgba(255,140,20,.3)}}
@@ -71,7 +78,7 @@ button{font:inherit;color:inherit}
 .knob{width:62px;height:62px;touch-action:none;cursor:ns-resize;outline:none;border-radius:50%}
 .knob:focus-visible{box-shadow:0 0 0 3px rgba(240,160,53,.7)}
 .knob svg{width:100%;height:100%;display:block}
-.knobread{font:600 12px var(--mono);color:#222;text-shadow:0 1px 0 rgba(255,255,255,.6);margin-top:-2px}
+.knobread{font:600 12px/1.25 var(--mono);color:#222;text-shadow:0 1px 0 rgba(255,255,255,.6);margin-top:-2px}
 .switch{display:flex;flex-direction:column;align-items:center;gap:6px}
 .toggle{width:54px;height:30px;border-radius:15px;border:0;cursor:pointer;position:relative;background:linear-gradient(180deg,#0b0b0d,#2a2a2f);box-shadow:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 4px 8px #000}
 .toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fafafb,#8d8f96);box-shadow:0 2px 4px rgba(0,0,0,.6);transition:transform .15s}
@@ -90,7 +97,7 @@ button{font:inherit;color:inherit}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
 .toolbar .sp{flex:1}
 .hint{color:var(--dim);font-size:12.5px;line-height:1.45}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);align-items:center}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim);align-items:center}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 
 /* fretboard */
@@ -133,7 +140,7 @@ button{font:inherit;color:inherit}
 .pk.lit.b{background:linear-gradient(180deg,#3d3d48,#0d0d14)}
 .pk.now{box-shadow:inset 0 0 0 3px #ffd54a,0 0 16px 3px rgba(255,213,74,.85)}
 .pk.now .fd{transform:scale(1.4);z-index:3}
-.pianolab{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:11.5px;color:var(--dim);margin:2px 2px 8px;line-height:1.4}
+.pianolab{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:12px;color:var(--dim);margin:2px 2px 8px;line-height:1.4}
 /* piano control panel */
 .pcontrol{margin:6px 0 12px}
 .pcontrol .panel-top{margin-bottom:2px}
@@ -152,7 +159,7 @@ button{font:inherit;color:inherit}
 .pcontrol .pc-play .btn:not(.pri){border-color:#111}
 .pread{margin-top:12px;background:#08080a;border:1px solid #000;border-radius:10px;padding:10px 12px;box-shadow:inset 0 3px 8px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.5);color:#e6e7ea}
 .pread .ptitle{font:700 17px var(--cond);color:var(--amber);letter-spacing:.03em}
-.pread .phand{font:500 11px var(--sans);color:var(--dim);margin-left:6px;letter-spacing:0}
+.pread .phand{font:500 12px var(--sans);color:var(--dim);margin-left:6px;letter-spacing:0}
 .pread .pdesc{font-size:12px;color:#a8aab3;line-height:1.45;margin:3px 0 8px}
 .pread .pfing{font:600 13px/1.75 var(--mono);color:#fff}
 .pread .pfing i{font-style:normal;color:var(--amber);font-size:11px}
@@ -161,7 +168,7 @@ button{font:inherit;color:inherit}
 .pread .sepd{color:#555;margin:0 6px}
 .nowline{margin-top:8px;font:600 12px var(--mono);color:#7d808a;min-height:18px;border-top:1px solid #1d1d22;padding-top:7px}
 .nowline.live{color:#ffd54a}
-.plegend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11px;color:var(--dim);align-items:center}
+.plegend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--dim);align-items:center}
 .plegend b{display:inline-block;width:16px;height:16px;border-radius:50%;text-align:center;font:800 10px/16px var(--sans);margin-right:4px;vertical-align:-3px}
 .plegend b.hR{background:#3fcf6e;color:#04210f}.plegend b.hL{background:#4f8dff;color:#fff}
 .plegend .rr{display:inline-block;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 2px #e8463e;margin-right:6px;background:#777;vertical-align:0}
@@ -175,7 +182,7 @@ button{font:inherit;color:inherit}
 .cc.sel{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
 .cc .rn{font:700 20px var(--cond);color:var(--amber);letter-spacing:.04em}
 .cc .nm{font:600 20px var(--sans)}
-.cc .nt{font:400 11.5px var(--mono);color:var(--dim);margin-top:4px}
+.cc .nt{font:400 12px var(--mono);color:var(--dim);margin-top:4px}
 .cc .fn{font:600 9.5px var(--sans);letter-spacing:.14em;color:#5d5f68;margin-top:2px;text-transform:uppercase}
 
 /* chord builder */
@@ -186,8 +193,8 @@ button{font:inherit;color:inherit}
 .readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
 .ro{background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:10px 12px}
 .ro .k{font:700 10px var(--sans);letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
-.ro .v{font:600 22px var(--mono);margin-top:4px;letter-spacing:.04em;word-spacing:.2em}
-.ro .v.big{font:700 34px var(--cond);letter-spacing:.03em}
+.ro .v{font:600 22px/1.25 var(--mono);margin-top:4px;letter-spacing:.04em;word-spacing:.2em}
+.ro .v.big{font:700 34px/1.2 var(--cond);letter-spacing:.03em}
 table.t{width:100%;border-collapse:collapse;font:13px var(--mono)}
 table.t th{font:700 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:right;padding:6px 8px;border-bottom:1px solid #2a2a31;position:sticky;top:0;background:#0c0c0f}
 table.t th:first-child,table.t td:first-child{text-align:left}
@@ -246,7 +253,7 @@ table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:v
 .chip.rt b{font:800 13px var(--sans)}
 .chip.rt small{font:600 9.5px var(--sans);opacity:.6}
 .qgrp{margin-top:10px}
-.qlab{font:600 10.5px var(--sans);color:#6f717a;letter-spacing:.08em;text-transform:uppercase;margin:0 0 5px}
+.qlab{font:600 10.5px var(--sans);color:#8f919a;letter-spacing:.08em;text-transform:uppercase;margin:0 0 5px}
 .chips.q{gap:5px}
 .chips.q .chip{padding:7px 6px;min-width:40px;font-size:12.5px}
 details.det{margin-top:12px;border-top:1px solid #1d1d23;padding-top:10px}
@@ -303,9 +310,9 @@ code.chart{display:block;background:#08080a;border:1px solid #1f1f25;border-radi
 .sbar{background:linear-gradient(180deg,#17171c,#0e0e12);border:1px solid #26262d;border-radius:10px;padding:10px 6px 8px;text-align:center;cursor:pointer;position:relative}
 .sbar .rn{font:700 13px var(--cond);color:var(--amber);letter-spacing:.06em}.sbar .nm{font:700 22px var(--sans)}.sbar .num{position:absolute;top:4px;left:7px;font:600 9px var(--mono);color:#555862}
 .sbar.now{border-color:var(--amber);background:linear-gradient(180deg,#2d2008,#14100a);box-shadow:0 0 16px rgba(240,160,53,.4)}
-.slab{font:700 10px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}.slab .soft{letter-spacing:.02em;text-transform:none;font-weight:500;color:#6b6d76}
+.slab{font:700 10px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}.slab .soft{letter-spacing:.02em;text-transform:none;font-weight:500;color:#8f919a}
 .sgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px;max-width:560px}
-.sl{display:flex;flex-direction:column;align-items:center;background:#0a0a0d;border:1px solid #1f1f25;border-radius:6px;padding:2px 0 3px}.sl em{font:500 10px var(--mono);color:#6b6d76;font-style:normal}.sl b{font:700 17px/1.1 var(--sans);color:#3a3c44}
+.sl{display:flex;flex-direction:column;align-items:center;background:#0a0a0d;border:1px solid #1f1f25;border-radius:6px;padding:2px 0 3px}.sl em{font:500 10px var(--mono);color:#8f919a;font-style:normal}.sl b{font:700 17px/1.1 var(--sans);color:#3a3c44}
 .sl.hit{background:#17171c;border-color:#34353d}.sl.hit b{color:var(--ink)}.sl.dn b{color:var(--amber)}
 .mel{display:flex;flex-wrap:wrap;gap:6px 10px}.mbar{display:flex;gap:3px;padding:3px 6px;border-left:2px solid #2f3038}
 .mn{font:600 13px var(--mono);color:#7b7d86;background:#0a0a0d;border:1px solid #1f1f25;border-radius:5px;padding:2px 5px}.mn.ct{color:#fff;background:#1e2a1f;border-color:#2f7d33}
@@ -321,10 +328,10 @@ nav.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + e
   display:flex;gap:2px;padding:6px;border-radius:30px;background:rgba(24,24,28,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #34353d;box-shadow:0 10px 30px rgba(0,0,0,.7)}
 nav.dock button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 14px 6px;border-radius:24px;cursor:pointer;color:#aeb0b8;font:700 10px var(--sans);letter-spacing:.08em;min-width:62px}
 nav.dock button svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-nav.dock button.on{background:#2a2b31;color:#4b8bff}
+nav.dock button.on{background:#2a2b31;color:#6aa5ff}
 nav.dock button .fx{font:italic 700 18px/26px Georgia,serif}
 @media (max-width:430px){nav.dock button{padding:7px 9px 6px;min-width:52px}}
-footer{margin:34px 0 0;text-align:center;font-size:11.5px;color:#585a63;line-height:1.7}
+footer{margin:34px 0 0;text-align:center;font-size:12px;color:#8b8d96;line-height:1.7}
 footer a{color:#7b8aa8}
 .tab{display:none}.tab.on{display:block}
 .stack{display:flex;flex-direction:column}
@@ -367,7 +374,7 @@ footer a{color:#7b8aa8}
 .btn.tog.midi.on{color:#e3b6ff;border-color:#c45bff;box-shadow:0 0 0 1px #c45bff,0 0 12px rgba(196,91,255,.4)}
 .pcontrol .btn.tog:not(.on){background:linear-gradient(180deg,#e9eaee,#a9abb2);color:#26272b;border-color:#5a5b62}
 .midirow{display:flex;gap:8px;align-items:center;margin-top:7px}
-.midistat{flex:1;font:500 11px/1.4 var(--sans);color:#3a3b42;min-width:0}
+.midistat{flex:1;font:500 12px/1.4 var(--sans);color:#3a3b42;min-width:0}
 .midistat.good{color:#14662d;font-weight:700}.midistat.warn{color:#8a2a20}
 .prac{margin-top:8px;border-top:1px solid #1d1d22;padding-top:9px}
 .prac[hidden]{display:none}
@@ -439,11 +446,27 @@ body[data-tab="lessons"] section[aria-label="Music control"]{display:none}
 .piano.blind.practicing .pk.target .fd,.piano.blind.practicing .pk.target .nm{transform:none}
 .lfooter{display:flex;gap:10px;justify-content:space-between;margin-top:16px;flex-wrap:wrap}.lfooter .btn{flex:1 1 200px;padding:12px 14px}
 @media (max-width:480px){.lprac .pc-prac .btn{font-size:12px;flex:1 1 28%}.lpart h3{font-size:20px}}
+/* ---- polish: accessibility + motion ---- */
+.sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:#e9eaee;color:#111;padding:10px 16px;border-radius:8px;font:700 14px var(--sans);text-decoration:none}
+.skip:focus{top:calc(8px + env(safe-area-inset-top))}
+:focus-visible{outline:2px solid #6aa5ff;outline-offset:2px}
+.pk:focus-visible{outline:3px solid #6aa5ff;outline-offset:-3px;z-index:6}
+.pianowrap:focus-visible,.fbwrap:focus-visible{outline:2px solid #6aa5ff;outline-offset:-2px}
+.dot{outline:none}.dot:focus-visible circle:first-child{stroke:#fff;stroke-width:3.5;stroke-opacity:1}
+main:focus{outline:none}
+body:not(.ready) footer,body:not(.ready) nav.dock{visibility:hidden}   /* no visible layout shift while the script builds the page */
+.pwa{margin-top:10px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}.pwa[hidden]{display:none}
+.pwa .pst{font-size:12px;color:#9fa1aa}.pwa .pst.good{color:#7fd882}.pwa .pst.warn{color:#f0b35a}
+@media (prefers-contrast:more){:root{--dim:#bfc1c9;--faint:#8b8d96}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media (forced-colors:active){.pk:focus-visible,:focus-visible{outline-color:Highlight}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
-  <h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
+  <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1></header>
 
   <!-- ===== MUSIC CONTROL PANEL ===== -->
   <section class="metal panel" aria-label="Music control">
@@ -456,7 +479,7 @@ body[data-tab="lessons"] section[aria-label="Music control"]{display:none}
   </section>
 
   <!-- ===== TABS ===== -->
-  <main>
+  <main id="main" tabindex="-1">
   <div id="tab-play" class="tab"><div class="stack" id="stack-play"></div></div>
   <div id="tab-chord" class="tab"><div class="stack" id="stack-chord"></div></div>
   <div id="tab-circle" class="tab"></div>
@@ -468,7 +491,9 @@ body[data-tab="lessons"] section[aria-label="Music control"]{display:none}
   <footer>
     Big Pear Guitar Works · web edition · <a href="https://github.com/berkley444/One">github.com/berkley444/One</a><br>
     Equal temperament · f(n) = A4 × 2<sup>n/12</sup> · no tracking, no dependencies.
+    <div class="pwa" id="pwa" hidden><span class="pst" id="pwaStatus"></span><button class="btn sm" data-act="install" id="pwaInstall" hidden>Install app</button><button class="btn sm" data-act="reloadapp" id="pwaReload" hidden>Reload now</button></div>
   </footer>
+  <div id="live" class="sr" role="status" aria-live="polite"></div>
 </div>
 
 <nav class="dock" id="dock" aria-label="Sections"></nav>
@@ -1843,6 +1868,7 @@ const Snd = (() => {
 /* ================================================================
    DERIVED DATA
    ================================================================ */
+const SMOOTH = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -1978,8 +2004,8 @@ function buildPanel() {
   $('#row1').innerHTML = ['pitch', 'root', 'scale', 'tuning', 'mode'].map(id => drumHTML(id, DRUMS[id].label)).join('');
   $('#row2').className = 'row r6';
   $('#row2').innerHTML = ['meter', 'tone', 'spell'].map(id => drumHTML(id, DRUMS[id].label, true)).join('') +
-    `<div class="slot knobwrap"><span class="engr sm">Tempo</span><div class="knob" id="knob-tempo" tabindex="0" role="slider"></div><div class="knobread" id="read-tempo"></div></div>
-     <div class="slot knobwrap"><span class="engr sm">Volume</span><div class="knob" id="knob-vol" tabindex="0" role="slider"></div><div class="knobread" id="read-vol"></div></div>
+    `<div class="slot knobwrap"><span class="engr sm">Tempo</span><div class="knob" id="knob-tempo" tabindex="0" role="slider" aria-label="Tempo"></div><div class="knobread" id="read-tempo"></div></div>
+     <div class="slot knobwrap"><span class="engr sm">Volume</span><div class="knob" id="knob-vol" tabindex="0" role="slider" aria-label="Volume"></div><div class="knobread" id="read-vol"></div></div>
      <div class="slot switch"><span class="engr sm">Metronome</span><button class="toggle" id="metro" aria-label="Metronome"></button></div>`;
   $$('.drum[data-drum]').forEach(el => {
     const id = el.dataset.drum, D = DRUMS[id], sel = $('select', el);
@@ -2036,7 +2062,7 @@ function fretboardSVG() {
   const top = 24, gap = n > 6 ? 32 : n < 6 ? 44 : 36, H = top + gap * (n - 1) + 48;
   const yRow = si => top + (n - 1 - si) * gap;
   const mid = top + gap * (n - 1) / 2;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fretboard, frets 0 to ${FRETS}, ${t.name} tuning">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="Fretboard, frets 0 to ${FRETS}, ${t.name} tuning. Arrow keys move between notes, Enter plays.">`;
   s += `<rect x="${nutX}" y="${top - 12}" width="${W - nutX - 8}" height="${gap * (n - 1) + 24}" fill="#0b0b0e"/>`;
   [3, 5, 7, 9, 15].forEach(f => { s += `<circle cx="${(fx(f - 1) + fx(f)) / 2}" cy="${mid}" r="8" fill="#17171c"/>`; });
   [-1, 1].forEach(k => { s += `<circle cx="${(fx(11) + fx(12)) / 2}" cy="${mid + k * gap * (n - 1) / 4}" r="8" fill="#17171c"/>`; });
@@ -2044,19 +2070,20 @@ function fretboardSVG() {
   s += `<line x1="${nutX}" y1="${top - 13}" x2="${nutX}" y2="${top + gap * (n - 1) + 13}" stroke="#e9e1c6" stroke-width="6"/>`;
   t.strings.forEach((m, si) => { const y = yRow(si); s += `<line class="fb-str" x1="${nutX - 4}" y1="${y}" x2="${W - 8}" y2="${y}" stroke-width="${(0.9 + (n - 1 - si) * 0.0 + (1 - si / (n - 1)) * 2.2).toFixed(2)}"/>`; });
   const lm = LM();
+  const dotA = (midi, si, f) => ` data-si="${si}" data-f="${f}" role="button" tabindex="-1" aria-label="${T.midiName(midi, t.flats)}, string ${n - si}, ${f ? 'fret ' + f : 'open'}"`;
   const dot = (cx, cy, midi, si, f) => {
     const pc = ((midi % 12) + 12) % 12, a = act.get(pc);
     if (!a) return '';
     const inSel = !SEL || SEL.map.has(si + ':' + f);
     if (!inSel) {                                     // outside the picked position: a faint pip, still tappable
       if (a.ctx) return '';
-      return `<g class="dot off" data-midi="${midi}"><circle cx="${cx}" cy="${cy}" r="4.5" fill="${a.bg}" fill-opacity=".3" stroke="none"/></g>`;
+      return `<g class="dot off" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="4.5" fill="${a.bg}" fill-opacity=".3" stroke="none"/></g>`;
     }
     const fin = SEL ? SEL.map.get(si + ':' + f) : 0;
     const lbl = lm === 'notes' ? a.name : lm === 'intervals' ? a.label : lm === 'fingers' ? (fin ? String(fin) : 'o') : '';
     const cls = SEL ? ' in' : '';
-    if (a.ctx) return `<g class="dot ctx${cls}" data-midi="${midi}"><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 5 : 10}" fill="#0b0b0e" stroke="#4b4d56" stroke-width="1.4"/><text x="${cx}" y="${cy}" style="fill:#7d808a;font-size:9.5px">${esc(lbl)}</text></g>`;
-    return `<g class="dot${a.root ? ' root' : ''}${cls}" data-midi="${midi}"><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 8 : 12.5}" fill="${a.bg}"/><text x="${cx}" y="${cy}" style="fill:${a.fg}">${esc(lbl)}</text></g>`;
+    if (a.ctx) return `<g class="dot ctx${cls}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 5 : 10}" fill="#0b0b0e" stroke="#4b4d56" stroke-width="1.4"/><text x="${cx}" y="${cy}" style="fill:#7d808a;font-size:9.5px">${esc(lbl)}</text></g>`;
+    return `<g class="dot${a.root ? ' root' : ''}${cls}" data-midi="${midi}"${dotA(midi, si, f)}><circle cx="${cx}" cy="${cy}" r="${lm === 'off' ? 8 : 12.5}" fill="${a.bg}"/><text x="${cx}" y="${cy}" style="fill:${a.fg}">${esc(lbl)}</text></g>`;
   };
   let minFr = 99;
   t.strings.forEach((m, si) => {
@@ -2187,18 +2214,19 @@ function pianoHTML() {
     const left = black ? wi * WK - BK / 2 : wi * WK; if (!black) wi++;
     const a = act.get(pc), ds = dots.get(midi);
     let inner = '';
-    if (open.has(midi)) inner += `<span class="str"></span><span class="strlab">${T.midiName(midi, t.flats)}</span>`;
+    if (open.has(midi)) inner += `<span class="str"></span><span class="strlab" aria-hidden="true">${T.midiName(midi, t.flats)}</span>`;
     if (ds) {
       ds.sort((x, y) => (x.hand === 'R' ? 0 : 1) - (y.hand === 'R' ? 0 : 1));
       const two = ds.length > 1;
-      if (!two) inner += `<span class="nm${ds[0].root ? ' root' : ''}">${esc(ds[0].name)}</span>`;
-      inner += ds.filter(n => n.finger).map((n, i) => `<span class="fd ${n.hand}${n.root ? ' root' : ''}${two ? ' two' + i : ''}" title="${HAND_ABBR[n.hand]} finger ${n.finger}">${n.finger}</span>`).join('');
+      if (!two) inner += `<span aria-hidden="true" class="nm${ds[0].root ? ' root' : ''}">${esc(ds[0].name)}</span>`;
+      inner += ds.filter(n => n.finger).map((n, i) => `<span aria-hidden="true" class="fd ${n.hand}${n.root ? ' root' : ''}${two ? ' two' + i : ''}" title="${HAND_ABBR[n.hand]} finger ${n.finger}">${n.finger}</span>`).join('');
     } else if (a && !a.ctx) inner += `<span class="pip" style="background:${a.bg}"></span>`;
     else if (a && a.ctx) inner += `<span class="pip ctx"></span>`;
-    if (!black && pc === 0) inner += `<span class="oct">C${midi / 12 - 1}</span>`;
-    html += `<div class="pk ${black ? 'b' : 'w'}${ds ? ' lit' : ''}" data-midi="${midi}" style="left:${left}px;width:${black ? BK : WK}px" title="${T.midiName(midi)}">${inner}</div>`;
+    if (!black && pc === 0) inner += `<span class="oct" aria-hidden="true">C${midi / 12 - 1}</span>`;
+    const nm = T.midiName(midi), fin = ds ? ds.filter(n => n.finger).map(n => `${HAND_ABBR[n.hand]} finger ${n.finger}`).join(' and ') : '';
+    html += `<div class="pk ${black ? 'b' : 'w'}${ds ? ' lit' : ''}" data-midi="${midi}" role="button" tabindex="-1" aria-label="${nm}${fin ? ', ' + fin : ''}" style="left:${left}px;width:${black ? BK : WK}px" title="${nm}">${inner}</div>`;
   }
-  return `<div class="pianowrap" id="pianoWrap"><div class="piano${blind ? ' blind' : ''}" style="width:${wi * WK}px">${html}</div></div>`;
+  return `<div class="pianowrap" id="pianoWrap" tabindex="0" role="region" aria-label="Piano keyboard (scrolls sideways; arrow keys move between keys, Enter plays)"><div class="piano${blind ? ' blind' : ''}" style="width:${wi * WK}px">${html}</div></div>`;
 }
 function whitesBelow(midi) { let wi = 0; for (let m = 21; m < midi; m++) if (!isBlackPc(m % 12)) wi++; return wi; }
 function pianoStartScroll() { return whitesBelow(48) * 24 - 30; }    // C3 near the left edge
@@ -2221,7 +2249,7 @@ function instrumentsHTML({ mid = '' } = {}) {
     <button class="btn sm" data-act="playScale">${playLbl}</button>
     <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>
   </div>
-  <div class="fbwrap" id="fbWrap">${fretboardSVG()}</div>
+  <div class="fbwrap" id="fbWrap" tabindex="0" role="region" aria-label="Fretboard (scrolls sideways; arrow keys move between notes)">${fretboardSVG()}</div>
   <div class="legend" style="margin-top:8px">${legendHTML()}<span style="margin-left:auto">tap any note to hear it · scroll sideways on a phone</span></div>
   ${mid}
   <h2>Piano <span class="ctx">${esc(PP.title)} · ${esc(PP.hand === 'auto' ? 'both hands' : HANDS[PP.hand] || '')}</span></h2>
@@ -2384,7 +2412,7 @@ function prFocusTarget() {
   const pw = $('#pianoWrap', $('#tab-' + S.tab)); if (!pw) return;
   const els = cur.midis.map(m => pw.querySelector(`.pk[data-midi="${m}"]`)).filter(Boolean); if (!els.length) return;
   const lo = Math.min(...els.map(e => e.offsetLeft)), hi = Math.max(...els.map(e => e.offsetLeft + e.offsetWidth));
-  if (lo < pw.scrollLeft + 10 || hi > pw.scrollLeft + pw.clientWidth - 10) pw.scrollTo({ left: Math.max(0, (lo + hi) / 2 - pw.clientWidth / 2), behavior: 'smooth' });
+  if (lo < pw.scrollLeft + 10 || hi > pw.scrollLeft + pw.clientWidth - 10) pw.scrollTo({ left: Math.max(0, (lo + hi) / 2 - pw.clientWidth / 2), behavior: SMOOTH });
 }
 function prPaint(res, midi) {
   lessonStaffPaint();
@@ -2614,7 +2642,7 @@ function renderChord() {
       <div class="ro"><div class="k">Notes</div><div class="v big">${esc(ch.notes.join(' '))}</div><div class="hint">${skip.length ? `On six strings the ${esc(skip.join(' and '))} may be left out of a voicing — the rest defines the chord.` : 'Every note is kept in the voicings.'}</div></div>
     </div>
     <div class="toolbar"><button class="btn pri" data-act="playChordNow">▶ Play chord</button><button class="btn" data-act="strum">Strum ↓</button><button class="btn" data-act="arp">Arpeggio</button><span class="sp"></span><span class="hint">guitar buttons · the piano has its own controls below</span></div>
-    <details class="det"><summary>Notes · intervals · frequencies</summary><div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semitones</th><th>Hz (oct 4)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></details>
+    <details class="det"><summary>Notes · intervals · frequencies</summary><div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semitones</th><th>Hz (oct 4)</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${rows}</tbody></table></div></details>
   </div>
   ${instrumentsHTML({ mid: chordPosBlockHTML() })}`;
 }
@@ -2754,13 +2782,13 @@ function renderMath() {
   <div class="card">
     <div class="pat" style="margin-bottom:10px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div>
     <div class="hint" style="margin-bottom:10px">W = whole step (2 semitones, ×1.1225) · H = half step (1 semitone, ×1.0595) · WH = 3 semitones. Compare equal temperament with the pure "just" ratios — the fifth is off by only ~2 cents.</div>
-    <div class="tablewrap" style="max-height:none"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semis</th><th>2^(s/12)</th><th>Just</th><th>Δ cents</th><th>Hz</th><th></th></tr></thead><tbody>${scaleRows}</tbody></table></div>
+    <div class="tablewrap" style="max-height:none"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semis</th><th>2^(s/12)</th><th>Just</th><th>Δ cents</th><th>Hz</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${scaleRows}</tbody></table></div>
   </div>
 
   <h2>Every note <span class="ctx">octave ${oct}</span></h2>
   <div class="card">
     <div class="ctrls"><div class="field"><label>Octave</label><div class="seg">${octSeg}</div></div><span class="hint">green rows are in ${esc(keyTitle())}, red is the root</span></div>
-    <div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>MIDI</th><th>n</th><th>2^(n/12)</th><th>Hz</th><th></th></tr></thead><tbody>${noteRows}</tbody></table></div>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>MIDI</th><th>n</th><th>2^(n/12)</th><th>Hz</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${noteRows}</tbody></table></div>
   </div>
 
   <div class="grid2" style="margin-top:14px">
@@ -2777,7 +2805,7 @@ fret k:    f = f_open × 2^(k/12)</div></div></div>
   <h2>Fretboard math <span class="ctx">frequency of every fret</span></h2>
   <div class="card">
     <div class="ctrls"><div class="field"><label>String</label><div class="seg" style="flex-wrap:wrap">${strSeg}</div></div></div>
-    <div class="tablewrap"><table class="t"><thead><tr><th>Fret</th><th>Note</th><th>n</th><th>2^(fret/12)</th><th>Hz</th><th></th></tr></thead><tbody>${fretRows}</tbody></table></div>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Fret</th><th>Note</th><th>n</th><th>2^(fret/12)</th><th>Hz</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${fretRows}</tbody></table></div>
   </div>`;
 }
 
@@ -3080,7 +3108,7 @@ function staffSVG(plan) {
     if (fingerRows) { if (hasT) g += `<text class="rowlab R" x="4" y="${rhRow + 10}">RH</text>`; if (hasB) g += `<text class="rowlab L" x="4" y="${(hasT ? lhRow : rhRow) + 10}">LH</text>`; }
     else g += `<text class="rowlab" x="4" y="${nmRow + 10}">Note</text>`;
   }
-  return `<svg class="stf" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(plan.title)} written on the staff${plan.hasTab ? ' with guitar tab' : ''}">${g}</svg>`;
+  return `<svg class="stf" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="group" aria-label="${esc(plan.title)} written on the staff${plan.hasTab ? ' with guitar tab' : ''}">${g}</svg>`;
 }
 function lessonStaffPaint() {
   const tab = $('#tab-lessons'); if (!tab || S.tab !== 'lessons') return;
@@ -3089,7 +3117,7 @@ function lessonStaffPaint() {
   const cur = run && !run.done ? cols[run.idx] : null, wrap = $('.stfwrap', tab);
   if (cur && wrap && run.idx !== LES.lastScroll) {
     LES.lastScroll = run.idx; const w = wrap.clientWidth, x = +cur.querySelector('.lhl').getAttribute('x') + 19;
-    if (x < wrap.scrollLeft + 40 || x > wrap.scrollLeft + w - 40) wrap.scrollTo({ left: Math.max(0, x - w / 2), behavior: 'smooth' });
+    if (x < wrap.scrollLeft + 40 || x > wrap.scrollLeft + w - 40) wrap.scrollTo({ left: Math.max(0, x - w / 2), behavior: SMOOTH });
   }
 }
 const LES = { lastScroll: -1, resetArmed: false };
@@ -3198,19 +3226,22 @@ const TABS = [
   ['lessons', 'LEARN', '<path d="M13 6c-2.6-1.8-6-2.2-9-1.6v13c3-.6 6.4-.2 9 1.6 2.6-1.8 6-2.2 9-1.6v-13c-3-.6-6.4-.2-9 1.6zM13 6v13" stroke-width="1.5"/>'],
 ];
 function buildDock() {
-  $('#dock').innerHTML = TABS.map(([id, label, svg]) => `<button data-act="tab" data-v="${id}" aria-label="${label}">${svg ? `<svg viewBox="0 0 26 26">${svg}</svg>` : '<span class="fx">ƒ(x)</span>'}<span>${label}</span></button>`).join('');
+  $('#dock').innerHTML = TABS.map(([id, label, svg]) => `<button data-act="tab" data-v="${id}">${svg ? `<svg viewBox="0 0 26 26" aria-hidden="true">${svg}</svg>` : '<span class="fx" aria-hidden="true">ƒ(x)</span>'}<span>${label}</span></button>`).join('');
 }
 function render() {
   const el = $('#tab-' + S.tab), y = window.scrollY;
   normalizePos(); SEL = selection(); PP = pianoPlan(); clearPianoTimers();
+  const fk = focusKey(el);
   el.innerHTML = RENDER[S.tab]();
+  a11yPass(el);
   const fb = $('#fbWrap', el), pw = $('#pianoWrap', el);
   if (fb && UI.wantFocus && UI.focusFrac != null) { const w = fb.querySelector('svg').getBoundingClientRect().width; UI.fbScroll = Math.max(0, UI.focusFrac * w - 8); }
   UI.wantFocus = false;
   if (fb) { fb.scrollLeft = UI.fbScroll ?? 0; fb.addEventListener('scroll', () => { UI.fbScroll = fb.scrollLeft; }); }
   if (pw) { pw.scrollLeft = (UI.piFocus || UI.piScroll == null) ? pianoFocusScroll() : UI.piScroll; UI.piFocus = false; pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); }
+  restoreFocus(el, fk);
   window.scrollTo(0, y);
-  $$('#dock button').forEach(b => b.classList.toggle('on', b.dataset.v === S.tab));
+  $$('#dock button').forEach(b => { const on = b.dataset.v === S.tab; b.classList.toggle('on', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   document.body.dataset.tab = S.tab;
   prAfterRender();
   if (SongPlay.on) { SongPlay.paint(); SongPlay.btns(); }
@@ -3218,6 +3249,7 @@ function render() {
 function setTab(tab, opts = {}) {
   if ((tab === 'lessons') !== (S.tab === 'lessons')) { prOff(); LES.lastScroll = -1; }
   S.tab = tab; UI.piFocus = true;
+  if (UI.booted) announce((TABS.find(t => t[0] === tab) || [0, tab])[1].toLowerCase() + ' tab');
   if (tab === 'chord') S.mode = 'chord';
   else if (tab === 'play' && !opts.keepMode) { S.mode = 'scale'; S.selDeg = null; }
   $$('.tab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + tab));
@@ -3327,6 +3359,8 @@ document.addEventListener('click', e => {
       (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => { act.textContent = 'Copied ✓'; setTimeout(() => { act.textContent = 'Copy chart'; }, 1400); }).catch(() => { act.textContent = 'Select & copy ↓'; });
       break;
     }
+    case 'install': pwaInstall(); break;
+    case 'reloadapp': location.reload(); break;
     case 'power': break;
   }
 });
@@ -3351,12 +3385,116 @@ document.addEventListener('change', e => {
 });
 window.addEventListener('hashchange', () => { applyHash(); syncPanel(); setTab(S.tab, { keepMode: true, noScroll: true }); });
 
+/* ---------- accessibility helpers ---------- */
+function announce(msg) { const l = $('#live'); if (!l) return; l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 40); }
+// Re-rendering replaces the DOM, which would drop keyboard focus; remember what was focused and put it back.
+function focusKey(el) {
+  const a = document.activeElement;
+  if (!a || a === document.body || !el.contains(a)) return null;
+  if (a.id) return '#' + CSS.escape(a.id);
+  const at = [...a.attributes].filter(x => /^data-/.test(x.name)).map(x => `[${x.name}="${CSS.escape(x.value)}"]`).join('');
+  return at ? a.tagName.toLowerCase() + at : null;
+}
+function restoreFocus(el, key) {
+  if (!key) return;
+  let n = null; try { n = el.querySelector(key); } catch (e) {}
+  if (n && n.focus) n.focus({ preventScroll: true });
+}
+// Names for fields and groups, and "accessible name contains the visible text" (WCAG 2.5.3 label in name).
+const A11Y_NAMES = new Map(), WIDE_MQ = matchMedia('(min-width: 760px)');   // matchMedia does not force a layout; innerWidth does
+function a11yPass(el) {
+  el.querySelectorAll('.field').forEach(f => {
+    const lab = f.querySelector(':scope > label'); if (!lab) return;
+    const txt = lab.textContent.trim();
+    f.querySelectorAll('select,input').forEach(c => { if (!c.hasAttribute('aria-label') && !c.id) c.setAttribute('aria-label', txt); });
+    const seg = f.querySelector(':scope > .seg'); if (seg && !seg.hasAttribute('aria-label')) { seg.setAttribute('role', 'group'); seg.setAttribute('aria-label', txt); }
+  });
+  el.querySelectorAll('.worked').forEach(w => { w.tabIndex = 0; w.setAttribute('role', 'group'); w.setAttribute('aria-label', 'Worked calculation (scrolls sideways)'); });
+  const fix = [], word = (h, n) => new RegExp('(^|[^a-z0-9])' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])').test(h);
+  const wide = WIDE_MQ.matches;
+  el.querySelectorAll('button[aria-label],[role="button"][aria-label]').forEach(b => {
+    if (b.matches('.knob,.pk,.dot,.lcol,.cdiag')) return;
+    const lab = b.getAttribute('aria-label'), sig = (wide ? 'w' : 'n') + '|' + b.className + '|' + lab + '|' + b.textContent;
+    let nl = A11Y_NAMES.get(sig);
+    if (nl === undefined) {                    // innerText forces a layout, so each distinct button is measured once, then remembered
+      const vis = (b.innerText || b.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      nl = vis && /[a-z0-9]/.test(vis) && !word(lab.toLowerCase(), vis) ? vis + ', ' + lab : null;
+      A11Y_NAMES.set(sig, nl);
+    }
+    if (nl) fix.push([b, nl]);
+  });
+  // spaces between adjacent inline pieces ("1" + "Ion") so the visible text reads "1 Ion" to assistive tech and voice control
+  fix.forEach(([b, l]) => { [...b.children].slice(1).forEach(c => b.insertBefore(document.createTextNode(' '), c)); b.setAttribute('aria-label', l); });
+}
+// Piano / fretboard by keyboard: Tab onto the instrument, arrows move between notes, Enter or Space plays.
+document.addEventListener('keydown', e => {
+  const t = e.target; if (!t || !t.closest || e.ctrlKey || e.metaKey || e.altKey) return;
+  const host = t.closest('#pianoWrap, #fbWrap'); if (!host) return;
+  const piano = host.id === 'pianoWrap', k = e.key;
+  const keys = [...host.querySelectorAll(piano ? '.pk' : '.dot')];
+  const cur = t.matches(piano ? '.pk' : '.dot') ? t : null;
+  if (cur && (k === 'Enter' || k === ' ')) { e.preventDefault(); cur.dispatchEvent(new MouseEvent('click', { bubbles: true })); return; }
+  const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+  if (!dirs[k] && !(piano && /^(Home|End|PageUp|PageDown)$/.test(k))) return;
+  e.preventDefault();
+  let next = null;
+  if (!cur) next = piano ? (host.querySelector('.pk.target') || host.querySelector('.pk.lit') || host.querySelector('.pk[data-midi="60"]')) : (host.querySelector('.dot:not(.off)') || host.querySelector('.dot'));
+  else if (piano) {
+    const m = +cur.dataset.midi; let to = m;
+    if (k === 'ArrowLeft') to = m - (e.shiftKey ? 12 : 1); else if (k === 'ArrowRight') to = m + (e.shiftKey ? 12 : 1);
+    else if (k === 'PageDown') to = m - 12; else if (k === 'PageUp') to = m + 12; else if (k === 'Home') to = 21; else if (k === 'End') to = 108;
+    to = Math.max(21, Math.min(108, to)); next = host.querySelector(`.pk[data-midi="${to}"]`);
+  } else {
+    const si = +cur.dataset.si, f = +cur.dataset.f, [dx, dy] = dirs[k], row = s => keys.filter(d => +d.dataset.si === s);
+    if (dx) { const c = row(si).filter(d => (+d.dataset.f - f) * dx > 0).sort((a, b) => Math.abs(a.dataset.f - f) - Math.abs(b.dataset.f - f)); next = c[0]; }
+    else { for (let s2 = si + dy; s2 >= 0 && s2 < 12 && !next; s2 += dy) { const c = row(s2).sort((a, b) => Math.abs(a.dataset.f - f) - Math.abs(b.dataset.f - f)); next = c[0]; } }
+  }
+  if (next) next.focus();
+});
+
+/* ---------- PWA: installable + works offline ---------- */
+const PWA = { deferred: null, offlineReady: false, updated: false, installed: false };
+const isStandalone = () => (typeof matchMedia === 'function' && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+function pwaPaint() {
+  const box = $('#pwa'); if (!box) return;
+  const st = $('#pwaStatus'), canSW = 'serviceWorker' in navigator && /^https?:$/.test(location.protocol);
+  let txt = '', cls = '';
+  if (PWA.updated) { txt = 'A new version is ready.'; cls = 'warn'; }
+  else if (isStandalone()) { txt = PWA.offlineReady ? 'Installed · works offline ✓' : 'Installed'; cls = 'good'; }
+  else if (PWA.offlineReady) { txt = 'Saved for offline use ✓'; cls = 'good'; }
+  else if (IS_IOS) txt = 'Tip: tap Share, then Add to Home Screen to install.';
+  st.textContent = txt; st.className = 'pst ' + cls;
+  $('#pwaInstall').hidden = !PWA.deferred || isStandalone();
+  $('#pwaReload').hidden = !PWA.updated;
+  box.hidden = !(canSW || PWA.deferred) || !(txt || PWA.deferred);
+}
+async function pwaInstall() {
+  const d = PWA.deferred; if (!d) return;
+  d.prompt(); try { await d.userChoice; } catch (e) {}
+  PWA.deferred = null; pwaPaint();
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); PWA.deferred = e; pwaPaint(); });
+window.addEventListener('appinstalled', () => { PWA.deferred = null; PWA.installed = true; pwaPaint(); announce('Big Pear Guitar Works installed'); });
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  const hadController = !!navigator.serviceWorker.controller;
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing; if (!nw) return;
+        nw.addEventListener('statechange', () => { if (nw.state === 'activated' && (hadController || PWA.offlineReady)) { PWA.updated = true; pwaPaint(); announce('A new version is ready. Use Reload now.'); } });
+      });
+      return navigator.serviceWorker.ready;
+    }).then(() => { PWA.offlineReady = true; pwaPaint(); }).catch(() => {});
+  });
+}
+
 /* ---------- boot ---------- */
 applyHash();
 buildDock();
 buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
+UI.booted = true; pwaPaint(); document.body.classList.add('ready');
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
 window.BPGW = { S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>

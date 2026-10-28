@@ -1,8 +1,9 @@
 # NEXT — done / next
 
-Updated 2026-10-28 (practice mode).
+Updated 2026-10-28 (slice 4: PWA / performance / accessibility).
 
 ## Done
+- [x] **Polish (2026-10-28, slice 4):** installable PWA + offline (manifest, service worker, icons, install button, 53-check browser test), axe-core 351 → 0, CLS 0.11 → 0.009, keyboard piano / fretboard, skip link / landmarks / live region, reduced-motion / contrast / forced-colors
 - [x] **MIDI play-along + Practice (2026-10-28, slice 1):** Web MIDI input, on-screen/computer-key fallback, Practice toggle with live scoring; 168k theory checks
 - [x] **Piano control panel (2026-10-27):** replaces the thumbnail grid; hands R/L/both, octave C2–C6, inversions / named 5+ note voicings / modes on each degree / pentatonic boxes, Match guitar, Play / Arpeggio / Scale, finger numbers on the keys (green RH, blue LH), "RH: C(1) E(3) G(5)" readout, follow-along highlighting; ~115k theory tests + 700-check browser smoke test
 - [x] Original design captured (`screenshots/gm_original.png`) and written up (`SPEC.md`)
@@ -26,7 +27,7 @@ Updated 2026-10-28 (practice mode).
 ## Next (in order)
 **Song generator follow-ups (v2):** note lengths in the tab; a bass line and a drum pattern; sevenths and borrowed chords; a 'lock this section, re-roll the melody' button; export to MIDI / MusicXML; lyrics syllable grid; a 'slow practice' mode that plays the melody with a count-in and lights the tab column.
 **Lessons follow-ups:** timed (rhythm) exercises with a metronome count-in; more lessons (minor scales, seventh chords, the 12 major keys' fingerings, rhythm reading, a second song); a key signature on the staff; an 'ear' mode that plays a note and asks you to find it; a printable lesson sheet.
-**Today's plan (2026-10-28):** 1 ✅ MIDI + Practice · 2 ✅ Song generator v1 · 3 ✅ Lessons tab (7 lessons, 33 practised parts) · 4 Polish (PWA/offline, performance, accessibility).
+**Today's plan (2026-10-28):** 1 ✅ MIDI + Practice · 2 ✅ Song generator v1 · 3 ✅ Lessons tab (7 lessons, 33 practised parts) · 4 ✅ Polish (PWA/offline, performance, accessibility).
 0. **Piano follow-ups:** have a piano teacher check the algorithmic fingerings for exotic scales; optional fingering view for common progressions (voice-leading between chords); optional on-screen hand drawing; optional metronome-synced playback.
 1. **Add the Xcode project to this repo.** This is the real app. Copy the project folder into `/mac/` (or `/ios/`), commit, push. Until this is done the repo is not the single source of truth. (`.gitignore`: `xcuserdata/`, `DerivedData/`, `.DS_Store`.)
 2. **Port the web theory tests to Swift** (or share test vectors as JSON) so both apps agree on spelling, key signatures and frequencies.
@@ -34,7 +35,8 @@ Updated 2026-10-28 (practice mode).
 4. Add a MATH-tab view of *cents* for tunings and a tuner-style readout.
 5. ~~Fretboard: show position boxes for the chosen scale.~~ **Done 2026-10-27.** Still open: name the five CAGED shapes on the chord positions, and an optional 2-notes-per-string / 4-notes-per-string view of the scale positions.
 6. Hash-link everything (time signature, tempo) so lessons can be shared by URL.
-7. Accessibility pass: keyboard-only use of all drums, screen-reader labels on fretboard/piano.
+7. ~~Accessibility pass~~ **Done 2026-10-28** (slice 4). Still open: test with a real screen reader (VoiceOver / TalkBack) — axe cannot judge whether the spoken labels are *pleasant*; keyboard-only use of the drum knobs is by arrow keys but untested by a person.
+8. **PWA follow-ups:** an "Update available — reload" toast when a new worker is waiting; Lighthouse CI in the repo; a screenshots entry in the manifest for richer install UI; a real-device check of Add to Home Screen on iPhone and Android.
 
 ## Next — positions follow-ups
 - Tap a chord position, then step through the *next* position with a swipe (phone).
