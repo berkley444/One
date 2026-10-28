@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Big Pear Guitar Works — guitar theory, math & piano bridge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<meta name="description" content="Pick a root, a scale and a tuning. See the notes on a fretboard and a piano, the math behind them (f = 440 × 2^(n/12)), the chords, the circle of fifths — and generate a progression.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#050506; --ink:#e9eaee; --dim:#8b8d96; --faint:#4a4c54;
+  --green:#58c75a; --green-d:#2f7d33; --red:#e8463e; --gold:#e5c98a; --amber:#f0a035; --blue:#4a86e8; --violet:#a06be0;
+  --panel-hi:#e4e5e9; --panel-lo:#8f9198;
+  --engrave:#2c2d31;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --cond:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding:calc(10px + env(safe-area-inset-top)) 12px calc(110px + env(safe-area-inset-bottom));
+  background:radial-gradient(1200px 500px at 50% -120px,#17171c 0,#050506 70%) no-repeat,var(--bg)}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font:600 22px/1.1 var(--cond);letter-spacing:.06em;text-align:center;margin:6px 0 12px;text-transform:uppercase}
+h1 small{display:block;font:500 11px var(--sans);letter-spacing:.14em;color:var(--dim);margin-top:4px}
+h2{font:700 26px/1 var(--cond);letter-spacing:.04em;color:#4a4c54;margin:26px 2px 10px;text-transform:uppercase;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h2 small{font:600 12px var(--sans);letter-spacing:.1em;color:#33353b}
+h2 .ctx{color:#6a6c75;font:600 12px var(--sans);letter-spacing:.12em}
+button{font:inherit;color:inherit}
+.hidden{display:none!important}
+
+/* ---------- brushed metal panel ---------- */
+.metal{
+  background:
+    repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 1px,rgba(0,0,0,.035) 1px 2px,rgba(255,255,255,0) 2px 4px),
+    linear-gradient(180deg,#f1f2f5 0%,#b7b9c0 38%,#d8d9de 52%,#8c8e95 100%);
+  border-radius:16px;border:1px solid #5c5e66;
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 -2px 4px rgba(0,0,0,.35) inset,0 8px 22px rgba(0,0,0,.6);
+  color:var(--engrave);position:relative}
+.panel{padding:12px 14px 14px}
+.panel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.engr{font:700 12px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--engrave);text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.engr.sm{font-size:10px;letter-spacing:.18em;color:#3b3c41}
+.power{display:flex;align-items:center;gap:7px;cursor:pointer;background:none;border:0;padding:4px 6px;border-radius:8px}
+.power .led{width:11px;height:11px;border-radius:50%;background:#5a3410;box-shadow:0 0 0 2px rgba(0,0,0,.35) inset,0 1px 0 rgba(255,255,255,.6)}
+.power.on .led{background:radial-gradient(circle at 35% 30%,#ffd9a0,#ff9a1f 55%,#c76400);box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 8px 3px rgba(255,150,30,.85),0 0 22px 6px rgba(255,140,20,.45);animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 6px 2px rgba(255,150,30,.7),0 0 14px 3px rgba(255,140,20,.3)}}
+.row{display:grid;gap:8px;grid-template-columns:repeat(5,1fr);align-items:end}
+.row + .row{margin-top:10px}
+.slot{display:flex;flex-direction:column;gap:4px;min-width:0}
+/* drum selector */
+.drum{position:relative;height:50px;border-radius:9px;background:linear-gradient(180deg,#0b0b0d,#232327 48%,#09090b);
+  box-shadow:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 8px 14px rgba(0,0,0,.9),inset 0 -6px 10px rgba(0,0,0,.7);overflow:hidden}
+.drum::before{content:"";position:absolute;left:14px;right:14px;top:50%;height:1px;background:linear-gradient(90deg,transparent,#b8733a 15%,#e0a368 50%,#b8733a 85%,transparent);opacity:.7;pointer-events:none}
+.drum .val{position:absolute;inset:0 16px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font:600 18px/1 var(--sans);letter-spacing:.01em;background:linear-gradient(180deg,#f5f5f7,#a9abb3 50%,#e6e7ea);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none;white-space:nowrap}
+.drum .val.long{font-size:14px}
+.drum .val.xl{font-size:12px}
+.drum .edge{position:absolute;top:0;bottom:0;width:16px;border:0;padding:0;cursor:pointer;z-index:2;
+  background:repeating-linear-gradient(180deg,#8d8f96 0 2px,#3a3b40 2px 4px)}
+.drum .edge.l{left:0;border-right:1px solid #000;box-shadow:inset -4px 0 6px rgba(0,0,0,.6)}
+.drum .edge.r{right:0;border-left:1px solid #000;box-shadow:inset 4px 0 6px rgba(0,0,0,.6)}
+.drum .edge:active{filter:brightness(1.4)}
+.drum select{position:absolute;left:16px;right:16px;top:0;bottom:0;width:calc(100% - 32px);height:100%;opacity:0;cursor:pointer;font-size:16px;z-index:1}
+.drum.small{height:40px}.drum.small .val{font-size:15px}
+/* knobs */
+.knobwrap{display:flex;flex-direction:column;align-items:center;gap:2px}
+.knob{width:62px;height:62px;touch-action:none;cursor:ns-resize;outline:none;border-radius:50%}
+.knob:focus-visible{box-shadow:0 0 0 3px rgba(240,160,53,.7)}
+.knob svg{width:100%;height:100%;display:block}
+.knobread{font:600 12px var(--mono);color:#222;text-shadow:0 1px 0 rgba(255,255,255,.6);margin-top:-2px}
+.switch{display:flex;flex-direction:column;align-items:center;gap:6px}
+.toggle{width:54px;height:30px;border-radius:15px;border:0;cursor:pointer;position:relative;background:linear-gradient(180deg,#0b0b0d,#2a2a2f);box-shadow:0 0 0 1px #000,0 1px 0 rgba(255,255,255,.5),inset 0 4px 8px #000}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:linear-gradient(180deg,#fafafb,#8d8f96);box-shadow:0 2px 4px rgba(0,0,0,.6);transition:transform .15s}
+.toggle.on{background:linear-gradient(180deg,#5b3208,#a9650f)}
+.toggle.on::after{transform:translateX(24px)}
+
+/* ---------- sections ---------- */
+.card{background:#0c0c0f;border:1px solid #1d1d23;border-radius:14px;padding:14px}
+.seg{display:inline-flex;background:#111115;border:1px solid #26262d;border-radius:9px;padding:2px;gap:2px}
+.seg button{background:none;border:0;padding:6px 11px;border-radius:7px;font:600 12px var(--sans);letter-spacing:.06em;color:var(--dim);cursor:pointer}
+.seg button.on{background:#2a2b31;color:#fff}
+.btn{background:linear-gradient(180deg,#2b2c32,#18181c);border:1px solid #34353d;border-radius:9px;padding:8px 14px;font:600 13px var(--sans);cursor:pointer;color:var(--ink);letter-spacing:.03em}
+.btn:hover{border-color:#52535e}.btn:active{transform:translateY(1px)}
+.btn.pri{background:linear-gradient(180deg,#d98c27,#a8650d);border-color:#e5a14a;color:#1a0f02}
+.btn.sm{padding:5px 10px;font-size:12px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.toolbar .sp{flex:1}
+.hint{color:var(--dim);font-size:12.5px;line-height:1.45}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);align-items:center}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+
+/* fretboard */
+.fbwrap{overflow-x:auto;border-radius:12px;border:3px solid var(--gold);background:#000;padding:4px 0;-webkit-overflow-scrolling:touch}
+.fbwrap svg{display:block;min-width:820px;width:100%;height:auto}
+.fb-str{stroke:#c4c4c8}
+.dot{cursor:pointer}
+.dot circle{stroke:#000;stroke-width:1}
+.dot text{font:700 11px var(--sans);fill:#06210a;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.dot.root text{fill:#fff}
+.dot:hover circle{filter:brightness(1.25)}
+
+/* piano */
+.pianowrap{overflow-x:auto;border-radius:12px;border:3px solid var(--gold);background:#000;-webkit-overflow-scrolling:touch}
+.piano{position:relative;height:216px;display:block}
+.pk{position:absolute;top:0;cursor:pointer}
+.pk.w{background:linear-gradient(180deg,#f4f4f1,#fff 70%,#d9d9d4);border:1px solid #111;border-radius:0 0 5px 5px;height:180px;margin-top:26px;box-shadow:0 2px 0 #aaa}
+.pk.b{background:linear-gradient(180deg,#2d2d31,#000);border-radius:0 0 4px 4px;height:112px;margin-top:26px;z-index:2;border:1px solid #000;box-shadow:0 2px 3px rgba(0,0,0,.8)}
+.pk:active{filter:brightness(.85)}
+.pk .mk{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;min-width:18px;height:18px;padding:0 3px;border-radius:9px;font:700 10px/18px var(--sans);text-align:center;color:#06210a;pointer-events:none}
+.pk.b .mk{bottom:8px}
+.pk .oct{position:absolute;bottom:-1px;left:0;right:0;text-align:center;font:600 9px var(--sans);color:#9a9a96;pointer-events:none}
+.pk .str{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--amber);pointer-events:none}
+.pk.ring{box-shadow:inset 0 0 0 3px #fff,0 0 12px 2px rgba(255,255,255,.6)}
+.pk .strlab{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:700 9px var(--sans);color:var(--amber);white-space:nowrap;pointer-events:none}
+
+/* chord cards */
+.chords{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:9px}
+.cc{background:linear-gradient(180deg,#17171c,#0e0e12);border:1px solid #26262d;border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;transition:.12s}
+.cc:hover{border-color:#6b6d79;transform:translateY(-1px)}
+.cc.sel{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
+.cc .rn{font:700 20px var(--cond);color:var(--amber);letter-spacing:.04em}
+.cc .nm{font:600 20px var(--sans)}
+.cc .nt{font:400 11.5px var(--mono);color:var(--dim);margin-top:4px}
+.cc .fn{font:600 9.5px var(--sans);letter-spacing:.14em;color:#5d5f68;margin-top:2px;text-transform:uppercase}
+
+/* chord builder */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:linear-gradient(180deg,#e4e5e9,#a0a2a9);color:#26272b;border:1px solid #555;border-radius:8px;padding:7px 10px;min-width:42px;text-align:center;font:700 13px var(--sans);cursor:pointer;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 3px rgba(0,0,0,.5)}
+.chip.on{background:linear-gradient(180deg,#ffbd62,#d77f12);border-color:#7a4403;color:#1a0f02;box-shadow:0 0 12px rgba(255,150,30,.55),0 1px 0 rgba(255,255,255,.5) inset}
+.chip small{font-weight:600;opacity:.65}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+.ro{background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:10px 12px}
+.ro .k{font:700 10px var(--sans);letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.ro .v{font:600 22px var(--mono);margin-top:4px;letter-spacing:.04em;word-spacing:.2em}
+.ro .v.big{font:700 34px var(--cond);letter-spacing:.03em}
+table.t{width:100%;border-collapse:collapse;font:13px var(--mono)}
+table.t th{font:700 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:right;padding:6px 8px;border-bottom:1px solid #2a2a31;position:sticky;top:0;background:#0c0c0f}
+table.t th:first-child,table.t td:first-child{text-align:left}
+table.t td{text-align:right;padding:6px 8px;border-bottom:1px solid #17171b}
+table.t tr.in td{background:rgba(88,199,90,.08)}
+table.t tr.root td{background:rgba(232,70,62,.14)}
+table.t tr:hover td{background:rgba(255,255,255,.05)}
+table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:var(--amber);cursor:pointer;padding:1px 7px}
+.tablewrap{max-height:520px;overflow:auto;border:1px solid #1d1d23;border-radius:10px}
+.voic{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.vc{background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:8px;text-align:center;cursor:pointer}
+.vc:hover{border-color:var(--amber)}
+.vc svg{width:100%;height:auto;display:block}
+.vc .fr{font:600 11px var(--mono);color:var(--dim)}
+
+/* math */
+.eq{font:600 26px/1.3 var(--mono);text-align:center;padding:14px 8px;letter-spacing:.02em}
+.eq .n{color:var(--amber)}.eq .a{color:var(--green)}
+.eq small{display:block;font:500 12px var(--sans);color:var(--dim);letter-spacing:.04em;margin-top:6px}
+.worked{font:14px/1.9 var(--mono);color:#cfd0d6;background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:pre}
+.worked b{color:var(--amber);font-weight:600}.worked i{color:var(--green);font-style:normal}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.pat{display:flex;gap:6px;flex-wrap:wrap}
+.pat span{background:#17171c;border:1px solid #2a2a31;border-radius:8px;padding:6px 10px;font:700 14px var(--mono)}
+.pat span.W{color:var(--green)}.pat span.H{color:var(--red)}.pat span.WH{color:var(--amber)}
+
+/* circle */
+.circlewrap{display:grid;grid-template-columns:minmax(300px,520px) 1fr;gap:18px;align-items:start}
+@media (max-width:820px){.circlewrap{grid-template-columns:1fr}}
+.circlewrap svg{width:100%;height:auto;display:block;max-width:520px;margin:0 auto}
+.wedge{cursor:pointer}
+.wedge path{transition:fill .15s}
+.wedge:hover path{filter:brightness(1.25)}
+.sig{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.sig span{font:700 20px var(--sans);background:#17171c;border:1px solid #2a2a31;border-radius:8px;padding:2px 10px}
+
+/* song */
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.bar{background:linear-gradient(180deg,#17171c,#0e0e12);border:1px solid #26262d;border-radius:12px;padding:12px 8px 10px;text-align:center;cursor:pointer;position:relative;overflow:hidden}
+.bar .rn{font:700 16px var(--cond);color:var(--amber);letter-spacing:.06em}
+.bar .nm{font:700 26px var(--sans);margin:2px 0}
+.bar .nt{font:11px var(--mono);color:var(--dim)}
+.bar .num{position:absolute;top:5px;left:8px;font:600 10px var(--mono);color:#555862}
+.bar .beats{display:flex;gap:4px;justify-content:center;margin-top:8px}
+.bar .beats i{width:8px;height:8px;border-radius:50%;background:#26262d}
+.bar.now{border-color:var(--amber);background:linear-gradient(180deg,#2d2008,#14100a);box-shadow:0 0 18px rgba(240,160,53,.35)}
+.bar.now .beats i.on{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.bar.now .beats i.acc.on{background:var(--red);box-shadow:0 0 8px var(--red)}
+@media (max-width:560px){.bars{grid-template-columns:repeat(2,1fr)}}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font:700 10px var(--sans);letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.field select{background:#17171c;border:1px solid #2f3038;color:var(--ink);border-radius:8px;padding:8px 10px;font:600 14px var(--sans)}
+.ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px}
+code.chart{display:block;background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:10px 12px;font:14px/1.7 var(--mono);color:#d8d9de;white-space:pre-wrap}
+
+/* nav */
+nav.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;
+  display:flex;gap:2px;padding:6px;border-radius:30px;background:rgba(24,24,28,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #34353d;box-shadow:0 10px 30px rgba(0,0,0,.7)}
+nav.dock button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 14px 6px;border-radius:24px;cursor:pointer;color:#aeb0b8;font:700 10px var(--sans);letter-spacing:.08em;min-width:62px}
+nav.dock button svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav.dock button.on{background:#2a2b31;color:#4b8bff}
+nav.dock button .fx{font:italic 700 18px/26px Georgia,serif}
+@media (max-width:430px){nav.dock button{padding:7px 9px 6px;min-width:52px}}
+footer{margin:34px 0 0;text-align:center;font-size:11.5px;color:#585a63;line-height:1.7}
+footer a{color:#7b8aa8}
+.tab{display:none}.tab.on{display:block}
+.stack{display:flex;flex-direction:column}
+.stack > *{order:5}
+.mt{margin-top:14px}
+@media (max-width:620px){
+  body{padding-left:8px;padding-right:8px}
+  .row,.row.r6{grid-template-columns:repeat(6,1fr)}
+  .row>.slot{grid-column:span 2}
+  #row1>.slot:nth-child(n+4){grid-column:span 3}
+  .drum .val{font-size:16px}
+  .eq{font-size:19px}
+  .ro .v{font-size:18px}
+}
+
+/* knob caps */
+.knob{position:relative}
+.knob .ticks{position:absolute;inset:0;width:100%;height:100%}
+.knob .cap{position:absolute;inset:10px;border-radius:50%;background:conic-gradient(from 20deg,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6,#8b8d94,#ebecef,#6e7078,#f4f4f6);box-shadow:0 4px 7px rgba(0,0,0,.6),0 0 0 2px #2b2c30,0 1px 0 rgba(255,255,255,.5) inset;will-change:transform}
+.knob .cap::before{content:"";position:absolute;inset:5px;border-radius:50%;background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.65),rgba(0,0,0,.28) 85%)}
+.knob .cap i{position:absolute;left:50%;top:3px;width:4px;height:13px;margin-left:-2px;background:#d9770a;border-radius:2px;box-shadow:0 0 4px rgba(255,140,20,.8)}
+.row.r6{grid-template-columns:repeat(6,1fr);align-items:end}
+.dot.flash circle{filter:brightness(1.7) drop-shadow(0 0 6px #fff)}
+.pk.flash{box-shadow:inset 0 0 0 3px #fff,0 0 14px 3px rgba(255,255,255,.7)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
+
+  <!-- ===== MUSIC CONTROL PANEL ===== -->
+  <section class="metal panel" aria-label="Music control">
+    <div class="panel-top">
+      <span class="engr">Music Control</span>
+      <button class="power on" id="power" aria-pressed="true" title="Sound on / off"><span class="engr sm">Power</span><span class="led"></span></button>
+    </div>
+    <div class="row" id="row1"></div>
+    <div class="row" id="row2"></div>
+  </section>
+
+  <!-- ===== TABS ===== -->
+  <main>
+  <div id="tab-play" class="tab"><div class="stack" id="stack-play"></div></div>
+  <div id="tab-chord" class="tab"><div class="stack" id="stack-chord"></div></div>
+  <div id="tab-circle" class="tab"></div>
+  <div id="tab-math" class="tab"></div>
+  <div id="tab-song" class="tab"></div>
+  </main>
+
+  <footer>
+    Big Pear Guitar Works · web edition · <a href="https://github.com/berkley444/One">github.com/berkley444/One</a><br>
+    Equal temperament · f(n) = A4 × 2<sup>n/12</sup> · no tracking, no dependencies.
+  </footer>
+</div>
+
+<nav class="dock" id="dock" aria-label="Sections"></nav>
+<script>
+// <THEORY>
+/* ================================================================
+   THEORY ENGINE — pure functions, no DOM, no audio.
+   Tested by tests/theory.test.js (it extracts this block from index.html).
+   ================================================================ */
+const Theory = (() => {
+  const LETTERS = ['C','D','E','F','G','A','B'];
+  const LETTER_PC = [0,2,4,5,7,9,11];
+  const MAJOR_SEMI = [0,2,4,5,7,9,11];
+  const SHARP_NAMES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+  const FLAT_NAMES  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+  const mod = (n, m) => ((n % m) + m) % m;
+
+  /* ---------- note names ---------- */
+  const accSym = a => a > 0 ? '♯'.repeat(a) : a < 0 ? '♭'.repeat(-a) : '';
+  function parseName(n) {
+    const letter = LETTERS.indexOf(n[0]);
+    if (letter < 0) throw new Error('bad note name ' + n);
+    let acc = 0;
+    for (const ch of n.slice(1)) { if (ch === '♯' || ch === '#') acc++; else if (ch === '♭' || ch === 'b') acc--; }
+    return { letter, acc, pc: mod(LETTER_PC[letter] + acc, 12), name: LETTERS[letter] + accSym(acc) };
+  }
+  function spellDegree(root, semis, deg) {           // root = parseName() result
+    const li = (root.letter + deg - 1) % 7;
+    const pc = mod(root.pc + semis, 12);
+    const a = mod(pc - LETTER_PC[li] + 6, 12) - 6;   // -6..5
+    if (Math.abs(a) > 2) return (SHARP_NAMES[pc]);   // never reached for sane keys
+    return LETTERS[li] + accSym(a);
+  }
+  function pcName(pc, flats) { return (flats ? FLAT_NAMES : SHARP_NAMES)[mod(pc, 12)]; }
+  function pcBoth(pc) { const s = SHARP_NAMES[mod(pc,12)], f = FLAT_NAMES[mod(pc,12)]; return s === f ? s : s + ' / ' + f; }
+
+  /* ---------- scales: [semitones, scale-degree] pairs so we can SPELL correctly ---------- */
+  const P = a => a.map(([s, d]) => ({ s, d }));
+  const SCALES = {
+    major:         { name: 'Major',          long: 'Major (Ionian)',        parent: 0, pts: P([[0,1],[2,2],[4,3],[5,4],[7,5],[9,6],[11,7]]) },
+    naturalMinor:  { name: 'Natural Minor',  long: 'Natural Minor (Aeolian)', parent: 5, pts: P([[0,1],[2,2],[3,3],[5,4],[7,5],[8,6],[10,7]]) },
+    harmonicMinor: { name: 'Harmonic Minor', long: 'Harmonic Minor',        parent: 5, pts: P([[0,1],[2,2],[3,3],[5,4],[7,5],[8,6],[11,7]]) },
+    melodicMinor:  { name: 'Melodic Minor',  long: 'Melodic Minor (ascending)', parent: 5, pts: P([[0,1],[2,2],[3,3],[5,4],[7,5],[9,6],[11,7]]) },
+    majorPent:     { name: 'Major Pentatonic', long: 'Major Pentatonic',    parent: 0, pts: P([[0,1],[2,2],[4,3],[7,5],[9,6]]) },
+    minorPent:     { name: 'Minor Pentatonic', long: 'Minor Pentatonic',    parent: 5, pts: P([[0,1],[3,3],[5,4],[7,5],[10,7]]) },
+    blues:         { name: 'Blues',          long: 'Blues (minor pent + ♭5)', parent: 5, pts: P([[0,1],[3,3],[5,4],[6,5],[7,5],[10,7]]) },
+    dorian:        { name: 'Dorian',         long: 'Dorian',                parent: 1, pts: P([[0,1],[2,2],[3,3],[5,4],[7,5],[9,6],[10,7]]) },
+    phrygian:      { name: 'Phrygian',       long: 'Phrygian',              parent: 2, pts: P([[0,1],[1,2],[3,3],[5,4],[7,5],[8,6],[10,7]]) },
+    lydian:        { name: 'Lydian',         long: 'Lydian',                parent: 3, pts: P([[0,1],[2,2],[4,3],[6,4],[7,5],[9,6],[11,7]]) },
+    mixolydian:    { name: 'Mixolydian',     long: 'Mixolydian',            parent: 4, pts: P([[0,1],[2,2],[4,3],[5,4],[7,5],[9,6],[10,7]]) },
+    locrian:       { name: 'Locrian',        long: 'Locrian',               parent: 6, pts: P([[0,1],[1,2],[3,3],[5,4],[6,5],[8,6],[10,7]]) },
+  };
+  const SCALE_ORDER = ['major','naturalMinor','harmonicMinor','melodicMinor','majorPent','minorPent','blues','dorian','phrygian','lydian','mixolydian','locrian'];
+  SCALE_ORDER.forEach(id => { SCALES[id].id = id; SCALES[id].semis = SCALES[id].pts.map(p => p.s); });
+  const isMinorish = id => SCALES[id].semis.includes(3);
+  const isHepta = id => SCALES[id].pts.length === 7;
+
+  function intervalLabel(semis, deg) {
+    const base = MAJOR_SEMI[(deg - 1) % 7] + 12 * Math.floor((deg - 1) / 7);
+    const diff = semis - base;
+    return accSym(diff) + deg;
+  }
+  const dotLabel = lbl => lbl === '1' ? 'R' : lbl;
+
+  /* ---------- key spelling ---------- */
+  // Parent major of a (root, scale): the major key whose signature the scale shares.
+  function parentMajor(root, scaleId) {
+    const k = SCALES[scaleId].parent;
+    const letter = mod(root.letter - k, 7);
+    const pc = mod(root.pc - MAJOR_SEMI[k], 12);
+    const a = mod(pc - LETTER_PC[letter] + 6, 12) - 6;
+    if (Math.abs(a) > 2) return null;
+    return parseName(LETTERS[letter] + accSym(a));
+  }
+  function spellScaleFrom(root, scaleId) {
+    return SCALES[scaleId].pts.map(p => {
+      const name = spellDegree(root, p.s, p.d);
+      const label = intervalLabel(p.s, p.d);
+      return { name, pc: parseName(name).pc, semis: p.s, deg: p.d, label };
+    });
+  }
+  function signatureScore(root, scaleId) {           // lower = friendlier key
+    const pm = parentMajor(root, scaleId);
+    if (!pm) return 99;
+    let s = 0;
+    for (const m of MAJOR_SEMI.map((x, i) => [x, i + 1])) {
+      const n = parseName(spellDegree(pm, m[0], m[1]));
+      if (Math.abs(n.acc) > 1) return 50;
+      s += Math.abs(n.acc);
+    }
+    return s;
+  }
+  // Pick a sensible spelling for a pitch class given the scale; pref: 'auto' | '♯' | '♭'
+  function rootName(pc, scaleId, pref = 'auto') {
+    pc = mod(pc, 12);
+    if (SHARP_NAMES[pc] === FLAT_NAMES[pc]) return SHARP_NAMES[pc];
+    const sh = SHARP_NAMES[pc], fl = FLAT_NAMES[pc];
+    if (pref === '♯') return sh;
+    if (pref === '♭') return fl;
+    const a = signatureScore(parseName(sh), scaleId), b = signatureScore(parseName(fl), scaleId);
+    if (a < b) return sh;
+    if (b < a) return fl;
+    return pc === 3 ? fl : sh;                       // ties: F♯, C♯… but E♭
+  }
+  function spellScale(rootNm, scaleId) { return spellScaleFrom(parseName(rootNm), scaleId); }
+
+  function stepPattern(semis) {
+    const out = [];
+    for (let i = 0; i < semis.length; i++) {
+      const d = (i + 1 < semis.length ? semis[i + 1] : 12) - semis[i];
+      out.push(d === 1 ? 'H' : d === 2 ? 'W' : d === 3 ? 'WH' : String(d));
+    }
+    return out;
+  }
+
+  /* ---------- key signatures & circle of fifths ---------- */
+  const SHARP_ORDER = ['F','C','G','D','A','E','B'];
+  const FLAT_ORDER  = ['B','E','A','D','G','C','F'];
+  function keySignature(majorName) {                 // name of a MAJOR key
+    const root = parseName(majorName);
+    const notes = MAJOR_SEMI.map((s, i) => parseName(spellDegree(root, s, i + 1)));
+    const sharps = notes.filter(n => n.acc > 0).length, flats = notes.filter(n => n.acc < 0).length;
+    // double accidentals count twice, but we never meet them for real keys
+    if (sharps) return { type: '♯', count: notes.reduce((a, n) => a + Math.max(0, n.acc), 0), accidentals: SHARP_ORDER.slice(0, notes.reduce((a, n) => a + Math.max(0, n.acc), 0)).map(l => l + '♯') };
+    if (flats)  return { type: '♭', count: notes.reduce((a, n) => a + Math.max(0, -n.acc), 0), accidentals: FLAT_ORDER.slice(0, notes.reduce((a, n) => a + Math.max(0, -n.acc), 0)).map(l => l + '♭') };
+    return { type: '', count: 0, accidentals: [] };
+  }
+  const CIRCLE_MAJ = ['C','G','D','A','E','B','F♯','D♭','A♭','E♭','B♭','F'];
+  const CIRCLE_MIN = ['A','E','B','F♯','C♯','G♯','D♯','B♭','F','C','G','D'];
+  const CIRCLE_ALT = { 5: ['C♭','A♭'], 6: ['G♭','E♭'], 7: ['C♯','A♯'] };
+  function circle() {
+    return CIRCLE_MAJ.map((maj, pos) => ({
+      pos, major: maj, minor: CIRCLE_MIN[pos], majorPc: parseName(maj).pc, minorPc: parseName(CIRCLE_MIN[pos]).pc,
+      alt: CIRCLE_ALT[pos] || null, sig: keySignature(maj),
+    }));
+  }
+  const circlePos = pc => mod(pc * 7, 12);           // 7 is its own inverse mod 12
+  function relativeMinor(majorNm) { const r = parseName(majorNm); return spellDegree(r, 9, 6); }
+  function relativeMajor(minorNm) { const r = parseName(minorNm); return spellDegree(r, 3, 3); }
+  // signature for any (root, scale) via its parent major
+  function signatureFor(rootNm, scaleId) {
+    const pm = parentMajor(parseName(rootNm), scaleId);
+    return pm ? Object.assign({ parent: pm.name }, keySignature(pm.name)) : null;
+  }
+
+  /* ---------- chords ---------- */
+  const Q = a => a.map(([s, d]) => ({ s, d }));
+  const CHORDS = {
+    major:      { name: 'Major',     sym: '',       pts: Q([[0,1],[4,3],[7,5]]) },
+    minor:      { name: 'Minor',     sym: 'm',      pts: Q([[0,1],[3,3],[7,5]]) },
+    dim:        { name: 'Diminished',sym: 'dim',    pts: Q([[0,1],[3,3],[6,5]]) },
+    aug:        { name: 'Augmented', sym: 'aug',    pts: Q([[0,1],[4,3],[8,5]]) },
+    sus2:       { name: 'Sus2',      sym: 'sus2',   pts: Q([[0,1],[2,2],[7,5]]) },
+    sus4:       { name: 'Sus4',      sym: 'sus4',   pts: Q([[0,1],[5,4],[7,5]]) },
+    maj7:       { name: 'Major 7th', sym: 'maj7',   pts: Q([[0,1],[4,3],[7,5],[11,7]]) },
+    dom7:       { name: 'Dominant 7th', sym: '7',   pts: Q([[0,1],[4,3],[7,5],[10,7]]) },
+    min7:       { name: 'Minor 7th', sym: 'm7',     pts: Q([[0,1],[3,3],[7,5],[10,7]]) },
+    m7b5:       { name: 'Half-diminished', sym: 'm7♭5', pts: Q([[0,1],[3,3],[6,5],[10,7]]) },
+    dim7:       { name: 'Diminished 7th', sym: 'dim7', pts: Q([[0,1],[3,3],[6,5],[9,7]]) },
+    minMaj7:    { name: 'Minor-major 7th', sym: 'mMaj7', pts: Q([[0,1],[3,3],[7,5],[11,7]]) },
+    augMaj7:    { name: 'Augmented major 7th', sym: 'maj7♯5', pts: Q([[0,1],[4,3],[8,5],[11,7]]) },
+  };
+  const CHORD_ORDER = ['major','minor','dim','aug','sus2','sus4','maj7','dom7','min7','m7b5','dim7','minMaj7','augMaj7'];
+  CHORD_ORDER.forEach(id => { CHORDS[id].id = id; CHORDS[id].semis = CHORDS[id].pts.map(p => p.s); });
+
+  function identifyQuality(semis) {
+    const key = semis.join(',');
+    for (const id of CHORD_ORDER) if (CHORDS[id].semis.join(',') === key) return id;
+    return null;
+  }
+  function buildChord(rootNm, qualityId) {
+    const root = parseName(rootNm), q = CHORDS[qualityId];
+    const tones = q.pts.map(p => {
+      const name = spellDegree(root, p.s, p.d);
+      return { name, pc: parseName(name).pc, semis: p.s, deg: p.d, label: intervalLabel(p.s, p.d) };
+    });
+    return { root: root.name, rootPc: root.pc, quality: qualityId, symbol: q.sym, name: root.name + q.sym, qualityName: q.name,
+      tones, notes: tones.map(t => t.name), pcs: tones.map(t => t.pc), formula: tones.map(t => t.label).join('–') };
+  }
+
+  /* ---------- harmonizing a scale in thirds ---------- */
+  const NUMERALS = ['I','II','III','IV','V','VI','VII'];
+  const PLAIN_NUMERAL_SCALES = ['major','naturalMinor','harmonicMinor','melodicMinor'];
+  function roman(i, qualityId, scaleId, semis) {
+    let base = NUMERALS[i];
+    const acc = PLAIN_NUMERAL_SCALES.includes(scaleId) ? '' : accSym(semis - MAJOR_SEMI[i]);
+    const lower = ['minor','dim','min7','m7b5','dim7','minMaj7'].includes(qualityId);
+    if (lower) base = base.toLowerCase();
+    const suffix = { major:'', minor:'', dim:'°', aug:'+', sus2:'sus2', sus4:'sus4', maj7:'maj7', dom7:'7', min7:'7', m7b5:'ø7', dim7:'°7', minMaj7:'maj7', augMaj7:'+maj7' }[qualityId];
+    return acc + base + suffix;
+  }
+  function harmonize(rootNm, scaleId, sevenths = false) {
+    if (!isHepta(scaleId)) return [];
+    const names = spellScale(rootNm, scaleId);
+    const semis = names.map(n => n.semis);
+    const idx = sevenths ? [0,2,4,6] : [0,2,4];
+    const out = [];
+    for (let i = 0; i < 7; i++) {
+      const stack = idx.map(k => { const j = i + k; return semis[j % 7] + (j >= 7 ? 12 : 0) - semis[i]; });
+      const q = identifyQuality(stack);
+      if (!q) continue;
+      const chord = buildChord(names[i].name, q);
+      out.push(Object.assign(chord, { degree: i, roman: roman(i, q, scaleId, semis[i]), fn: ['Tonic','Supertonic','Mediant','Subdominant','Dominant','Submediant','Leading tone'][i] }));
+    }
+    return out;
+  }
+
+  /* ---------- pitch math: f(n) = A4 × 2^(n/12) ---------- */
+  const NOTE_C0 = 12;                                   // MIDI of C0
+  const midiOf = (pc, octave) => 12 * (octave + 1) + pc;
+  const nFromA4 = midi => midi - 69;
+  const freq = (midi, a4 = 440) => a4 * Math.pow(2, (midi - 69) / 12);
+  const midiName = (midi, flats = false) => pcName(midi, flats) + (Math.floor(midi / 12) - 1);
+  const ratio = n => Math.pow(2, n / 12);
+
+  /* ---------- tunings (lowest string first, MIDI) ---------- */
+  const TUNINGS = [
+    { id: 'standard', name: 'Standard',        strings: [40,45,50,55,59,64] },
+    { id: 'dropD',    name: 'Drop D',          strings: [38,45,50,55,59,64] },
+    { id: 'dadgad',   name: 'DADGAD',          strings: [38,45,50,55,57,62] },
+    { id: 'openG',    name: 'Open G',          strings: [38,43,50,55,59,62] },
+    { id: 'openD',    name: 'Open D',          strings: [38,45,50,54,57,62] },
+    { id: 'openE',    name: 'Open E',          strings: [40,47,52,56,59,64] },
+    { id: 'halfDown', name: 'Half-step Down',  strings: [39,44,49,54,58,63], flats: true },
+    { id: 'fullDown', name: 'Whole-step Down', strings: [38,43,48,53,57,62] },
+    { id: 'seven',    name: '7-String',        strings: [35,40,45,50,55,59,64] },
+    { id: 'bass',     name: 'Bass (4-string)', strings: [28,33,38,43] },
+  ];
+  const tuningById = id => TUNINGS.find(t => t.id === id) || TUNINGS[0];
+
+  /* ---------- guitar voicing finder ---------- */
+  function fingersNeeded(frets) {
+    const fretted = frets.map((f, i) => ({ f, i })).filter(x => x.f > 0);
+    if (!fretted.length) return 0;
+    const lo = Math.min(...fretted.map(x => x.f));
+    const atLo = fretted.filter(x => x.f === lo).map(x => x.i);
+    let barre = false;
+    if (atLo.length >= 2) {
+      const a = atLo[0], b = atLo[atLo.length - 1];
+      barre = true;
+      for (let i = a; i <= b; i++) if (frets[i] === 0) barre = false;
+    }
+    return barre ? 1 + fretted.filter(x => x.f !== lo).length : fretted.length;
+  }
+  function findVoicings(chord, openMidi, opt = {}) {
+    const span = opt.span ?? 3, maxFret = opt.maxFret ?? 12, limit = opt.limit ?? 6;
+    const n = openMidi.length, pcs = new Set(chord.pcs);
+    const minStrings = opt.minStrings ?? Math.min(4, n);
+    const required = chord.tones.filter(t => !(chord.tones.length >= 4 && t.deg === 5)).map(t => t.pc);
+    const seen = new Map();
+    for (let w = 1; w + span <= maxFret + 1; w++) {
+      const cur = new Array(n).fill(-1);
+      const dfs = (s, phase) => {
+        if (s === n) {
+          const played = cur.filter(f => f >= 0);
+          if (played.length < minStrings) return;
+          const firstIdx = cur.findIndex(f => f >= 0);
+          if (mod(openMidi[firstIdx] + cur[firstIdx], 12) !== chord.rootPc) return;
+          const pcPlayed = new Set(); cur.forEach((f, i) => { if (f >= 0) pcPlayed.add(mod(openMidi[i] + f, 12)); });
+          if (!required.every(pc => pcPlayed.has(pc))) return;
+          const fretted = cur.filter(f => f > 0);
+          if (fretted.length && Math.max(...fretted) - Math.min(...fretted) > span) return;
+          if (cur.includes(0) && fretted.length && Math.max(...fretted) > 3) return;   // open-position shapes stay near the nut
+          const fingers = fingersNeeded(cur);
+          if (fingers > 4) return;
+          const key = cur.join(',');
+          if (seen.has(key)) return;
+          const opens = cur.filter(f => f === 0).length;
+          const avg = fretted.length ? fretted.reduce((a, b) => a + b, 0) / fretted.length : 0;
+          const score = avg * 0.55 - opens * 1.1 + fingers * 0.45 + (n - played.length) * 0.9 + (fretted.length ? Math.min(...fretted) : 0) * 0.35;
+          seen.set(key, { frets: cur.slice(), fingers, score, base: fretted.length ? Math.min(...fretted) : 0, midi: cur.map((f, i) => f >= 0 ? openMidi[i] + f : null) });
+          return;
+        }
+        // mute (only as prefix or suffix)
+        if (phase === 0) { cur[s] = -1; dfs(s + 1, 0); }
+        else if (phase === 1) { cur[s] = -1; dfs(s + 1, 2); }
+        else if (phase === 2) { cur[s] = -1; dfs(s + 1, 2); }
+        if (phase === 2) return;
+        const opts = [0]; for (let f = w; f <= w + span; f++) opts.push(f);
+        for (const f of opts) {
+          if (!pcs.has(mod(openMidi[s] + f, 12))) continue;
+          cur[s] = f; dfs(s + 1, 1);
+        }
+        cur[s] = -1;
+      };
+      dfs(0, 0);
+    }
+    return [...seen.values()].sort((a, b) => a.score - b.score).slice(0, limit);
+  }
+
+  /* ---------- piano voicing (inversions) ---------- */
+  function pianoVoicing(chord, inversion = 0, baseOctave = 4) {
+    const rootMidi = midiOf(chord.rootPc, baseOctave);
+    let notes = chord.tones.map(t => rootMidi + t.semis);
+    for (let k = 0; k < inversion % notes.length; k++) { const lo = notes.shift(); notes.push(lo + 12); }
+    return notes;
+  }
+  function chordMidi(chord, low = 48) {               // block voicing for playback, root bass below
+    let rootMidi = low + mod(chord.rootPc - low, 12);
+    const bass = rootMidi - 12;
+    return { bass, notes: chord.tones.map(t => rootMidi + t.semis) };
+  }
+
+  /* ---------- meters / metronome ---------- */
+  const METERS = {
+    '2/4':  { num: 2,  accents: [2,0],                  unit: 'beat' },
+    '3/4':  { num: 3,  accents: [2,0,0],                unit: 'beat' },
+    '4/4':  { num: 4,  accents: [2,0,1,0],              unit: 'beat' },
+    '5/4':  { num: 5,  accents: [2,0,0,1,0],            unit: 'beat' },
+    '6/8':  { num: 6,  accents: [2,0,0,1,0,0],          unit: 'eighth', compound: true },
+    '7/8':  { num: 7,  accents: [2,0,1,0,1,0,0],        unit: 'eighth' },
+    '9/8':  { num: 9,  accents: [2,0,0,1,0,0,1,0,0],    unit: 'eighth', compound: true },
+    '12/8': { num: 12, accents: [2,0,0,1,0,0,1,0,0,1,0,0], unit: 'eighth', compound: true },
+  };
+  function pulseSeconds(meterId, bpm) {
+    const m = METERS[meterId];
+    if (m.unit === 'beat') return 60 / bpm;
+    return m.compound ? 60 / (bpm * 3) : 60 / (bpm * 2);       // bpm = dotted quarter (compound) or quarter (7/8)
+  }
+
+  /* ---------- progression generator ---------- */
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const MARKOV_MAJ = { 0:[[3,.28],[4,.26],[5,.28],[1,.10],[2,.08]], 1:[[4,.7],[3,.2],[6,.1]], 2:[[5,.4],[3,.4],[1,.2]], 3:[[4,.4],[0,.25],[1,.2],[5,.15]], 4:[[0,.5],[5,.3],[3,.2]], 5:[[3,.4],[1,.3],[4,.2],[2,.1]], 6:[[0,1]] };
+  const MARKOV_MIN = { 0:[[3,.25],[5,.25],[6,.25],[4,.15],[2,.10]], 1:[[4,1]], 2:[[5,.4],[6,.3],[3,.3]], 3:[[4,.35],[0,.3],[6,.2],[5,.15]], 4:[[0,.6],[5,.25],[3,.15]], 5:[[6,.35],[3,.25],[2,.2],[4,.2]], 6:[[2,.4],[5,.3],[0,.3]] };
+  const POP_MAJ = [[0,4,5,3],[0,5,3,4],[0,3,5,4],[5,3,0,4],[0,2,3,4],[0,3,0,4],[0,4,3,4]];
+  const POP_MIN = [[0,5,2,6],[0,3,6,2],[0,6,5,4],[0,3,4,0],[0,5,3,4],[0,2,6,3]];
+  function pick(rng, pairs, avoid) {
+    const list = pairs.filter(p => p[0] !== avoid);
+    const tot = list.reduce((a, p) => a + p[1], 0);
+    let r = rng() * tot;
+    for (const p of list) { r -= p[1]; if (r <= 0) return p[0]; }
+    return list[list.length - 1][0];
+  }
+  function generateProgression({ rootName: rn, scaleId = 'major', bars = 4, style = 'smart', sevenths = false, seed = 1 }) {
+    const rng = mulberry32(seed);
+    const minor = isMinorish(scaleId);
+    const harmScale = (isHepta(scaleId) && !['harmonicMinor','melodicMinor'].includes(scaleId)) ? scaleId : (minor ? 'naturalMinor' : 'major');
+    const useSev = sevenths || style === 'jazz';
+    const bank = harmonize(rn, harmScale, useSev);
+    const harmV = (minor && harmScale === 'naturalMinor') ? harmonize(rn, 'harmonicMinor', useSev)[4] : null;
+    const get = d => (d === 4 && harmV) ? Object.assign({}, harmV, { roman: roman(4, harmV.quality, 'harmonicMinor', 7), borrowed: true }) : bank[d];
+    let chords = [];
+    if (style === 'blues') {
+      const root = parseName(rn);
+      const mk = (s, d, q, rom) => Object.assign(buildChord(spellDegree(root, s, d), q), { roman: rom });
+      const I = mk(0,1, minor ? 'min7' : 'dom7', minor ? 'i7' : 'I7');
+      const IV = mk(5,4, minor ? 'min7' : 'dom7', minor ? 'iv7' : 'IV7');
+      const V = mk(7,5, 'dom7', 'V7');
+      const seq = { 4: [I,IV,I,V], 5: [I,IV,I,V,I], 6: [I,I,IV,I,V,I], 7: [I,I,IV,IV,I,V,I], 8: [I,V,IV,IV,I,V,I,V] }[bars] || [I,V,IV,IV,I,V,I,V].slice(0, bars);
+      chords = seq;
+    } else {
+      let degs;
+      if (style === 'jazz') {
+        degs = { 4:[1,4,0,0], 5:[1,4,0,5,0], 6:[2,5,1,4,0,0], 7:[0,5,1,4,0,3,0], 8:[0,5,1,4,2,5,1,0] }[bars] || [1,4,0,0];
+        degs = degs.slice(0, bars);
+      } else if (style === 'pop') {
+        const t = (minor ? POP_MIN : POP_MAJ)[Math.floor(rng() * (minor ? POP_MIN : POP_MAJ).length)];
+        degs = Array.from({ length: bars }, (_, i) => t[i % t.length]);
+        if (bars > 4) { degs[bars - 2] = 4; degs[bars - 1] = 0; }
+      } else {
+        const table = minor ? MARKOV_MIN : MARKOV_MAJ;
+        degs = [0];
+        const mid = bars >= 4 ? bars - 2 : bars - 1;           // chords before the cadence
+        for (let i = 1; i < mid; i++) degs.push(pick(rng, table[degs[i - 1]], degs[i - 1]));
+        if (bars >= 4) {
+          const last = degs[degs.length - 1];
+          let pen = rng() < 0.75 ? 4 : 3;                       // cadence: V (or IV) -> I
+          if (pen === last) pen = pen === 4 ? 3 : 4;
+          degs.push(pen, 0);
+        } else if (bars > 1) degs.push(0);
+        degs = degs.slice(0, bars);
+      }
+      chords = degs.map(get);
+    }
+    return { rootName: rn, scaleId, bars, style, sevenths: useSev, seed, minor, chords };
+  }
+  function chartText(prog) {
+    const rows = [];
+    for (let i = 0; i < prog.chords.length; i += 4) rows.push('| ' + prog.chords.slice(i, i + 4).map(c => c.name.padEnd(7)).join(' | ') + ' |');
+    return rows.join('\n');
+  }
+
+  return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
+    mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
+    spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
+    keySignature, circle, circlePos, relativeMinor, relativeMajor, signatureFor,
+    identifyQuality, buildChord, harmonize, midiOf, nFromA4, freq, midiName, ratio, tuningById,
+    findVoicings, fingersNeeded, pianoVoicing, chordMidi, pulseSeconds, mulberry32, generateProgression, chartText };
+})();
+// </THEORY>
+const T = Theory;
+/* ================================================================
+   STATE
+   ================================================================ */
+const DEFAULTS = {
+  tab: 'play', rootPc: 0, pref: 'auto', scale: 'major', tuning: 'standard', mode: 'scale', a4: 440,
+  labels: 'notes', tone: 'pluck', vol: 0.7, tempo: 100, meter: '4/4', metro: false, power: true,
+  chordRoot: 'C', chordQ: 'major', inv: 0, sevenths: false, seed: 7, bars: 4, style: 'smart', feel: 'strum', loop: true,
+  mathOct: 4, mathString: 0, selDeg: null,
+};
+const S = Object.assign({}, DEFAULTS);
+const STORE = 'bpgw.v1';
+try { Object.assign(S, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
+S.metro = false;                                   // never auto-start a click track
+
+/* ================================================================
+   SOUND — WebAudio. Three voices: Karplus-Strong pluck, soft electric-piano keys, mellow synth.
+   ================================================================ */
+const Snd = (() => {
+  let ctx = null, master = null; const cache = new Map();
+  function ensure() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      master = ctx.createGain();
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.ratio.value = 4;
+      master.connect(comp); comp.connect(ctx.destination);
+      applyVol();
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  const applyVol = () => { if (master) master.gain.value = S.power ? Math.pow(S.vol, 2) * 0.9 : 0; };
+  const now = () => (ctx ? ctx.currentTime : 0);
+  function pluckBuffer(f) {
+    const sr = ctx.sampleRate, key = Math.round(f * 100) + '@' + sr;
+    if (cache.has(key)) return cache.get(key);
+    const N = Math.floor(sr * 2.6), L = Math.max(2, Math.round(sr / f - 0.5));
+    const buf = ctx.createBuffer(1, N, sr), d = buf.getChannelData(0);
+    const rng = T.mulberry32(Math.round(f * 1000));
+    let prev = 0;
+    for (let i = 0; i < L; i++) { const x = rng() * 2 - 1; prev = 0.55 * x + 0.45 * prev; d[i] = prev; }   // slightly soft attack
+    const decay = 0.9972 - Math.min(0.0025, f / 400000);
+    for (let i = L; i < N; i++) d[i] = 0.5 * (d[i - L] + d[i - L + 1]) * decay;
+    let peak = 0; for (let i = 0; i < N; i++) peak = Math.max(peak, Math.abs(d[i]));
+    for (let i = 0; i < N; i++) d[i] /= (peak || 1);
+    cache.set(key, buf); return buf;
+  }
+  function env(g, t, a, peak, hold, rel) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(peak, t + a);
+    g.gain.setTargetAtTime(0.0001, t + a + hold, rel);
+  }
+  function note(midi, when, dur = 1.4, vel = 0.8) {
+    if (!ensure()) return;
+    const t = Math.max(when ?? now(), now());
+    const f = T.freq(midi, S.a4);
+    if (S.tone === 'pluck') {
+      const src = ctx.createBufferSource(); src.buffer = pluckBuffer(f);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(9000, 2200 + f * 4);
+      const g = ctx.createGain(); g.gain.setValueAtTime(vel * 0.9, t);
+      g.gain.setTargetAtTime(0.0001, t + dur, 0.18);
+      src.connect(lp); lp.connect(g); g.connect(master); src.start(t); src.stop(t + dur + 1.2);
+    } else if (S.tone === 'keys') {
+      const g = ctx.createGain(); env(g, t, 0.004, vel * 0.5, 0.02, Math.max(0.35, dur * 0.6));
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3800;
+      g.connect(lp); lp.connect(master);
+      [[1, 1, 'sine'], [2, 0.38, 'sine'], [3, 0.14, 'sine'], [4.01, 0.08, 'triangle'], [7, 0.025, 'sine']].forEach(([m, a, type], i) => {
+        const o = ctx.createOscillator(); o.type = type; o.frequency.value = f * m;
+        const og = ctx.createGain(); og.gain.setValueAtTime(a, t); og.gain.setTargetAtTime(a * 0.15, t, 0.25 + 0.5 / (i + 1));
+        o.connect(og); og.connect(g); o.start(t); o.stop(t + dur + 2.2);
+      });
+    } else {
+      const g = ctx.createGain(); env(g, t, 0.012, vel * 0.32, dur * 0.55, 0.22);
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 2;
+      lp.frequency.setValueAtTime(Math.min(7000, f * 7), t); lp.frequency.exponentialRampToValueAtTime(Math.max(500, f * 1.6), t + dur);
+      g.connect(lp); lp.connect(master);
+      [['sawtooth', -6], ['triangle', 5]].forEach(([type, det]) => {
+        const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.detune.value = det;
+        o.connect(g); o.start(t); o.stop(t + dur + 1.6);
+      });
+    }
+  }
+  function chord(midis, when, dur = 1.6, vel = 0.7, spread = 0.028, up = false) {
+    const list = up ? midis.slice().reverse() : midis;
+    list.forEach((m, i) => { if (m != null) note(m, (when ?? now()) + i * spread, dur, vel * (0.9 + 0.1 * Math.random())); });
+  }
+  function click(level, when) {
+    if (!ensure()) return;
+    const t = Math.max(when ?? now(), now());
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'square'; o.frequency.value = level === 2 ? 1760 : level === 1 ? 1320 : 990;
+    g.gain.setValueAtTime(level === 2 ? 0.42 : level === 1 ? 0.3 : 0.2, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 600;
+    o.connect(hp); hp.connect(g); g.connect(master); o.start(t); o.stop(t + 0.06);
+  }
+  return { ensure, note, chord, click, now, applyVol, get ctx() { return ctx; } };
+})();
+
+/* ================================================================
+   DERIVED DATA
+   ================================================================ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const keyName = () => T.rootName(S.rootPc, S.scale, S.pref);
+const keyNotes = () => T.spellScale(keyName(), S.scale);
+const curTuning = () => T.tuningById(S.tuning);
+const tuningNames = t => t.strings.map(m => T.pcName(m, t.flats));
+const curChord = () => T.buildChord(S.chordRoot, S.chordQ);
+const keyTitle = () => `${keyName()} ${T.SCALES[S.scale].name}`;
+const fmtHz = f => (f >= 1000 ? f.toFixed(1) : f >= 100 ? f.toFixed(2) : f.toFixed(3));
+const minus = n => (n < 0 ? '−' + Math.abs(n) : String(n));
+
+function save() { try { const { metro, ...rest } = S; localStorage.setItem(STORE, JSON.stringify(rest)); } catch (e) {} }
+function updateHash() {
+  const h = [S.tab, 'root=' + encodeURIComponent(keyName()), 'scale=' + S.scale, 'tuning=' + S.tuning].join('&');
+  try { history.replaceState(null, '', '#' + h); } catch (e) {}
+}
+function applyHash() {
+  const raw = location.hash.replace(/^#/, ''); if (!raw) return;
+  raw.split('&').forEach((tok, i) => {
+    if (!tok.includes('=')) { if (['play','chord','circle','math','song'].includes(tok)) S.tab = tok; return; }
+    const [k, v0] = tok.split('='); const v = decodeURIComponent(v0);
+    try {
+      if (k === 'root') { const n = T.parseName(v); S.rootPc = n.pc; S.pref = 'auto'; const auto = T.rootName(n.pc, S.scale, 'auto'); if (auto !== n.name) S.pref = n.acc > 0 ? '♯' : '♭'; }
+      else if (k === 'scale' && T.SCALES[v]) S.scale = v;
+      else if (k === 'tuning' && T.TUNINGS.some(t => t.id === v)) S.tuning = v;
+      else if (k === 'mode' && (v === 'scale' || v === 'chord')) S.mode = v;
+      else if (k === 'chord') S.chordRoot = T.parseName(v).name;
+      else if (k === 'q' && T.CHORDS[v]) S.chordQ = v;
+      else if (k === 'meter' && T.METERS[v]) S.meter = v;
+      else if (k === 'tempo') S.tempo = Math.max(40, Math.min(220, +v || 100));
+      else if (k === 'a4') S.a4 = +v || 440;
+    } catch (e) {}
+  });
+}
+
+/* ---------- which notes are lit? ---------- */
+const RED = '#e8463e', GREEN = '#58c75a', AMBER = '#f0b43c', BLUE = '#4a86e8', VIOLET = '#a06be0';
+function toneStyle(deg, isRoot) {
+  if (isRoot) return { bg: RED, fg: '#fff' };
+  if (deg === 5) return { bg: GREEN, fg: '#06210a' };
+  if (deg === 7) return { bg: BLUE, fg: '#fff' };
+  if (deg === 3 || deg === 2 || deg === 4) return { bg: AMBER, fg: '#2a1a00' };
+  return { bg: VIOLET, fg: '#fff' };
+}
+function activeNotes() {
+  const map = new Map();
+  if (S.mode === 'chord') {
+    keyNotes().forEach(n => map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), ctx: true }));
+    curChord().tones.forEach(t => { const st = toneStyle(t.deg, t.semis === 0); map.set(t.pc, { name: t.name, label: T.dotLabel(t.label), bg: st.bg, fg: st.fg, root: t.semis === 0 }); });
+  } else {
+    keyNotes().forEach(n => { const r = n.semis === 0; map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), bg: r ? RED : GREEN, fg: r ? '#fff' : '#06210a', root: r }); });
+  }
+  return map;
+}
+function legendHTML() {
+  if (S.mode === 'chord') return `<span><i style="background:${RED}"></i>root</span><span><i style="background:${AMBER}"></i>3rd / sus</span><span><i style="background:${GREEN}"></i>5th</span><span><i style="background:${BLUE}"></i>7th</span><span><i style="border:1.5px solid #666"></i>other notes in key</span>`;
+  return `<span><i style="background:${RED}"></i>root</span><span><i style="background:${GREEN}"></i>scale note</span>`;
+}
+
+/* ================================================================
+   KNOBS + DRUMS (the control panel)
+   ================================================================ */
+function drumHTML(id, label, small) {
+  return `<div class="slot"><span class="engr sm">${label}</span><div class="drum${small ? ' small' : ''}" data-drum="${id}"><button class="edge l" aria-label="${label} previous"></button><div class="val"></div><select aria-label="${label}"></select><button class="edge r" aria-label="${label} next"></button></div></div>`;
+}
+const DRUMS = {
+  pitch:  { label: 'Pitch',  opts: () => [415,420,430,432,435,438,440,442,444,445,450].map(v => ({ v, l: v + ' Hz' })), get: () => S.a4, show: () => String(S.a4), set: v => { S.a4 = +v; } },
+  root:   { label: 'Root',   opts: () => Array.from({ length: 12 }, (_, pc) => ({ v: pc, l: T.pcBoth(pc) })), get: () => S.rootPc, show: () => keyName(), set: v => { S.rootPc = +v; } },
+  scale:  { label: 'Scale',  opts: () => T.SCALE_ORDER.map(id => ({ v: id, l: T.SCALES[id].long })), get: () => S.scale, show: () => T.SCALES[S.scale].name, set: v => { S.scale = v; } },
+  tuning: { label: 'Tuning', opts: () => T.TUNINGS.map(t => ({ v: t.id, l: `${t.name} — ${tuningNames(t).join(' ')}` })), get: () => S.tuning, show: () => curTuning().name, set: v => { S.tuning = v; } },
+  mode:   { label: 'Mode',   opts: () => [{ v: 'scale', l: 'Scale' }, { v: 'chord', l: 'Chord' }], get: () => S.mode, show: () => (S.mode === 'scale' ? 'Scale' : 'Chord'), set: v => { S.mode = v; if (v === 'scale') S.selDeg = null; } },
+  meter:  { label: 'Time Sig', opts: () => Object.keys(T.METERS).map(m => ({ v: m, l: m })), get: () => S.meter, show: () => S.meter, set: v => { S.meter = v; } },
+  tone:   { label: 'Tone',   opts: () => [{ v: 'pluck', l: 'Guitar pluck' }, { v: 'keys', l: 'Electric keys' }, { v: 'synth', l: 'Soft synth' }], get: () => S.tone, show: () => ({ pluck: 'Pluck', keys: 'Keys', synth: 'Synth' }[S.tone]), set: v => { S.tone = v; } },
+  spell:  { label: 'Spelling', opts: () => [{ v: 'auto', l: 'Auto (sensible for the key)' }, { v: '♯', l: 'Prefer sharps ♯' }, { v: '♭', l: 'Prefer flats ♭' }], get: () => S.pref, show: () => ({ auto: 'Auto', '♯': '♯ Sharps', '♭': '♭ Flats' }[S.pref]), set: v => { S.pref = v; } },
+};
+function buildPanel() {
+  $('#row1').innerHTML = ['pitch', 'root', 'scale', 'tuning', 'mode'].map(id => drumHTML(id, DRUMS[id].label)).join('');
+  $('#row2').className = 'row r6';
+  $('#row2').innerHTML = ['meter', 'tone', 'spell'].map(id => drumHTML(id, DRUMS[id].label, true)).join('') +
+    `<div class="slot knobwrap"><span class="engr sm">Tempo</span><div class="knob" id="knob-tempo" tabindex="0" role="slider"></div><div class="knobread" id="read-tempo"></div></div>
+     <div class="slot knobwrap"><span class="engr sm">Volume</span><div class="knob" id="knob-vol" tabindex="0" role="slider"></div><div class="knobread" id="read-vol"></div></div>
+     <div class="slot switch"><span class="engr sm">Metronome</span><button class="toggle" id="metro" aria-label="Metronome"></button></div>`;
+  $$('.drum').forEach(el => {
+    const id = el.dataset.drum, D = DRUMS[id], sel = $('select', el);
+    sel.innerHTML = D.opts().map(o => `<option value="${esc(o.v)}">${esc(o.l)}</option>`).join('');
+    const apply = v => { D.set(v); onChange(id); };
+    sel.addEventListener('change', () => apply(sel.value));
+    const step = dir => { const o = D.opts(); let i = o.findIndex(x => String(x.v) === String(D.get())); i = (i + dir + o.length) % o.length; apply(o[i].v); };
+    $('.edge.l', el).addEventListener('click', () => step(-1));
+    $('.edge.r', el).addEventListener('click', () => step(1));
+  });
+  mkKnob('#knob-tempo', { min: 40, max: 220, step: 1, get: () => S.tempo, set: v => { S.tempo = v; }, fmt: v => v + ' BPM', after: () => { $('#read-tempo').textContent = S.tempo + ' BPM'; save(); } });
+  mkKnob('#knob-vol', { min: 0, max: 1, step: 0.01, get: () => S.vol, set: v => { S.vol = v; Snd.applyVol(); }, fmt: v => Math.round(v * 100) + '%', after: () => { $('#read-vol').textContent = Math.round(S.vol * 100) + '%'; save(); } });
+  $('#metro').addEventListener('click', () => { S.metro = !S.metro; Snd.ensure(); syncPanel(); Player.sync(); });
+  $('#power').addEventListener('click', () => { S.power = !S.power; if (S.power) Snd.ensure(); Snd.applyVol(); syncPanel(); save(); });
+  syncPanel();
+}
+function syncPanel() {
+  $$('.drum').forEach(el => {
+    const id = el.dataset.drum, D = DRUMS[id], val = $('.val', el), sel = $('select', el), t = D.show();
+    val.textContent = t; val.className = 'val' + (t.length > 15 ? ' xl' : t.length > 9 ? ' long' : '');
+    sel.value = String(D.get());
+  });
+  $('#read-tempo').textContent = S.tempo + ' BPM'; $('#read-vol').textContent = Math.round(S.vol * 100) + '%';
+  ['#knob-tempo', '#knob-vol'].forEach(s => $(s).__sync && $(s).__sync());
+  $('#metro').classList.toggle('on', S.metro);
+  const p = $('#power'); p.classList.toggle('on', S.power); p.setAttribute('aria-pressed', S.power);
+}
+function mkKnob(sel, o) {
+  const el = $(sel); const ticks = Array.from({ length: 11 }, (_, i) => { const a = (-135 + 27 * i) * Math.PI / 180; return `<line x1="${50 + 42 * Math.sin(a)}" y1="${50 - 42 * Math.cos(a)}" x2="${50 + 47 * Math.sin(a)}" y2="${50 - 47 * Math.cos(a)}" stroke="#3a3b40" stroke-width="2" stroke-linecap="round"/>`; }).join('');
+  el.innerHTML = `<svg class="ticks" viewBox="0 0 100 100">${ticks}</svg><div class="cap"><i></i></div>`;
+  const cap = $('.cap', el);
+  const frac = () => (o.get() - o.min) / (o.max - o.min);
+  const sync = () => { cap.style.transform = `rotate(${-135 + 270 * frac()}deg)`; el.setAttribute('aria-valuemin', o.min); el.setAttribute('aria-valuemax', o.max); el.setAttribute('aria-valuenow', o.get()); el.setAttribute('aria-valuetext', o.fmt(o.get())); };
+  el.__sync = sync;
+  const setV = v => { v = Math.max(o.min, Math.min(o.max, Math.round(v / o.step) * o.step)); o.set(+v.toFixed(3)); sync(); o.after && o.after(); };
+  let y0 = 0, v0 = 0, drag = false;
+  el.addEventListener('pointerdown', e => { drag = true; y0 = e.clientY; v0 = o.get(); el.setPointerCapture(e.pointerId); e.preventDefault(); });
+  el.addEventListener('pointermove', e => { if (!drag) return; setV(v0 + ((y0 - e.clientY) / 160) * (o.max - o.min) * (e.shiftKey ? 0.2 : 1)); });
+  el.addEventListener('pointerup', () => { drag = false; });
+  el.addEventListener('wheel', e => { e.preventDefault(); setV(o.get() + (e.deltaY < 0 ? 1 : -1) * o.step * (o.max - o.min > 10 ? 2 : 5)); }, { passive: false });
+  el.addEventListener('keydown', e => { const k = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[e.key]; if (k) { e.preventDefault(); setV(o.get() + k * o.step * (o.max - o.min > 10 ? 1 : 5)); } });
+  sync();
+}
+
+/* ================================================================
+   INSTRUMENTS: fretboard + piano
+   ================================================================ */
+const UI = { fbScroll: null, piScroll: null };
+const FRETS = 15;
+function fretboardSVG() {
+  const t = curTuning(), n = t.strings.length, act = activeNotes();
+  const W = 1000, nutX = 80, L = (985 - nutX) / (1 - Math.pow(2, -FRETS / 12));
+  const fx = f => nutX + L * (1 - Math.pow(2, -f / 12));
+  const top = 24, gap = n > 6 ? 32 : n < 6 ? 44 : 36, H = top + gap * (n - 1) + 48;
+  const yRow = si => top + (n - 1 - si) * gap;
+  const mid = top + gap * (n - 1) / 2;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fretboard, frets 0 to ${FRETS}, ${t.name} tuning">`;
+  s += `<rect x="${nutX}" y="${top - 12}" width="${W - nutX - 8}" height="${gap * (n - 1) + 24}" fill="#0b0b0e"/>`;
+  [3, 5, 7, 9, 15].forEach(f => { s += `<circle cx="${(fx(f - 1) + fx(f)) / 2}" cy="${mid}" r="8" fill="#17171c"/>`; });
+  [-1, 1].forEach(k => { s += `<circle cx="${(fx(11) + fx(12)) / 2}" cy="${mid + k * gap * (n - 1) / 4}" r="8" fill="#17171c"/>`; });
+  for (let f = 1; f <= FRETS; f++) s += `<line x1="${fx(f)}" y1="${top - 12}" x2="${fx(f)}" y2="${top + gap * (n - 1) + 12}" stroke="#55565e" stroke-width="2"/>`;
+  s += `<line x1="${nutX}" y1="${top - 13}" x2="${nutX}" y2="${top + gap * (n - 1) + 13}" stroke="#e9e1c6" stroke-width="6"/>`;
+  t.strings.forEach((m, si) => { const y = yRow(si); s += `<line class="fb-str" x1="${nutX - 4}" y1="${y}" x2="${W - 8}" y2="${y}" stroke-width="${(0.9 + (n - 1 - si) * 0.0 + (1 - si / (n - 1)) * 2.2).toFixed(2)}"/>`; });
+  const dot = (cx, cy, midi) => {
+    const pc = ((midi % 12) + 12) % 12, a = act.get(pc);
+    if (!a) return '';
+    const lbl = S.labels === 'notes' ? a.name : S.labels === 'intervals' ? a.label : '';
+    if (a.ctx) return `<g class="dot ctx" data-midi="${midi}"><circle cx="${cx}" cy="${cy}" r="${S.labels === 'off' ? 5 : 10}" fill="#0b0b0e" stroke="#4b4d56" stroke-width="1.4"/><text x="${cx}" y="${cy}" style="fill:#7d808a;font-size:9.5px">${esc(lbl)}</text></g>`;
+    return `<g class="dot${a.root ? ' root' : ''}" data-midi="${midi}"><circle cx="${cx}" cy="${cy}" r="${S.labels === 'off' ? 8 : 12.5}" fill="${a.bg}"/><text x="${cx}" y="${cy}" style="fill:${a.fg}">${esc(lbl)}</text></g>`;
+  };
+  t.strings.forEach((m, si) => {
+    const y = yRow(si);
+    const open = dot(44, y, m);
+    s += open || `<text x="44" y="${y}" style="fill:#3d3f47;font:600 11px var(--sans);text-anchor:middle;dominant-baseline:central">${T.pcName(m, t.flats)}</text>`;
+    for (let f = 1; f <= FRETS; f++) s += dot((fx(f - 1) + fx(f)) / 2, y, m + f);
+  });
+  for (let f = 1; f <= FRETS; f++) s += `<text x="${(fx(f - 1) + fx(f)) / 2}" y="${H - 12}" style="fill:${[3,5,7,9,12,15].includes(f) ? '#aeb0b8' : '#5a5c65'};font:600 12px var(--sans);text-anchor:middle">${f}</text>`;
+  s += `<text x="44" y="${H - 12}" style="fill:#5a5c65;font:600 11px var(--sans);text-anchor:middle">open</text></svg>`;
+  return s;
+}
+const isBlackPc = pc => [1, 3, 6, 8, 10].includes(pc);
+function pianoHTML(ring = []) {
+  const t = curTuning(), act = activeNotes(), WK = 24, BK = 15;
+  const open = new Map(t.strings.map(m => [m, true]));
+  let wi = 0, html = '';
+  for (let midi = 21; midi <= 108; midi++) {
+    const pc = midi % 12, black = isBlackPc(pc);
+    const left = black ? wi * WK - BK / 2 : wi * WK; if (!black) wi++;
+    const a = act.get(pc);
+    let inner = '';
+    if (open.has(midi)) inner += `<span class="str"></span><span class="strlab">${T.midiName(midi, t.flats)}</span>`;
+    if (a && !a.ctx) { const lbl = S.labels === 'notes' ? a.name : S.labels === 'intervals' ? a.label : ''; inner += `<span class="mk" style="background:${a.bg};color:${a.fg};${lbl ? '' : 'min-width:10px;height:10px;bottom:30px'}">${esc(lbl)}</span>`; }
+    else if (a && a.ctx) inner += `<span class="mk" style="min-width:8px;height:8px;padding:0;background:#c8c8c8;opacity:.55;bottom:${black ? 10 : 30}px"></span>`;
+    if (!black && pc === 0) inner += `<span class="oct">C${midi / 12 - 1}</span>`;
+    html += `<div class="pk ${black ? 'b' : 'w'}${ring.includes(midi) ? ' ring' : ''}" data-midi="${midi}" style="left:${left}px;width:${black ? BK : WK}px" title="${T.midiName(midi)}">${inner}</div>`;
+  }
+  return `<div class="pianowrap" id="pianoWrap"><div class="piano" style="width:${wi * WK}px">${html}</div></div>`;
+}
+function pianoStartScroll() {      // show C3 at the left edge-ish
+  let wi = 0; for (let m = 21; m < 48; m++) if (!isBlackPc(m % 12)) wi++;
+  return wi * 24 - 30;
+}
+function instrumentsHTML({ ring = [] } = {}) {
+  const t = curTuning(), chordMode = S.mode === 'chord', ch = curChord();
+  const ctx = chordMode ? `${ch.name} — ${t.name}` : `${keyTitle()} — ${t.name}`;
+  return `
+  <h2>${t.strings.length < 6 ? 'Bass' : t.strings.length > 6 ? t.strings.length + '-String' : 'Guitar'} <span class="ctx">${esc(ctx)}</span></h2>
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Labels"><button data-act="labels" data-v="notes" class="${S.labels === 'notes' ? 'on' : ''}">NOTES</button><button data-act="labels" data-v="intervals" class="${S.labels === 'intervals' ? 'on' : ''}">INTERVALS</button><button data-act="labels" data-v="off" class="${S.labels === 'off' ? 'on' : ''}">OFF</button></div>
+    <span class="sp"></span>
+    <button class="btn sm" data-act="playScale">▶ Scale</button>
+    <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>
+  </div>
+  <div class="fbwrap" id="fbWrap">${fretboardSVG()}</div>
+  <div class="legend" style="margin-top:8px">${legendHTML()}<span style="margin-left:auto">tap any note to hear it · scroll sideways on a phone</span></div>
+  <h2>Piano <span class="ctx">the same notes on 88 keys</span></h2>
+  <div class="hint" style="margin:-4px 2px 10px">Every coloured key is a note in the ${chordMode ? 'chord' : 'scale'}. <span style="color:var(--amber)">▼ amber arrows</span> mark where your guitar's open strings sit on the keyboard (${tuningNames(t).map((n, i) => n + Math.floor(t.strings[i] / 12 - 1)).join(' · ')}). Scroll sideways for the full range.</div>
+  ${pianoHTML(ring)}`;
+}
+function flash(midi, delay = 0, ms = 280) {
+  setTimeout(() => {
+    const els = $$(`[data-midi="${midi}"]`);
+    els.forEach(e => e.classList.add('flash'));
+    setTimeout(() => els.forEach(e => e.classList.remove('flash')), ms);
+  }, delay);
+}
+function playMidi(m) { Snd.ensure(); Snd.note(m, undefined, 1.6, 0.85); flash(m); }
+
+function scaleMidis() {
+  const k = keyNotes(), r = 48 + T.mod(S.rootPc - 48, 12);
+  const up = k.map(n => r + n.semis).concat([r + 12]);
+  return up.concat(up.slice(0, -1).reverse());
+}
+function playScale() {
+  Snd.ensure();
+  const step = 60 / (S.tempo * 2), t0 = Snd.now() + 0.06;
+  scaleMidis().forEach((m, i) => { Snd.note(m, t0 + i * step, step * 1.5, 0.8); flash(m, (0.06 + i * step) * 1000); });
+}
+function chordNotes(ch) { const c = T.chordMidi(ch, 48); return [c.bass].concat(c.notes); }
+function playChord(ch, how = 'strum') {
+  Snd.ensure();
+  const list = chordNotes(ch), t0 = Snd.now() + 0.03, sp = how === 'arp' ? 0.2 : how === 'block' ? 0.004 : 0.032;
+  list.forEach((m, i) => { Snd.note(m, t0 + i * sp, how === 'arp' ? 1.8 : 1.9, 0.75); flash(m, (0.03 + i * sp) * 1000); });
+}
+function playFrets(v) {
+  Snd.ensure(); let i = 0; const t0 = Snd.now() + 0.03;
+  v.midi.forEach(m => { if (m != null) { Snd.note(m, t0 + i * 0.045, 2, 0.75); flash(m, (0.03 + i * 0.045) * 1000); i++; } });
+}
+
+/* ================================================================
+   PLAY TAB
+   ================================================================ */
+function scaleReadoutHTML() {
+  const k = keyNotes(), sc = T.SCALES[S.scale], sig = T.signatureFor(keyName(), S.scale);
+  const pat = T.stepPattern(sc.semis);
+  const sigTxt = !sig ? '—' : sig.count === 0 ? 'no ♯ or ♭' : `${sig.count}${sig.type} (${sig.accidentals.join(' ')})`;
+  const sigNote = sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? ` <span style="font-size:11px;color:var(--dim)">as ${esc(sig.parent)} major</span>` : '';
+  return `<div class="readout">
+    <div class="ro" style="grid-column:span 2"><div class="k">${esc(keyTitle())}</div><div class="v big">${k.map(n => `<span style="color:${n.semis === 0 ? RED : '#e9eaee'}">${esc(n.name)}</span>`).join(' ')}</div></div>
+    <div class="ro"><div class="k">Formula</div><div class="v" style="font-size:16px;letter-spacing:.02em;word-spacing:.1em">${k.map(n => esc(n.label)).join(' ')}</div></div>
+    <div class="ro"><div class="k">Step pattern</div><div class="pat" style="margin-top:6px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div></div>
+    <div class="ro"><div class="k">Key signature</div><div class="v" style="font:600 18px var(--sans)">${esc(sigTxt)}${sigNote}</div></div>
+  </div>`;
+}
+function diatonicHTML() {
+  if (!T.isHepta(S.scale)) {
+    return `<h2>Chords <span class="ctx">${esc(keyTitle())}</span></h2><div class="card hint">${esc(T.SCALES[S.scale].name)} has ${T.SCALES[S.scale].pts.length} notes, so it doesn't stack into seven diatonic chords. Pick a 7-note scale (Major, a Minor, or a Mode) to see the harmonised chords — or head to the <b>Song</b> tab: it builds progressions from the matching major or minor key.</div>`;
+  }
+  const cs = T.harmonize(keyName(), S.scale, S.sevenths);
+  return `<h2>Chords <span class="ctx">harmonised in ${esc(keyTitle())}</span></h2>
+  <div class="toolbar"><div class="seg"><button data-act="sev" data-v="0" class="${!S.sevenths ? 'on' : ''}">TRIADS</button><button data-act="sev" data-v="1" class="${S.sevenths ? 'on' : ''}">7THS</button></div><span class="hint">tap a chord to hear it and light it up on the fretboard &amp; piano</span></div>
+  <div class="chords">${cs.map(c => `<div class="cc${S.mode === 'chord' && S.selDeg === c.degree ? ' sel' : ''}" data-act="dia" data-deg="${c.degree}" role="button" tabindex="0"><div class="rn">${esc(c.roman)}</div><div class="nm">${esc(c.name)}</div><div class="nt">${esc(c.notes.join(' '))}</div><div class="fn">${esc(c.fn)}</div></div>`).join('')}</div>`;
+}
+function renderPlay() { return scaleReadoutHTML() + instrumentsHTML() + diatonicHTML(); }
+
+/* ================================================================
+   CHORD TAB
+   ================================================================ */
+const MINORISH_Q = ['minor', 'dim', 'min7', 'm7b5', 'dim7', 'minMaj7'];
+function chordRootFor(pc, q = S.chordQ) { return T.rootName(pc, MINORISH_Q.includes(q) ? 'naturalMinor' : 'major', S.pref); }
+function voicingSVG(v, tuning, chord) {
+  const n = tuning.strings.length, W = 120, left = 20, right = 14, top = 36, rows = 5, rh = 21;
+  const gap = (W - left - right) / (n - 1), H = top + rows * rh + 12;
+  const fretted = v.frets.filter(f => f > 0), maxF = fretted.length ? Math.max(...fretted) : 0, minF = fretted.length ? Math.min(...fretted) : 1;
+  const start = maxF <= 4 ? 1 : minF;
+  const tone = pc => chord.tones.find(t => t.pc === pc);
+  let s = `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
+  for (let r = 0; r <= rows; r++) s += `<line x1="${left}" x2="${left + gap * (n - 1)}" y1="${top + r * rh}" y2="${top + r * rh}" stroke="#4a4c54" stroke-width="1"/>`;
+  if (start === 1) s += `<line x1="${left}" x2="${left + gap * (n - 1)}" y1="${top}" y2="${top}" stroke="#e9e1c6" stroke-width="4"/>`;
+  for (let i = 0; i < n; i++) s += `<line x1="${left + i * gap}" x2="${left + i * gap}" y1="${top}" y2="${top + rows * rh}" stroke="#b4b5bb" stroke-width="${(1.8 - i * 0.2).toFixed(1)}"/>`;
+  if (start > 1) s += `<text x="${left - 6}" y="${top + rh / 2 + 4}" style="fill:#aeb0b8;font:700 10px var(--sans);text-anchor:end">${start}</text>`;
+  v.frets.forEach((f, i) => {
+    const x = left + i * gap, m = v.midi[i];
+    if (f < 0) { s += `<text x="${x}" y="${top - 10}" style="fill:#7d808a;font:700 12px var(--sans);text-anchor:middle">×</text>`; return; }
+    const tn = tone(((m % 12) + 12) % 12), st = toneStyle(tn ? tn.deg : 5, tn && tn.semis === 0);
+    if (f === 0) { s += `<circle cx="${x}" cy="${top - 11}" r="4.2" fill="none" stroke="${st.bg}" stroke-width="1.8"/>`; return; }
+    const y = top + (f - start) * rh + rh / 2;
+    s += `<circle cx="${x}" cy="${y}" r="7.5" fill="${st.bg}"/><text x="${x}" y="${y + 0.5}" style="fill:${st.fg};font:700 8.5px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(tn ? tn.name : '')}</text>`;
+  });
+  return s + '</svg>';
+}
+function renderChord() {
+  const ch = curChord(), t = curTuning();
+  const rootPcSel = ch.rootPc;
+  const rootChips = Array.from({ length: 12 }, (_, pc) => {
+    const nm = chordRootFor(pc), both = T.pcBoth(pc).split(' / ');
+    return `<button class="chip${pc === rootPcSel ? ' on' : ''}" data-act="croot" data-pc="${pc}">${esc(both[0])}${both[1] ? `<small>/${esc(both[1])}</small>` : ''}</button>`;
+  }).join('');
+  const qChips = T.CHORD_ORDER.map(id => `<button class="chip${id === S.chordQ ? ' on' : ''}" data-act="cq" data-q="${id}" title="${esc(T.CHORDS[id].name)}">${esc(T.CHORDS[id].sym || 'maj')}</button>`).join('');
+  const maxInv = ch.tones.length;
+  const inv = S.inv % maxInv, pv = T.pianoVoicing(ch, inv, 4);
+  const rows = ch.tones.map(tn => {
+    const m = T.midiOf(ch.rootPc, 4) + tn.semis, st = toneStyle(tn.deg, tn.semis === 0);
+    return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${st.bg};margin-right:8px"></span>${esc(tn.name)}</td><td>${esc(tn.label)}</td><td>${tn.semis}</td><td>${fmtHz(T.freq(m, S.a4))}</td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
+  }).join('');
+  const vs = T.findVoicings(ch, t.strings, { limit: 8 });
+  const vHTML = vs.length ? vs.map((v, i) => `<div class="vc" data-act="pv" data-i="${i}" role="button" tabindex="0">${voicingSVG(v, t, ch)}<div class="fr">${v.frets.map(f => f < 0 ? 'x' : f).join(' ')}</div></div>`).join('') : `<div class="card hint">No comfortable shapes found in this tuning for ${esc(ch.name)} — the notes are still lit up on the fretboard above.</div>`;
+  window.__voicings = vs;
+  return `
+  <h2>Chord Builder <span class="ctx">pick a root and a quality</span></h2>
+  <div class="card">
+    <div class="engr sm" style="color:#8b8d96;margin-bottom:6px">Root</div><div class="chips">${rootChips}</div>
+    <div class="engr sm" style="color:#8b8d96;margin:14px 0 6px">Quality</div><div class="chips">${qChips}</div>
+    <div class="readout">
+      <div class="ro"><div class="k">Chord</div><div class="v big">${esc(ch.name)}</div><div class="hint">${esc(ch.root)} ${esc(ch.qualityName)}</div></div>
+      <div class="ro"><div class="k">Formula</div><div class="v big">${esc(ch.formula)}</div><div class="hint">${ch.tones.map(x => x.semis).join(' · ')} semitones above the root</div></div>
+      <div class="ro"><div class="k">Notes</div><div class="v big">${esc(ch.notes.join(' '))}</div><div class="hint">${esc(T.SCALES.major.name)} third = 4 semitones, minor third = 3</div></div>
+    </div>
+    <div class="toolbar"><button class="btn pri" data-act="playChordNow">▶ Play chord</button><button class="btn" data-act="strum">Strum ↓</button><button class="btn" data-act="arp">Arpeggio</button><span class="sp"></span>
+      <span class="engr sm" style="color:#8b8d96">Piano inversion</span><div class="seg">${['Root', '1st', '2nd', '3rd'].slice(0, maxInv).map((l, i) => `<button data-act="inv" data-v="${i}" class="${i === inv ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+    <div class="hint" style="margin-bottom:10px">Piano voicing (white ring on the keys): <b style="color:#e9eaee;font-family:var(--mono)">${pv.map(m => T.midiName(m, ch.root.includes('♭'))).join(' · ')}</b></div>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semitones</th><th>Hz (oct 4)</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+  </div>
+  ${instrumentsHTML({ ring: pv })}
+  <h2>Shapes <span class="ctx">${esc(ch.name)} in ${esc(t.name)}</span></h2>
+  <div class="hint" style="margin:-4px 2px 10px">Generated from the tuning, not memorised: every fret that hits a chord tone, within a 4-fret reach, lowest note = root. Tap one to hear it.</div>
+  <div class="voic">${vHTML}</div>`;
+}
+
+/* ================================================================
+   CIRCLE OF FIFTHS
+   ================================================================ */
+function sectorPath(r1, r2, a0, a1) {
+  const p = (r, a) => [200 + r * Math.cos(a * Math.PI / 180), 200 + r * Math.sin(a * Math.PI / 180)].map(v => v.toFixed(2));
+  const [x1, y1] = p(r1, a0), [x2, y2] = p(r1, a1), [x3, y3] = p(r2, a1), [x4, y4] = p(r2, a0);
+  return `M${x1} ${y1} A${r1} ${r1} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${r2} ${r2} 0 0 0 ${x4} ${y4}Z`;
+}
+function circleInfo() {
+  const sc = T.SCALES[S.scale], pm = T.parentMajor(T.parseName(keyName()), S.scale);
+  const pos = pm ? T.circlePos(pm.pc) : 0;
+  const ring = sc.parent === 0 ? 'maj' : sc.parent === 5 ? 'min' : null;   // modes: highlight the parent major only
+  return { pos, ring, pm };
+}
+function circleSVG() {
+  const C = T.circle(), { pos, ring } = circleInfo();
+  const minorKey = ring === 'min';
+  const role = (i, r) => {                        // returns {fill, tx, rn}
+    const d = ((i - pos) + 12) % 12;
+    if (!minorKey) {
+      if (r === 'maj') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'I' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'IV' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'V' }; }
+      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'vi' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'ii' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'iii' }; }
+    } else {
+      if (r === 'min') { if (d === 0) return { f: '#c77d12', t: '#1a0f02', rn: 'i' }; if (d === 11) return { f: '#2f5fa8', t: '#fff', rn: 'iv' }; if (d === 1) return { f: '#2f5fa8', t: '#fff', rn: 'v' }; }
+      else { if (d === 0) return { f: '#3a3d49', t: '#fff', rn: 'III' }; if (d === 11) return { f: '#3a3d49', t: '#fff', rn: 'VI' }; if (d === 1) return { f: '#3a3d49', t: '#fff', rn: 'VII' }; }
+    }
+    return { f: r === 'maj' ? '#17181d' : '#101115', t: '#9ea0a9', rn: '' };
+  };
+  let s = `<svg viewBox="0 0 400 400" role="img" aria-label="Circle of fifths"><circle cx="200" cy="200" r="196" fill="#08080a"/>`;
+  C.forEach((k, i) => {
+    const a = -90 + 30 * i, a0 = a - 14.6, a1 = a + 14.6, rad = a * Math.PI / 180;
+    const P = (r, dy = 0) => `x="${(200 + r * Math.cos(rad)).toFixed(1)}" y="${(200 + r * Math.sin(rad) + dy).toFixed(1)}"`;
+    const ro = role(i, 'maj'), ri = role(i, 'min');
+    const mj = k.alt ? `${k.major}` : k.major;
+    s += `<g class="wedge" data-act="circ" data-ring="maj" data-pos="${i}"><title>${esc(k.major)} major${k.alt ? ' / ' + esc(k.alt[0]) : ''} — ${k.sig.count ? k.sig.count + k.sig.type : 'no sharps or flats'}</title>
+      <path d="${sectorPath(192, 130, a0, a1)}" fill="${ro.f}" stroke="#000" stroke-width="2"/>
+      <text ${P(163, k.alt ? -4 : 0)} style="fill:${ro.t};font:700 21px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(mj)}</text>
+      ${k.alt ? `<text ${P(150, 8)} style="fill:${ro.t};opacity:.7;font:600 10px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(k.alt[0])}</text>` : ''}
+      ${ro.rn ? `<text ${P(182, 0)} style="fill:${ro.t};opacity:.85;font:700 9px var(--sans);text-anchor:middle;dominant-baseline:central">${ro.rn}</text>` : ''}</g>`;
+    s += `<g class="wedge" data-act="circ" data-ring="min" data-pos="${i}"><title>${esc(k.minor)} minor${k.alt ? ' / ' + esc(k.alt[1]) + 'm' : ''}</title>
+      <path d="${sectorPath(128, 84, a0, a1)}" fill="${ri.f}" stroke="#000" stroke-width="2"/>
+      <text ${P(108, 0)} style="fill:${ri.t};font:700 15px var(--sans);text-anchor:middle;dominant-baseline:central">${esc(k.minor)}m</text>
+      ${ri.rn ? `<text ${P(93, 0)} style="fill:${ri.t};opacity:.85;font:700 8.5px var(--sans);text-anchor:middle;dominant-baseline:central">${ri.rn}</text>` : ''}</g>`;
+  });
+  const sig = T.signatureFor(keyName(), S.scale);
+  s += `<circle cx="200" cy="200" r="80" fill="#0c0c0f" stroke="#000" stroke-width="2"/>
+    <text x="200" y="176" style="fill:#e9eaee;font:700 24px var(--cond);text-anchor:middle;letter-spacing:.04em">${esc(keyName())}</text>
+    <text x="200" y="198" style="fill:#8b8d96;font:600 11px var(--sans);text-anchor:middle;letter-spacing:.1em">${esc(T.SCALES[S.scale].name.toUpperCase())}</text>
+    <text x="200" y="228" style="fill:#f0a035;font:700 30px var(--sans);text-anchor:middle">${sig ? (sig.count ? sig.count + sig.type : '0') : ''}</text></svg>`;
+  return s;
+}
+function renderCircle() {
+  const C = T.circle(), { pos, pm } = circleInfo(), k = C[pos];
+  const sig = T.signatureFor(keyName(), S.scale);
+  const dom = C[(pos + 1) % 12], sub = C[(pos + 11) % 12];
+  const relMin = T.relativeMinor(k.major);
+  const cs = T.isHepta(S.scale) ? T.harmonize(keyName(), S.scale, false) : [];
+  const nm = c => esc(c);
+  return `<h2>Circle of Fifths <span class="ctx">tap a key</span></h2>
+  <div class="circlewrap">
+    <div>${circleSVG()}
+      <div class="legend" style="justify-content:center;margin-top:8px"><span><i style="background:#c77d12"></i>tonic</span><span><i style="background:#2f5fa8"></i>IV &amp; V (neighbours)</span><span><i style="background:#3a3d49"></i>relative minors / majors in key</span></div></div>
+    <div>
+      <div class="card">
+        <div class="engr sm" style="color:#8b8d96">Key signature</div>
+        <div class="v" style="font:700 36px var(--cond);margin:2px 0 6px">${sig ? (sig.count ? `${sig.count} ${sig.type === '♯' ? 'sharp' : 'flat'}${sig.count > 1 ? 's' : ''}` : 'no sharps or flats') : '—'}</div>
+        <div class="sig">${sig && sig.accidentals.length ? sig.accidentals.map(a => `<span>${nm(a)}</span>`).join('') : '<span style="color:var(--dim)">all natural</span>'}</div>
+        ${sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? `<div class="hint" style="margin-top:8px">${esc(keyTitle())} borrows the signature of ${esc(sig.parent)} major.${S.scale === 'harmonicMinor' ? ' Raise the 7th by a semitone on top of it.' : S.scale === 'melodicMinor' ? ' Raise the 6th and 7th going up.' : ''}</div>` : ''}
+        <div class="readout" style="margin-bottom:0">
+          <div class="ro"><div class="k">Relative ${T.SCALES[S.scale].parent === 5 ? 'major' : 'minor'}</div><div class="v">${esc(T.SCALES[S.scale].parent === 5 ? (pm ? pm.name : '') : relMin + 'm')}</div><div class="hint">same notes, different home</div></div>
+          <div class="ro"><div class="k">Up a fifth (V)</div><div class="v">${esc(dom.major)}</div><div class="hint">clockwise — ${dom.sig.count ? dom.sig.count + dom.sig.type : 'no ♯/♭'}</div></div>
+          <div class="ro"><div class="k">Down a fifth (IV)</div><div class="v">${esc(sub.major)}</div><div class="hint">counter-clockwise — ${sub.sig.count ? sub.sig.count + sub.sig.type : 'no ♯/♭'}</div></div>
+        </div>
+      </div>
+      ${cs.length ? `<h2 style="margin-top:18px">Chords in key</h2><div class="chords">${cs.map(c => `<div class="cc" data-act="cdia" data-deg="${c.degree}" role="button" tabindex="0"><div class="rn">${esc(c.roman)}</div><div class="nm">${esc(c.name)}</div></div>`).join('')}</div>` : ''}
+      <div class="toolbar mt"><button class="btn pri" data-act="walk">▶ Walk the circle</button><button class="btn" data-act="playKeyTriad">▶ ${esc(keyName())} chord</button></div>
+      <div class="hint">Walking a fifth up each time (C → G → D → …) adds exactly one sharp; walking down adds a flat. Order of sharps: <b>F C G D A E B</b>. Order of flats is the reverse: <b>B E A D G C F</b>. Each step is 7 semitones, and 7 × 12 ≡ 0 (mod 12)… the circle closes after 12 hops. That's the math under the picture.</div>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   MATH f(x)
+   ================================================================ */
+const JUST = { 0: [1, 1], 1: [16, 15], 2: [9, 8], 3: [6, 5], 4: [5, 4], 5: [4, 3], 6: [45, 32], 7: [3, 2], 8: [8, 5], 9: [5, 3], 10: [9, 5], 11: [15, 8], 12: [2, 1] };
+function noteLabelFor(pc) {
+  const hit = keyNotes().find(n => n.pc === pc);
+  return hit ? hit.name : T.pcBoth(pc);
+}
+function renderMath() {
+  S.mathPc = S.mathPc ?? 0;
+  const oct = S.mathOct, a4 = S.a4, k = keyNotes(), t = curTuning();
+  const mm = T.midiOf(S.mathPc, oct), n = T.nFromA4(mm), r = T.ratio(n), f = T.freq(mm, a4);
+  const nm = `${noteLabelFor(S.mathPc)}${oct}`;
+  const pcSel = Array.from({ length: 12 }, (_, pc) => `<option value="${pc}"${pc === S.mathPc ? ' selected' : ''}>${esc(T.pcBoth(pc))}</option>`).join('');
+  const octSeg = Array.from({ length: 9 }, (_, o) => `<button data-act="moct" data-v="${o}" class="${o === oct ? 'on' : ''}">${o}</button>`).join('');
+  const rootMidi = T.midiOf(S.rootPc, oct);
+  const scaleRows = k.concat([{ name: k[0].name, semis: 12, label: '8', deg: 8, pc: k[0].pc }]).map((x, i) => {
+    const m = rootMidi + x.semis, j = JUST[x.semis] || null, cents = j ? x.semis * 100 - 1200 * Math.log2(j[0] / j[1]) : 0;
+    return `<tr class="${i === 0 || x.semis === 12 ? 'root' : 'in'}"><td>${esc(x.name)}${Math.floor(m / 12) - 1}</td><td>${esc(x.label)}</td><td>${x.semis}</td><td>${T.ratio(x.semis).toFixed(5)}</td><td>${j ? j[0] + ':' + j[1] : '—'}</td><td>${j ? (cents >= 0 ? '+' : '−') + Math.abs(cents).toFixed(1) + '¢' : ''}</td><td>${fmtHz(T.freq(m, a4))}</td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
+  }).join('');
+  const inKey = new Set(k.map(x => x.pc));
+  const noteRows = Array.from({ length: 13 }, (_, i) => {
+    const m = T.midiOf(0, oct) + i, pc = m % 12, nn = T.nFromA4(m);
+    const cls = pc === S.rootPc ? 'root' : inKey.has(pc) ? 'in' : '';
+    return `<tr class="${cls}"><td>${esc(noteLabelFor(pc))}${Math.floor(m / 12) - 1}</td><td>${m}</td><td>${minus(nn)}</td><td>${T.ratio(nn).toFixed(6)}</td><td><b style="color:var(--ink)">${fmtHz(T.freq(m, a4))}</b></td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
+  }).join('');
+  const si = Math.min(S.mathString, t.strings.length - 1), open = t.strings[si];
+  const strSeg = t.strings.map((m, i) => ({ m, i })).reverse().map(({ m, i }) => `<button data-act="mstr" data-v="${i}" class="${i === si ? 'on' : ''}">${t.strings.length - i}·${T.pcName(m, t.flats)}${Math.floor(m / 12) - 1}</button>`).join('');
+  const fretRows = Array.from({ length: 16 }, (_, fr) => {
+    const m = open + fr, nn = T.nFromA4(m), pc = m % 12;
+    return `<tr class="${pc === S.rootPc ? 'root' : inKey.has(pc) ? 'in' : ''}"><td>fret ${fr}</td><td>${esc(noteLabelFor(pc))}${Math.floor(m / 12) - 1}</td><td>${minus(nn)}</td><td>${T.ratio(fr).toFixed(5)}</td><td><b style="color:var(--ink)">${fmtHz(T.freq(m, a4))}</b></td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
+  }).join('');
+  const strRows = t.strings.map((m, i) => `<tr><td>String ${t.strings.length - i}</td><td>${T.pcName(m, t.flats)}${Math.floor(m / 12) - 1}</td><td>${minus(T.nFromA4(m))}</td><td>${fmtHz(T.freq(m, a4))}</td></tr>`).reverse().join('');
+  const pat = T.stepPattern(T.SCALES[S.scale].semis);
+  return `
+  <h2>f(x) <span class="ctx">the math under every note</span></h2>
+  <div class="card">
+    <div class="eq">f(n) = <span class="a">${a4}</span> × 2<sup>n<span style="font-size:.6em">/12</span></sup><small>n = semitones above (+) or below (−) A4 · A4 = ${a4} Hz (change it with the PITCH drum) · twelve equal steps double the frequency</small></div>
+  </div>
+
+  <h2>Worked example <span class="ctx">pick any note</span></h2>
+  <div class="card">
+    <div class="ctrls"><div class="field"><label>Note</label><select data-chg="mathpc">${pcSel}</select></div><div class="field"><label>Octave</label><div class="seg">${octSeg}</div></div><button class="btn pri" data-act="pm" data-m="${mm}">▶ Hear it</button></div>
+    <div class="worked"><b>note</b>     ${esc(nm)}   (pitch class ${S.mathPc}, octave ${oct})
+<b>MIDI</b>     12 × (${oct} + 1) + ${S.mathPc} = <i>${mm}</i>
+<b>n</b>        ${mm} − 69 = <i>${minus(n)}</i>   semitones from A4  [ n = 12×(${oct}−4) + (${S.mathPc}−9) ]
+<b>2^(n/12)</b> 2^(${minus(n)}/12) = 2^(${minus(+(n / 12).toFixed(4))}) = <i>${r.toFixed(6)}</i>
+<b>f</b>        ${a4} × ${r.toFixed(6)} = <b>${fmtHz(f)} Hz</b></div>
+  </div>
+
+  <h2>${esc(keyTitle())} <span class="ctx">scale math, octave ${oct}</span></h2>
+  <div class="card">
+    <div class="pat" style="margin-bottom:10px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div>
+    <div class="hint" style="margin-bottom:10px">W = whole step (2 semitones, ×1.1225) · H = half step (1 semitone, ×1.0595) · WH = 3 semitones. Compare equal temperament with the pure "just" ratios — the fifth is off by only ~2 cents.</div>
+    <div class="tablewrap" style="max-height:none"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semis</th><th>2^(s/12)</th><th>Just</th><th>Δ cents</th><th>Hz</th><th></th></tr></thead><tbody>${scaleRows}</tbody></table></div>
+  </div>
+
+  <h2>Every note <span class="ctx">octave ${oct}</span></h2>
+  <div class="card">
+    <div class="ctrls"><div class="field"><label>Octave</label><div class="seg">${octSeg}</div></div><span class="hint">green rows are in ${esc(keyTitle())}, red is the root</span></div>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>MIDI</th><th>n</th><th>2^(n/12)</th><th>Hz</th><th></th></tr></thead><tbody>${noteRows}</tbody></table></div>
+  </div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div><h2 style="margin-top:12px">Open strings <span class="ctx">${esc(t.name)}</span></h2><div class="card"><div class="tablewrap" style="max-height:none"><table class="t"><thead><tr><th>String</th><th>Note</th><th>n</th><th>Hz</th></tr></thead><tbody>${strRows}</tbody></table></div></div></div>
+    <div><h2 style="margin-top:12px">Intervals <span class="ctx">cheat sheet</span></h2><div class="card"><div class="worked" style="font-size:12.5px">semitone   2^(1/12)  = <i>1.059463</i>
+octave     2^(12/12) = <i>2.000000</i>
+fifth      2^(7/12)  = <i>1.498307</i>   (just 3:2 = 1.5)
+fourth     2^(5/12)  = <i>1.334840</i>   (just 4:3 = 1.3333)
+maj third  2^(4/12)  = <i>1.259921</i>   (just 5:4 = 1.25)
+min third  2^(3/12)  = <i>1.189207</i>   (just 6:5 = 1.2)
+fret k:    f = f_open × 2^(k/12)</div></div></div>
+  </div>
+
+  <h2>Fretboard math <span class="ctx">frequency of every fret</span></h2>
+  <div class="card">
+    <div class="ctrls"><div class="field"><label>String</label><div class="seg" style="flex-wrap:wrap">${strSeg}</div></div></div>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Fret</th><th>Note</th><th>n</th><th>2^(fret/12)</th><th>Hz</th><th></th></tr></thead><tbody>${fretRows}</tbody></table></div>
+  </div>`;
+}
+
+/* ================================================================
+   SONG — progression generator + metronome
+   ================================================================ */
+const currentProg = () => T.generateProgression({ rootName: keyName(), scaleId: S.scale, bars: S.bars, style: S.style, sevenths: S.sevenths, seed: S.seed });
+const Player = {
+  timer: null, raf: null, pulse: 0, next: 0, queue: [], chordsOn: false,
+  begin() {
+    if (!Snd.ensure() || this.timer) return;
+    this.pulse = 0; this.next = Snd.now() + 0.1; this.queue = [];
+    this.timer = setInterval(() => this.tick(), 25);
+    const loop = () => { this.frame(); this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+  },
+  halt() { clearInterval(this.timer); this.timer = null; cancelAnimationFrame(this.raf); this.raf = null; this.queue = []; this.light(-1, -1, 0); },
+  reset() { if (this.timer) { this.pulse = 0; this.next = Snd.now() + 0.1; this.queue = []; } },
+  sync() { if (S.metro || this.chordsOn) this.begin(); else this.halt(); updateSongBtn(); },
+  startChords() { this.chordsOn = true; if (this.timer) { this.reset(); } else this.begin(); updateSongBtn(); },
+  stopChords() { this.chordsOn = false; if (!S.metro) this.halt(); updateSongBtn(); },
+  tick() {
+    const ctx = Snd.ctx; if (!ctx) return;
+    while (this.next < ctx.currentTime + 0.15) { this.schedule(this.pulse, this.next); this.next += T.pulseSeconds(S.meter, S.tempo); this.pulse++; }
+  },
+  schedule(p, t) {
+    const M = T.METERS[S.meter], beat = p % M.num, barAbs = Math.floor(p / M.num), ps = T.pulseSeconds(S.meter, S.tempo);
+    const prog = currentProg(), nb = prog.chords.length;
+    if (this.chordsOn && !S.loop && barAbs >= nb) { this.chordsOn = false; setTimeout(() => { if (!S.metro) this.halt(); updateSongBtn(); }, 0); }
+    const acc = M.accents[beat];
+    if (S.metro) Snd.click(acc, t);
+    let bar = -1;
+    if (this.chordsOn) {
+      bar = barAbs % nb;
+      const cm = T.chordMidi(prog.chords[bar], 48), full = [cm.bass].concat(cm.notes);
+      if (S.feel === 'pad') { if (beat === 0) Snd.chord(full, t, M.num * ps * 0.98, 0.62, 0.022); }
+      else if (S.feel === 'strum') {
+        if (acc === 2) Snd.chord(full, t, ps * 2.2, 0.72, 0.024);
+        else if (acc === 1) Snd.chord(cm.notes, t, ps * 1.6, 0.5, 0.018, true);
+      } else {
+        const seq = [cm.bass].concat(cm.notes, cm.notes.slice(1, -1).reverse());
+        Snd.note(seq[beat % seq.length], t, ps * 3, beat === 0 ? 0.8 : 0.6);
+      }
+    }
+    this.queue.push({ t, bar, beat, acc });
+  },
+  frame() {
+    const ctx = Snd.ctx; if (!ctx) return;
+    while (this.queue.length && this.queue[0].t <= ctx.currentTime) { const e = this.queue.shift(); this.light(e.bar, e.beat, e.acc); }
+  },
+  light(bar, beat, acc) {
+    $$('.bar').forEach((el, i) => { el.classList.toggle('now', i === bar); $$('.beats i', el).forEach((d, j) => d.classList.toggle('on', i === bar && j === beat)); });
+    if (beat >= 0) { const m = $('#metro'); if (m && S.metro) { m.style.boxShadow = '0 0 0 1px #000,0 0 12px 3px ' + (acc === 2 ? 'rgba(232,70,62,.9)' : 'rgba(255,170,60,.7)'); setTimeout(() => { m.style.boxShadow = ''; }, 90); } }
+  },
+};
+function updateSongBtn() {
+  const b = $('[data-act="songplay"]'); if (b) b.textContent = Player.chordsOn ? '■ Stop' : '▶ Play progression';
+}
+function renderSong() {
+  const prog = currentProg(), M = T.METERS[S.meter], t = curTuning();
+  const selOpts = (arr, cur) => arr.map(([v, l]) => `<option value="${v}"${String(v) === String(cur) ? ' selected' : ''}>${l}</option>`).join('');
+  const cards = prog.chords.map((c, i) => `<div class="bar" data-act="barplay" data-i="${i}" role="button" tabindex="0"><span class="num">${i + 1}</span><div class="rn">${esc(c.roman)}</div><div class="nm">${esc(c.name)}</div><div class="nt">${esc(c.notes.join(' '))}</div><div class="beats">${M.accents.map(a => `<i class="${a === 2 ? 'acc' : ''}"></i>`).join('')}</div></div>`).join('');
+  const seen = new Set(), shapes = [];
+  prog.chords.forEach(c => { if (seen.has(c.name)) return; seen.add(c.name); const v = T.findVoicings(c, t.strings, { limit: 1 })[0]; if (v) shapes.push({ c, v }); });
+  window.__songShapes = shapes;
+  const unit = M.unit === 'beat' ? 'beats' : M.compound ? 'eighth notes (BPM = dotted quarter)' : 'eighth notes';
+  return `
+  <h2>Song <span class="ctx">${esc(keyTitle())} · ${S.meter} · ${S.tempo} BPM · ${esc(t.name)}</span></h2>
+  <div class="card">
+    <div class="hint" style="margin-bottom:12px"><b style="color:var(--ink)">Root + scale + time signature + tempo → a progression.</b> This is step one of the song generator: it picks chords from the harmonised key with simple functional-harmony rules (tonic → subdominant/dominant → back home) and plays them. Set the key, tuning, time signature and tempo with the control panel above.</div>
+    <div class="ctrls">
+      <div class="field"><label>Bars</label><select data-chg="bars">${selOpts([[4, '4 bars'], [5, '5 bars'], [6, '6 bars'], [7, '7 bars'], [8, '8 bars']], S.bars)}</select></div>
+      <div class="field"><label>Style</label><select data-chg="style">${selOpts([['smart', 'Smart (functional)'], ['pop', 'Pop loops'], ['blues', 'Blues'], ['jazz', 'Jazz ii–V–I']], S.style)}</select></div>
+      <div class="field"><label>Feel</label><select data-chg="feel">${selOpts([['strum', 'Strum'], ['pad', 'Pad (one hit per bar)'], ['arp', 'Arpeggio']], S.feel)}</select></div>
+      <div class="field"><label>Chords</label><div class="seg"><button data-act="sev" data-v="0" class="${!S.sevenths ? 'on' : ''}">TRIADS</button><button data-act="sev" data-v="1" class="${S.sevenths || S.style === 'jazz' ? 'on' : ''}">7THS</button></div></div>
+      <label class="hint" style="display:flex;gap:6px;align-items:center;padding-bottom:9px"><input type="checkbox" data-chg="loop" ${S.loop ? 'checked' : ''}> loop</label>
+    </div>
+    <div class="toolbar"><button class="btn pri" data-act="songplay">${Player.chordsOn ? '■ Stop' : '▶ Play progression'}</button><button class="btn" data-act="gen">⟳ Generate new</button><button class="btn" data-act="copy">Copy chart</button><span class="sp"></span><span class="hint">idea #${S.seed} · ${S.meter}: ${M.num} ${unit} per bar</span></div>
+    <div class="bars">${cards}</div>
+    <code class="chart" id="chart">${esc(T.chartText(prog))}</code>
+  </div>
+  <h2>Shapes <span class="ctx">for this progression in ${esc(t.name)}</span></h2>
+  <div class="voic">${shapes.map((x, i) => `<div class="vc" data-act="sv" data-i="${i}" role="button" tabindex="0"><div class="rn" style="font:700 16px var(--cond);color:var(--amber)">${esc(x.c.name)}</div>${voicingSVG(x.v, t, x.c)}<div class="fr">${x.v.frets.map(f => f < 0 ? 'x' : f).join(' ')}</div></div>`).join('')}</div>
+  <div class="hint mt">Tip: flip the metronome switch on the panel for a click track under the progression, change the TONE drum for a different voice, and drag the TEMPO knob while it plays.</div>`;
+}
+
+/* ================================================================
+   WIRING
+   ================================================================ */
+const RENDER = { play: renderPlay, chord: renderChord, circle: renderCircle, math: renderMath, song: renderSong };
+const TABS = [
+  ['play', 'PLAY', '<rect x="3" y="6" width="20" height="14" rx="2"/><path d="M9 6v14M15 6v14M3 11h20M3 15h20" stroke-width="1.2"/>'],
+  ['chord', 'CHORD', '<path d="M7 4v18M13 4v18M19 4v18M4 9h18M4 15h18" stroke-width="1.2"/><circle cx="13" cy="12" r="2.6" fill="currentColor"/><circle cx="7" cy="18" r="2.2" fill="currentColor"/>'],
+  ['circle', 'CIRCLE', '<circle cx="13" cy="13" r="9.5"/><circle cx="13" cy="13" r="4.5"/><circle cx="13" cy="3.6" r="1.6" fill="currentColor"/><circle cx="21.2" cy="17.7" r="1.4" fill="currentColor"/>'],
+  ['math', 'MATH', null],
+  ['song', 'SONG', '<path d="M9 5.5l12 7.5-12 7.5z" fill="currentColor"/>'],
+];
+function buildDock() {
+  $('#dock').innerHTML = TABS.map(([id, label, svg]) => `<button data-act="tab" data-v="${id}" aria-label="${label}">${svg ? `<svg viewBox="0 0 26 26">${svg}</svg>` : '<span class="fx">ƒ(x)</span>'}<span>${label}</span></button>`).join('');
+}
+function render() {
+  const el = $('#tab-' + S.tab), y = window.scrollY;
+  el.innerHTML = RENDER[S.tab]();
+  const fb = $('#fbWrap'), pw = $('#pianoWrap');
+  if (fb) { fb.scrollLeft = UI.fbScroll ?? 0; fb.addEventListener('scroll', () => { UI.fbScroll = fb.scrollLeft; }); }
+  if (pw) { pw.scrollLeft = UI.piScroll ?? pianoStartScroll(); pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); }
+  window.scrollTo(0, y);
+  $$('#dock button').forEach(b => b.classList.toggle('on', b.dataset.v === S.tab));
+}
+function setTab(tab, opts = {}) {
+  S.tab = tab;
+  if (tab === 'chord') S.mode = 'chord';
+  else if (tab === 'play' && !opts.keepMode) { S.mode = 'scale'; S.selDeg = null; }
+  $$('.tab').forEach(t => t.classList.toggle('on', t.id === 'tab-' + tab));
+  syncPanel(); render(); save(); updateHash();
+  if (!opts.noScroll) window.scrollTo(0, 0);
+}
+function refreshSelDeg() {
+  if (S.mode === 'chord' && S.selDeg != null && S.tab === 'play') {
+    const c = T.harmonize(keyName(), S.scale, S.sevenths).find(x => x.degree === S.selDeg);
+    if (c) { S.chordRoot = c.root; S.chordQ = c.quality; } else S.selDeg = null;
+  }
+}
+function onChange(id) {
+  if (id === 'root' || id === 'scale' || id === 'spell') refreshSelDeg();
+  if (id === 'meter') Player.reset();
+  syncPanel(); render(); save(); updateHash();
+}
+function pickKey(pc, scale) { S.rootPc = pc; S.scale = scale; S.pref = 'auto'; }
+
+document.addEventListener('click', e => {
+  const act = e.target.closest('[data-act]');
+  if (!act) { const m = e.target.closest('[data-midi]'); if (m) playMidi(+m.dataset.midi); return; }
+  const v = act.dataset.v, A = act.dataset.act;
+  switch (A) {
+    case 'tab': setTab(v); break;
+    case 'labels': S.labels = v; render(); save(); break;
+    case 'sev': S.sevenths = v === '1'; refreshSelDeg(); render(); save(); break;
+    case 'dia': {
+      const deg = +act.dataset.deg;
+      const c = T.harmonize(keyName(), S.scale, S.sevenths).find(x => x.degree === deg); if (!c) break;
+      if (S.mode === 'chord' && S.selDeg === deg) { S.mode = 'scale'; S.selDeg = null; }
+      else { S.mode = 'chord'; S.selDeg = deg; S.chordRoot = c.root; S.chordQ = c.quality; playChord(c); }
+      syncPanel(); render(); save(); break;
+    }
+    case 'playScale': playScale(); break;
+    case 'playChordNow': playChord(curChord(), 'block'); break;
+    case 'strum': playChord(curChord(), 'strum'); break;
+    case 'arp': playChord(curChord(), 'arp'); break;
+    case 'croot': S.chordRoot = chordRootFor(+act.dataset.pc); render(); save(); playChord(curChord(), 'strum'); break;
+    case 'cq': {
+      const pc = T.parseName(S.chordRoot).pc; S.chordQ = act.dataset.q; S.chordRoot = chordRootFor(pc, S.chordQ); S.inv = 0; S.selDeg = null;
+      render(); save(); playChord(curChord(), 'strum'); break;
+    }
+    case 'inv': S.inv = +v; render(); { const ch = curChord(); const pv = T.pianoVoicing(ch, S.inv, 4); Snd.ensure(); const t0 = Snd.now() + .03; pv.forEach((m, i) => { Snd.note(m, t0 + i * 0.03, 1.8, 0.75); flash(m, (0.03 + i * 0.03) * 1000); }); } break;
+    case 'pm': playMidi(+act.dataset.m); break;
+    case 'pv': { const vv = window.__voicings[+act.dataset.i]; if (vv) playFrets(vv); break; }
+    case 'sv': { const x = window.__songShapes[+act.dataset.i]; if (x) playFrets(x.v); break; }
+    case 'circ': {
+      const k = T.circle()[+act.dataset.pos], maj = act.dataset.ring === 'maj';
+      pickKey(maj ? k.majorPc : k.minorPc, maj ? 'major' : 'naturalMinor');
+      S.mode = 'scale'; S.selDeg = null;
+      syncPanel(); render(); save(); updateHash();
+      playChord(T.harmonize(keyName(), S.scale, false)[0], 'strum'); break;
+    }
+    case 'cdia': { const c = T.harmonize(keyName(), S.scale, false).find(x => x.degree === +act.dataset.deg); if (c) playChord(c, 'strum'); break; }
+    case 'playKeyTriad': { const c = T.harmonize(keyName(), S.scale, false)[0]; if (c) playChord(c, 'block'); break; }
+    case 'walk': {
+      Snd.ensure(); const t0 = Snd.now() + 0.05, ch = T.circle();
+      ch.forEach((k, i) => { const c = T.buildChord(k.major, 'major'); const cm = T.chordMidi(c, 48); const when = t0 + i * 0.5; cm.notes.forEach((m, j) => Snd.note(m, when + j * 0.02, 0.9, 0.55)); Snd.note(cm.bass, when, 0.9, 0.7); });
+      break;
+    }
+    case 'moct': S.mathOct = +v; render(); save(); break;
+    case 'mstr': S.mathString = +v; render(); save(); break;
+    case 'gen': S.seed = Math.floor(Math.random() * 9000) + 1; render(); save(); if (Player.chordsOn) Player.reset(); break;
+    case 'songplay': if (Player.chordsOn) Player.stopChords(); else Player.startChords(); break;
+    case 'barplay': { const c = currentProg().chords[+act.dataset.i]; if (c) playChord(c, 'strum'); break; }
+    case 'copy': {
+      const prog = currentProg();
+      const text = `${keyTitle()} · ${S.meter} · ${S.tempo} BPM\n` + T.chartText(prog) + '\n' + prog.chords.map(c => c.roman).join(' – ');
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => { act.textContent = 'Copied ✓'; setTimeout(() => { act.textContent = 'Copy chart'; }, 1400); }).catch(() => { act.textContent = 'Select & copy ↓'; });
+      break;
+    }
+    case 'power': break;
+  }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-act]')) { e.preventDefault(); e.target.click(); }
+});
+document.addEventListener('change', e => {
+  const c = e.target.closest('[data-chg]'); if (!c) return;
+  const v = c.type === 'checkbox' ? c.checked : c.value;
+  switch (c.dataset.chg) {
+    case 'bars': S.bars = +v; break;
+    case 'style': S.style = v; break;
+    case 'feel': S.feel = v; break;
+    case 'loop': S.loop = !!v; break;
+    case 'mathpc': S.mathPc = +v; break;
+  }
+  render(); save();
+});
+window.addEventListener('hashchange', () => { applyHash(); syncPanel(); setTab(S.tab, { keepMode: true, noScroll: true }); });
+
+/* ---------- boot ---------- */
+applyHash();
+buildDock();
+buildPanel();
+setTab(S.tab, { keepMode: true, noScroll: true });
+window.BPGW = { S, Theory, Snd, Player, setTab, render };
+</script>
+</body>
+</html>
