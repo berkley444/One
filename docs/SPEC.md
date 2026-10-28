@@ -8,7 +8,11 @@
 A guitar app that **teaches the theory under the notes** — and, as a second act, **bridges guitar to piano**.
 It is *not* a song engine, not a tab player, and not a game. It is a tutorial: pick a key, a scale, a tuning, and *see and hear* what it is made of.
 
-## The look (non-negotiable)
+## The look
+
+**Default (since 2026-10-28): Minimal Light** — flat, airy, iOS-style segmented controls on a light page. Jeremy picked it from eight themes. Every other theme, including the original below, is one tap away in the Theme picker or via `?theme=` (`silver`, `console`, `pedal`, `tube`, `minimal`, `minimal-dark`, `synth`, `wood`). A saved choice always wins over the default.
+
+### The original look (Silver Hi-Fi, `?theme=silver`; non-negotiable *as a theme*)
 
 Taken from the original app (see `screenshots/gm_original.png`):
 

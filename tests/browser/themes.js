@@ -142,7 +142,8 @@ function swatchPass() {
   const ctx = await (b.createBrowserContext ? b.createBrowserContext() : b.createIncognitoBrowserContext());
   const p = await ctx.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
   await p.goto(URL0, { waitUntil: 'load' }); await sleep(300);
-  ok(await p.evaluate(() => !document.documentElement.getAttribute('data-theme')), 'default is Silver Hi-Fi (no data-theme)');
+  ok(await p.evaluate(() => document.documentElement.getAttribute('data-theme') === 'minimal' && !localStorage.getItem('bpgw.theme')), 'default for a new user is Minimal Light, and nothing is saved until they pick');
+  ok(await p.evaluate(() => document.querySelector('meta[name=theme-color]').content === '#f2f2f7'), 'browser chrome colour matches Minimal Light');
   ok(await p.evaluate(() => document.getElementById('themePanel').hidden && document.getElementById('themeBtn').getAttribute('aria-expanded') === 'false'), 'picker starts closed');
   await p.click('#themeBtn'); await sleep(150);
   const cards = await p.evaluate(() => [...document.querySelectorAll('#themePanel [role="radio"]')].map(x => x.dataset.v));
@@ -158,7 +159,15 @@ function swatchPass() {
   await p.goto(URL0 + '?theme=synth', { waitUntil: 'load' }); await sleep(300);
   ok(await p.evaluate(() => document.documentElement.dataset.theme === 'synth'), '?theme= beats the saved theme');
   await p.goto(URL0 + '?theme=nope', { waitUntil: 'load' }); await sleep(300);
-  ok(await p.evaluate(() => !document.documentElement.dataset.theme || document.documentElement.dataset.theme === 'synth' || document.documentElement.dataset.theme === 'tube'), 'unknown ?theme= is ignored');
+  ok(await p.evaluate(() => document.documentElement.dataset.theme === 'minimal'), 'unknown ?theme= falls back to the default (Minimal Light)');
+  await p.goto(URL0 + '?theme=silver', { waitUntil: 'load' }); await sleep(300);
+  ok(await p.evaluate(() => !document.documentElement.getAttribute('data-theme')), '?theme=silver still gives the original Silver Hi-Fi (no data-theme)');
+  await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
+  await p.click('#themeBtn'); await sleep(150); await p.click('#themePanel [data-v="silver"]'); await sleep(150);
+  await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
+  ok(await p.evaluate(() => !document.documentElement.getAttribute('data-theme') && localStorage.getItem('bpgw.theme') === 'silver'), 'an explicit Silver choice is remembered across reloads');
+  await p.evaluate(() => localStorage.removeItem('bpgw.theme')); await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
+  ok(await p.evaluate(() => document.documentElement.dataset.theme === 'minimal'), 'with no saved theme the default is Minimal Light again');
   await ctx.close(); await b.close();
   console.log(`\nthemes.js: ${checks - bad}/${checks} checks passed` + (soft ? ` (Silver baseline: ${soft} decorative low-contrast text nodes reported, not asserted)` : ''));
   process.exit(bad ? 1 : 0);

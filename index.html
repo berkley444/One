@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Big Pear Guitar Works — guitar theory, math & piano bridge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050506" id="metaTheme">
-<script>/* theme before first paint: ?theme= wins, then the saved choice; Silver Hi-Fi (the default) sets nothing */
-(function(){try{var m=/[?&]theme=([\w-]+)/.exec(location.search),id=m?m[1].toLowerCase():localStorage.getItem("bpgw.theme");if(id&&id!=="silver"&&/^[a-z-]+$/.test(id))document.documentElement.setAttribute("data-theme",id)}catch(e){}})();</script>
+<meta name="theme-color" content="#f2f2f7" id="metaTheme">
+<script>/* theme before first paint: ?theme= wins, then the saved choice, then the default (Minimal Light). Silver Hi-Fi is the base stylesheet and sets nothing. */
+(function(){var id="minimal";try{var m=/[?&]theme=([\w-]+)/.exec(location.search),v=m?m[1].toLowerCase():localStorage.getItem("bpgw.theme");if(v)id=v}catch(e){}if(id!=="silver"&&/^[a-z-]+$/.test(id))document.documentElement.setAttribute("data-theme",id)})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -4485,21 +4485,21 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 
 
 /* ================================================================
-   THEMES — "Silver Hi-Fi" is the default and sets nothing. Every other theme is a block of CSS custom properties plus
+   THEMES — "Minimal Light" is the default (DEFAULT_THEME). "Silver Hi-Fi" is the original base stylesheet and sets no data-theme. Every other theme is a block of CSS custom properties plus
    per-theme control styling in <style id="themes"> (authored in themes/*.css and assembled by tools/build-themes.js).
-   The choice is saved in localStorage ("bpgw.theme") and can be forced with ?theme=<id>.
+   The choice is saved in localStorage ("bpgw.theme", only once the user picks one) and can be forced with ?theme=<id>.
    ================================================================ */
 const THEMES = [
-  { id: 'silver',       name: 'Silver Hi-Fi',   note: 'The original: brushed aluminium, drum selectors, a glowing power lamp.', color: '#050506' },
+  { id: 'silver',       name: 'Silver Hi-Fi',   note: 'The original look: brushed aluminium, drum selectors, a glowing power lamp.', color: '#050506' },
   { id: 'console',      name: 'Studio Console', note: 'Charcoal mixing desk, colour-coded channel caps, a live LED meter.', color: '#17191c', meter: true },
   { id: 'pedal',        name: 'Boutique Pedal', note: 'Chunky enamel stompbox, fat pointer knobs, a jewel lamp.', color: '#1b1630', fonts: 'family=Rubik:wght@400;500;600;700;800&family=Bowlby+One' },
   { id: 'tube',         name: 'Tube Amp',       note: 'Black tolex, cream chicken-head knobs, gold plate, grille cloth.', color: '#0d0c0b', fonts: 'family=Josefin+Sans:wght@600;700&family=Oswald:wght@400;500;600' },
-  { id: 'minimal',      name: 'Minimal Light',  note: 'Flat and airy, iOS-style segmented controls.', color: '#f2f2f7', fonts: 'family=Inter:wght@500;600;700;800' },
+  { id: 'minimal',      name: 'Minimal Light',  note: 'The default. Flat and airy, iOS-style segmented controls.', color: '#f2f2f7', fonts: 'family=Inter:wght@500;600;700;800' },
   { id: 'minimal-dark', name: 'Minimal Dark',   note: 'The same flat controls on true black.', color: '#000000', fonts: 'family=Inter:wght@500;600;700;800' },
   { id: 'synth',        name: 'Modular Synth',  note: 'Eurorack panels, small knobs, mono labels, patch points.', color: '#101114', meter: true, fonts: 'family=IBM+Plex+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;700' },
   { id: 'wood',         name: 'Vintage Wood',   note: 'Walnut cabinet, brass fittings, warm paper labels.', color: '#1a0f08', fonts: 'family=Playfair+Display:wght@600;700;800&family=Alegreya+Sans:wght@500;700;800' },
 ];
-const THEME_KEY = 'bpgw.theme';
+const THEME_KEY = 'bpgw.theme', DEFAULT_THEME = 'minimal';
 const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];
 const curThemeId = () => document.documentElement.getAttribute('data-theme') || 'silver';
 function themePreviewHTML(id) {
@@ -4569,7 +4569,7 @@ buildDock();
 buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
-setTheme(THEMES.some(t => t.id === curThemeId()) ? curThemeId() : 'silver', { noSave: true });
+setTheme(THEMES.some(t => t.id === curThemeId()) ? curThemeId() : DEFAULT_THEME, { noSave: true });
 UI.booted = true; pwaPaint(); document.body.classList.add('ready');
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
 window.BPGW = { THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };

@@ -24,15 +24,15 @@ Panel controls: `PITCH` (A4 415–450) · `ROOT` · `SCALE` (major, natural/harm
 
 ## Themes
 
-The look is a setting: tap the **theme button** (top right of the header) or add `?theme=<id>` to the URL. The choice is remembered. **Silver Hi-Fi** (the original brushed-metal look) is the default.
+The look is a setting: tap the **theme button** (top right of the header) or add `?theme=<id>` to the URL. The choice is remembered. **Minimal Light** is the default; **Silver Hi-Fi** (the original brushed-metal look) is one tap away.
 
 | Theme | Link | Look |
 |---|---|---|
-| Silver Hi-Fi (default) | [`?theme=silver`](https://berkley444.github.io/One/?theme=silver) | brushed aluminium, 1970s home stereo |
+| Silver Hi-Fi (the original) | [`?theme=silver`](https://berkley444.github.io/One/?theme=silver) | brushed aluminium, 1970s home stereo |
 | Studio Console | [`?theme=console`](https://berkley444.github.io/One/?theme=console) | charcoal mixing desk, coloured channel-strip caps, live LED level meter |
 | Boutique Pedal | [`?theme=pedal`](https://berkley444.github.io/One/?theme=pedal) | teal enamel stompbox, chicken-head knobs, jewel lamp |
 | Tube Amp | [`?theme=tube`](https://berkley444.github.io/One/?theme=tube) | black tolex, gold plate, cream chicken-head knobs, grille cloth |
-| Minimal Light | [`?theme=minimal`](https://berkley444.github.io/One/?theme=minimal) | flat iOS-style, segmented controls and steppers |
+| Minimal Light (default) | [`?theme=minimal`](https://berkley444.github.io/One/?theme=minimal) | flat iOS-style, segmented controls and steppers |
 | Minimal Dark | [`?theme=minimal-dark`](https://berkley444.github.io/One/?theme=minimal-dark) | the same on true black |
 | Modular Synth | [`?theme=synth`](https://berkley444.github.io/One/?theme=synth) | Eurorack panels, small knobs, patch jacks, mono labels, LED meter |
 | Vintage Wood | [`?theme=wood`](https://berkley444.github.io/One/?theme=wood) | walnut cabinet, brass knobs, paper label tags |

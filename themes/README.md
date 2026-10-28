@@ -4,8 +4,8 @@
 `index.html` between `/*THEMES:BEGIN*/` and `/*THEMES:END*/` (inside `<style id="themes">`). `node tools/build-themes.js --check`
 fails if the pasted copy is stale (`tests/browser/themes.js` runs it).
 
-**Silver Hi-Fi is the default and is the base CSS of `index.html`, untouched.** It sets no `data-theme`. Every other theme is
-`<html data-theme="id">`, set before first paint from `?theme=` or `localStorage['bpgw.theme']`.
+**Minimal Light is the default** (`DEFAULT_THEME` in `index.html`, mirrored in the inline `<head>` script): with no `?theme=` and nothing saved, `data-theme="minimal"` is set. **Silver Hi-Fi is the base CSS of `index.html`, untouched**; it sets no `data-theme` and is selected by `?theme=silver` or a saved `bpgw.theme = silver`. Every other theme is
+`<html data-theme="id">`, set before first paint from `?theme=`, then `localStorage['bpgw.theme']`, then the default.
 
 ## Files (assembled in filename order)
 

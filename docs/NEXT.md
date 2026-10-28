@@ -1,9 +1,9 @@
 # NEXT — done / next
 
-Updated 2026-10-28 (themes).
+Updated 2026-10-28 (Minimal Light default, Identify chord).
 
 ## Done
-- [x] **Theme system (2026-10-28):** Theme picker + `?theme=` + eight themes (Silver Hi-Fi default, Studio Console, Boutique Pedal, Tube Amp, Minimal Light / Dark, Modular Synth, Vintage Wood); `tests/browser/themes.js` (axe + contrast + overflow + finger colours for every theme x phone/desktop x 8 views). See `themes/README.md`.
+- [x] **Theme system (2026-10-28):** Theme picker + `?theme=` + eight themes (Minimal Light is now the default; Silver Hi-Fi, Studio Console, Boutique Pedal, Tube Amp, Minimal Light / Dark, Modular Synth, Vintage Wood); `tests/browser/themes.js` (axe + contrast + overflow + finger colours for every theme x phone/desktop x 8 views). See `themes/README.md`.
 - [x] **Polish (2026-10-28, slice 4):** installable PWA + offline (manifest, service worker, icons, install button, 53-check browser test), axe-core 351 → 0, CLS 0.11 → 0.009, keyboard piano / fretboard, skip link / landmarks / live region, reduced-motion / contrast / forced-colors
 - [x] **MIDI play-along + Practice (2026-10-28, slice 1):** Web MIDI input, on-screen/computer-key fallback, Practice toggle with live scoring; 168k theory checks
 - [x] **Piano control panel (2026-10-27):** replaces the thumbnail grid; hands R/L/both, octave C2–C6, inversions / named 5+ note voicings / modes on each degree / pentatonic boxes, Match guitar, Play / Arpeggio / Scale, finger numbers on the keys (green RH, blue LH), "RH: C(1) E(3) G(5)" readout, follow-along highlighting; ~115k theory tests + 700-check browser smoke test
@@ -26,7 +26,7 @@ Updated 2026-10-28 (themes).
 - [x] Docs: spec, decisions, postmortem, how to work with agents
 
 ## Next (in order)
-**Theme follow-ups:** wait for Jeremy's pick after he has tried them for a day, then (a) make the winner the default for new visitors (keep Silver one tap away), (b) delete or merge the losers rather than carry eight forever, (c) polish the winner on a real phone and on iOS Safari (the screenshots are headless Chrome), (d) self-host the fonts of the winner so the first paint is identical offline, (e) bring Silver's ~570 decorative low-contrast labels up to AA if Silver stays.
+**Theme follow-ups:** wait for Jeremy's pick after he has tried them for a day, then (a) ✅ done 2026-10-28: Minimal Light is the default for new visitors, Silver is one tap away, (b) delete or merge the losers rather than carry eight forever, (c) polish the winner on a real phone and on iOS Safari (the screenshots are headless Chrome), (d) self-host the fonts of the winner so the first paint is identical offline, (e) bring Silver's ~570 decorative low-contrast labels up to AA if Silver stays.
 **Song generator follow-ups (v2):** note lengths in the tab; a bass line and a drum pattern; sevenths and borrowed chords; a 'lock this section, re-roll the melody' button; export to MIDI / MusicXML; lyrics syllable grid; a 'slow practice' mode that plays the melody with a count-in and lights the tab column.
 **Lessons follow-ups:** timed (rhythm) exercises with a metronome count-in; more lessons (minor scales, seventh chords, the 12 major keys' fingerings, rhythm reading, a second song); a key signature on the staff; an 'ear' mode that plays a note and asks you to find it; a printable lesson sheet.
 **Today's plan (2026-10-28):** 1 ✅ MIDI + Practice · 2 ✅ Song generator v1 · 3 ✅ Lessons tab (7 lessons, 33 practised parts) · 4 ✅ Polish (PWA/offline, performance, accessibility).
