@@ -37,6 +37,8 @@ The look is a setting: tap the **theme button** (top right of the header) or add
 | Modular Synth | [`?theme=synth`](https://berkley444.github.io/One/?theme=synth) | Eurorack panels, small knobs, patch jacks, mono labels, LED meter |
 | Vintage Wood | [`?theme=wood`](https://berkley444.github.io/One/?theme=wood) | walnut cabinet, brass knobs, paper label tags |
 
+Side by side: [PLAY](docs/screenshots/themes_play.png) · [CHORD](docs/screenshots/themes_chord.png) · [LEARN on a phone](docs/screenshots/themes_learn_phone.png).
+
 Themes are plain CSS in [`themes/`](themes/README.md), pasted into `index.html` by `node tools/build-themes.js`. `node tools/theme-shots.js` and `node tools/contact-sheet.js` make the comparison screenshots.
 
 ## Run it
