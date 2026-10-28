@@ -25,7 +25,8 @@ Updated 2026-10-28 (practice mode).
 
 ## Next (in order)
 **Song generator follow-ups (v2):** note lengths in the tab; a bass line and a drum pattern; sevenths and borrowed chords; a 'lock this section, re-roll the melody' button; export to MIDI / MusicXML; lyrics syllable grid; a 'slow practice' mode that plays the melody with a count-in and lights the tab column.
-**Today's plan (2026-10-28):** 1 ✅ MIDI + Practice · 2 ✅ Song generator v1 · 3 Lessons tab (guitar→piano bridge, each lesson uses Practice) · 4 Polish (PWA/offline, performance, accessibility).
+**Lessons follow-ups:** timed (rhythm) exercises with a metronome count-in; more lessons (minor scales, seventh chords, the 12 major keys' fingerings, rhythm reading, a second song); a key signature on the staff; an 'ear' mode that plays a note and asks you to find it; a printable lesson sheet.
+**Today's plan (2026-10-28):** 1 ✅ MIDI + Practice · 2 ✅ Song generator v1 · 3 ✅ Lessons tab (7 lessons, 33 practised parts) · 4 Polish (PWA/offline, performance, accessibility).
 0. **Piano follow-ups:** have a piano teacher check the algorithmic fingerings for exotic scales; optional fingering view for common progressions (voice-leading between chords); optional on-screen hand drawing; optional metronome-synced playback.
 1. **Add the Xcode project to this repo.** This is the real app. Copy the project folder into `/mac/` (or `/ios/`), commit, push. Until this is done the repo is not the single source of truth. (`.gitignore`: `xcuserdata/`, `DerivedData/`, `.DS_Store`.)
 2. **Port the web theory tests to Swift** (or share test vectors as JSON) so both apps agree on spelling, key signatures and frequencies.

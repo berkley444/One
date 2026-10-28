@@ -929,5 +929,133 @@ group('song — piano fingering for the chords and the text export');
   const tx = T.songText(so, false, 100); ok(tx.includes('[Verse]') && tx.includes('[Chorus]') && tx.includes('1 & 2 & 3 & 4 &') && tx.includes('e|'), 'song text contains sections, counts and tab');
 }
 
+/* ---------------- LESSONS ---------------- */
+group('lessons — staff positions');
+eq(T.staffStep(64, 'E'), 30, 'E4 = bottom line of the treble staff'); eq(T.staffStep(43, 'G'), 18, 'G2 = bottom line of the bass staff');
+eq(T.staffStep(60, 'C'), 28, 'middle C'); eq(T.staffStep(61, 'C♯'), 28, 'C♯4 sits on the C line'); eq(T.staffStep(61, 'D♭'), 29, 'D♭4 sits on the D line');
+eq(T.staffStep(58, 'B♭'), T.staffStep(59, 'B'), 'B♭3 sits on the B line'); eq(T.staffStep(59, 'B'), 27, 'B3 = 27');
+eq(T.staffStep(71, 'B') - T.staffStep(60, 'C'), 6, 'B4 is six steps above middle C'); eq(T.staffStep(72, 'C') - T.staffStep(60, 'C'), 7, 'an octave is seven steps');
+for (let m = 21; m <= 108; m++) { const nm = T.SHARP_NAMES[m % 12]; eq(T.staffStep(m + 12, nm) - T.staffStep(m, nm), 7, 'octave = 7 steps, midi ' + m); }
+
+group('lessons — note parser');
+{
+  const n = T.parseLessonNote('R:E♭4:3'); eq([n.hand, n.midi, n.name, n.finger, n.tab], ['R', 63, 'E♭', 3, null], 'R:E♭4:3');
+  eq(T.parseLessonNote('R:Eb4:3').midi, 63, 'ascii flat'); eq(T.parseLessonNote('R:F#4:-').midi, 66, 'ascii sharp'); eq(T.parseLessonNote('R:F#4:-').finger, null, 'finger -');
+  eq(T.parseLessonNote('L:C3:5').midi, 48, 'C3 = 48'); eq(T.parseLessonNote('R:C4:1').midi, 60, 'C4 = 60'); eq(T.parseLessonNote('L:B♭2:5').midi, 46, 'B♭2 = 46');
+  eq(T.parseLessonNote('R:F4:3@2/6').tab, { string: 2, fret: 6 }, 'tab annotation');
+  for (const bad of ['X:C4:1', 'R:H4:1', 'R:C4:6', 'R:C4', 'R:C4:1@7/0', 'C4:1']) { let t = false; try { T.parseLessonNote(bad); } catch (e) { t = true; } ok(t, 'rejects ' + bad); }
+  const st = T.parseLessonSteps('L:C3:5+R:E4:3 R:G4:5');
+  eq(st.length, 2, 'two steps'); eq(st[0].midis, [48, 64], 'step 0 midis sorted'); eq(st[0].pcs, [0, 4], 'step 0 pcs'); eq(st[1].midis, [67], 'step 1');
+  eq(T.lessonTabMidi(6, 0), 40, 'low E string'); eq(T.lessonTabMidi(1, 0), 64, 'high E string'); eq(T.lessonTabMidi(2, 3), 62, 'B string fret 3 = D4');
+}
+
+group('lessons — structure of every lesson and part');
+{
+  const ids = new Set(); ok(T.LESSONS.length >= 7, 'at least the seven requested lessons');
+  eq(T.LESSONS.map(l => l.id), ['fingers', 'fivefinger', 'cscale', 'triads', 'staff', 'wheel1', 'wheel2'], 'lessons in teaching order');
+  for (const l of T.LESSONS) {
+    ok(!ids.has(l.id), `lesson id ${l.id} unique`); ids.add(l.id); ok(l.title && l.blurb && l.parts.length >= 3, `${l.id}: title, blurb, 3+ parts`);
+    const pids = new Set();
+    for (const p of l.parts) {
+      const k = l.id + '/' + p.id; ok(!pids.has(p.id), `${k} unique`); pids.add(p.id);
+      ok(p.title && Array.isArray(p.text) && p.text.length >= 1 && p.text.every(x => typeof x === 'string' && x.length > 20), `${k}: title and text`);
+      ok(p.ex && typeof p.ex.steps === 'string', `${k}: has an exercise`);
+      eq(T.lessonById(l.id), l, 'lessonById ' + l.id);
+    }
+  }
+  eq(T.lessonById('nope'), undefined, 'unknown lesson');
+}
+
+group('lessons — every exercise parses and is playable');
+const FINGER_LESSON_PARTS = [];
+for (const l of T.LESSONS) for (const p of l.parts) {
+  const k = l.id + '/' + p.id, pl = T.lessonPlan(p.ex), steps = pl.steps;
+  ok(steps.length >= 3 && steps.length <= 20, `${k}: 3–20 steps (${steps.length})`);
+  eq(pl.kind, 'lesson', k + ' kind'); eq(pl.forceExact, !!p.ex.exact, k + ' forceExact');
+  ok(steps.every(s => s.notes.every(n => n.midi >= 21 && n.midi <= 108)), `${k}: inside the 88 keys`);
+  ok(steps.every(s => s.notes.every(n => n.finger === null || (n.finger >= 1 && n.finger <= 5))), `${k}: fingers 1–5`);
+  ok(steps.every(s => { const nn = s.notes.length; return new Set(s.midis).size === nn; }), `${k}: no duplicate keys in a step`);
+  ok(steps.every(s => ['R', 'L'].every(h => s.notes.filter(n => n.hand === h).length <= 5)), `${k}: ≤5 notes per hand`);
+  // fingers inside one hand must run with the keys: RH higher key = higher finger number, LH higher key = lower finger number
+  ok(steps.every(s => ['R', 'L'].every(h => { const a = s.notes.filter(n => n.hand === h && n.finger).sort((x, y) => x.midi - y.midi); return a.every((n, i) => i === 0 || (h === 'R' ? n.finger > a[i - 1].finger : n.finger < a[i - 1].finger)); })), `${k}: fingers run with the keys in each chord`);
+  // tab annotations reproduce the pitch
+  for (const s of steps) for (const n of s.notes) if (n.tab) { eq(T.lessonTabMidi(n.tab.string, n.tab.fret), n.midi, `${k}: tab ${n.tab.string}/${n.tab.fret} = ${n.name}${n.oct}`); ok(n.tab.fret <= 12, `${k}: fret ≤ 12`); }
+  eq(pl.hasTab, steps.some(s => s.notes.some(n => n.tab)), k + ' hasTab flag');
+  // the unique-notes list covers every step note
+  ok(steps.every(s => s.notes.every(n => pl.notes.some(x => x.hand === n.hand && x.midi === n.midi))), `${k}: plan.notes covers all steps`);
+  ok(pl.notes.every((n, i) => i === 0 || pl.notes[i - 1].midi <= n.midi), `${k}: plan.notes sorted`);
+  // single-hand melodic motion: a finger may go "against" the pitch only as a thumb-under / cross-over, and never leap more than an octave
+  for (let i = 1; i < steps.length; i++) for (const h of ['R', 'L']) {
+    const a = steps[i - 1].notes.filter(n => n.hand === h), b = steps[i].notes.filter(n => n.hand === h);
+    if (a.length === 1 && b.length === 1 && a[0].finger && b[0].finger) {
+      const dp = b[0].midi - a[0].midi, df = b[0].finger - a[0].finger, dir = h === 'R' ? df : -df;
+      ok(Math.abs(dp) <= 12, `${k}: ${h} leap ≤ octave at step ${i}`);
+      if (dp !== 0 && Math.sign(dir) !== Math.sign(dp) && df !== 0) ok(a[0].finger === 1 || b[0].finger === 1, `${k}: ${h} step ${i} crossing uses the thumb (${a[0].finger}→${b[0].finger})`);
+      if (dp === 0) eq(df, 0, `${k}: repeated key keeps its finger`);
+    }
+  }
+  // a simulated perfect run completes with no wrong notes — in both matching modes
+  for (const exact of [false, true]) {
+    const run = T.createPractice(steps, { exact: exact || pl.forceExact }); let t = 1000;
+    for (const s of steps) { for (const m of s.midis) { run.noteOn(m, t); t += 40; } for (const m of s.midis) { run.noteOff(m, t); } t += 400; }
+    ok(run.done, `${k}: perfect run finishes (exact=${exact})`); eq(run.summary().wrong, 0, `${k}: no wrong notes (exact=${exact})`);
+  }
+  // a wrong note is noticed
+  { const run = T.createPractice(steps, { exact: true }), bad = steps[0].midis.includes(61) ? 62 : 61; run.noteOn(bad, 1000); ok(run.summary().wrong === 1 && !run.done, `${k}: a wrong key is counted`); }
+}
+
+group('lessons — fingerings agree with the app’s own chord and scale fingerings');
+{
+  const CH = {}, flats = T.FLAT_NAMES, sharps = T.SHARP_NAMES;
+  for (let pc = 0; pc < 12; pc++) for (const q of ['major', 'minor']) for (const nm of new Set([sharps[pc], flats[pc]])) { const ch = T.buildChord(nm, q); CH[q + ':' + pc] = CH[q + ':' + pc] || ch; }
+  let triads = 0;
+  for (const l of T.LESSONS) for (const p of l.parts) for (const s of T.parseLessonSteps(p.ex.steps)) for (const h of ['R', 'L']) {
+    const g = s.notes.filter(n => n.hand === h); if (g.length !== 3 || !g.every(n => n.finger)) continue;
+    const pcs = g.map(n => n.midi % 12); let found = null;
+    for (const q of ['major', 'minor']) for (let r = 0; r < 12; r++) { const ch = CH[q + ':' + r], set = ch.tones.map(t => t.pc).sort((a, b) => a - b).join(); if (set === [...pcs].sort((a, b) => a - b).join()) found = { ch, q }; }
+    ok(found, `${l.id}/${p.id}: ${g.map(n => n.name).join('')} is a major or minor triad`); if (!found) continue;
+    const vs = T.pianoVoicings(found.ch), inv = vs.findIndex(v => v.bassTone.pc === g[0].midi % 12);
+    const plan = T.pianoChordPlan(found.ch, vs[inv], h, 4), want = plan[h].map(x => x.finger), have = g.map(n => n.finger);
+    eq(have, want, `${l.id}/${p.id}: ${h} ${found.ch.name || ''} inversion ${inv} fingers match the app (${have.join('-')})`); triads++;
+  }
+  ok(triads >= 20, `cross-checked ${triads} triads against pianoChordPlan`);
+  const scale = (hand, g) => T.pianoScalePlan('C', 'major', 0, hand, 1, hand === 'R' ? 4 : 3);
+  const fingersOf = id => T.parseLessonSteps(T.lessonById('cscale').parts.find(x => x.id === id).ex.steps).map(s => s.notes.find(n => n.hand === (id.startsWith('lh') ? 'L' : 'R')).finger);
+  const rh = T.pianoScalePlan('C', 'major', 0, 'R', 1, 4), lh = T.pianoScalePlan('C', 'major', 0, 'L', 1, 3);
+  eq(fingersOf('rhup'), rh.fingers, 'RH scale up = pianoScalePlan'); eq(fingersOf('rhdown'), rh.fingers.slice().reverse(), 'RH scale down = reverse');
+  eq(fingersOf('lhup'), lh.fingers, 'LH scale up = pianoScalePlan'); eq(fingersOf('lhdown'), lh.fingers.slice().reverse(), 'LH scale down = reverse');
+  const tg = T.parseLessonSteps(T.lessonById('cscale').parts.find(x => x.id === 'together').ex.steps);
+  eq(tg.map(s => s.notes.find(n => n.hand === 'R').finger), rh.fingers, 'together: RH = pianoScalePlan'); eq(tg.map(s => s.notes.find(n => n.hand === 'L').finger), lh.fingers, 'together: LH = pianoScalePlan');
+  eq(tg.map(s => s.notes.find(n => n.hand === 'R').midi), rh.midis, 'together: RH keys'); eq(tg.map(s => s.notes.find(n => n.hand === 'L').midi), lh.midis, 'together: LH keys');
+}
+
+group('lessons — specific musical facts');
+{
+  const ex = (l, p) => T.lessonPlan(T.lessonById(l).parts.find(x => x.id === p).ex), nm = pl => pl.steps.map(s => s.notes.map(n => n.name).join('+'));
+  eq(nm(ex('staff', 'tune')).join(' '), 'E E F G G F E D C C D E E D D', 'Ode to Joy notes');
+  eq(ex('wheel2', 'melody').steps.map(s => s.notes[0].tab.fret), [6, 8, 10, 8, 6, 5, 3, 6, 5, 3, 5], 'Wheel in the Sky intro line = published B-string frets');
+  eq(nm(ex('wheel2', 'melody')).join(' '), 'F G A G F E D F E D E', 'intro line note names');
+  eq(nm(ex('fivefinger', 'minor')).slice(0, 5), ['C', 'D', 'E♭', 'F', 'G'], 'minor five-finger position');
+  eq(ex('fivefinger', 'octaves').forceExact, true, 'octaves part requires exact keys'); eq(ex('fivefinger', 'crh').forceExact, false, 'single hand part does not');
+  eq(ex('wheel1', 'bb').steps[3].midis, [46, 62, 65, 70], 'B♭ chord: B♭2 + D4 F4 B♭4');
+  eq(ex('wheel2', 'dm').steps.map(s => s.midis[0]), [50, 65, 62, 57, 65], 'Dm picking pattern keys');
+  eq(ex('wheel2', 'dm').steps.map(s => s.notes[0].name).join(''), 'DFDAF', 'Dm picking order');
+  // the three chord patterns are the same shape moved
+  const shape = pl => pl.steps.map(s => s.notes[0].finger).join(''); eq(shape(ex('wheel2', 'dm')), shape(ex('wheel2', 'f')), 'Dm and F patterns use the same fingers'); eq(shape(ex('wheel2', 'f')), shape(ex('wheel2', 'c')), 'F and C patterns use the same fingers');
+  // grand-staff coverage: the open strings are the six pitches E2 A2 D3 G3 B3 E4
+  eq(ex('staff', 'open').steps.map(s => s.midis[0]), T.GUITAR_STANDARD, 'open strings = standard tuning');
+  // the staff lesson has no fingers except the tune
+  ok(ex('staff', 'lines').hasFingers === false && ex('staff', 'tune').hasFingers === true, 'reading parts hide fingers, the tune shows them');
+}
+
+group('lessons — progress statistics');
+{
+  const total = T.LESSONS.reduce((a, l) => a + l.parts.length, 0), z = T.lessonStats({});
+  eq([z.parts, z.done, z.complete], [total, 0, 0], 'empty progress');
+  const all = {}; T.LESSONS.forEach(l => l.parts.forEach(p => all[l.id + '/' + p.id] = { acc: 100 })); const f = T.lessonStats(all);
+  eq([f.done, f.complete], [total, T.LESSONS.length], 'all done'); eq(T.lessonStats({ 'fingers/numbers': 1, 'nope/x': 1 }).done, 1, 'unknown keys ignored');
+  eq(T.lessonStats({ 'fingers/numbers': 1 }).lessons[0], { id: 'fingers', parts: 3, done: 1, complete: false }, 'one part done');
+}
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

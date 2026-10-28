@@ -35,6 +35,7 @@ Taken from the original app (see `screenshots/gm_original.png`):
 11. **Rhythm** — time signature and tempo, a metronome, and a **Generate progression** button that writes 4–8 bars in the current key and plays them.
 12. **MIDI play-along & Practice** (2026-10-28) — connect a digital piano by Web MIDI (or tap the on-screen keys / use the computer keyboard); incoming notes light the keys; Practice waits for the next note or chord of the chosen scale position / chord, shows the fingering, scores right/wrong/time.
 13. **Song generator** (2026-10-28) — key + scale + time signature + tuning + idea number → intro/verse/chorus/bridge with chords, strum patterns by meter, a scale-tone melody, guitar tab, piano fingering and playback.
+14. **Lessons** (2026-10-28) — the LEARN tab: 7 lessons / 33 short parts that teach the guitar-to-piano bridge (finger numbers, five-finger position, C major scale, triads and inversions, reading the staff from tab, Wheel in the Sky intro simplified and full). Each part has text, a guitar-bridge note, the exercise on a staff with tab, **Hear it**, and Practice (MIDI / on-screen keys / computer keys) with progress saved on the device.
 
 ## In his words
 

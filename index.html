@@ -383,6 +383,62 @@ footer a{color:#7b8aa8}
 .prkeys{margin-top:6px;font:500 10.5px/1.4 var(--sans);color:#7d808a}
 .prac.done .prres{font-size:20px}
 @media (max-width:480px){.pc-prac{gap:5px}.pc-prac .btn{font-size:12px}.midistat{font-size:10.5px}.prtarget{font-size:12px}}
+
+/* lessons */
+body[data-tab="lessons"] section[aria-label="Music control"]{display:none}
+.lspeed{display:flex;align-items:center;gap:8px;margin-top:9px;font:700 11px var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--engrave)}
+.lspeed .seg{display:flex;gap:4px;flex:1}.lspeed .seg button{flex:1;padding:6px 2px;border-radius:7px;border:1px solid #5a5b62;background:linear-gradient(180deg,#e9eaee,#a9abb2);color:#26272b;font:700 12px var(--sans);cursor:pointer}.lspeed .seg button.on{background:linear-gradient(180deg,#2a2b31,#0b0b0e);color:var(--amber);border-color:var(--amber)}
+.lintro p{margin:0 0 8px;font-size:14px;line-height:1.55;color:#cfd0d6}.lintro p b{color:var(--ink)}
+.lall{display:flex;align-items:center;gap:12px;margin-top:10px;font:600 12px var(--mono);color:#9a9ca6}
+.lprog{height:7px;border-radius:5px;background:#1b1c21;overflow:hidden;flex:1}.lprog i{display:block;height:100%;background:linear-gradient(90deg,#3fcf6e,#8fe3a8);border-radius:5px}
+.lprog.big{height:10px}.lcard .lprog{flex:none}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:14px}
+.lcard{background:#0c0c0f;border:1px solid #1d1d23;border-radius:14px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;position:relative}
+.lcard.done{border-color:#2f7d33}
+.lcard h3{margin:0;font:700 20px/1.1 var(--cond);letter-spacing:.04em;text-transform:uppercase;color:var(--amber);padding-right:40px}
+.lcard p{margin:0;font-size:13px;line-height:1.5;color:#a8aab3;flex:1}
+.lnum{position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:50%;background:#1b1c21;color:#cfd0d6;font:800 15px/30px var(--cond);text-align:center}
+.lcard.done .lnum{background:#2f7d33;color:#fff}
+.lmeta{display:flex;align-items:center;justify-content:space-between;gap:8px;font:600 12px var(--mono);color:#9a9ca6}
+.lfoot{margin-top:16px;text-align:center}
+.lnav{display:flex;align-items:center;gap:12px;margin-top:6px}.lcount{font:600 12px var(--mono);color:#8b8d96}
+.lchips{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 12px}
+.lchip{min-width:40px;height:40px;border-radius:50%;border:1px solid #34353d;background:#17181d;color:#cfd0d6;font:800 15px var(--cond);cursor:pointer}
+.lchip.ok{border-color:#2f7d33;color:#8fe3a8}.lchip.on{background:var(--amber);border-color:var(--amber);color:#1a0f02}
+.lpart h3{margin:0 0 8px;font:700 22px/1.15 var(--cond);letter-spacing:.03em;color:var(--ink);display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.lbadge{font:700 11px var(--mono);color:#8fe3a8;letter-spacing:0;background:#10301a;border-radius:10px;padding:2px 9px}
+.lpart p{margin:0 0 9px;font-size:14.5px;line-height:1.6;color:#d3d4da}
+.lhook{margin-top:10px;padding:9px 12px;border-left:3px solid var(--amber);background:#17130b;border-radius:0 8px 8px 0;font-size:13.5px;line-height:1.5;color:#e8d9bd}.lhook b{color:var(--amber);margin-right:6px}
+.lstaffcard{margin-top:12px;padding:10px 8px 8px}
+.stfwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.stf{display:block;max-width:none}
+.stf .sl{stroke:#6c6e78;stroke-width:1}.stf .sl.led{stroke:#9a9ca6}.stf .sl.bar{stroke:#9a9ca6;stroke-width:1.6}.stf .sl.tl{stroke:#55575f}
+.stf .clef{fill:#cfd0d6;font-family:"Noto Music","Segoe UI Symbol","Apple Symbols","Noto Sans Symbols 2","Symbola",serif}
+.stf .tablab{fill:#8b8d96;font:800 9px var(--sans)}
+.stf .tbg{fill:#0c0c0f}.stf .fret{fill:#ffd54a;font:800 10px var(--mono);text-anchor:middle}
+.stf .nh{fill:#e9eaee;stroke:#05050a;stroke-width:.6}
+.stf .stem{stroke:#e9eaee;stroke-width:1.3}
+.stf .acc{fill:#e9eaee;font:700 15px var(--sans)}
+.stf .nmrow{fill:#cfd0d6;font:700 11px var(--mono);text-anchor:middle}
+.stf .frow{font:800 11px var(--mono);text-anchor:middle}.stf .frow.R,.stf .rowlab.R{fill:#3fcf6e}.stf .frow.L,.stf .rowlab.L{fill:#6aa0ff}
+.stf .rowlab{fill:#8b8d96;font:800 9px var(--sans)}
+.stf .lcol{cursor:pointer;outline:none}.stf .lhl{fill:transparent;stroke:transparent}
+.stf .lcol:hover .lhl{fill:rgba(255,255,255,.05)}.stf .lcol:focus-visible .lhl{stroke:var(--blue);stroke-width:2}
+.stf .lcol.done .nh{fill:#3fcf6e}.stf .lcol.done .stem{stroke:#3fcf6e}
+.stf .lcol.cur .lhl,.stf .lcol.hear .lhl{fill:rgba(255,213,74,.14);stroke:#ffd54a}
+.stf .lcol.cur .nh,.stf .lcol.hear .nh{fill:#ffd54a}.stf .lcol.cur .stem,.stf .lcol.hear .stem{stroke:#ffd54a}
+.lstaffcard .plegend{margin-top:6px}
+.lprac{margin-top:12px}
+.lprac .pc-prac{flex-wrap:wrap}.lprac .pc-prac .btn{flex:1 1 30%}
+.lprac .btn.tog:disabled{opacity:.7;cursor:default}
+.lprac .pread{margin-top:10px}
+.lprac .pcontrol .btn:not(.on):not(.tog):not(.pri){border-color:#111}
+.lprac .pc-prac>.btn:not(.tog){background:linear-gradient(180deg,#e9eaee,#a9abb2);color:#26272b;border-color:#5a5b62}
+.lprac .pc-prac>.btn:not(.tog).on{background:linear-gradient(180deg,#2a2b31,#0b0b0e);color:var(--amber);border-color:var(--amber)}
+.piano.blind .pk.target{box-shadow:none;animation:none}
+.piano.blind.practicing .pk.target .fd,.piano.blind.practicing .pk.target .nm{transform:none}
+.lfooter{display:flex;gap:10px;justify-content:space-between;margin-top:16px;flex-wrap:wrap}.lfooter .btn{flex:1 1 200px;padding:12px 14px}
+@media (max-width:480px){.lprac .pc-prac .btn{font-size:12px;flex:1 1 28%}.lpart h3{font-size:20px}}
 </style>
 </head>
 <body>
@@ -406,6 +462,7 @@ footer a{color:#7b8aa8}
   <div id="tab-circle" class="tab"></div>
   <div id="tab-math" class="tab"></div>
   <div id="tab-song" class="tab"></div>
+  <div id="tab-lessons" class="tab"></div>
   </main>
 
   <footer>
@@ -1473,6 +1530,194 @@ const Theory = (() => {
     return out.join('\n');
   }
 
+  /* ================================================================
+     LESSONS — the guitar-to-piano bridge as short, practised lessons
+     Each exercise is written in a compact notation that is parsed (and tested) here:
+        step  = notes joined by "+", steps separated by spaces
+        note  = Hand:Name+octave:finger[@string/fret]       R:E4:3   L:C3:5   R:F♯4:-   R:F4:3@2/6
+        finger 1–5 (1 = thumb) or "-" when the point of the exercise is reading, not fingering
+        @string/fret = where the same sounding pitch is on a standard-tuned guitar (string 1 = high E)
+     ================================================================ */
+  const GUITAR_STANDARD = [40, 45, 50, 55, 59, 64];                    // strings 6 … 1
+  const lessonTabMidi = (string, fret) => GUITAR_STANDARD[6 - string] + fret;
+  const LSN_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, LSN_IDX = { C: 0, D: 1, E: 2, F: 3, G: 4, A: 5, B: 6 };
+  function parseLessonNote(tok) {
+    const m = /^([LR]):([A-G])([♯♭#b]?)(-?\d):([1-5-])(?:@([1-6])\/(\d{1,2}))?$/.exec(tok);
+    if (!m) throw new Error('bad lesson note: ' + tok);
+    const acc = m[3] === '♯' || m[3] === '#' ? 1 : m[3] === '♭' || m[3] === 'b' ? -1 : 0, oct = +m[4];
+    const midi = 12 * (oct + 1) + LSN_PC[m[2]] + acc, name = m[2] + (acc > 0 ? '♯' : acc < 0 ? '♭' : '');
+    return { hand: m[1], midi, name, oct, finger: m[5] === '-' ? null : +m[5], tab: m[6] ? { string: +m[6], fret: +m[7] } : null };
+  }
+  function parseLessonSteps(str) {
+    return str.trim().split(/\s+/).map(tok => {
+      const ns = tok.split('+').map(parseLessonNote).sort((a, b) => a.midi - b.midi);
+      return { notes: ns, midis: ns.map(n => n.midi), pcs: [...new Set(ns.map(n => pcOf(n.midi)))].sort((a, b) => a - b) };
+    });
+  }
+  function lessonPlan(ex) {
+    const steps = parseLessonSteps(ex.steps), seen = new Map();
+    steps.forEach(s => s.notes.forEach(n => { const k = n.hand + n.midi; if (!seen.has(k)) seen.set(k, { hand: n.hand, midi: n.midi, finger: n.finger, name: n.name, root: false, deg: '' }); }));
+    const notes = [...seen.values()].sort((a, b) => a.midi - b.midi);
+    return { kind: 'lesson', steps, notes, forceExact: !!ex.exact, hasTab: steps.some(s => s.notes.some(n => n.tab)), hasFingers: steps.some(s => s.notes.some(n => n.finger)) };
+  }
+  // position of a written note on the staff, counted in lines-and-spaces from C0 (E4 = 30 is the bottom line of the treble staff, G2 = 18 the bottom line of the bass staff)
+  function staffStep(midi, name) {
+    const acc = /♯/.test(name) ? 1 : /♭/.test(name) ? -1 : 0, oct = Math.floor((midi - acc) / 12) - 1;
+    return LSN_IDX[name[0]] + 7 * oct;
+  }
+  const STAFF_BOTTOM = { treble: 30, bass: 18 };
+
+  const LESSONS = [
+    { id: 'fingers', title: 'Finger numbers', blurb: 'Piano counts the thumb. Learn 1–5 on both hands, and how they mirror.', parts: [
+      { id: 'numbers', title: 'Thumb is 1', text: [
+          'On guitar you number your fretting fingers 1–4 from the index finger, and the thumb is just “T”. Piano is different: every finger of each hand gets a number, starting with the thumb. 1 = thumb, 2 = index, 3 = middle, 4 = ring, 5 = pinky — and the right hand and left hand use the same numbers.',
+          'Put your right thumb on middle C. Every finger rests on a white key: C D E F G. Now play C, E, G with fingers 1, 3 and 5 — skipping keys makes you think about the number instead of just following your neighbours.'],
+        hook: 'Your guitar index finger (1) is piano finger 2. Your guitar thumb (T) is piano finger 1.',
+        ex: { steps: 'R:C4:1 R:E4:3 R:G4:5 R:E4:3 R:C4:1' } },
+      { id: 'left', title: 'The left hand mirrors the right', text: [
+          'The left hand uses the same numbers, but they run the other way: 1 (thumb) is on the right side of the left hand, and 5 (pinky) is on the left. So in a position where both hands face the middle, thumbs meet in the centre and pinkies point outward — low notes get the pinky.',
+          'Left hand: thumb on G below middle C, then middle finger on E, then pinky on the low C. Notice how the numbers go down as the notes go down — that is the opposite of the right hand.'],
+        hook: 'Same as guitar: your strongest fingers (1 and 2) are nearest the middle of the keyboard; the pinky takes the outer notes.',
+        ex: { steps: 'L:G3:1 L:E3:3 L:C3:5 L:E3:3 L:G3:1' } },
+      { id: 'both', title: 'Both hands, matching numbers', text: [
+          'Now both hands at once. Start with the thumbs next to each other — left thumb on G, right thumb on middle C — and walk outward: finger 2 with 2, 3 with 3, and so on. Every step plays two keys with the same finger number, one in each hand.',
+          'Keep your wrists level and your fingers curved, like holding a small ball. If one hand is slower, slow both down.'],
+        ex: { steps: 'L:G3:1+R:C4:1 L:F3:2+R:D4:2 L:E3:3+R:E4:3 L:D3:4+R:F4:4 L:C3:5+R:G4:5' } },
+    ] },
+    { id: 'fivefinger', title: 'Five-finger position', blurb: 'Park each finger on its own key. The shape of a major and a minor position.', parts: [
+      { id: 'crh', title: 'C position, right hand', text: [
+          'A five-finger position puts one finger on one key, five keys in a row, with no movement of the hand. It is the piano version of staying in one fret position: the hand never shifts, only the fingers move.',
+          'Right hand: thumb on middle C, then 1-2-3-4-5 up on C D E F G, and back down.'],
+        ex: { steps: 'R:C4:1 R:D4:2 R:E4:3 R:F4:4 R:G4:5 R:F4:4 R:E4:3 R:D4:2 R:C4:1' } },
+      { id: 'clh', title: 'C position, left hand', text: [
+          'Left hand: the pinky goes on the C below middle C, and the thumb on G. Going up the keys the numbers count down: 5-4-3-2-1.'],
+        ex: { steps: 'L:C3:5 L:D3:4 L:E3:3 L:F3:2 L:G3:1 L:F3:2 L:E3:3 L:D3:4 L:C3:5' } },
+      { id: 'octaves', title: 'Both hands, an octave apart', text: [
+          'Hands together, one octave apart. Because the left hand’s numbers run the other way, the finger pairs add up to 6: 5 with 1, 4 with 2, 3 with 3, 2 with 4, 1 with 5. The app checks both hands here, so each step needs the high key and the low key.'],
+        ex: { exact: true, steps: 'L:C3:5+R:C4:1 L:D3:4+R:D4:2 L:E3:3+R:E4:3 L:F3:2+R:F4:4 L:G3:1+R:G4:5' } },
+      { id: 'gpos', title: 'Same shape, new key: G position', text: [
+          'The pattern of a major five-finger position is whole step, whole step, half step, whole step — W W H W. Slide the hand to G and play the same shape: G A B C D. The fingers do not change; only the starting key does.',
+          'On guitar this is moving a box shape up the neck. The shape is the lesson; the key is just where you put it.'],
+        ex: { steps: 'R:G4:1 R:A4:2 R:B4:3 R:C5:4 R:D5:5 R:C5:4 R:B4:3 R:A4:2 R:G4:1' } },
+      { id: 'minor', title: 'Lower the middle finger: minor', text: [
+          'Take C position and move only finger 3 down a half step, from E to E♭ (the black key). The shape becomes W H W W — a minor five-finger position. That one note is the difference you hear between a happy and a sad C.',
+          'It is the same as the guitar’s major and minor third: one fret apart.'],
+        ex: { steps: 'R:C4:1 R:D4:2 R:E♭4:3 R:F4:4 R:G4:5 R:F4:4 R:E♭4:3 R:D4:2 R:C4:1' } },
+    ] },
+    { id: 'cscale', title: 'C major scale, both hands', blurb: 'The thumb-under trick, one octave each way, then hands together.', parts: [
+      { id: 'rhup', title: 'Right hand, going up', text: [
+          'A scale is eight notes — more than five fingers. So after finger 3 on E, the thumb tucks under the hand to land on F; then 2, 3, 4, 5 carry on up to the high C. The fingering is 1 2 3 · 1 2 3 4 5.',
+          'Keep the hand quiet: let the thumb move early, while finger 3 is still playing, instead of waiting until the last moment.'],
+        hook: 'The thumb-under is the piano’s version of a position shift on the guitar neck.',
+        ex: { steps: 'R:C4:1 R:D4:2 R:E4:3 R:F4:1 R:G4:2 R:A4:3 R:B4:4 R:C5:5' } },
+      { id: 'rhdown', title: 'Right hand, coming down', text: [
+          'Coming down the fingering is the mirror: 5 4 3 2 1 · 3 2 1. After the thumb plays F, the third finger crosses over it to play E.'],
+        ex: { steps: 'R:C5:5 R:B4:4 R:A4:3 R:G4:2 R:F4:1 R:E4:3 R:D4:2 R:C4:1' } },
+      { id: 'lhup', title: 'Left hand, going up', text: [
+          'The left hand goes 5 4 3 2 1 · 3 2 1 going up: pinky on the low C and thumb on G, then finger 3 crosses over the thumb to A.'],
+        ex: { steps: 'L:C3:5 L:D3:4 L:E3:3 L:F3:2 L:G3:1 L:A3:3 L:B3:2 L:C4:1' } },
+      { id: 'lhdown', title: 'Left hand, coming down', text: [
+          'Coming down it is the thumb that tucks under: 1 2 3 · 1 2 3 4 5 — the same numbers the right hand used going up.'],
+        ex: { steps: 'L:C4:1 L:B3:2 L:A3:3 L:G3:1 L:F3:2 L:E3:3 L:D3:4 L:C3:5' } },
+      { id: 'together', title: 'Hands together', text: [
+          'Both hands, one octave apart, up the scale. The hands turn at different moments — the right thumb tucks under after finger 3, the left finger 3 crosses over its thumb one note later — so check each pair (left/right): 5/1, 4/2, 3/3, 2/1, 1/2, 3/3, 2/4, 1/5.',
+          'Go slowly. A clean scale at a slow tempo beats a messy one at a fast tempo.'],
+        ex: { exact: true, steps: 'L:C3:5+R:C4:1 L:D3:4+R:D4:2 L:E3:3+R:E4:3 L:F3:2+R:F4:1 L:G3:1+R:G4:2 L:A3:3+R:A4:3 L:B3:2+R:B4:4 L:C4:1+R:C5:5' } },
+    ] },
+    { id: 'triads', title: 'Triads and inversions', blurb: 'Three notes at once. Root position, two inversions, both hands, and a chord change.', parts: [
+      { id: 'root', title: 'A triad is three notes: 1-3-5', text: [
+          'A triad stacks three notes a third apart: root, third and fifth. C major is C-E-G. Play it with right-hand fingers 1, 3 and 5, all three keys at the same moment.',
+          'These are the same three notes a guitarist plays in an open C chord — the guitar just doubles some of them.'],
+        hook: 'Guitar chord = fingers on strings. Piano chord = fingers on keys. Same notes.',
+        ex: { steps: 'R:C4:1 R:E4:3 R:G4:5 R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'inv1', title: 'First inversion: E-G-C', text: [
+          'Take the bottom note, C, and move it to the top: now the chord reads E-G-C. Same three notes, a different order — a first inversion. The fingers become 1, 2, 5, because the top gap is wide.'],
+        ex: { steps: 'R:C4:1+R:E4:3+R:G4:5 R:E4:1+R:G4:2+R:C5:5 R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'inv2', title: 'Second inversion: G-C-E', text: [
+          'Move the bottom note again: E goes to the top, and the chord reads G-C-E. That is the second inversion, fingered 1, 3, 5 again.',
+          'Play the three shapes in a row: root → 1st → 2nd. Your hand only moves a little each time — that is the whole point of inversions.'],
+        ex: { steps: 'R:C4:1+R:E4:3+R:G4:5 R:E4:1+R:G4:2+R:C5:5 R:G4:1+R:C5:3+R:E5:5' } },
+      { id: 'lh', title: 'Left-hand triads', text: [
+          'The left hand plays the same triads with the numbers reversed: root position is 5, 3, 1 (pinky on the low C). The first inversion keeps 5-3-1; the second inversion becomes 5-2-1.'],
+        ex: { steps: 'L:C3:5+L:E3:3+L:G3:1 L:E3:5+L:G3:3+L:C4:1 L:G3:5+L:C4:2+L:E4:1' } },
+      { id: 'minor', title: 'Minor triad: lower the third', text: [
+          'Lower the middle note of C major, E, by a half step to E♭ and the chord is C minor: C-E♭-G. Fingers 1, 3, 5 on the same keys, except the middle finger drops onto a black key.'],
+        ex: { steps: 'R:C4:1+R:E4:3+R:G4:5 R:C4:1+R:E♭4:3+R:G4:5 R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'change', title: 'I – IV – V – I with the least movement', text: [
+          'Use inversions to change chords with almost no hand movement. C stays in root position (C-E-G). F is played in second inversion (C-F-A) — it shares the note C. G is played in first inversion (B-D-G). Then back to C.',
+          'This is the chord change behind countless songs, and your hand barely leaves the same patch of keys.'],
+        hook: 'On guitar you shift a whole shape to change chords. On piano, an inversion lets your hand stay put.',
+        ex: { steps: 'R:C4:1+R:E4:3+R:G4:5 R:C4:1+R:F4:3+R:A4:5 R:B3:1+R:D4:2+R:G4:5 R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'bass', title: 'Add the left hand root', text: [
+          'Finally add the left hand: a single bass note on finger 5, one note per chord — C, F, G, C — under the same right-hand triads. This is the classic “bass note and chord” piano accompaniment.'],
+        ex: { steps: 'L:C3:5+R:C4:1+R:E4:3+R:G4:5 L:F3:5+R:C4:1+R:F4:3+R:A4:5 L:G3:5+R:B3:1+R:D4:2+R:G4:5 L:C3:5+R:C4:1+R:E4:3+R:G4:5' } },
+    ] },
+    { id: 'staff', title: 'Reading the staff from tab', blurb: 'You already read tab. Learn to turn string-and-fret into a note on the staff, and then into a piano key.', parts: [
+      { id: 'lines', title: 'Treble staff: the lines', text: [
+          'The staff is five lines. The treble staff (the “G clef”) is where the right hand mostly plays. Its lines, from the bottom, are E G B D F — “Every Good Boy Deserves Fudge”. The first line is the E above middle C.',
+          'In this lesson each step shows the note on the staff. Play the lit key. You can choose any finger — for now the point is to recognise the note, not to finger it.'],
+        ex: { steps: 'R:E4:- R:G4:- R:B4:- R:D5:- R:F5:-' } },
+      { id: 'spaces', title: 'Treble staff: the spaces', text: [
+          'The spaces between the lines, from the bottom, spell F A C E — easy: FACE. Together with the lines you can now name every note from the E above middle C up to the F at the top.',
+          'Middle C sits just below the staff on a short line of its own — a ledger line.'],
+        ex: { steps: 'R:F4:- R:A4:- R:C5:- R:E5:- R:C4:-' } },
+      { id: 'open', title: 'Your open strings on the grand staff', text: [
+          'Tab says which string and fret; the staff says which note. Your six open strings are E A D G B E. Written for piano, the lower strings sit on the bass staff (the “F clef”, where the left hand plays) and only the top string, E, reaches the treble staff. Middle C sits between the two, and together they make the grand staff.',
+          'Each step shows the note and the tab that makes it. (Guitar music is usually written an octave higher than it sounds; here the staff shows the real sounding pitch, so tab → piano key is a direct map.)'],
+        hook: 'Tab → note: the open strings are E2 A2 D3 G3 B3 E4. Add one semitone for every fret.',
+        ex: { steps: 'L:E2:-@6/0 L:A2:-@5/0 L:D3:-@4/0 L:G3:-@3/0 L:B3:-@2/0 R:E4:-@1/0' } },
+      { id: 'frets', title: 'Frets move the note up', text: [
+          'Fret numbers add semitones. On the B string, fret 0 is B, fret 1 is C, fret 3 is D. On the high E string, fret 0 is E, fret 1 is F, fret 3 is G, fret 5 is A. Read the tab, find the note, play the key.'],
+        ex: { steps: 'R:B3:-@2/0 R:C4:-@2/1 R:D4:-@2/3 R:E4:-@1/0 R:F4:-@1/1 R:G4:-@1/3 R:A4:-@1/5' } },
+      { id: 'tune', title: 'Play a tune from tab', text: [
+          'Here is the opening of “Ode to Joy” as guitar tab on the top two strings. Read each fret, find the note on the staff, and play it. Fingers are given this time: the right hand sits in C position (thumb on C), so C D E F G are fingers 1-2-3-4-5.',
+          'Notes: E E F G · G F E D · C C D E · E D D.'],
+        ex: { steps: 'R:E4:3@1/0 R:E4:3@1/0 R:F4:4@1/1 R:G4:5@1/3 R:G4:5@1/3 R:F4:4@1/1 R:E4:3@1/0 R:D4:2@2/3 R:C4:1@2/1 R:C4:1@2/1 R:D4:2@2/3 R:E4:3@1/0 R:E4:3@1/0 R:D4:2@2/3 R:D4:2@2/3' } },
+    ] },
+    { id: 'wheel1', title: 'Wheel in the Sky — intro, simplified', blurb: 'Journey’s opening chords on piano: Dm – F – C, then B♭, with a bass note.', parts: [
+      { id: 'key', title: 'The key and the chords', text: [
+          'The song is in D minor. The intro is built from three chords, Dm, F and C, and a B♭ that leads into the verse. (The chord names and the guitar grips here come from published lessons and tabs; transcriptions of the same song differ a little, so trust your ears too.)',
+          'On the piano: Dm in root position (D-F-A, fingers 1-3-5); F in second inversion (C-F-A, 1-3-5) — it shares F and A with Dm so the hand barely moves; C in root position (C-E-G). The shape of the hand stays the same; the notes slide.'],
+        hook: 'On guitar the intro starts with a Dm grip around the 5th–7th frets, picking a low note and the top strings. We will copy that picking pattern in the next lesson.',
+        ex: { steps: 'R:D4:1+R:F4:3+R:A4:5 R:C4:1+R:F4:3+R:A4:5 R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'bass', title: 'Add the bass note', text: [
+          'Add a left-hand bass note on finger 5 — the root of each chord: D, F, C. The guitar intro starts each chord with its low note, so this is the same job.'],
+        ex: { steps: 'L:D3:5+R:D4:1+R:F4:3+R:A4:5 L:F3:5+R:C4:1+R:F4:3+R:A4:5 L:C3:5+R:C4:1+R:E4:3+R:G4:5' } },
+      { id: 'bb', title: 'B♭ into the verse', text: [
+          'After the C the band lands on B♭ major as the song kicks in. Play it in first inversion (D-F-B♭), fingers 1-2-5, with the bass B♭ underneath. It is one step down from the C, so the hand just slips down.',
+          'Now play the whole four-chord phrase: Dm – F – C – B♭.'],
+        ex: { steps: 'L:D3:5+R:D4:1+R:F4:3+R:A4:5 L:F3:5+R:C4:1+R:F4:3+R:A4:5 L:C3:5+R:C4:1+R:E4:3+R:G4:5 L:B♭2:5+R:D4:1+R:F4:2+R:B♭4:5' } },
+    ] },
+    { id: 'wheel2', title: 'Wheel in the Sky — intro, full', blurb: 'The picking pattern, the single-note intro line, and bass + melody together.', parts: [
+      { id: 'dm', title: 'Picking pattern on Dm', text: [
+          'The guitar plays the Dm intro by picking: the thumb takes the low string, the fingers take the top strings. The order is roughly bass · top · middle · low · top. On piano: left-hand D, then right-hand F, D, A, F — the right hand sits on A-D-F (a second-inversion Dm), fingers 1-3-5.',
+          'Count it as: 1 (bass) 2 (top) 3 (middle) 4 (low) 5 (top) — and repeat until it flows like a rolled chord.'],
+        hook: 'This is the shape Dm takes as a guitar grip: A string fret 5, D string fret 7, G string fret 7, B string fret 6 — the notes D, A, D, F.',
+        ex: { steps: 'L:D3:5 R:F4:5 R:D4:3 R:A3:1 R:F4:5' } },
+      { id: 'f', title: 'The same pattern on F', text: [
+          'Same pattern, new chord: bass F, then the right hand plays A, F, C, A. The right hand sits on C-F-A (second-inversion F), fingers 1-3-5. Only the starting notes change; the pattern of fingers does not.'],
+        ex: { steps: 'L:F3:5 R:A4:5 R:F4:3 R:C4:1 R:A4:5' } },
+      { id: 'c', title: 'The same pattern on C', text: [
+          'And again on C: bass C, then E, C, G, E. The right hand sits on G-C-E (second-inversion C), fingers 1-3-5. You have now played the three chords of the intro as a pattern, not just as blocks.'],
+        ex: { steps: 'L:C3:5 R:E4:5 R:C4:3 R:G3:1 R:E4:5' } },
+      { id: 'melody', title: 'The intro line, single notes', text: [
+          'Above the chords the intro has a simple single-note line. In published tabs it is played on the B string: frets 6, 8, 10, 8, 6, 5, 3, 6, 5, 3, 5 — the notes F G A G F E D F E D E. That fits a five-finger position starting on D: thumb on D, then E, F, G, A as 1-2-3-4-5.',
+          'This is a simplified single-note version taken from a fan transcription (“close enough” rather than note-perfect). Listen to the record and adjust to taste.'],
+        hook: 'Same pitches as the B-string frets 6 8 10 8 6 5 3 6 5 3 5 — the staff and tab above the piano show both.',
+        ex: { steps: 'R:F4:3@2/6 R:G4:4@2/8 R:A4:5@2/10 R:G4:4@2/8 R:F4:3@2/6 R:E4:2@2/5 R:D4:1@2/3 R:F4:3@2/6 R:E4:2@2/5 R:D4:1@2/3 R:E4:2@2/5' } },
+      { id: 'both', title: 'Bass note and melody together', text: [
+          'Finally combine: the left hand holds the low D underneath while the right hand plays the single-note line. The first step needs both the low D and the first melody note together; after that, just the right hand.',
+          'When this feels comfortable, try the picking pattern from the first three parts underneath it — that is the “full” intro.'],
+        ex: { steps: 'L:D3:5+R:F4:3 R:G4:4 R:A4:5 R:G4:4 R:F4:3 R:E4:2 R:D4:1 R:F4:3 R:E4:2 R:D4:1 R:E4:2' } },
+    ] },
+  ];
+  const lessonById = id => LESSONS.find(l => l.id === id);
+  function lessonStats(doneMap) {            // doneMap: { 'lesson/part': {...} }
+    let parts = 0, done = 0;
+    const per = LESSONS.map(l => { const d = l.parts.filter(p => doneMap && doneMap[l.id + '/' + p.id]).length; parts += l.parts.length; done += d; return { id: l.id, parts: l.parts.length, done: d, complete: d === l.parts.length }; });
+    return { parts, done, lessons: per, complete: per.filter(x => x.complete).length };
+  }
+
   return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
     mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
     spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
@@ -1480,7 +1725,8 @@ const Theory = (() => {
     identifyQuality, buildChord, harmonize, midiOf, nFromA4, freq, midiName, ratio, tuningById,
     scalePositions, modeInfo, scaleFingers, CHORD_GROUPS, CORE_QUALITIES, isMinorQuality,
     findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs,
-    SONG_RHYTHMS, SONG_FORMS, songGrid, slotAccent, songCounts, playableRange, melodyWindow, generateSong, songFrets, songTab, songTimeline, pianoChordLine, songText };
+    SONG_RHYTHMS, SONG_FORMS, songGrid, slotAccent, songCounts, playableRange, melodyWindow, generateSong, songFrets, songTab, songTimeline, pianoChordLine, songText,
+    GUITAR_STANDARD, lessonTabMidi, parseLessonNote, parseLessonSteps, lessonPlan, staffStep, STAFF_BOTTOM, LESSONS, lessonById, lessonStats };
 })();
 // </THEORY>
 const T = Theory;
@@ -1494,6 +1740,7 @@ const DEFAULTS = {
   mathOct: 4, mathString: 0, selDeg: null,
   prExact: false, prHow: 'together', midiSound: false, midiOn: false,
   songSeed: 11, songForm: 'full', songStyle: 'smart', songLoop: false,
+  lesson: null, lpart: 0, lessons: {}, lblind: false, lspeed: 'normal',
 };
 const S = Object.assign({}, DEFAULTS);
 const STORE = 'bpgw.v3';
@@ -1649,6 +1896,7 @@ function updateHash() {
     if (!ch) parts.push('pn=' + S.pOcts);
   }
   if (S.tab === 'song') parts.push('ss=' + S.songSeed, 'sf=' + S.songForm, 'sst=' + S.songStyle);
+  if (S.tab === 'lessons' && S.lesson) parts.push('les=' + S.lesson, 'lp=' + S.lpart);
   const h = parts.join('&');
   try { history.replaceState(null, '', '#' + h); } catch (e) {}
 }
@@ -1656,7 +1904,7 @@ function applyHash() {
   const raw = location.hash.replace(/^#/, ''); if (!raw) return;
   const X = {};
   raw.split('&').forEach((tok, i) => {
-    if (!tok.includes('=')) { if (['play','chord','circle','math','song'].includes(tok)) S.tab = tok; return; }
+    if (!tok.includes('=')) { if (['play','chord','circle','math','song','lessons'].includes(tok)) S.tab = tok; return; }
     const [k, v0] = tok.split('='); const v = decodeURIComponent(v0);
     try {
       if (k === 'root') { const n = T.parseName(v); S.rootPc = n.pc; S.pref = 'auto'; const auto = T.rootName(n.pc, S.scale, 'auto'); if (auto !== n.name) S.pref = n.acc > 0 ? '♯' : '♭'; }
@@ -1670,6 +1918,8 @@ function applyHash() {
       else if (k === 'meter' && T.METERS[v]) S.meter = v;
       else if (k === 'tempo') S.tempo = Math.max(40, Math.min(220, +v || 100));
       else if (k === 'a4') S.a4 = +v || 440;
+      else if (k === 'les') S.lesson = T.lessonById(v) ? v : null;
+      else if (k === 'lp') S.lpart = Math.max(0, Math.min(19, +v || 0));
       else if (k === 'ss') S.songSeed = Math.max(1, Math.min(99999, +v || 11));
       else if (k === 'sf' && (v === 'full' || v === 'short')) S.songForm = v;
       else if (k === 'sst' && (v === 'smart' || v === 'pop')) S.songStyle = v;
@@ -1836,6 +2086,7 @@ const isBlackPc = pc => [1, 3, 6, 8, 10].includes(pc);
 const HANDS = { R: 'Right hand', L: 'Left hand', B: 'Both hands', S: 'Both hands, same notes' };
 const HAND_ABBR = { R: 'RH', L: 'LH' };
 function pianoPlan() {
+  if (S.tab === 'lessons') return lessonPlanUI();
   const notes = [], push = (hand, arr) => arr.forEach(n => notes.push({ hand, midi: n.midi, finger: n.finger, name: n.name, root: !!n.root, deg: n.deg || '' }));
   if (S.mode === 'chord') {
     const ch = curChord(), vs = T.pianoVoicings(ch), g = S.pcPos === 'g' ? curVoicing() : null;
@@ -1927,9 +2178,9 @@ function pianoPanelHTML() {
   </section>`;
 }
 function pianoHTML() {
-  const t = curTuning(), act = activeNotes(), WK = 24, BK = 15;
+  const t = curTuning(), act = PP.kind === 'lesson' ? new Map() : activeNotes(), WK = 24, BK = 15, blind = lBlind();
   const open = new Map(t.strings.map(m => [m, true]));
-  const dots = new Map(); PP.notes.forEach(n => { if (!dots.has(n.midi)) dots.set(n.midi, []); dots.get(n.midi).push(n); });
+  const dots = new Map(); (blind ? [] : PP.notes).forEach(n => { if (!dots.has(n.midi)) dots.set(n.midi, []); dots.get(n.midi).push(n); });
   let wi = 0, html = '';
   for (let midi = 21; midi <= 108; midi++) {
     const pc = midi % 12, black = isBlackPc(pc);
@@ -1941,13 +2192,13 @@ function pianoHTML() {
       ds.sort((x, y) => (x.hand === 'R' ? 0 : 1) - (y.hand === 'R' ? 0 : 1));
       const two = ds.length > 1;
       if (!two) inner += `<span class="nm${ds[0].root ? ' root' : ''}">${esc(ds[0].name)}</span>`;
-      inner += ds.map((n, i) => `<span class="fd ${n.hand}${n.root ? ' root' : ''}${two ? ' two' + i : ''}" title="${HAND_ABBR[n.hand]} finger ${n.finger}">${n.finger}</span>`).join('');
+      inner += ds.filter(n => n.finger).map((n, i) => `<span class="fd ${n.hand}${n.root ? ' root' : ''}${two ? ' two' + i : ''}" title="${HAND_ABBR[n.hand]} finger ${n.finger}">${n.finger}</span>`).join('');
     } else if (a && !a.ctx) inner += `<span class="pip" style="background:${a.bg}"></span>`;
     else if (a && a.ctx) inner += `<span class="pip ctx"></span>`;
     if (!black && pc === 0) inner += `<span class="oct">C${midi / 12 - 1}</span>`;
     html += `<div class="pk ${black ? 'b' : 'w'}${ds ? ' lit' : ''}" data-midi="${midi}" style="left:${left}px;width:${black ? BK : WK}px" title="${T.midiName(midi)}">${inner}</div>`;
   }
-  return `<div class="pianowrap" id="pianoWrap"><div class="piano" style="width:${wi * WK}px">${html}</div></div>`;
+  return `<div class="pianowrap" id="pianoWrap"><div class="piano${blind ? ' blind' : ''}" style="width:${wi * WK}px">${html}</div></div>`;
 }
 function whitesBelow(midi) { let wi = 0; for (let m = 21; m < midi; m++) if (!isBlackPc(m % 12)) wi++; return wi; }
 function pianoStartScroll() { return whitesBelow(48) * 24 - 30; }    // C3 near the left edge
@@ -1980,7 +2231,7 @@ function instrumentsHTML({ mid = '' } = {}) {
 }
 
 /* ---------- follow-along playback ---------- */
-function clearPianoTimers() { (UI.pTimers || []).forEach(clearTimeout); UI.pTimers = []; $$('.pk.now').forEach(e => e.classList.remove('now')); $$('.nowline').forEach(e => { e.textContent = e.dataset.idle || ''; e.classList.remove('live'); }); }
+function clearPianoTimers() { (UI.pTimers || []).forEach(clearTimeout); UI.pTimers = []; $$('.pk.now, .lcol.hear').forEach(e => e.classList.remove('now', 'hear')); $$('.nowline').forEach(e => { e.textContent = e.dataset.idle || ''; e.classList.remove('live'); }); }
 function pianoEvents(how) {
   const P = PP, N = P.notes, by = (a, b) => a.midi - b.midi;
   if (P.kind === 'chord') {
@@ -2113,12 +2364,12 @@ function kbBaseOct() {
 }
 
 /* ---- practice run ---- */
-function prSteps() { return T.practiceSteps(PP, { how: S.prHow }); }
+function prSteps() { return PP.kind === 'lesson' ? PP.steps : T.practiceSteps(PP, { how: S.prHow }); }
 function prBuild() {
   const p = UI.pr;
   if (!p.on) { p.run = null; return; }
-  const steps = prSteps(), sig = JSON.stringify([steps.map(s => s.midis), S.prExact, S.prHow]);
-  if (!p.run || sig !== p.sig) { p.run = T.createPractice(steps, { exact: !!S.prExact }); p.sig = sig; p.res = null; p.lastStep = -1; UI.held.forEach((s, m) => UI.held.delete(m)); }
+  const steps = prSteps(), sig = JSON.stringify([steps.map(s => s.midis), prEx(), S.prHow]);
+  if (!p.run || sig !== p.sig) { p.run = T.createPractice(steps, { exact: prEx() }); p.sig = sig; p.res = null; p.lastStep = -1; UI.held.forEach((s, m) => UI.held.delete(m)); }
 }
 function prReset() { const p = UI.pr; p.sig = ''; p.res = null; p.lastStep = -1; prBuild(); prPaint(); prFocusTarget(); }
 function prToggle(on) {
@@ -2136,6 +2387,7 @@ function prFocusTarget() {
   if (lo < pw.scrollLeft + 10 || hi > pw.scrollLeft + pw.clientWidth - 10) pw.scrollTo({ left: Math.max(0, (lo + hi) / 2 - pw.clientWidth / 2), behavior: 'smooth' });
 }
 function prPaint(res, midi) {
+  lessonStaffPaint();
   const tab = $('#tab-' + S.tab); if (!tab) return;
   const p = UI.pr, run = p.on ? p.run : null, piano = $('.piano', tab);
   if (piano) {
@@ -2144,7 +2396,7 @@ function prPaint(res, midi) {
     if (run && !run.done) {
       const cur = run.current(), have = run.have();
       cur.midis.forEach(m => { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('target'); });
-      UI.held.forEach((s, m) => { const k = S.prExact ? m : m % 12; if (have.has(k)) { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('hit'); } });
+      UI.held.forEach((s, m) => { const k = prEx() ? m : m % 12; if (have.has(k)) { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('hit'); } });
     }
     if (res && midi != null && (res.type === 'wrong' || res.type === 'step' || res.type === 'done' || res.type === 'ok')) {
       const e = piano.querySelector(`.pk[data-midi="${midi}"]`);
@@ -2164,13 +2416,13 @@ function prPaint(res, midi) {
   const s = run.summary(), cur = run.current();
   $('.prstep', box).textContent = run.done ? 'Done' : `Step ${run.idx + 1} of ${run.steps.length}`;
   $('.prtime', box).textContent = '⏱ ' + T.fmtMs(s.ms);
-  $('.prtarget', box).innerHTML = run.done ? '' : `<span class="prlab">Play</span> ` + cur.notes.map(n => `<span class="pn ${n.hand}"><b>${HAND_ABBR[n.hand]} ${n.finger}</b> ${esc(S.prExact ? T.midiName(n.midi) : n.name)}</span>`).join(' ') + (cur.midis.length > 1 ? ` <span class="prlab">together</span>` : '') + (S.prExact ? '' : ` <span class="prlab">· any octave</span>`);
+  $('.prtarget', box).innerHTML = run.done ? '' : `<span class="prlab">Play</span> ` + cur.notes.map(n => lBlind() ? `<span class="pn ${n.hand}"><b>${HAND_ABBR[n.hand]}</b> ?</span>` : `<span class="pn ${n.hand}"><b>${HAND_ABBR[n.hand]}${n.finger ? ' ' + n.finger : ''}</b> ${esc(prEx() ? T.midiName(n.midi) : n.name)}</span>`).join(' ') + (cur.midis.length > 1 ? ` <span class="prlab">together</span>` : '') + (prEx() ? '' : ` <span class="prlab">· any octave</span>`);
   const r = $('.prres', box); r.className = 'prres ' + (p.res ? p.res.cls : ''); r.textContent = p.res ? p.res.txt : (run.started ? '' : 'Waiting for your first note…');
   const pct = s.accuracy == null ? '–' : Math.round(s.accuracy * 100) + '%';
   $('.prscore', box).innerHTML = run.done
     ? `<b>${s.correct}</b> of ${s.total} notes right · <b class="${s.wrong ? 'bad' : 'good'}">${s.wrong}</b> wrong · accuracy <b>${pct}</b> · time <b>${T.fmtMs(s.ms)}</b>${s.perfect ? ' · <b class="good">perfect!</b>' : ''}`
     : `<span class="good">✓ ${s.correct}</span> correct · <span class="${s.wrong ? 'bad' : ''}">✗ ${s.wrong}</span> wrong · accuracy ${pct}`;
-  $('.prkeys', box).textContent = S.prExact ? `Exact octave: the key must be the one lit. Computer keys A–K = ${T.midiName(12 * (kbBaseOct() + 1))}–${T.midiName(12 * (kbBaseOct() + 2))} (Z/X shift).` : `Any octave counts. Computer keys A–K = C–C (Z / X = octave down / up).`;
+  $('.prkeys', box).textContent = prEx() ? `Exact octave: the key must be the one lit. Computer keys A–K = ${T.midiName(12 * (kbBaseOct() + 1))}–${T.midiName(12 * (kbBaseOct() + 2))} (Z/X shift).` : `Any octave counts. Computer keys A–K = C–C (Z / X = octave down / up).`;
   box.classList.toggle('done', run.done);
   if (run.idx !== p.lastStep) { p.lastStep = run.idx; prFocusTarget(); }
 }
@@ -2745,15 +2997,205 @@ function renderSong() {
 }
 
 /* ================================================================
+   LESSONS TAB — the guitar-to-piano bridge, practised with the same Practice engine as the Piano control
+   State: S.lesson (open lesson id | null), S.lpart (part index), S.lessons (progress: 'lesson/part' → {acc, ms, wrong, perfect, at}), S.lblind (hide hints)
+   ================================================================ */
+function lessonCur() {
+  const l = S.lesson && T.lessonById(S.lesson); if (!l) return null;
+  const i = Math.max(0, Math.min(l.parts.length - 1, S.lpart | 0));
+  return { l, p: l.parts[i], i, key: l.id + '/' + l.parts[i].id };
+}
+function lessonPlanUI() {
+  const c = lessonCur();
+  if (!c) return { kind: 'lesson', title: 'Lessons', desc: '', notes: [], steps: [], hand: 'auto', source: 'lesson', match: false, forceExact: false, hasTab: false, hasFingers: false };
+  return Object.assign(T.lessonPlan(c.p.ex), { title: c.p.title, desc: '', hand: 'auto', source: 'lesson', match: false });
+}
+const prEx = () => !!(PP && PP.forceExact) || !!S.prExact;
+const lBlind = () => S.tab === 'lessons' && !!S.lblind && !!lessonCur();
+function lessonFirstOpen(l) { const i = l.parts.findIndex(p => !S.lessons[l.id + '/' + p.id]); return i < 0 ? 0 : i; }
+
+/* ---- the staff (and tab) drawing ---- */
+function staffSVG(plan) {
+  const steps = plan.steps, n = steps.length, SW = 38, X0 = 62, W = X0 + n * SW + 10;
+  const all = steps.flatMap(s => s.notes), hasT = all.some(x => x.hand === 'R'), hasB = all.some(x => x.hand === 'L');
+  const ss = all.map(x => T.staffStep(x.midi, x.name)), maxS = Math.max(...ss), minS = Math.min(...ss);
+  const HI = hasT ? Math.max(40, maxS + 3) : Math.max(28, maxS + 3), LO = hasB ? Math.min(16, minS - 2) : Math.min(26, minS - 2);
+  const Y0 = 8, y = s => Y0 + (HI - s) * 4, staffBot = y(LO);
+  let g = '';
+  const lines = [], addStaff = bottom => { for (let k = 0; k < 5; k++) lines.push(`<line class="sl" x1="26" x2="${W - 4}" y1="${y(bottom + 2 * k)}" y2="${y(bottom + 2 * k)}"/>`); };
+  if (hasT) addStaff(T.STAFF_BOTTOM.treble); if (hasB) addStaff(T.STAFF_BOTTOM.bass);
+  g += lines.join('');
+  const topLine = hasT ? 38 : 26, botLine = hasB ? 18 : 30;
+  g += `<line class="sl bar" x1="26" x2="26" y1="${y(topLine)}" y2="${y(botLine)}"/>`;
+  if (hasT) g += `<text class="clef" x="29" y="${y(31.2)}" font-size="40" aria-hidden="true">𝄞</text>`;
+  if (hasB) g += `<text class="clef" x="29" y="${y(22.2)}" font-size="28" aria-hidden="true">𝄢</text>`;
+  const rows = hasT && hasB ? 2 : 1; let yb = staffBot + 6;
+  // tab strip (only when the exercise carries guitar tab)
+  let tabTop = 0, TL = 7;
+  if (plan.hasTab) {
+    tabTop = yb + 12; yb = tabTop + 5 * TL + 14;
+    for (let k = 0; k < 6; k++) g += `<line class="sl tl" x1="26" x2="${W - 4}" y1="${tabTop + k * TL}" y2="${tabTop + k * TL}"/>`;
+    g += `<text class="tablab" x="4" y="${tabTop + 12}">T</text><text class="tablab" x="4" y="${tabTop + 22}">A</text><text class="tablab" x="4" y="${tabTop + 32}">B</text>`;
+  }
+  const nameRow = !plan.hasFingers, fingerRows = plan.hasFingers;
+  const rhRow = yb + 4, lhRow = rhRow + (hasT ? 13 : 0), nmRow = yb + 4;
+  let H = yb + 4;
+  if (nameRow) H += 14; else H += (hasT ? 13 : 0) + (hasB ? 13 : 0);
+  H += 6;
+  const blind = lBlind();
+  steps.forEach((s, i) => {
+    const cx = X0 + i * SW + SW / 2; let col = `<rect class="lhl" x="${X0 + i * SW + 1}" y="2" width="${SW - 2}" height="${H - 4}" rx="6"/>`;
+    for (const clef of ['treble', 'bass']) {
+      const grp = s.notes.filter(x => (clef === 'treble') === (x.hand === 'R')).map(x => ({ x, st: T.staffStep(x.midi, x.name) })).sort((a, b) => a.st - b.st);
+      if (!grp.length) continue;
+      const lo = clef === 'treble' ? 28 : 16, hiL = clef === 'treble' ? 40 : 28, mid = clef === 'treble' ? 34 : 22;
+      let prev = null, accs = 0;
+      grp.forEach(o => {
+        o.dx = prev && o.st - prev.st === 1 && !prev.dx ? 11 : 0; prev = o;
+        if (o.st <= lo) for (let l = lo; l >= o.st; l -= 2) col += `<line class="sl led" x1="${cx - 9 + o.dx}" x2="${cx + 9 + o.dx}" y1="${y(l)}" y2="${y(l)}"/>`;
+        if (o.st >= hiL) for (let l = hiL; l <= o.st; l += 2) col += `<line class="sl led" x1="${cx - 9 + o.dx}" x2="${cx + 9 + o.dx}" y1="${y(l)}" y2="${y(l)}"/>`;
+      });
+      // the middle-C ledger line belongs to both staves when a grand staff is drawn
+      const up = grp.reduce((a, o) => a + o.st, 0) / grp.length < mid, a0 = grp[0], a1 = grp[grp.length - 1];
+      col += up ? `<line class="stem" x1="${cx + 5}" x2="${cx + 5}" y1="${y(a0.st)}" y2="${y(a1.st) - 26}"/>` : `<line class="stem" x1="${cx - 5}" x2="${cx - 5}" y1="${y(a0.st) + 26}" y2="${y(a1.st)}"/>`;
+      grp.forEach(o => {
+        const px = cx + o.dx, py = y(o.st), acc = /♯/.test(o.x.name) ? '♯' : /♭/.test(o.x.name) ? '♭' : '';
+        col += `<ellipse class="nh ${o.x.hand}" cx="${px}" cy="${py}" rx="5.6" ry="4.1" transform="rotate(-20 ${px} ${py})"/>`;
+        if (acc) col += `<text class="acc" x="${cx - 15 - 9 * accs++}" y="${py + 5}">${acc}</text>`;
+      });
+    }
+    if (plan.hasTab) s.notes.forEach(nt => { if (nt.tab) { const ty = tabTop + (nt.tab.string - 1) * TL; col += `<rect class="tbg" x="${cx - 8}" y="${ty - 5}" width="16" height="10"/><text class="fret" x="${cx}" y="${ty + 3.6}">${nt.tab.fret}</text>`; } });
+    if (!blind) {
+      if (nameRow) col += `<text class="nmrow" x="${cx}" y="${nmRow + 10}">${esc(s.notes.map(x => x.name).join(' '))}</text>`;
+      else {
+        const f = h => s.notes.filter(x => x.hand === h && x.finger).sort((a, b) => a.midi - b.midi).map(x => x.finger).join('·');
+        if (hasT && f('R')) col += `<text class="frow R" x="${cx}" y="${rhRow + 10}">${f('R')}</text>`;
+        if (hasB && f('L')) col += `<text class="frow L" x="${cx}" y="${(hasT ? lhRow : rhRow) + 10}">${f('L')}</text>`;
+      }
+    }
+    const label = s.notes.map(x => `${x.name}${x.oct}`).join(' and ');
+    g += `<g class="lcol" data-i="${i}" data-act="lstep" role="button" tabindex="0" aria-label="Step ${i + 1}: ${esc(label)}. Activate to hear it."><title>${esc(label)}</title>${col}</g>`;
+  });
+  if (!blind) {
+    if (fingerRows) { if (hasT) g += `<text class="rowlab R" x="4" y="${rhRow + 10}">RH</text>`; if (hasB) g += `<text class="rowlab L" x="4" y="${(hasT ? lhRow : rhRow) + 10}">LH</text>`; }
+    else g += `<text class="rowlab" x="4" y="${nmRow + 10}">Note</text>`;
+  }
+  return `<svg class="stf" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(plan.title)} written on the staff${plan.hasTab ? ' with guitar tab' : ''}">${g}</svg>`;
+}
+function lessonStaffPaint() {
+  const tab = $('#tab-lessons'); if (!tab || S.tab !== 'lessons') return;
+  const p = UI.pr, run = p.on ? p.run : null, cols = $$('.lcol', tab); if (!cols.length) return;
+  cols.forEach((c, i) => { c.classList.toggle('done', !!run && (run.done || i < run.idx)); c.classList.toggle('cur', !!run && !run.done && i === run.idx); });
+  const cur = run && !run.done ? cols[run.idx] : null, wrap = $('.stfwrap', tab);
+  if (cur && wrap && run.idx !== LES.lastScroll) {
+    LES.lastScroll = run.idx; const w = wrap.clientWidth, x = +cur.querySelector('.lhl').getAttribute('x') + 19;
+    if (x < wrap.scrollLeft + 40 || x > wrap.scrollLeft + w - 40) wrap.scrollTo({ left: Math.max(0, x - w / 2), behavior: 'smooth' });
+  }
+}
+const LES = { lastScroll: -1, resetArmed: false };
+
+/* ---- views ---- */
+function lessonListHTML() {
+  const st = T.lessonStats(S.lessons), pct = Math.round(st.done / st.parts * 100);
+  const cards = T.LESSONS.map((l, n) => {
+    const r = st.lessons[n], p = Math.round(r.done / r.parts * 100), label = r.complete ? 'Review' : r.done ? 'Continue' : 'Start';
+    return `<article class="lcard${r.complete ? ' done' : ''}"><div class="lnum" aria-hidden="true">${r.complete ? '✓' : n + 1}</div>
+      <h3>${esc(l.title)}</h3><p>${esc(l.blurb)}</p>
+      <div class="lprog" role="progressbar" aria-valuemin="0" aria-valuemax="${r.parts}" aria-valuenow="${r.done}" aria-label="${esc(l.title)} progress"><i style="width:${p}%"></i></div>
+      <div class="lmeta"><span>${r.done} of ${r.parts} parts</span><button class="btn ${r.complete ? '' : 'pri'} sm" data-act="lopen" data-id="${l.id}" aria-label="${label} ${esc(l.title)}">${label} →</button></div></article>`;
+  }).join('');
+  return `<h2>Learn <span class="ctx">guitar → piano, one short lesson at a time</span></h2>
+  <div class="card lintro">
+    <p><b>You already know the fretboard — this is the same music on a keyboard.</b> Each lesson is a few short parts: a little reading, a note about how it maps to the guitar, and a Practice exercise that waits for you to play each note, on a MIDI piano, the on-screen keys, or your computer keyboard.</p>
+    <p class="hint">Do them in order. Wheel in the Sky is the goal: once you can play the chords, the picking pattern and the single-note intro line, you have the whole bridge.</p>
+    <div class="lall"><div class="lprog big" role="progressbar" aria-valuemin="0" aria-valuemax="${st.parts}" aria-valuenow="${st.done}" aria-label="Overall progress"><i style="width:${pct}%"></i></div><span>${st.done} of ${st.parts} parts · ${st.complete} of ${T.LESSONS.length} lessons</span></div>
+  </div>
+  <div class="lgrid">${cards}</div>
+  ${st.done ? `<div class="lfoot"><button class="btn sm" data-act="lreset">${LES.resetArmed ? 'Tap again to erase your progress' : 'Reset progress'}</button></div>` : ''}`;
+}
+function lessonViewHTML(c) {
+  const { l, p, i } = c, nL = T.LESSONS.indexOf(l) + 1, done = S.lessons[c.key], P = PP, run = UI.pr.on ? UI.pr.run : null;
+  const chips = l.parts.map((q, k) => `<button class="lchip${k === i ? ' on' : ''}${S.lessons[l.id + '/' + q.id] ? ' ok' : ''}" data-act="lpart" data-i="${k}" aria-label="Part ${k + 1}: ${esc(q.title)}${S.lessons[l.id + '/' + q.id] ? ', done' : ''}"${k === i ? ' aria-current="step"' : ''}>${S.lessons[l.id + '/' + q.id] ? '✓' : k + 1}</button>`).join('');
+  const text = p.text.map(t => `<p>${esc(t)}</p>`).join('');
+  const hook = p.hook ? `<div class="lhook"><b>🎸 Guitar bridge</b> ${esc(p.hook)}</div>` : '';
+  const exTog = P.forceExact ? `<button class="btn tog on" disabled aria-pressed="true" title="Hands together: both octaves must be right">Exact octave ✓</button>` : `<button class="btn tog${S.prExact ? ' on' : ''}" data-act="prexact" aria-pressed="${!!S.prExact}" title="On: the key must be the exact one lit. Off: any octave counts.">Exact octave</button>`;
+  const legend = `<div class="plegend">${P.hasFingers ? '<span><b class="hR">R</b> right hand</span><span><b class="hL">L</b> left hand</span><span>1 thumb · 2 index · 3 middle · 4 ring · 5 pinky</span>' : '<span>Treble staff = right hand · bass staff = left hand</span>'}${P.hasTab ? '<span>Numbers on the tab lines are frets</span>' : ''}<span>Tap a note to hear it</span></div>`;
+  const prev = i > 0 ? `<button class="btn" data-act="lpart" data-i="${i - 1}">← ${esc(l.parts[i - 1].title)}</button>` : `<button class="btn" data-act="lback">← All lessons</button>`;
+  const lastLesson = i === l.parts.length - 1, nextL = T.LESSONS[nL];
+  const next = !lastLesson ? `<button class="btn${done ? ' pri' : ''}" data-act="lpart" data-i="${i + 1}">${esc(l.parts[i + 1].title)} →</button>` : nextL ? `<button class="btn${done ? ' pri' : ''}" data-act="lopen" data-id="${nextL.id}">Next lesson: ${esc(nextL.title)} →</button>` : `<button class="btn${done ? ' pri' : ''}" data-act="lback">All lessons ✓</button>`;
+  return `<div class="lnav"><button class="btn sm" data-act="lback">← All lessons</button><span class="lcount">Lesson ${nL} of ${T.LESSONS.length} · part ${i + 1} of ${l.parts.length}</span></div>
+  <h2>${esc(l.title)}</h2>
+  <div class="lchips" role="group" aria-label="Parts of this lesson">${chips}</div>
+  <article class="card lpart" aria-labelledby="lpt"><h3 id="lpt">${i + 1}. ${esc(p.title)}${done ? `<span class="lbadge" title="Best run: ${Math.round(done.acc * 100)}% accuracy, ${T.fmtMs(done.ms)}">${done.perfect ? '★ perfect' : '✓ done'} · ${Math.round(done.acc * 100)}%</span>` : ''}</h3>${text}${hook}</article>
+  <section class="card lstaffcard" aria-label="The exercise on the staff">
+    <div class="stfwrap" id="stfWrap">${staffSVG(P)}</div>${legend}
+  </section>
+  <section class="metal panel pcontrol lprac" aria-label="Practice controls">
+    <div class="panel-top"><span class="engr">Practice this part</span><span class="engr sm">${P.steps.length} steps${P.forceExact ? ' · hands together' : ''}</span></div>
+    <div class="pc-prac"><button class="btn" data-act="lhear" id="lhearBtn" title="Hear the exercise played slowly">♪ Hear it</button><button class="btn tog${UI.pr.on ? ' on' : ''}" data-act="prtog" aria-pressed="${UI.pr.on}" title="Wait for you to play each note or chord, and score it">● Practice</button>${exTog}<button class="btn tog${S.lblind ? ' on' : ''}" data-act="lblind" aria-pressed="${!!S.lblind}" title="Hide the key glow, names and fingers so you have to read the staff">Hide hints</button><button class="btn tog midi" data-act="midi" aria-pressed="false" title="Connect a MIDI piano (Chrome / Edge, USB or Bluetooth)">MIDI</button></div>
+    <div class="midirow"><div class="midistat" role="status">${esc(midiStatusText())}</div><button class="btn sm tog" data-act="midisnd" title="Also play the sound of your MIDI keys through this device (leave off if the piano makes its own sound)">🔊 Echo</button></div>
+    <div class="lspeed" role="group" aria-label="Speed of ♪ Hear it"><span>Hear it</span><div class="seg">${[['slow', 'Slow'], ['normal', 'Normal'], ['fast', 'Fast']].map(([v, l]) => `<button data-act="lspeed" data-v="${v}" class="${S.lspeed === v ? 'on' : ''}" aria-pressed="${S.lspeed === v}">${l}</button>`).join('')}</div></div>
+    <div class="pread" aria-live="polite">
+      <div class="prac" id="prac" hidden><div class="prhead"><span class="prstep"></span><span class="prtime"></span><button class="btn sm" data-act="prreset">Start over</button></div><div class="prtarget"></div><div class="prres" aria-live="assertive"></div><div class="prscore"></div><div class="prkeys"></div></div>
+      <div class="nowline" data-idle="Press ♪ Hear it to listen, then ● Practice to play it yourself.">Press ♪ Hear it to listen, then ● Practice to play it yourself.</div>
+    </div>
+  </section>
+  ${pianoHTML()}
+  <div class="lfooter">${prev}${next}</div>`;
+}
+function renderLessons() { const c = lessonCur(); return c ? lessonViewHTML(c) : lessonListHTML(); }
+
+/* ---- actions ---- */
+function prOff() { const p = UI.pr; if (!p.on) return; p.on = false; clearInterval(p.tick); p.tick = null; p.res = null; p.run = null; p.sig = ''; UI.held.forEach((s, m) => UI.held.delete(m)); }
+function lessonGo(id, i) {
+  prOff(); LES.lastScroll = -1; LES.resetArmed = false; clearPianoTimers();
+  S.lesson = id; if (id) { const l = T.lessonById(id); S.lpart = Math.max(0, Math.min(l.parts.length - 1, i == null ? lessonFirstOpen(l) : i)); }
+  UI.piFocus = true; render(); save(); updateHash(); window.scrollTo(0, 0);
+}
+function lessonHear() {
+  const btn = $('#lhearBtn');
+  if (UI.pTimers && UI.pTimers.length && btn && btn.classList.contains('on')) { clearPianoTimers(); lessonHearUI(false); return; }
+  clearPianoTimers(); Snd.ensure();
+  const steps = PP.steps, step = { slow: 1.0, normal: 0.65, fast: 0.42 }[S.lspeed] || 0.65, t0 = Snd.now() + 0.06;
+  lessonHearUI(true);
+  steps.forEach((s, i) => {
+    s.midis.forEach((m, j) => Snd.note(m, t0 + i * step + j * 0.012, s.midis.length > 1 ? step * 1.9 : step * 1.5, 0.78, 'keys'));
+    UI.pTimers.push(setTimeout(() => {
+      $$('.pk.now').forEach(e => e.classList.remove('now')); $$('.lcol.hear').forEach(e => e.classList.remove('hear'));
+      s.midis.forEach(m => $$(`#tab-lessons .pk[data-midi="${m}"]`).forEach(e => e.classList.add('now')));
+      const col = $(`#tab-lessons .lcol[data-i="${i}"]`); if (col) col.classList.add('hear');
+      $$('.nowline').forEach(e => { e.textContent = `Step ${i + 1}: ` + s.notes.map(x => `${HAND_ABBR[x.hand]}${x.finger ? ' ' + x.finger : ''} · ${x.name}`).join('   '); e.classList.add('live'); });
+    }, 60 + i * step * 1000));
+  });
+  UI.pTimers.push(setTimeout(() => { clearPianoTimers(); $$('.lcol.hear').forEach(e => e.classList.remove('hear')); lessonHearUI(false); }, 60 + (steps.length - 1) * step * 1000 + 900));
+}
+function lessonHearUI(on) { const b = $('#lhearBtn'); if (b) { b.classList.toggle('on', on); b.textContent = on ? '■ Stop' : '♪ Hear it'; } }
+function lessonStep(i) {                                   // click a note on the staff: hear it
+  const s = PP.steps[i]; if (!s) return; Snd.ensure();
+  s.midis.forEach((m, j) => { Snd.note(m, Snd.now() + 0.02 + j * 0.01, 1.4, 0.8, 'keys'); flash(m, 0); });
+}
+UI.onPracticeDone = summary => {
+  if (S.tab !== 'lessons') return;
+  const c = lessonCur(); if (!c) return;
+  const prev = S.lessons[c.key], acc = summary.accuracy == null ? 0 : summary.accuracy;
+  const rec = { acc, ms: summary.ms, wrong: summary.wrong, perfect: !!summary.perfect, at: Date.now() };
+  if (!prev || acc > prev.acc || (acc === prev.acc && summary.ms < prev.ms)) S.lessons[c.key] = rec; else if (summary.perfect && !prev.perfect) S.lessons[c.key] = Object.assign({}, prev, { perfect: true });
+  save();
+  setTimeout(() => { if (S.tab === 'lessons') { render(); const r = $('#tab-lessons .lfooter .pri'); if (r && r.scrollIntoView) { /* keep the score in view; the footer is just below */ } } }, 0);
+};
+UI.lessonDoneKey = null;
+
+/* ================================================================
    WIRING
    ================================================================ */
-const RENDER = { play: renderPlay, chord: renderChord, circle: renderCircle, math: renderMath, song: renderSong };
+const RENDER = { play: renderPlay, chord: renderChord, circle: renderCircle, math: renderMath, song: renderSong, lessons: renderLessons };
 const TABS = [
   ['play', 'PLAY', '<rect x="3" y="6" width="20" height="14" rx="2"/><path d="M9 6v14M15 6v14M3 11h20M3 15h20" stroke-width="1.2"/>'],
   ['chord', 'CHORD', '<path d="M7 4v18M13 4v18M19 4v18M4 9h18M4 15h18" stroke-width="1.2"/><circle cx="13" cy="12" r="2.6" fill="currentColor"/><circle cx="7" cy="18" r="2.2" fill="currentColor"/>'],
   ['circle', 'CIRCLE', '<circle cx="13" cy="13" r="9.5"/><circle cx="13" cy="13" r="4.5"/><circle cx="13" cy="3.6" r="1.6" fill="currentColor"/><circle cx="21.2" cy="17.7" r="1.4" fill="currentColor"/>'],
   ['math', 'MATH', null],
   ['song', 'SONG', '<path d="M9 5.5l12 7.5-12 7.5z" fill="currentColor"/>'],
+  ['lessons', 'LEARN', '<path d="M13 6c-2.6-1.8-6-2.2-9-1.6v13c3-.6 6.4-.2 9 1.6 2.6-1.8 6-2.2 9-1.6v-13c-3-.6-6.4-.2-9 1.6zM13 6v13" stroke-width="1.5"/>'],
 ];
 function buildDock() {
   $('#dock').innerHTML = TABS.map(([id, label, svg]) => `<button data-act="tab" data-v="${id}" aria-label="${label}">${svg ? `<svg viewBox="0 0 26 26">${svg}</svg>` : '<span class="fx">ƒ(x)</span>'}<span>${label}</span></button>`).join('');
@@ -2769,10 +3211,12 @@ function render() {
   if (pw) { pw.scrollLeft = (UI.piFocus || UI.piScroll == null) ? pianoFocusScroll() : UI.piScroll; UI.piFocus = false; pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); }
   window.scrollTo(0, y);
   $$('#dock button').forEach(b => b.classList.toggle('on', b.dataset.v === S.tab));
+  document.body.dataset.tab = S.tab;
   prAfterRender();
   if (SongPlay.on) { SongPlay.paint(); SongPlay.btns(); }
 }
 function setTab(tab, opts = {}) {
+  if ((tab === 'lessons') !== (S.tab === 'lessons')) { prOff(); LES.lastScroll = -1; }
   S.tab = tab; UI.piFocus = true;
   if (tab === 'chord') S.mode = 'chord';
   else if (tab === 'play' && !opts.keepMode) { S.mode = 'scale'; S.selDeg = null; }
@@ -2798,7 +3242,7 @@ document.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) { const m = e.target.closest('[data-midi]'); if (m) { if (m.classList.contains('pk')) tapNote(+m.dataset.midi); else playMidi(+m.dataset.midi); } return; }
   const v = act.dataset.v, A = act.dataset.act;
-  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset'].includes(A)) UI.piFocus = true;
+  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed'].includes(A)) UI.piFocus = true;
   switch (A) {
     case 'tab': setTab(v); break;
     case 'labels': S.labels = v; render(); save(); break;
@@ -2832,6 +3276,14 @@ document.addEventListener('click', e => {
     }
     case 'pplay': playPiano(v); break;
     case 'prtog': prToggle(); break;
+    case 'lopen': lessonGo(act.dataset.id); break;
+    case 'lback': lessonGo(null); break;
+    case 'lpart': lessonGo(S.lesson, +act.dataset.i); break;
+    case 'lhear': lessonHear(); break;
+    case 'lstep': lessonStep(+act.dataset.i); break;
+    case 'lspeed': S.lspeed = v; save(); $$('[data-act="lspeed"]').forEach(b => { b.classList.toggle('on', b.dataset.v === v); b.setAttribute('aria-pressed', b.dataset.v === v); }); break;
+    case 'lblind': S.lblind = !S.lblind; save(); render(); break;
+    case 'lreset': if (LES.resetArmed) { S.lessons = {}; LES.resetArmed = false; save(); } else { LES.resetArmed = true; setTimeout(() => { if (LES.resetArmed) { LES.resetArmed = false; if (S.tab === 'lessons' && !S.lesson) render(); } }, 4000); } render(); break;
     case 'prexact': S.prExact = !S.prExact; save(); render(); break;
     case 'prhow': S.prHow = S.prHow === 'single' ? 'together' : 'single'; save(); render(); break;
     case 'prreset': prReset(); break;
@@ -2879,7 +3331,7 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-act]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-act]')) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
 });
 document.addEventListener('change', e => {
   const c = e.target.closest('[data-chg]'); if (!c) return;
@@ -2906,7 +3358,7 @@ buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps };
+window.BPGW = { S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>
 </body>
 </html>
