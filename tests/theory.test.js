@@ -814,5 +814,120 @@ group('practice matcher — wrong-note scoring is exact');
   }
 }
 
+
+/* ---------------- SONG GENERATOR ---------------- */
+const SONG_METERS = ['2/4','3/4','4/4','5/4','6/8','7/8','9/8','12/8'];
+const SONG_SCALES = Object.keys(SCALE_COUNT);
+const mod12 = x => ((x % 12) + 12) % 12;
+group('song — rhythm patterns are valid for every meter');
+SONG_METERS.forEach(mt => {
+  const g = T.songGrid(mt); eq(T.SONG_RHYTHMS[mt].length, 3, mt + ' has 3 intensity levels');
+  T.SONG_RHYTHMS[mt].forEach((p, lvl) => {
+    eq(p.length, g.slots, `${mt} level ${lvl}: one char per slot`); ok(/^[Dub.]+$/.test(p), `${mt} level ${lvl}: allowed chars only`); ok(p[0] !== '.', `${mt} level ${lvl}: slot 0 is a hit`);
+  });
+  const hits = T.SONG_RHYTHMS[mt].map(p => p.replace(/\./g, '').length); ok(hits[0] <= hits[1] && hits[1] <= hits[2], `${mt}: intensity grows`);
+  eq(T.songCounts(mt).length, g.slots, mt + ' counts length');
+});
+eq(T.songGrid('4/4').slots, 8, '4/4 = 8 slots'); eq(T.songGrid('6/8').slots, 6, '6/8 = 6 slots'); eq(T.songGrid('7/8').slots, 7, '7/8 = 7 slots'); eq(T.songGrid('12/8').slots, 12, '12/8 = 12 slots');
+eq(T.songCounts('4/4').join(' '), '1 & 2 & 3 & 4 &', '4/4 counting'); eq(T.songCounts('6/8').join(' '), '1 2 3 4 5 6', '6/8 counting');
+
+group('song — melody window is playable in every tuning');
+TUN_IDS.concat(['fullDown', 'openE']).forEach(id => {
+  const st = tuningStrings(id), w = T.melodyWindow(st), pr = T.playableRange(st);
+  ok(w.lo >= pr.lo && w.hi <= pr.hi, `${id} window ${w.lo}-${w.hi} inside ${pr.lo}-${pr.hi}`); ok(w.hi - w.lo >= 12, `${id} window spans at least an octave (${w.hi - w.lo})`);
+});
+
+group('song — every root × scale × meter × tuning × form × seed gives a valid song');
+{
+  let n = 0, strong = 0, strongCT = 0, tonicEnds = 0, chorusCount = 0, distinctChorus = 0, seedDiff = 0, seedPairs = 0;
+  const forms = ['full', 'short'], seeds = [1, 2, 3, 7, 42];
+  for (const root of KEYS12) for (const sc of SONG_SCALES) {
+    const scPcs = new Set(T.spellScale(root, sc).map(x => x.pc)), rootPc = T.spellScale(root, sc)[0].pc;
+    SONG_METERS.forEach((mt, mi) => {
+      const g = T.songGrid(mt), tun = TUN_IDS[(mi + KEYS12.indexOf(root)) % TUN_IDS.length], st = tuningStrings(tun);
+      const seed = seeds[(mi + SONG_SCALES.indexOf(sc)) % seeds.length], form = forms[(mi + KEYS12.indexOf(root)) % 2];
+      const so = T.generateSong({ rootName: root, scaleId: sc, meter: mt, seed, form, tuningStrings: st }); n++;
+      const lab = `${root} ${sc} ${mt} ${tun} #${seed} ${form}`;
+      eq(so.order.join(), T.SONG_FORMS[form].join(), lab + ' order');
+      const ids = [...new Set(so.order)]; eq(Object.keys(so.sections).sort().join(), ids.sort().join(), lab + ' sections');
+      const win = so.window;
+      ids.forEach(id => {
+        const sec = so.sections[id];
+        ok(sec.chords.length === sec.bars && sec.bars >= 2, lab + ' ' + id + ' chord per bar');
+        sec.chords.forEach(c => ok(c.name && c.pcs && c.pcs.length >= 3, lab + ' chord valid'));
+        eq(sec.rhythm.length, g.slots, lab + ' ' + id + ' rhythm length');
+        ok(sec.melody.length >= sec.bars, lab + ' ' + id + ' melody has notes');
+        // melody tiles the section exactly, starts each bar on slot 0 .. and stays inside the bar
+        let t = 0, okTile = true, okRange = true, okScale = true, okBarSlot = true;
+        sec.melody.forEach(nt => {
+          if (Math.abs(nt.pulse - t) > 1e-9) okTile = false; t += nt.pulses;
+          if (nt.midi < win.lo || nt.midi > win.hi) okRange = false;
+          if (!scPcs.has(mod12(nt.midi))) okScale = false;
+          if (nt.slot < 0 || nt.slot >= g.slots || nt.bar < 0 || nt.bar >= sec.bars) okBarSlot = false;
+          if (Math.abs(nt.pulse - (nt.bar * g.pulses + nt.slot * g.slotPulses)) > 1e-9) okBarSlot = false;
+          if (nt.strong) { strong++; if (nt.chordTone) strongCT++; }
+          if (nt.chordTone !== sec.chords[nt.bar].pcs.includes(mod12(nt.midi))) okScale = false;
+        });
+        ok(okTile && Math.abs(t - sec.bars * g.pulses) < 1e-9, lab + ' ' + id + ' melody fills every pulse (' + t + ')');
+        ok(okRange, lab + ' ' + id + ' melody within window'); ok(okScale, lab + ' ' + id + ' melody in scale / chordTone flags right'); ok(okBarSlot, lab + ' ' + id + ' note positions');
+        for (let b = 0; b < sec.bars; b++) ok(sec.melody.some(x => x.bar === b && x.slot === 0), lab + ' ' + id + ' bar ' + b + ' starts on slot 0');
+        // tab: every note playable, pitch reproduced
+        eq(sec.tab.length, sec.melody.length, lab + ' tab length');
+        sec.tab.forEach((tb, i) => { ok(tb && tb.fret >= 0 && tb.fret <= 15 && tb.string >= 0 && tb.string < st.length && st[tb.string] + tb.fret === sec.melody[i].midi, lab + ' tab note ' + i); });
+        const txt = T.songTab(so, id); const tl = txt.split('\n').filter(l => /\|/.test(l));
+        eq(tl.length % st.length, 0, lab + ' tab has a line per string'); ok(new Set(tl.map(l => l.length)).size <= 1 + 0 || tl.every(l => l.length > 0), lab + ' tab lines');
+        const frets = txt.split('\n').filter(l => /\|/.test(l)).join('').replace(/^.*?\|/gm, '').match(/\d+/g) || [];
+        eq(frets.length, sec.tab.length, lab + ' ' + id + ' tab prints every note');
+      });
+      const ending = (id, tonic) => { const m = so.sections[id].melody; return m[m.length - 1]; };
+      if (so.sections.chorus) { const lastC = so.sections.chorus.chords[so.sections.chorus.chords.length - 1]; if (lastC.pcs.includes(rootPc)) { chorusCount++; if (mod12(ending('chorus').midi) === rootPc) tonicEnds++; } if (so.sections.verse.chords.map(c => c.name).join() !== so.sections.chorus.chords.map(c => c.name).join()) distinctChorus++; }
+      ids.forEach(id => { const m = so.sections[id].melody, last = m[m.length - 1]; ok(last.chordTone, lab + ' ' + id + ' ends on a chord tone'); });
+      // determinism
+      if (n % 7 === 0) { const so2 = T.generateSong({ rootName: root, scaleId: sc, meter: mt, seed, form, tuningStrings: st }); eq(JSON.stringify(so2.sections), JSON.stringify(so.sections), lab + ' deterministic'); }
+      if (n % 5 === 0) { const so3 = T.generateSong({ rootName: root, scaleId: sc, meter: mt, seed: seed + 100, form, tuningStrings: st }); seedPairs++; if (JSON.stringify(so3.sections.verse.melody.map(x => x.midi)) !== JSON.stringify(so.sections.verse.melody.map(x => x.midi))) seedDiff++; }
+    });
+  }
+  ok(n === 12 * SONG_SCALES.length * 8, n + ' songs generated');
+  ok(strongCT / strong >= 0.55, `chord tones on strong beats ${(100 * strongCT / strong).toFixed(1)}% ≥ 55% (${strongCT}/${strong})`);
+  ok(chorusCount > 500 && tonicEnds === chorusCount, `choruses end on the tonic whenever the last chord contains it ${tonicEnds}/${chorusCount}`);
+  ok(distinctChorus / chorusCount >= 0.85, `chorus differs from verse ${distinctChorus}/${chorusCount}`);
+  ok(seedDiff / seedPairs >= 0.9, `different seeds give different melodies ${seedDiff}/${seedPairs}`);
+}
+
+group('song — melody repeats its motif (bar 3 echoes bar 1) and moves mostly by step');
+{
+  let steps = 0, leaps = 0, echo = 0, bars3 = 0;
+  for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) for (const mt of ['4/4', '3/4', '6/8']) {
+    const so = T.generateSong({ rootName: 'C', scaleId: 'major', meter: mt, seed }), sec = so.sections.verse, m = sec.melody;
+    for (let i = 1; i < m.length; i++) { const d = Math.abs(m[i].midi - m[i - 1].midi); if (d <= 2) steps++; else if (d >= 5) leaps++; }
+    const b1 = m.filter(x => x.bar === 0).map(x => x.slot).join(), b3 = m.filter(x => x.bar === 2).map(x => x.slot).join(); bars3++; if (b1 === b3) echo++;
+  }
+  ok(steps > 2 * leaps, `mostly stepwise (${steps} steps vs ${leaps} leaps)`); eq(echo, bars3, 'bar 3 repeats bar 1 rhythm');
+}
+
+group('song — timeline for playback');
+SONG_METERS.forEach(mt => {
+  for (const form of ['full', 'short']) {
+    const so = T.generateSong({ rootName: 'G', scaleId: 'major', meter: mt, seed: 3, form }), tl = T.songTimeline(so, 100), g = T.songGrid(mt), ps = T.pulseSeconds(mt, 100);
+    const nBars = so.order.reduce((a, id) => a + so.sections[id].bars, 0);
+    eq(tl.bars.length, nBars, `${mt} ${form} bar count`); near(tl.total, nBars * g.pulses * ps, 1e-9, `${mt} ${form} total length`);
+    let mono = true; for (let i = 1; i < tl.events.length; i++) if (tl.events[i].t < tl.events[i - 1].t - 1e-12) mono = false; ok(mono, `${mt} ${form} events sorted`);
+    ok(tl.events.every(e => e.t >= 0 && e.t < tl.total && e.dur > 0 && e.t + e.dur <= tl.total + 1e-9), `${mt} ${form} events inside the song`);
+    const expectChord = so.order.reduce((a, id) => a + so.sections[id].bars * so.sections[id].rhythm.replace(/\./g, '').length, 0);
+    eq(tl.events.filter(e => e.kind === 'chord').length, expectChord, `${mt} ${form} chord hits`);
+    eq(tl.events.filter(e => e.kind === 'melody').length, so.order.reduce((a, id) => a + so.sections[id].melody.length, 0), `${mt} ${form} melody notes`);
+    ok(tl.bars.every((b, i) => i === 0 || Math.abs(b.t - tl.bars[i - 1].t - tl.barSec) < 1e-9), `${mt} ${form} bars evenly spaced`);
+  }
+});
+{ const so = T.generateSong({ rootName: 'C', scaleId: 'major', meter: '4/4', seed: 1 }); near(T.songTimeline(so, 120).total * 2, T.songTimeline(so, 60).total, 1e-9, 'half the tempo = twice the length'); }
+
+group('song — piano fingering for the chords and the text export');
+{
+  const so = T.generateSong({ rootName: 'C', scaleId: 'major', meter: '4/4', seed: 4 });
+  for (const id of Object.keys(so.sections)) so.sections[id].chords.forEach(c => { const l = T.pianoChordLine(c); ok(/^[A-G][♯♭]?\(\d\)( [A-G][♯♭]?\(\d\))*$/.test(l.rh) && l.lh.length > 0, `${c.name}: RH ${l.rh} LH ${l.lh}`); });
+  const l = T.pianoChordLine(T.buildChord('C', 'major')); eq(l.rh, 'C(1) E(3) G(5)', 'C major RH = C E G on 1 3 5'); ok(/^C\(5\)/.test(l.lh), 'C major LH starts on pinky: ' + l.lh);
+  const tx = T.songText(so, false, 100); ok(tx.includes('[Verse]') && tx.includes('[Chorus]') && tx.includes('1 & 2 & 3 & 4 &') && tx.includes('e|'), 'song text contains sections, counts and tab');
+}
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -295,6 +295,27 @@ details.det[open] summary{margin-bottom:8px}
 .ctrls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px}
 code.chart{display:block;background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:10px 12px;font:14px/1.7 var(--mono);color:#d8d9de;white-space:pre-wrap}
 
+
+/* song generator */
+.sec{margin-top:12px}.sechead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}.sechead h3{margin:0;font:700 22px var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--amber)}.sechead .btn{margin-left:auto}
+.btn.sm{padding:6px 12px;font-size:12px}
+.sbars{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:8px;margin-bottom:10px}
+.sbar{background:linear-gradient(180deg,#17171c,#0e0e12);border:1px solid #26262d;border-radius:10px;padding:10px 6px 8px;text-align:center;cursor:pointer;position:relative}
+.sbar .rn{font:700 13px var(--cond);color:var(--amber);letter-spacing:.06em}.sbar .nm{font:700 22px var(--sans)}.sbar .num{position:absolute;top:4px;left:7px;font:600 9px var(--mono);color:#555862}
+.sbar.now{border-color:var(--amber);background:linear-gradient(180deg,#2d2008,#14100a);box-shadow:0 0 16px rgba(240,160,53,.4)}
+.slab{font:700 10px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}.slab .soft{letter-spacing:.02em;text-transform:none;font-weight:500;color:#6b6d76}
+.sgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px;max-width:560px}
+.sl{display:flex;flex-direction:column;align-items:center;background:#0a0a0d;border:1px solid #1f1f25;border-radius:6px;padding:2px 0 3px}.sl em{font:500 10px var(--mono);color:#6b6d76;font-style:normal}.sl b{font:700 17px/1.1 var(--sans);color:#3a3c44}
+.sl.hit{background:#17171c;border-color:#34353d}.sl.hit b{color:var(--ink)}.sl.dn b{color:var(--amber)}
+.mel{display:flex;flex-wrap:wrap;gap:6px 10px}.mbar{display:flex;gap:3px;padding:3px 6px;border-left:2px solid #2f3038}
+.mn{font:600 13px var(--mono);color:#7b7d86;background:#0a0a0d;border:1px solid #1f1f25;border-radius:5px;padding:2px 5px}.mn.ct{color:#fff;background:#1e2a1f;border-color:#2f7d33}
+pre.tabtxt{margin:0;background:#08080a;border:1px solid #1f1f25;border-radius:10px;padding:10px 12px;font:12.5px/1.35 var(--mono);color:#d8d9de;overflow-x:auto;white-space:pre}
+.form{display:flex;flex-wrap:wrap;gap:4px 2px;align-items:center;margin-top:12px}.fchip{font:700 12px var(--cond);letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:7px;background:#17171c;border:1px solid #2a2a31;color:#9a9ca6}.fsep{color:#4a4c54;font-style:normal;padding:0 2px}
+.fchip.now{background:var(--amber);color:#1b1000;border-color:var(--amber);box-shadow:0 0 12px rgba(240,160,53,.5)}.songnow{min-height:20px;margin-top:8px;font:600 13px var(--mono);color:var(--amber)}
+.pfgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}.pfc{background:#0c0c0f;border:1px solid #1d1d23;border-radius:12px;padding:12px}
+.pfc .top{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}.pfc .top b{font:700 24px var(--sans)}.pfc .rn{font:700 13px var(--cond);color:var(--amber);letter-spacing:.06em}
+.pfc .ln{font:600 13px var(--mono);color:#d8d9de;margin:3px 0}.pfc .ln .h{display:inline-block;width:26px;color:var(--dim);font-weight:500}.pfc .acts{display:flex;gap:6px;margin-top:8px}
+
 /* nav */
 nav.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;
   display:flex;gap:2px;padding:6px;border-radius:30px;background:rgba(24,24,28,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #34353d;box-shadow:0 10px 30px rgba(0,0,0,.7)}
@@ -1275,13 +1296,191 @@ const Theory = (() => {
   }
   function fmtMs(ms) { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 
+  /* ================================================================
+     SONG GENERATOR v1
+     root + scale + time signature + tuning + seed -> sections (intro / verse / chorus / bridge), a chord per bar,
+     a strum pattern per section, a melody built from scale tones that lands on chord tones on strong beats,
+     guitar tab for the melody (in the chosen tuning), piano fingering for the chords, and a playback timeline.
+     Everything is deterministic from the seed, so a song is a link.
+     ================================================================ */
+  const SONG_RHYTHMS = {          // D = down-strum, u = up-strum, b = bass note only, . = rest.  One character per grid slot (see songGrid).
+    '2/4':  ['D...', 'D.D.', 'DuDu'],
+    '3/4':  ['D.....', 'b.D.D.', 'b.DuDu'],
+    '4/4':  ['D.......', 'D...D.u.', 'D.DuD.Du'],
+    '5/4':  ['D.........', 'D.....D...', 'D.DuD.D.Du'],
+    '6/8':  ['D.....', 'D..D..', 'D.uD.u'],
+    '7/8':  ['D......', 'D.D.D..', 'DuD.D.u'],
+    '9/8':  ['D........', 'D..D..D..', 'D.uD.uD.u'],
+    '12/8': ['D...........', 'D..D..D..D..', 'D.uD.uD.uD.u'],
+  };
+  function songGrid(meterId) {    // beat-unit meters get eighth-note slots (2 per beat); eighth-unit meters get one slot per eighth
+    const M = METERS[meterId], beat = M.unit === 'beat';
+    return { slots: beat ? M.num * 2 : M.num, slotPulses: beat ? 0.5 : 1, unit: M.unit, pulses: M.num };
+  }
+  function slotAccent(meterId, s) {
+    const M = METERS[meterId], g = songGrid(meterId);
+    if (g.unit === 'beat') return s % 2 === 0 ? M.accents[s / 2] : 0;
+    return M.accents[s];
+  }
+  function songCounts(meterId) {  // "1 & 2 & 3 & 4 &"  or  "1 2 3 4 5 6"
+    const g = songGrid(meterId);
+    return Array.from({ length: g.slots }, (_, s) => (g.unit === 'beat' ? (s % 2 === 0 ? String(s / 2 + 1) : '&') : String(s + 1)));
+  }
+  function playableRange(strings, maxFret = 15) { return { lo: Math.min(...strings), hi: Math.max(...strings) + maxFret }; }
+  function melodyWindow(strings, maxFret = 15) {      // an octave and a fifth that the instrument can actually play, centred around G3–D5 when it can
+    const { lo: pLo, hi: pHi } = playableRange(strings, maxFret), W = 19;
+    let lo = 55;
+    while (lo + W > pHi && lo - 12 >= pLo) lo -= 12;
+    while (lo < pLo) lo += 12;
+    return { lo, hi: Math.min(lo + W, pHi) };
+  }
+  function songBank(rn, scaleId) {
+    const minor = isMinorish(scaleId);
+    const harmScale = (isHepta(scaleId) && !['harmonicMinor', 'melodicMinor'].includes(scaleId)) ? scaleId : (minor ? 'naturalMinor' : 'major');
+    const bank = harmonize(rn, harmScale, false);
+    const harmV = (minor && harmScale === 'naturalMinor') ? harmonize(rn, 'harmonicMinor', false)[4] : null;
+    return { minor, get: d => ((d === 4 && harmV) ? Object.assign({}, harmV, { roman: roman(4, harmV.quality, 'harmonicMinor', 7), borrowed: true }) : bank[d]) };
+  }
+  const chordKey = c => c.name;
+  function songMelody(rng, chords, meterId, scaleNotes, win, rootPc, density, ending) {
+    const M = METERS[meterId], g = songGrid(meterId), nBars = chords.length;
+    const byPc = new Map(scaleNotes.map(n => [n.pc, n]));
+    const cands = []; for (let m = win.lo; m <= win.hi; m++) if (byPc.has(mod(m, 12))) cands.push(m);
+    const n = cands.length, mid = Math.floor(n / 2);
+    const mkRhythm = () => {
+      const on = [0];
+      for (let s = 1; s < g.slots; s++) { const acc = slotAccent(meterId, s), p = acc >= 1 ? 0.9 : (g.unit === 'beat' && s % 2 === 0) ? 0.72 : density; if (rng() < p) on.push(s); }
+      if (on.length < 2) on.push(Math.floor(g.slots / 2));
+      return on;
+    };
+    const r1 = mkRhythm(), r2 = mkRhythm(), rhy = b => ([r1, r2, r1, r2][b % 4]);
+    const notes = []; let idx = mid, deltas = null;
+    const pickIdx = (prev, strong, pcs) => {
+      let tot = 0; const w = [];
+      for (let i = Math.max(0, prev - 4); i <= Math.min(n - 1, prev + 4); i++) {
+        const d = i - prev; let x = Math.exp(-(d * d) / 4.5); if (d === 0) x *= 0.3;
+        const ct = pcs.has(mod(cands[i], 12)); x *= strong ? (ct ? 4 : 0.5) : (ct ? 1.3 : 1);
+        x *= Math.exp(-((i - mid) * (i - mid)) / (2 * (n / 3) * (n / 3)));
+        w.push([i, x]); tot += x;
+      }
+      let r = rng() * tot; for (const [i, x] of w) { r -= x; if (r <= 0) return i; } return w[w.length - 1][0];
+    };
+    const nearest = (prev, pcs) => { let best = -1, bd = 1e9; for (let i = 0; i < n; i++) if (pcs.has(mod(cands[i], 12))) { const d = Math.abs(i - prev) + (i === prev ? 0.1 : 0); if (d < bd) { bd = d; best = i; } } return best < 0 ? prev : best; };
+    for (let b = 0; b < nBars; b++) {
+      const on = rhy(b), pcs = new Set(chords[b].pcs), repeat = b === 2 && nBars >= 4 && deltas && deltas.length === on.length;
+      const bd = [];
+      on.forEach((s, k) => {
+        const strong = s === 0 || slotAccent(meterId, s) >= 1, last = b === nBars - 1 && k === on.length - 1;
+        let ni;
+        if (last) ni = nearest(idx, (ending === 'tonic' && pcs.has(rootPc)) ? new Set([rootPc]) : pcs);   // resolve to the tonic when the last chord contains it, else a chord tone
+        else if (repeat) { ni = Math.max(0, Math.min(n - 1, idx + deltas[k])); if (strong && !pcs.has(mod(cands[ni], 12))) { const alt = nearest(ni, pcs); if (Math.abs(alt - ni) <= 2) ni = alt; } }
+        else if (b === 0 && k === 0) ni = nearest(mid, new Set([rootPc, (rootPc + 7) % 12]));
+        else ni = pickIdx(idx, strong, pcs);
+        bd.push(ni - idx); idx = ni;
+        const end = k + 1 < on.length ? on[k + 1] : g.slots;
+        const midi = cands[ni], sn = byPc.get(mod(midi, 12));
+        notes.push({ bar: b, slot: s, pulse: b * g.pulses + s * g.slotPulses, pulses: (end - s) * g.slotPulses, midi, name: sn.name, degree: sn.label, chordTone: pcs.has(mod(midi, 12)), strong });
+      });
+      if (b === 0) deltas = bd;
+    }
+    return notes;
+  }
+  function songFrets(notes, strings, maxFret = 15) {
+    let pf = 3, ps = null;
+    return notes.map(nt => {
+      let best = null;
+      strings.forEach((open, i) => {
+        const f = nt.midi - open; if (f < 0 || f > maxFret) return;
+        const cost = Math.abs(f - pf) + (ps == null ? 0 : Math.abs(i - ps) * 0.8) + (f === 0 ? -0.6 : 0) + (f > 12 ? 2 : 0) + (ps == null ? i * 0.05 : 0);
+        if (!best || cost < best.cost) best = { string: i, fret: f, cost };
+      });
+      if (!best) return null;
+      if (best.fret > 0) pf = best.fret; ps = best.string;
+      return { string: best.string, fret: best.fret };
+    });
+  }
+  const SONG_FORMS = { full: ['intro', 'verse', 'chorus', 'verse', 'chorus', 'bridge', 'chorus'], short: ['verse', 'chorus', 'verse', 'chorus'] };
+  function generateSong({ rootName: rn, scaleId = 'major', meter = '4/4', seed = 1, form = 'full', style = 'smart', tuningStrings = [40, 45, 50, 55, 59, 64] }) {
+    const bank = songBank(rn, scaleId), minor = bank.minor, scaleNotes = spellScale(rn, scaleId), rootPc = parseName(rn).pc;
+    const win = melodyWindow(tuningStrings), order = (SONG_FORMS[form] || SONG_FORMS.full).slice();
+    const prog = (sd, bars, st) => generateProgression({ rootName: rn, scaleId, bars, style: st, sevenths: false, seed: sd }).chords;
+    const names = cs => cs.map(chordKey).join(' ');
+    const verse = prog(seed * 7 + 1, 4, style === 'blues' || style === 'jazz' ? 'smart' : style);
+    let chorus = prog(seed * 13 + 5, 4, 'pop'), tries = 0;
+    while (names(chorus) === names(verse) && tries++ < 12) chorus = prog(seed * 13 + 5 + tries * 17, 4, 'pop');
+    if (chorus[3] && chorus[3].degree !== 0 && bank.get(0)) chorus = chorus.slice(0, 3).concat([bank.get(0)]);   // the chorus always resolves home
+    const bridgeDegs = minor ? [5, 3, 6, 4] : [5, 3, 1, 4];
+    const bridge = bridgeDegs.map(d => bank.get(d)).filter(Boolean);
+    const intro = verse.slice(0, 2);
+    const def = {
+      intro:  { title: 'Intro',  chords: intro,  level: 0, density: 0.2,  ending: 'chord' },
+      verse:  { title: 'Verse',  chords: verse,  level: 1, density: 0.35, ending: 'chord' },
+      chorus: { title: 'Chorus', chords: chorus, level: 2, density: 0.5,  ending: 'tonic' },
+      bridge: { title: 'Bridge', chords: bridge, level: 0, density: 0.4,  ending: 'chord' },
+    };
+    const sections = {};
+    [...new Set(order)].forEach((id, si) => {
+      const d = def[id], rng = mulberry32(seed * 101 + si * 7 + 3);
+      sections[id] = { id, title: d.title, bars: d.chords.length, chords: d.chords, level: d.level, rhythm: SONG_RHYTHMS[meter][d.level],
+        melody: songMelody(rng, d.chords, meter, scaleNotes, win, rootPc, d.density, d.ending) };
+      sections[id].tab = songFrets(sections[id].melody, tuningStrings);
+    });
+    return { rootName: rn, scaleId, meter, seed, form, style, minor, window: win, order, sections, strings: tuningStrings.slice() };
+  }
+  function songTab(song, sectionId, flats = false, perLine) {
+    const sec = song.sections[sectionId], g = songGrid(song.meter), W = 3, S = song.strings, nBars = sec.bars;
+    const lab = S.map(m => pcName(m, flats)); const top = lab.length - 1; if (lab.slice(0, top).includes(lab[top])) lab[top] = lab[top].toLowerCase();
+    const lw = Math.max(...lab.map(x => x.length)), cnt = songCounts(song.meter);
+    const barW = g.slots * W + 1; perLine = perLine || Math.max(1, Math.floor(54 / barW));
+    const cell = f => (f == null ? '---' : f < 10 ? `-${f}-` : `${f}-`);
+    const grid = S.map(() => Array.from({ length: nBars }, () => Array(g.slots).fill(null)));
+    sec.melody.forEach((nt, i) => { const t = sec.tab[i]; if (t) grid[t.string][nt.bar][nt.slot] = t.fret; });
+    const lines = [];
+    for (let b0 = 0; b0 < nBars; b0 += perLine) {
+      const bs = Array.from({ length: Math.min(perLine, nBars - b0) }, (_, k) => b0 + k);
+      lines.push(' '.repeat(lw) + ' ' + bs.map(b => cnt.map(c => ` ${c}`.padEnd(W)).join('')).join(' '));
+      for (let i = S.length - 1; i >= 0; i--) lines.push(lab[i].padStart(lw) + '|' + bs.map(b => grid[i][b].map(cell).join('') + '|').join(''));
+      if (b0 + perLine < nBars) lines.push('');
+    }
+    return lines.join('\n');
+  }
+  function songTimeline(song, bpm) {
+    const g = songGrid(song.meter), ps = pulseSeconds(song.meter, bpm), barSec = g.pulses * ps, slotSec = g.slotPulses * ps;
+    const bars = [], ev = []; let gi = 0;
+    song.order.forEach((sid, oi) => {
+      const sec = song.sections[sid];
+      for (let b = 0; b < sec.bars; b++, gi++) {
+        const t0 = gi * barSec; bars.push({ gi, order: oi, section: sid, bar: b, t: t0, dur: barSec });
+        const hits = []; for (let s = 0; s < g.slots; s++) if (sec.rhythm[s] !== '.') hits.push(s);
+        hits.forEach((s, k) => ev.push({ kind: 'chord', t: t0 + s * slotSec, dur: ((k + 1 < hits.length ? hits[k + 1] : g.slots) - s) * slotSec, hit: sec.rhythm[s], chord: b, section: sid, gi, order: oi }));
+        sec.melody.forEach(nt => { if (nt.bar === b) ev.push({ kind: 'melody', t: t0 + nt.slot * slotSec, dur: nt.pulses * ps, midi: nt.midi, section: sid, gi, order: oi }); });
+      }
+    });
+    ev.sort((a, b) => a.t - b.t || (a.kind === 'chord' ? -1 : 1));
+    return { bars, events: ev, total: gi * barSec, barSec, slotSec };
+  }
+  function pianoChordLine(chord, oct = 4) {         // default piano voicing for a chord, with fingers: { rh:'C(1) E(3) G(5)', lh:'C(5)' }
+    const vs = pianoVoicings(chord), pl = pianoChordPlan(chord, vs[0], 'B', oct);
+    const fmt = a => a.map(x => `${x.tone.name}(${x.finger})`).join(' ');
+    return { rh: fmt(pl.R), lh: fmt(pl.L), label: vs[0].label };
+  }
+  function songText(song, flats = false, bpm = 100) {
+    const out = [`${song.rootName} ${SCALES[song.scaleId].name} · ${song.meter} · ${bpm} BPM · idea #${song.seed}`, 'Form: ' + song.order.map(id => song.sections[id].title).join(' – '), ''];
+    [...new Set(song.order)].forEach(id => {
+      const s = song.sections[id];
+      out.push(`[${s.title}]  ` + s.chords.map(c => c.name).join(' | '), '  strum: ' + s.rhythm.split('').join(' ') + '   (' + songCounts(song.meter).join(' ') + ')', '  melody: ' + s.melody.map(n => n.name).join(' '), '', songTab(song, id, flats), '');
+    });
+    return out.join('\n');
+  }
+
   return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
     mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
     spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
     keySignature, circle, circlePos, relativeMinor, relativeMajor, signatureFor,
     identifyQuality, buildChord, harmonize, midiOf, nFromA4, freq, midiName, ratio, tuningById,
     scalePositions, modeInfo, scaleFingers, CHORD_GROUPS, CORE_QUALITIES, isMinorQuality,
-    findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs };
+    findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs,
+    SONG_RHYTHMS, SONG_FORMS, songGrid, slotAccent, songCounts, playableRange, melodyWindow, generateSong, songFrets, songTab, songTimeline, pianoChordLine, songText };
 })();
 // </THEORY>
 const T = Theory;
@@ -1294,6 +1493,7 @@ const DEFAULTS = {
   chordRoot: 'C', chordQ: 'major', chHand: 'B', scHand: 'R', pOct: 4, pOcts: 1, pcPos: 0, psPos: 0, scalePos: null, chordPos: 0, sevenths: false, seed: 7, bars: 4, style: 'smart', feel: 'strum', loop: true,
   mathOct: 4, mathString: 0, selDeg: null,
   prExact: false, prHow: 'together', midiSound: false, midiOn: false,
+  songSeed: 11, songForm: 'full', songStyle: 'smart', songLoop: false,
 };
 const S = Object.assign({}, DEFAULTS);
 const STORE = 'bpgw.v3';
@@ -1304,7 +1504,8 @@ S.metro = false;                                   // never auto-start a click t
    SOUND — WebAudio. Three voices: Karplus-Strong pluck, soft electric-piano keys, mellow synth.
    ================================================================ */
 const Snd = (() => {
-  let ctx = null, master = null; const cache = new Map();
+  let ctx = null, master = null, dest = null; const cache = new Map();
+  const out = () => dest || master;
   function ensure() {
     if (!ctx) {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -1350,11 +1551,11 @@ const Snd = (() => {
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = Math.min(9000, 2200 + f * 4);
       const g = ctx.createGain(); g.gain.setValueAtTime(vel * 0.9, t);
       g.gain.setTargetAtTime(0.0001, t + dur, 0.18);
-      src.connect(lp); lp.connect(g); g.connect(master); src.start(t); src.stop(t + dur + 1.2);
+      src.connect(lp); lp.connect(g); g.connect(out()); src.start(t); src.stop(t + dur + 1.2);
     } else if (tone === 'keys') {
       const g = ctx.createGain(); env(g, t, 0.004, vel * 0.5, 0.02, Math.max(0.35, dur * 0.6));
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3800;
-      g.connect(lp); lp.connect(master);
+      g.connect(lp); lp.connect(out());
       [[1, 1, 'sine'], [2, 0.38, 'sine'], [3, 0.14, 'sine'], [4.01, 0.08, 'triangle'], [7, 0.025, 'sine']].forEach(([m, a, type], i) => {
         const o = ctx.createOscillator(); o.type = type; o.frequency.value = f * m;
         const og = ctx.createGain(); og.gain.setValueAtTime(a, t); og.gain.setTargetAtTime(a * 0.15, t, 0.25 + 0.5 / (i + 1));
@@ -1364,16 +1565,16 @@ const Snd = (() => {
       const g = ctx.createGain(); env(g, t, 0.012, vel * 0.32, dur * 0.55, 0.22);
       const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 2;
       lp.frequency.setValueAtTime(Math.min(7000, f * 7), t); lp.frequency.exponentialRampToValueAtTime(Math.max(500, f * 1.6), t + dur);
-      g.connect(lp); lp.connect(master);
+      g.connect(lp); lp.connect(out());
       [['sawtooth', -6], ['triangle', 5]].forEach(([type, det]) => {
         const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.detune.value = det;
         o.connect(g); o.start(t); o.stop(t + dur + 1.6);
       });
     }
   }
-  function chord(midis, when, dur = 1.6, vel = 0.7, spread = 0.028, up = false) {
+  function chord(midis, when, dur = 1.6, vel = 0.7, spread = 0.028, up = false, voice) {
     const list = up ? midis.slice().reverse() : midis;
-    list.forEach((m, i) => { if (m != null) note(m, (when ?? now()) + i * spread, dur, vel * (0.9 + 0.1 * Math.random())); });
+    list.forEach((m, i) => { if (m != null) note(m, (when ?? now()) + i * spread, dur, vel * (0.9 + 0.1 * Math.random()), voice); });
   }
   function click(level, when) {
     if (!ensure()) return;
@@ -1383,9 +1584,13 @@ const Snd = (() => {
     g.gain.setValueAtTime(level === 2 ? 0.42 : level === 1 ? 0.3 : 0.2, t);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
     const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 600;
-    o.connect(hp); hp.connect(g); g.connect(master); o.start(t); o.stop(t + 0.06);
+    o.connect(hp); hp.connect(g); g.connect(out()); o.start(t); o.stop(t + 0.06);
   }
-  return { ensure, note, chord, click, now, applyVol, get ctx() { return ctx; } };
+  // A bus is a gain node that a whole song is played through, so one call can silence everything already scheduled.
+  function newBus() { if (!ensure()) return null; const g = ctx.createGain(); g.connect(master); return g; }
+  function setBus(g) { dest = g || null; }
+  function killBus(g) { if (!g) return; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setTargetAtTime(0, ctx.currentTime, 0.015); setTimeout(() => { try { g.disconnect(); } catch (e) {} }, 250); } catch (e) {} }
+  return { ensure, note, chord, click, now, newBus, setBus, killBus, applyVol, get ctx() { return ctx; } };
 })();
 
 /* ================================================================
@@ -1443,6 +1648,7 @@ function updateHash() {
     parts.push('mode=' + S.mode, 'pp=' + (ch ? S.pcPos : S.psPos), 'hd=' + (ch ? S.chHand : S.scHand), 'po=' + S.pOct);
     if (!ch) parts.push('pn=' + S.pOcts);
   }
+  if (S.tab === 'song') parts.push('ss=' + S.songSeed, 'sf=' + S.songForm, 'sst=' + S.songStyle);
   const h = parts.join('&');
   try { history.replaceState(null, '', '#' + h); } catch (e) {}
 }
@@ -1464,6 +1670,9 @@ function applyHash() {
       else if (k === 'meter' && T.METERS[v]) S.meter = v;
       else if (k === 'tempo') S.tempo = Math.max(40, Math.min(220, +v || 100));
       else if (k === 'a4') S.a4 = +v || 440;
+      else if (k === 'ss') S.songSeed = Math.max(1, Math.min(99999, +v || 11));
+      else if (k === 'sf' && (v === 'full' || v === 'short')) S.songForm = v;
+      else if (k === 'sst' && (v === 'smart' || v === 'pop')) S.songStyle = v;
       else if (['pp', 'hd', 'po', 'pn'].includes(k)) X[k] = v;
     } catch (e) {}
   });
@@ -2336,7 +2545,7 @@ const Player = {
   halt() { clearInterval(this.timer); this.timer = null; cancelAnimationFrame(this.raf); this.raf = null; this.queue = []; this.light(-1, -1, 0); },
   reset() { if (this.timer) { this.pulse = 0; this.next = Snd.now() + 0.1; this.queue = []; } },
   sync() { if (S.metro || this.chordsOn) this.begin(); else this.halt(); updateSongBtn(); },
-  startChords() { this.chordsOn = true; if (this.timer) { this.reset(); } else this.begin(); updateSongBtn(); },
+  startChords() { SongPlay.stop(); this.chordsOn = true; if (this.timer) { this.reset(); } else this.begin(); updateSongBtn(); },
   stopChords() { this.chordsOn = false; if (!S.metro) this.halt(); updateSongBtn(); },
   tick() {
     const ctx = Snd.ctx; if (!ctx) return;
@@ -2347,7 +2556,7 @@ const Player = {
     const prog = currentProg(), nb = prog.chords.length;
     if (this.chordsOn && !S.loop && barAbs >= nb) { this.chordsOn = false; setTimeout(() => { if (!S.metro) this.halt(); updateSongBtn(); }, 0); }
     const acc = M.accents[beat];
-    if (S.metro) Snd.click(acc, t);
+    if (S.metro && !SongPlay.on) Snd.click(acc, t);
     let bar = -1;
     if (this.chordsOn) {
       bar = barAbs % nb;
@@ -2372,6 +2581,138 @@ const Player = {
     if (beat >= 0) { const m = $('#metro'); if (m && S.metro) { m.style.boxShadow = '0 0 0 1px #000,0 0 12px 3px ' + (acc === 2 ? 'rgba(232,70,62,.9)' : 'rgba(255,170,60,.7)'); setTimeout(() => { m.style.boxShadow = ''; }, 90); } }
   },
 };
+/* ================================================================
+   SONG GENERATOR (UI + playback)
+   ================================================================ */
+let _song = null, _songKey = '';
+const songKey = () => [keyName(), S.scale, S.meter, S.tuning, S.songSeed, S.songForm, S.songStyle].join('|');
+function currentSong() {
+  const k = songKey();
+  if (k !== _songKey) {
+    _song = T.generateSong({ rootName: keyName(), scaleId: S.scale, meter: S.meter, seed: S.songSeed, form: S.songForm, style: S.songStyle, tuningStrings: curTuning().strings });
+    _songKey = k;
+  }
+  return _song;
+}
+const SongPlay = {
+  on: false, timer: null, raf: null, bus: null, gi: 0, t: 0, only: null, queue: [], cur: null, key: '', tls: new Map(), song: null, done: false, endT: 0,
+  tl(bpm) {
+    const k = bpm + '|' + this.song.order.join();
+    let x = this.tls.get(k);
+    if (!x) { const tl = T.songTimeline(this.song, bpm), byBar = new Map(); tl.events.forEach(e => { if (!byBar.has(e.gi)) byBar.set(e.gi, []); byBar.get(e.gi).push(e); }); x = { tl, byBar }; this.tls.set(k, x); }
+    return x;
+  },
+  start(only) {
+    if (!Snd.ensure()) return;
+    this.stop(); Player.stopChords();
+    const full = currentSong();
+    this.song = only ? Object.assign({}, full, { order: [only] }) : full; this.only = only || null; this.key = songKey(); this.tls = new Map();
+    this.bus = Snd.newBus(); this.gi = 0; this.t = Snd.now() + 0.12; this.queue = []; this.cur = null; this.done = false; this.on = true;
+    this.timer = setInterval(() => this.tick(), 40);
+    const loop = () => { this.frame(); if (this.on) this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop); this.btns();
+  },
+  stop() {
+    if (!this.on) return;
+    clearInterval(this.timer); this.timer = null; cancelAnimationFrame(this.raf); this.raf = null;
+    Snd.killBus(this.bus); this.bus = null; this.on = false; this.queue = []; this.cur = null; this.only = null;
+    this.paint(); this.btns();
+  },
+  tick() {
+    if (songKey() !== this.key) { this.stop(); return; }              // key / scale / meter / tuning changed: this song no longer exists
+    const lim = Snd.now() + 0.7;
+    while (!this.done && this.t < lim) {
+      const { tl, byBar } = this.tl(S.tempo);
+      if (this.gi >= tl.bars.length) { if (S.songLoop) this.gi = 0; else { this.done = true; this.endT = this.t + 1.2; break; } }
+      this.bar(tl.bars[this.gi], byBar.get(this.gi) || [], tl); this.t += tl.barSec; this.gi++;
+    }
+  },
+  bar(bar, evs, tl) {
+    const sec = this.song.sections[bar.section], cm = T.chordMidi(sec.chords[bar.bar], 48), M = T.METERS[S.meter], ps = T.pulseSeconds(S.meter, S.tempo);
+    Snd.setBus(this.bus);
+    try {
+      this.queue.push({ t: this.t, bar });
+      evs.forEach(e => {
+        const at = this.t + (e.t - bar.t);
+        if (e.kind === 'melody') Snd.note(e.midi, at, Math.max(0.15, e.dur * 0.95), 0.85, 'pluck');
+        else if (e.hit === 'D') Snd.chord([cm.bass].concat(cm.notes), at, Math.min(2.6, e.dur * 1.1 + 0.3), 0.8, 0.016, false, 'keys');
+        else if (e.hit === 'u') Snd.chord(cm.notes, at, Math.min(1.4, e.dur * 1.1 + 0.2), 0.5, 0.012, true, 'keys');
+        else if (e.hit === 'b') Snd.note(cm.bass, at, Math.min(2.2, e.dur * 1.1 + 0.2), 0.8, 'keys');
+      });
+      if (S.metro) for (let p = 0; p < M.num; p++) Snd.click(M.accents[p], this.t + p * ps);
+    } finally { Snd.setBus(null); }
+  },
+  frame() {
+    const now = Snd.now();
+    let moved = false;
+    while (this.queue.length && this.queue[0].t <= now) { this.cur = this.queue.shift().bar; moved = true; }
+    if (moved) this.paint();
+    if (this.done && !this.queue.length && now > this.endT) this.stop();
+  },
+  paint() {
+    const tab = $('#tab-song'); if (!tab) return;
+    $$('.sbar.now, .fchip.now', tab).forEach(e => e.classList.remove('now'));
+    const now = $('#songnow', tab), c = this.on ? this.cur : null;
+    if (!c) { if (now) now.textContent = ''; return; }
+    const el = tab.querySelector(`.sbar[data-sec="${c.section}"][data-bar="${c.bar}"]`); if (el) el.classList.add('now');
+    if (!this.only) { const ch = tab.querySelector(`.fchip[data-o="${c.order}"]`); if (ch) ch.classList.add('now'); }
+    if (now) { const sec = this.song.sections[c.section]; now.textContent = `${sec.title} · bar ${c.bar + 1}/${sec.bars} · ${sec.chords[c.bar].name}`; }
+  },
+  btns() {
+    const tab = $('#tab-song'); if (!tab) return;
+    const g = $('[data-act="songgo"]', tab); if (g) g.textContent = this.on && !this.only ? '■ Stop' : '▶ Play song';
+    $$('[data-act="secplay"]', tab).forEach(b => { b.textContent = this.on && this.only === b.dataset.sec ? '■ Stop' : '▶ Play'; });
+  },
+};
+function songHear(chord) {
+  Snd.ensure();
+  const pl = T.pianoChordPlan(chord, T.pianoVoicings(chord)[0], 'B', 4), ms = pl.R.concat(pl.L).map(n => n.midi).sort((a, b) => a - b);
+  Snd.chord(ms, Snd.now() + 0.03, 2, 0.8, 0.012, false, 'keys');
+}
+function songGenHTML() {
+  const song = currentSong(), t = curTuning(), g = T.songGrid(S.meter), perLine = window.innerWidth < 560 ? Math.max(1, Math.floor(36 / (T.songGrid(S.meter).slots * 3 + 1))) : undefined, counts = T.songCounts(S.meter), flats = !!t.flats;
+  const selOpts = (arr, cur) => arr.map(([v, l]) => `<option value="${v}"${String(v) === String(cur) ? ' selected' : ''}>${l}</option>`).join('');
+  const ids = [...new Set(song.order)], uses = id => song.order.filter(x => x === id).length;
+  const chips = song.order.map((id, o) => `<span class="fchip" data-o="${o}">${esc(song.sections[id].title)}</span>`).join('<i class="fsep">›</i>');
+  const uniq = [], seen = new Set();
+  ids.forEach(id => song.sections[id].chords.forEach(c => { if (!seen.has(c.name)) { seen.add(c.name); uniq.push(c); } }));
+  SONGUI.chords = uniq;
+  const sym = { D: '↓', u: '↑', b: '●', '.': '·' }, LV = ['light', 'steady', 'full'];
+  const secs = ids.map(id => {
+    const sec = song.sections[id], n = sec.bars;
+    const bars = sec.chords.map((c, b) => `<div class="sbar" data-act="sbarplay" data-sec="${id}" data-bar="${b}" role="button" tabindex="0" aria-label="${esc(c.name)}, bar ${b + 1}"><span class="num">${b + 1}</span><div class="rn">${esc(c.roman)}</div><div class="nm">${esc(c.name)}</div></div>`).join('');
+    const strum = sec.rhythm.split('').map((h, s) => `<span class="sl${h !== '.' ? ' hit' : ''}${T.slotAccent(S.meter, s) === 2 ? ' dn' : ''}"><em>${esc(counts[s])}</em><b>${sym[h]}</b></span>`).join('');
+    const mel = Array.from({ length: n }, (_, b) => `<span class="mbar">${sec.melody.filter(x => x.bar === b).map(x => `<span class="mn${x.chordTone ? ' ct' : ''}" title="${esc(x.degree)}">${esc(x.name)}</span>`).join('')}</span>`).join('');
+    return `<div class="card sec" data-sec="${id}">
+      <div class="sechead"><h3>${esc(sec.title)}</h3><span class="ctx">${n} bars · ${uses(id) > 1 ? 'played ×' + uses(id) + ' · ' : ''}${LV[sec.level]} strum</span><button class="btn sm" data-act="secplay" data-sec="${id}">▶ Play</button></div>
+      <div class="sbars">${bars}</div>
+      <div class="slab">Strum pattern · one bar <span class="soft">· ↓ down  ↑ up  ● bass note</span></div>
+      <div class="sgrid" style="--n:${g.slots}">${strum}</div>
+      <div class="slab">Melody <span class="soft">· bright = chord tone</span></div>
+      <div class="mel">${mel}</div>
+      <div class="slab">Guitar tab <span class="soft">· ${esc(t.name)}</span></div>
+      <pre class="tabtxt" tabindex="0" aria-label="Guitar tab for the ${esc(sec.title)} melody">${esc(T.songTab(song, id, flats, perLine))}</pre>
+    </div>`;
+  }).join('');
+  const fing = uniq.map((c, i) => { const l = T.pianoChordLine(c); return `<div class="pfc"><div class="top"><b>${esc(c.name)}</b><span class="rn">${esc(c.roman)}</span></div><div class="ln"><span class="h">RH</span>${esc(l.rh)}</div><div class="ln"><span class="h">LH</span>${esc(l.lh)}</div><div class="acts"><button class="btn sm" data-act="songhear" data-i="${i}">♪ Hear</button><button class="btn sm" data-act="songprac" data-i="${i}">Practice</button></div></div>`; }).join('');
+  return `
+  <h2>Song generator <span class="ctx">${esc(keyTitle())} · ${S.meter} · ${S.tempo} BPM · ${esc(t.name)}</span></h2>
+  <div class="card">
+    <div class="hint" style="margin-bottom:12px"><b style="color:var(--ink)">Key + scale + time signature + tuning → a whole song.</b> Intro, verse, chorus and bridge, each with a chord per bar, a strum pattern that fits ${S.meter}, a melody made only of ${esc(T.SCALES[S.scale].name)} notes (chord tones land on the strong beats), the melody as guitar tab in ${esc(t.name)}, and piano fingering for every chord. Change anything in the panel and the song follows; the same idea number always gives the same song.</div>
+    <div class="ctrls">
+      <div class="field"><label>Form</label><select data-chg="songform">${selOpts([['full', 'Full song (7 parts)'], ['short', 'Short (verse + chorus)']], S.songForm)}</select></div>
+      <div class="field"><label>Chords</label><select data-chg="songstyle">${selOpts([['smart', 'Smart (functional)'], ['pop', 'Pop loops']], S.songStyle)}</select></div>
+      <label class="hint" style="display:flex;gap:6px;align-items:center;padding-bottom:9px"><input type="checkbox" data-chg="songloop" ${S.songLoop ? 'checked' : ''}> loop</label>
+    </div>
+    <div class="toolbar"><button class="btn pri" data-act="songgo">${SongPlay.on && !SongPlay.only ? '■ Stop' : '▶ Play song'}</button><button class="btn" data-act="songnew">⟳ New song</button><button class="btn" data-act="songcopy">Copy song</button><span class="hint">idea #${S.songSeed}</span></div>
+    <div class="form" aria-label="Song form">${chips}</div>
+    <div class="songnow" id="songnow" aria-live="off"></div>
+  </div>
+  ${secs}
+  <h2>Piano fingering <span class="ctx">chords in this song · RH = right hand, LH = left hand · numbers are fingers (1 = thumb)</span></h2>
+  <div class="pfgrid">${fing}</div>`;
+}
+const SONGUI = { chords: [] };
 function updateSongBtn() {
   const b = $('[data-act="songplay"]'); if (b) b.textContent = Player.chordsOn ? '■ Stop' : '▶ Play progression';
 }
@@ -2383,8 +2724,8 @@ function renderSong() {
   prog.chords.forEach(c => { if (seen.has(c.name)) return; seen.add(c.name); const v = T.findVoicings(c, t.strings, { limit: 1 })[0]; if (v) shapes.push({ c, v }); });
   window.__songShapes = shapes;
   const unit = M.unit === 'beat' ? 'beats' : M.compound ? 'eighth notes (BPM = dotted quarter)' : 'eighth notes';
-  return `
-  <h2>Song <span class="ctx">${esc(keyTitle())} · ${S.meter} · ${S.tempo} BPM · ${esc(t.name)}</span></h2>
+  return songGenHTML() + `
+  <h2 style="margin-top:22px">Progression sketcher <span class="ctx">${esc(keyTitle())} · ${S.meter} · ${S.tempo} BPM · ${esc(t.name)}</span></h2>
   <div class="card">
     <div class="hint" style="margin-bottom:12px"><b style="color:var(--ink)">Root + scale + time signature + tempo → a progression.</b> This is step one of the song generator: it picks chords from the harmonised key with simple functional-harmony rules (tonic → subdominant/dominant → back home) and plays them. Set the key, tuning, time signature and tempo with the control panel above.</div>
     <div class="ctrls">
@@ -2429,6 +2770,7 @@ function render() {
   window.scrollTo(0, y);
   $$('#dock button').forEach(b => b.classList.toggle('on', b.dataset.v === S.tab));
   prAfterRender();
+  if (SongPlay.on) { SongPlay.paint(); SongPlay.btns(); }
 }
 function setTab(tab, opts = {}) {
   S.tab = tab; UI.piFocus = true;
@@ -2514,6 +2856,17 @@ document.addEventListener('click', e => {
     case 'moct': S.mathOct = +v; render(); save(); break;
     case 'mstr': S.mathString = +v; render(); save(); break;
     case 'gen': S.seed = Math.floor(Math.random() * 9000) + 1; render(); save(); if (Player.chordsOn) Player.reset(); break;
+    case 'songgo': if (SongPlay.on && !SongPlay.only) SongPlay.stop(); else SongPlay.start(); break;
+    case 'secplay': if (SongPlay.on && SongPlay.only === act.dataset.sec) SongPlay.stop(); else SongPlay.start(act.dataset.sec); break;
+    case 'songnew': S.songSeed = Math.floor(Math.random() * 9000) + 1; render(); save(); updateHash(); break;
+    case 'sbarplay': { const c = currentSong().sections[act.dataset.sec].chords[+act.dataset.bar]; if (c) songHear(c); break; }
+    case 'songhear': { const c = SONGUI.chords[+act.dataset.i]; if (c) songHear(c); break; }
+    case 'songprac': { const c = SONGUI.chords[+act.dataset.i]; if (!c) break; S.chordRoot = c.root; S.chordQ = c.quality; S.pcPos = 0; S.chHand = 'B'; setTab('chord'); prToggle(true); break; }
+    case 'songcopy': {
+      const text = T.songText(currentSong(), !!curTuning().flats, S.tempo);
+      (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => { act.textContent = 'Copied ✓'; setTimeout(() => { act.textContent = 'Copy song'; }, 1400); }).catch(() => { act.textContent = 'Clipboard blocked'; setTimeout(() => { act.textContent = 'Copy song'; }, 1800); });
+      break;
+    }
     case 'songplay': if (Player.chordsOn) Player.stopChords(); else Player.startChords(); break;
     case 'barplay': { const c = currentProg().chords[+act.dataset.i]; if (c) playChord(c, 'strum'); break; }
     case 'copy': {
@@ -2536,6 +2889,9 @@ document.addEventListener('change', e => {
     case 'style': S.style = v; break;
     case 'feel': S.feel = v; break;
     case 'loop': S.loop = !!v; break;
+    case 'songform': S.songForm = v; break;
+    case 'songstyle': S.songStyle = v; break;
+    case 'songloop': S.songLoop = !!v; break;
     case 'mathpc': S.mathPc = +v; break;
     case 'poct': S.pOct = +v; UI.piFocus = true; break;
   }
@@ -2550,7 +2906,7 @@ buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { S, Theory, Snd, Player, setTab, render, UI, MIDI, inputNote, prToggle, prSteps };
+window.BPGW = { S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps };
 </script>
 </body>
 </html>

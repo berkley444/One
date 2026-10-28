@@ -34,6 +34,7 @@ Taken from the original app (see `screenshots/gm_original.png`):
 10. **Sound** — notes, chords and scales play through WebAudio.
 11. **Rhythm** — time signature and tempo, a metronome, and a **Generate progression** button that writes 4–8 bars in the current key and plays them.
 12. **MIDI play-along & Practice** (2026-10-28) — connect a digital piano by Web MIDI (or tap the on-screen keys / use the computer keyboard); incoming notes light the keys; Practice waits for the next note or chord of the chosen scale position / chord, shows the fingering, scores right/wrong/time.
+13. **Song generator** (2026-10-28) — key + scale + time signature + tuning + idea number → intro/verse/chorus/bridge with chords, strum patterns by meter, a scale-tone melody, guitar tab, piano fingering and playback.
 
 ## In his words
 
