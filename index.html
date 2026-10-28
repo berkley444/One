@@ -2729,6 +2729,188 @@ const Theory = (() => {
     return { parts, done, lessons: per, complete: per.filter(x => x.complete).length };
   }
 
+  /* ---------- identify a chord from the notes someone has placed ----------
+     identifyChord(midis, { flats }) takes the SOUNDING pitches (MIDI numbers, any order, duplicates fine) and names the chord using
+     the same 51 qualities as the Chord Builder. How:
+       · for every root (12) x quality (51): the played pitch classes must all belong to the chord, the root must be played, and the
+         chord's essentialTones() (the root, 3rd/sus tone, 7th, altered tones, the top natural extension; the plain 5th may go once the
+         chord has 4+ notes) must be present;
+       · a bass note that is NOT in the chord is allowed when three or more other pitch classes make a chord ("C/D", "Em7/C");
+       · each candidate gets a cost: how common the quality is, how many chord tones are left out, and how far from root position the
+         bass is. The cheapest wins; the other names for the same notes are the alternatives (C6 = Am7/C).
+     Two notes are an interval (a perfect 5th is also a power chord); one note is just a note; no match lists the notes and the
+     intervals above the lowest note, plus chords those notes could grow into. */
+  const INTERVAL_NAMES = ['unison', 'minor 2nd', 'major 2nd', 'minor 3rd', 'major 3rd', 'perfect 4th', 'tritone', 'perfect 5th', 'minor 6th', 'major 6th', 'minor 7th', 'major 7th'];
+  const GENERIC_LABELS = ['1', '♭2', '2', '♭3', '3', '4', '♭5', '5', '♭6', '6', '♭7', '7'];
+  function intervalName(semis) {
+    semis = Math.abs(Math.round(semis));
+    const o = Math.floor(semis / 12), r = semis % 12;
+    if (!o) return INTERVAL_NAMES[r];
+    if (!r) return o === 1 ? 'octave' : o + ' octaves';
+    return INTERVAL_NAMES[r] + ' + ' + (o === 1 ? 'an octave' : o + ' octaves');
+  }
+  const toneKind = (semis, deg) => semis === 0 ? 'root' : deg === 5 ? 'fifth' : deg === 7 ? 'seventh' : (deg === 3 || deg === 2 || deg === 4) ? 'third' : 'ext';
+  const _qInfo = {};
+  function qualityInfo(id) {
+    if (_qInfo[id]) return _qInfo[id];
+    const q = CHORDS[id], tones = q.pts.map(p => ({ deg: p.d, semis: p.s }));
+    const ess = essentialTones({ tones }).map(t => t.semis % 12);
+    return (_qInfo[id] = { q, offs: q.pts.map(p => p.s % 12), ess, n: tones.length });
+  }
+  const ODD_QUALITIES = ['sus2sus4', 'no5', 'majb5'];
+  function qualityBase(id) {
+    const ci = CORE_QUALITIES.indexOf(id);
+    return (ci >= 0 ? ci * 0.04 : 0.6 + CHORD_ORDER.indexOf(id) * 0.012) + (ODD_QUALITIES.includes(id) ? 0.8 : 0);
+  }
+  function spellRoot(pc, id, flats) {                  // the spelling of the root whose chord tones need the fewest accidentals
+    const names = [SHARP_NAMES[pc], FLAT_NAMES[pc]].filter((n, i, a) => a.indexOf(n) === i);
+    const tie = rootName(pc, isMinorQuality(id) ? 'naturalMinor' : 'major', flats ? '♭' : 'auto');
+    let best = null;
+    names.forEach(nm => {
+      const cost = buildChord(nm, id).tones.reduce((a, t) => { const x = Math.abs(parseName(t.name).acc); return a + (x > 1 ? 4 * x : x); }, 0) + (nm === tie ? 0 : 0.5);
+      if (!best || cost < best.cost) best = { nm, cost };
+    });
+    return best.nm;
+  }
+  const ordLabel = l => { const m = /^(\D*)(\d+)$/.exec(l); if (!m) return l; const n = +m[2], t = n % 100; return m[1] + n + (t >= 11 && t <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th'); };
+  function describePosition(deg, label, outside) {
+    if (outside) return 'slash chord (the bass is not part of the chord)';
+    if (deg === 1) return 'root position';
+    const tag = 'the ' + ordLabel(label) + ' is in the bass';
+    if (deg === 3) return '1st inversion (' + tag + ')';
+    if (deg === 5) return '2nd inversion (' + tag + ')';
+    if (deg === 7) return '3rd inversion (' + tag + ')';
+    return 'slash chord (' + tag + ')';
+  }
+  function identifyChord(midis, opt = {}) {
+    const flats = !!opt.flats;
+    const ms = (midis || []).filter(Number.isFinite).map(Math.round).sort((a, b) => a - b);
+    const res = { midis: ms, count: ms.length, pcs: [], status: 'empty', title: '', detail: '', best: null, alternatives: [], placed: [], notes: [], intervals: [], suggestions: [], interval: null };
+    if (!ms.length) { res.detail = 'No notes placed yet.'; return res; }
+    const bassMidi = ms[0], bassPc = mod(bassMidi, 12);
+    const pcs = [...new Set(ms.map(m => mod(m, 12)))];
+    res.pcs = pcs;
+    const bassFirst = pcs.slice().sort((a, b) => mod(a - bassPc, 12) - mod(b - bassPc, 12));
+    // plain note names / intervals above the lowest note (used when there is no chord to hang them on)
+    const plainName = pc => pcName(pc, flats);
+    res.notes = bassFirst.map(plainName);
+    res.intervals = bassFirst.map(pc => ({ pc, name: plainName(pc), semis: mod(pc - bassPc, 12), label: GENERIC_LABELS[mod(pc - bassPc, 12)], text: intervalName(mod(pc - bassPc, 12)) }));
+    const plainPlaced = () => ms.map(m => { const pc = mod(m, 12), s = mod(pc - bassPc, 12); return { midi: m, pc, name: plainName(pc), label: GENERIC_LABELS[s], dot: GENERIC_LABELS[s] === '1' ? '1' : GENERIC_LABELS[s], tone: s === 0 ? 'root' : toneKind(s, s === 7 ? 5 : s === 3 || s === 4 ? 3 : s === 10 || s === 11 ? 7 : 6), isBass: m === bassMidi }; });
+
+    if (pcs.length === 1) {
+      res.status = 'single'; res.placed = plainPlaced();
+      res.title = plainName(bassPc);
+      res.detail = ms.length > 1 ? `${plainName(bassPc)} played ${ms.length} times (an octave apart). Add more notes to make a chord.` : 'One note. Add at least two more to make a chord.';
+      return res;
+    }
+
+    // ---- candidates ----
+    const cands = [];
+    const playedSet = new Set(pcs), rest = pcs.filter(p => p !== bassPc);
+    const twoNotes = pcs.length === 2;
+    for (let root = 0; root < 12; root++) {
+      if (!playedSet.has(root) && !(rest.length >= 3 && rest.includes(root))) continue;
+      for (const id of CHORD_ORDER) {
+        if (twoNotes && id !== 'power') continue;
+        const { q, offs, ess, n } = qualityInfo(id);
+        const chordPcs = offs.map(o => mod(root + o, 12));
+        let outside = false, set = playedSet;
+        if (!pcs.every(p => chordPcs.includes(p))) {
+          if (!(rest.length >= 3 && !chordPcs.includes(bassPc) && rest.every(p => chordPcs.includes(p)))) continue;
+          outside = true; set = new Set(rest);
+        }
+        if (!set.has(root)) continue;
+        if (!ess.every(o => set.has(mod(root + o, 12)))) continue;
+        const omitted = q.pts.filter(p => !set.has(mod(root + p.s, 12)));
+        const rootNm = spellRoot(root, id, flats), spelled = buildChord(rootNm, id);
+        const accs = spelled.tones.map(t => Math.abs(parseName(t.name).acc));
+        let cost = qualityBase(id) + omitted.reduce((a, p) => a + (p.d === 5 ? 0.9 : 1.4), 0) + accs.filter(x => x > 1).length * 0.9 + accs.filter(x => x === 1).length * 0.02 + spelled.notes.filter(n => /^(E♯|B♯|C♭|F♭)/.test(n)).length * 0.3;
+        let bassTone = null;
+        if (outside) cost += 2.6;
+        else {
+          bassTone = q.pts.find(p => mod(root + p.s, 12) === bassPc);
+          cost += bassTone.d === 1 && bassTone.s === 0 ? 0 : bassTone.d === 3 ? 0.9 : bassTone.d === 5 ? 1.3 : bassTone.d === 7 ? 1.7 : 1.6;
+        }
+        cands.push({ root, id, cost, outside, omitted, bassTone, rootNm, spelled });
+      }
+    }
+    cands.sort((a, b) => a.cost - b.cost || CHORD_ORDER.indexOf(a.id) - CHORD_ORDER.indexOf(b.id));
+
+    const make = c => {
+      const ch = c.spelled, q = CHORDS[c.id];
+      const anyFlat = ch.notes.some(n => n.includes('♭')), anySharp = ch.notes.some(n => n.includes('♯'));
+      const bassSemis = mod(bassPc - c.root, 12);
+      const bassName = c.outside ? (() => {                                           // spell an outside bass note with a letter the chord is not already using
+        const cand = [SHARP_NAMES[bassPc], FLAT_NAMES[bassPc]], used = ch.notes.map(n => n[0]), fresh = cand.filter(n => !used.includes(n[0]));
+        return fresh.length === 1 ? fresh[0] : pcName(bassPc, anyFlat ? true : anySharp ? false : flats);
+      })() : ch.tones.find(t => t.pc === bassPc).name;
+      const slash = bassPc !== c.root;
+      const tone = pc => ch.tones.find(t => t.pc === pc) || null;
+      const bt = c.outside ? null : tone(bassPc);
+      const bassLabel = c.outside ? GENERIC_LABELS[bassSemis] : bt.label;
+      const position = describePosition(c.outside ? 0 : bt.deg, bassLabel, c.outside);
+      const placed = ms.map(m => {
+        const pc = mod(m, 12), t = tone(pc);
+        if (t) return { midi: m, pc, name: t.name, label: t.label, dot: dotLabel(t.label), tone: toneKind(t.semis, t.deg), isBass: m === bassMidi };
+        const s = mod(pc - c.root, 12);
+        return { midi: m, pc, name: bassName, label: GENERIC_LABELS[s], dot: GENERIC_LABELS[s], tone: 'ext', isBass: m === bassMidi };
+      });
+      const omittedLabels = c.omitted.map(p => { const t = ch.tones.find(x => x.semis === p.s && x.deg === p.d); return t.label === '5' ? '5th' : t.label; });
+      const kind = c.outside ? 'outside' : !slash ? 'root' : bt.deg === 3 ? 'first' : bt.deg === 5 ? 'second' : bt.deg === 7 ? 'third' : 'other';
+      return { name: ch.name + (slash ? '/' + bassName : ''), chordName: ch.name, root: ch.root, rootPc: ch.rootPc, quality: c.id, qualityName: q.name, symbol: q.sym,
+        bass: bassName, bassPc, slash, bassLabel, kind, position, omitted: omittedLabels, exact: !c.omitted.length && !c.outside,
+        notes: ch.notes, formula: ch.formula, chord: ch, placed, score: +c.cost.toFixed(3) };
+    };
+    const seen = new Set(), all = [];
+    for (const c of cands) { const m = make(c); if (seen.has(m.name)) continue; seen.add(m.name); all.push(m); if (all.length >= 12) break; }
+
+    if (all.length) {
+      const best = all[0];
+      res.best = best; res.placed = best.placed;
+      res.alternatives = all.slice(1).filter(a => a.score <= best.score + 3.2).slice(0, 7);
+      if (twoNotes) {
+        res.status = 'interval';
+        const s = mod(pcs.find(p => p !== bassPc) - bassPc, 12);
+        res.interval = { semis: s, name: intervalName(s), from: plainName(bassPc), to: plainName(bassFirst[1]) };
+        res.title = best.name;
+        res.detail = `${res.interval.name} (${plainName(bassPc)} to ${plainName(bassFirst[1])}). As a chord this is the power chord ${best.name}${best.slash ? ', the 5th is in the bass' : ''}. A third is needed to say major or minor.`;
+      } else {
+        res.status = 'chord';
+        res.title = best.name;
+        const parts = [`${best.root} ${best.qualityName.toLowerCase()}`, best.position];
+        res.detail = `${parts.join(', ')}. Notes: ${best.notes.join(' ')} (${best.formula}).` + (best.omitted.length ? ` No ${best.omitted.join(', ')} played.` : '') + (best.kind === 'outside' ? ` ${best.bass} is an extra bass note.` : '');
+      }
+    } else {
+      res.placed = plainPlaced();
+      res.status = twoNotes ? 'interval' : 'unknown';
+      if (twoNotes) {
+        const s = mod(bassFirst[1] - bassPc, 12);
+        res.interval = { semis: s, name: intervalName(s), from: plainName(bassPc), to: plainName(bassFirst[1]) };
+        res.title = `${res.interval.name} (${plainName(bassPc)} – ${plainName(bassFirst[1])})`;
+        res.detail = `Two notes make an interval, not a chord. ${plainName(bassPc)} to ${plainName(bassFirst[1])} is a ${res.interval.name}.`;
+      } else {
+        res.title = 'No chord match';
+        res.detail = `${res.notes.join(' ')}: no chord in the list uses exactly these notes. Intervals above the lowest note, ${plainName(bassPc)}: ` + res.intervals.slice(1).map(i => `${i.name} ${i.label} (${i.text})`).join(', ') + '.';
+      }
+    }
+    // if these notes are only part of something bigger, say what to add
+    if (res.status !== 'chord') {
+      const sug = [];
+      for (let root = 0; root < 12; root++) for (const id of CORE_QUALITIES.concat(['power', 'six', 'm6', 'add9', 'dom9', 'maj9', 'm9'])) {
+        const { offs } = qualityInfo(id), chordPcs = offs.map(o => mod(root + o, 12));
+        if (!pcs.every(p => chordPcs.includes(p)) || pcs.length >= chordPcs.length) continue;
+        const rootNm = spellRoot(root, id, flats), ch = buildChord(rootNm, id);
+        const add = ch.tones.filter(t => !pcs.includes(t.pc)).map(t => t.name);
+        const cost = add.length + (root === bassPc ? 0 : 0.4) + qualityBase(id) * 0.3;
+        sug.push({ name: ch.name, add, cost, quality: id, root: ch.root });
+      }
+      sug.sort((a, b) => a.cost - b.cost);
+      const seenS = new Set();
+      res.suggestions = sug.filter(x => !seenS.has(x.name) && seenS.add(x.name)).slice(0, 5).map(({ name, add, quality, root }) => ({ name, add, quality, root }));
+    }
+    return res;
+  }
+
   return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
     mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
     spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
@@ -2737,7 +2919,7 @@ const Theory = (() => {
     scalePositions, modeInfo, scaleFingers, CHORD_GROUPS, CORE_QUALITIES, isMinorQuality,
     findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs,
     SONG_RHYTHMS, SONG_FORMS, songGrid, slotAccent, songCounts, playableRange, melodyWindow, generateSong, songFrets, songTab, songTimeline, pianoChordLine, songText,
-    GUITAR_STANDARD, lessonTabMidi, parseLessonNote, parseLessonSteps, lessonPlan, staffStep, STAFF_BOTTOM, LESSONS, lessonById, lessonStats };
+    identifyChord, intervalName, GUITAR_STANDARD, lessonTabMidi, parseLessonNote, parseLessonSteps, lessonPlan, staffStep, STAFF_BOTTOM, LESSONS, lessonById, lessonStats };
 })();
 // </THEORY>
 const T = Theory;
