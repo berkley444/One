@@ -632,9 +632,9 @@ html[data-theme] .btn.pri{background:var(--pri-bg);border-color:var(--pri-bd);co
 html[data-theme] .seg{background:var(--seg-bg);border-color:var(--seg-bd);border-radius:var(--seg-r)}
 html[data-theme] .seg button{color:var(--dim)}
 html[data-theme] .seg button.on{background:var(--seg-on);color:var(--seg-on-ink)}
-html[data-theme] .chip,html[data-theme] .pos,html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .lprac .pc-prac>.btn:not(.tog),html[data-theme] .lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
+html[data-theme] .chip,html[data-theme] .pos,html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .toolbar .btn.tog:not(.on),html[data-theme] .idpanel .btn.tog:not(.on),html[data-theme] .gset .btn.tog:not(.on),html[data-theme] .lprac .pc-prac>.btn:not(.tog),html[data-theme] .lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
 html[data-theme] .lspeed .seg button{box-shadow:none}
-html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .pcontrol .pc-play .btn:not(.pri),html[data-theme] .pc-prac .btn:not(.tog),html[data-theme] .pcontrol .pc-prac .btn{border-color:var(--key-bd)}
+html[data-theme] .pcontrol .btn.tog:not(.on),html[data-theme] .toolbar .btn.tog:not(.on),html[data-theme] .idpanel .btn.tog:not(.on),html[data-theme] .gset .btn.tog:not(.on),html[data-theme] .pcontrol .pc-play .btn:not(.pri),html[data-theme] .pc-prac .btn:not(.tog),html[data-theme] .pcontrol .pc-prac .btn{border-color:var(--key-bd)}
 html[data-theme] .pcontrol .pc-play .btn:not(.pri){background:var(--key-bg);color:var(--key-ink);box-shadow:var(--key-sh)}
 html[data-theme] .pos:hover{border-color:var(--accent-bd)}
 html[data-theme] .chip.on,html[data-theme] .lspeed .seg button.on:not(.x){background:var(--on-bg);border-color:var(--on-bd);color:var(--on-ink);box-shadow:var(--on-sh)}
@@ -851,7 +851,7 @@ header{position:relative}
 .idsub2 b{color:var(--ink)}
 .idchips{display:flex;flex-wrap:wrap;gap:6px}
 .idn{display:inline-flex;align-items:baseline;gap:6px;padding:4px 12px;border-radius:999px;font:700 15px var(--sans);background:#6b6f7b;color:#fff}
-.idn small{font:700 11px var(--sans);opacity:.92}
+.idn small{font:700 11px var(--sans)}
 .idn[data-tone="root"]{background:var(--t-root,#e8463e);color:var(--t-root-fg,#fff)}
 .idn[data-tone="third"]{background:var(--t-third,#f0b43c);color:var(--t-third-fg,#2a1a00)}
 .idn[data-tone="fifth"]{background:var(--t-fifth,#58c75a);color:var(--t-fifth-fg,#06210a)}
@@ -901,6 +901,8 @@ body.gating{overflow:hidden}
 @media(max-width:520px){header h1{padding:0 50px}
 header h1 small{margin:4px -50px 0}
 }
+/* the small engraved captions sit on a card here, not on the metal panel: plain readable text in every theme */
+html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:none}
 
 /* ===== 25-silver.css ===== */
 [data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}

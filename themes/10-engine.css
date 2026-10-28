@@ -91,9 +91,9 @@ details.det{border-top-color:var(--hair)}
 .btn:hover{border-color:var(--btn-bd-h)}
 .btn.pri{background:var(--pri-bg);border-color:var(--pri-bd);color:var(--pri-ink)}
 .seg{background:var(--seg-bg);border-color:var(--seg-bd);border-radius:var(--seg-r)} .seg button{color:var(--dim)} .seg button.on{background:var(--seg-on);color:var(--seg-on-ink)}
-.chip,.pos,.pcontrol .btn.tog:not(.on),.lprac .pc-prac>.btn:not(.tog),.lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
+.chip,.pos,.pcontrol .btn.tog:not(.on),.toolbar .btn.tog:not(.on),.idpanel .btn.tog:not(.on),.gset .btn.tog:not(.on),.lprac .pc-prac>.btn:not(.tog),.lspeed .seg button{background:var(--key-bg);border-color:var(--key-bd);color:var(--key-ink);box-shadow:var(--key-sh);border-radius:var(--key-r)}
 .lspeed .seg button{box-shadow:none}
-.pcontrol .btn.tog:not(.on),.pcontrol .pc-play .btn:not(.pri),.pc-prac .btn:not(.tog),.pcontrol .pc-prac .btn{border-color:var(--key-bd)}
+.pcontrol .btn.tog:not(.on),.toolbar .btn.tog:not(.on),.idpanel .btn.tog:not(.on),.gset .btn.tog:not(.on),.pcontrol .pc-play .btn:not(.pri),.pc-prac .btn:not(.tog),.pcontrol .pc-prac .btn{border-color:var(--key-bd)}
 .pcontrol .pc-play .btn:not(.pri){background:var(--key-bg);color:var(--key-ink);box-shadow:var(--key-sh)}
 .pos:hover{border-color:var(--accent-bd)}
 .chip.on,.lspeed .seg button.on:not(.x){background:var(--on-bg);border-color:var(--on-bd);color:var(--on-ink);box-shadow:var(--on-sh)}

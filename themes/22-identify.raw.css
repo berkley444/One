@@ -11,7 +11,7 @@
 .idsub2 b{color:var(--ink)}
 .idchips{display:flex;flex-wrap:wrap;gap:6px}
 .idn{display:inline-flex;align-items:baseline;gap:6px;padding:4px 12px;border-radius:999px;font:700 15px var(--sans);background:#6b6f7b;color:#fff}
-.idn small{font:700 11px var(--sans);opacity:.92}
+.idn small{font:700 11px var(--sans)}
 .idn[data-tone="root"]{background:var(--t-root,#e8463e);color:var(--t-root-fg,#fff)}
 .idn[data-tone="third"]{background:var(--t-third,#f0b43c);color:var(--t-third-fg,#2a1a00)}
 .idn[data-tone="fifth"]{background:var(--t-fifth,#58c75a);color:var(--t-fifth-fg,#06210a)}
@@ -55,3 +55,6 @@
 body.gating{overflow:hidden}
 @media (max-width:560px){.qname{font-size:40px}.idbig{font-size:30px}.gatecard h2{font-size:23px}}
 @media(max-width:520px){header h1{padding:0 50px}header h1 small{margin:4px -50px 0}}
+
+/* the small engraved captions sit on a card here, not on the metal panel: plain readable text in every theme */
+html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:none}
