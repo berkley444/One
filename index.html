@@ -788,6 +788,9 @@ html[data-theme] .engr .soft{opacity:.92}
 html[data-theme] .chip small,html[data-theme] .chip.rt small{opacity:.9}
 html[data-theme] .pos span,html[data-theme] .pos.on span{opacity:1}
 html[data-theme] .wedge text{opacity:1!important}
+@media(max-width:520px){html[data-theme] header h1{padding:0 44px}
+html[data-theme] header h1 small{margin:4px -44px 0}
+}
 
 /* ===== 20-picker.raw.css ===== */
 /* Theme picker (every theme, including Silver, uses these; colours come from the active theme's variables) */
@@ -967,8 +970,10 @@ html[data-theme="console"] .btn:active,html[data-theme="console"] .pos:active,ht
   --bar-n:#9a8fc4; --ok:#1f9d6b; --ok-bg:#12382c; --ok-ink:#7ff0c6; --hook-bg:#2d2548; --hook-ink:#fff4dc; --code-ink:#efe6ff;
 }
 html[data-theme="pedal"] body{font-weight:500}
-html[data-theme="pedal"] h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:24px;text-shadow:3px 3px 0 #0b0719}
+html[data-theme="pedal"] h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:clamp(14px,4.5vw,24px);text-shadow:3px 3px 0 #0b0719}
+html[data-theme="pedal"] h1 small{letter-spacing:.1em}
 html[data-theme="pedal"] h2{font-weight:800;text-shadow:3px 3px 0 #0b0719}
+html[data-theme="pedal"] h1 small{letter-spacing:.1em}
 html[data-theme="pedal"] .card,html[data-theme="pedal"] .lcard,html[data-theme="pedal"] .pfc{border-width:2px}
 html[data-theme="pedal"] .card,html[data-theme="pedal"] .cc,html[data-theme="pedal"] .bar,html[data-theme="pedal"] .sbar{box-shadow:0 4px 0 #0d0820}
 html[data-theme="pedal"] .metal{background:radial-gradient(rgba(255,255,255,.22) 1px,transparent 1.5px) 0 0/8px 8px,var(--panel);border-width:3px}
@@ -1046,7 +1051,7 @@ html[data-theme="pedal"] .cc.sel{box-shadow:0 0 0 2px var(--amber) inset,0 4px 0
   --cd-line:#5a4e34; --cd-str:#b9ab88; --cd-dot:#f3e9cc; --cd-dot-fg:#1a1305; --cd-lab:#cdbd96; --cd-fn:#e8bf5a;
   --bar-n:#a89a76; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
 }
-html[data-theme="tube"] h1{font-weight:700;text-shadow:0 2px 0 #000}
+html[data-theme="tube"] h1{font-weight:700;font-size:clamp(14px,4.2vw,22px);text-shadow:0 2px 0 #000}
 html[data-theme="tube"] h1::after{content:"";display:block;width:min(260px,70%);height:3px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#d1a94c 20%,#d1a94c 80%,transparent)}
 html[data-theme="tube"] h2{font-weight:700;letter-spacing:.1em;border-bottom:2px solid #6b5522;padding-bottom:5px}
 html[data-theme="tube"] .card,html[data-theme="tube"] .pfc,html[data-theme="tube"] .lcard{box-shadow:0 0 0 2px #0b0a09,0 0 0 3px #7a6224}
@@ -1316,7 +1321,7 @@ html[data-theme="minimal-dark"] .seg button.on{box-shadow:none}
   --cd-line:#5a5d66; --cd-str:#b8b6ac; --cd-dot:#ece9e0; --cd-dot-fg:#111; --cd-lab:#b8b6ac; --cd-fn:#ffa35c;
   --bar-n:#a8a69c; --ok:#0b8a5a; --ok-bg:#0f2a20; --ok-ink:#6fe8b8; --hook-bg:#2a1a12; --hook-ink:#f1dfcf; --code-ink:#dcd9d0;
 }
-html[data-theme="synth"] h1{font-weight:700;letter-spacing:.14em}
+html[data-theme="synth"] h1{font-weight:700;font-size:clamp(15px,4.8vw,22px);letter-spacing:.14em}
 html[data-theme="synth"] h2{font-weight:700;font-size:21px;letter-spacing:.08em;align-items:center}
 html[data-theme="synth"] h2::before{content:"";width:10px;height:10px;background:var(--amber);flex:none;box-shadow:0 0 8px rgba(255,106,43,.6)}
 html[data-theme="synth"] .card,html[data-theme="synth"] .pfc,html[data-theme="synth"] .lcard{border-top:2px solid #cfcdc4}

@@ -189,3 +189,4 @@ nav.dock button.on{background:var(--dock-on);color:var(--dock-on-ink)}
 .chip small,.chip.rt small{opacity:.9}
 .pos span,.pos.on span{opacity:1}
 .wedge text{opacity:1!important}
+@media(max-width:520px){header h1{padding:0 44px}header h1 small{margin:4px -44px 0}}

@@ -40,7 +40,7 @@
   --cd-line:#5a4e34; --cd-str:#b9ab88; --cd-dot:#f3e9cc; --cd-dot-fg:#1a1305; --cd-lab:#cdbd96; --cd-fn:#e8bf5a;
   --bar-n:#a89a76; --ok:#3f7d33; --ok-bg:#17240f; --ok-ink:#a8e08a; --hook-bg:#1d170c; --hook-ink:#f0e2b8; --code-ink:#e8dcb9;
 }
-h1{font-weight:700;text-shadow:0 2px 0 #000}
+h1{font-weight:700;font-size:clamp(14px,4.2vw,22px);text-shadow:0 2px 0 #000}
 h1::after{content:"";display:block;width:min(260px,70%);height:3px;margin:8px auto 0;background:linear-gradient(90deg,transparent,#d1a94c 20%,#d1a94c 80%,transparent)}
 h2{font-weight:700;letter-spacing:.1em;border-bottom:2px solid #6b5522;padding-bottom:5px}
 .card,.pfc,.lcard{box-shadow:0 0 0 2px #0b0a09,0 0 0 3px #7a6224}

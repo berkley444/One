@@ -40,8 +40,10 @@
   --bar-n:#9a8fc4; --ok:#1f9d6b; --ok-bg:#12382c; --ok-ink:#7ff0c6; --hook-bg:#2d2548; --hook-ink:#fff4dc; --code-ink:#efe6ff;
 }
 body{font-weight:500}
-h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:24px;text-shadow:3px 3px 0 #0b0719}
+h1{font-family:"Bowlby One","Rubik",sans-serif;font-weight:400;font-size:clamp(14px,4.5vw,24px);text-shadow:3px 3px 0 #0b0719}
+h1 small{letter-spacing:.1em}
 h2{font-weight:800;text-shadow:3px 3px 0 #0b0719}
+h1 small{letter-spacing:.1em}
 .card,.lcard,.pfc{border-width:2px}
 .card,.cc,.bar,.sbar{box-shadow:0 4px 0 #0d0820}
 .metal{background:radial-gradient(rgba(255,255,255,.22) 1px,transparent 1.5px) 0 0/8px 8px,var(--panel);border-width:3px}
