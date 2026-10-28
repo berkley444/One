@@ -1,0 +1,57 @@
+/* Clear / Identify, Chord Quiz and the Chord unlock pop-up. Raw (unprefixed) rules for every theme: colours come from the theme's variables, with fallbacks for Silver. */
+.idpanel .idcard{display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.idbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idbar .sp{flex:1}
+.idbar .btn[disabled]{opacity:.45;cursor:default}
+.idshape{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.idshape code{font:700 18px var(--mono);letter-spacing:.14em;padding:4px 12px;border-radius:8px;background:var(--chip,#17171c);border:1px solid var(--chip-bd,#2f3038);color:var(--ink)}
+.idres{min-height:88px;display:flex;flex-direction:column;gap:8px}
+.idbig{font:700 36px/1.1 var(--hfont,var(--cond));letter-spacing:.02em;color:var(--ink);overflow-wrap:anywhere}
+.idsub2{font:500 14px/1.45 var(--sans);color:var(--ink2,#b5b7c0)}
+.idsub2 b{color:var(--ink)}
+.idchips{display:flex;flex-wrap:wrap;gap:6px}
+.idn{display:inline-flex;align-items:baseline;gap:6px;padding:4px 12px;border-radius:999px;font:700 15px var(--sans);background:#6b6f7b;color:#fff}
+.idn small{font:700 11px var(--sans);opacity:.92}
+.idn[data-tone="root"]{background:var(--t-root,#e8463e);color:var(--t-root-fg,#fff)}
+.idn[data-tone="third"]{background:var(--t-third,#f0b43c);color:var(--t-third-fg,#2a1a00)}
+.idn[data-tone="fifth"]{background:var(--t-fifth,#58c75a);color:var(--t-fifth-fg,#06210a)}
+.idn[data-tone="seventh"]{background:var(--t-seventh,#4a86e8);color:var(--t-seventh-fg,#fff)}
+.idn[data-tone="ext"]{background:var(--t-ext,#a06be0);color:var(--t-ext-fg,#fff)}
+.idn[data-tone="scale"]{background:var(--t-scale,#58c75a);color:var(--t-scale-fg,#06210a)}
+.idalt{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;font:500 13px/1.4 var(--sans);color:var(--ink2,#b5b7c0)}
+.idaltn b{font:700 15px var(--sans);color:var(--ink)}
+.qtarget{display:flex;flex-direction:column;gap:4px}
+.qname{font:800 48px/1.05 var(--hfont,var(--cond));letter-spacing:.02em;color:var(--ink)}
+.idscore{font:700 13px var(--sans);color:var(--ink2,#b5b7c0);letter-spacing:.04em}
+.idfb{border-radius:10px;padding:10px 12px;border:1px solid var(--chip-bd,#444);background:var(--chip,#17171c);color:var(--ink);font:500 14px/1.45 var(--sans)}
+.idfb.ok{border-color:#3fae42;box-shadow:inset 4px 0 0 #3fae42}
+.idfb.no{border-color:#d9433b;box-shadow:inset 4px 0 0 #d9433b}
+.idfb.info{border-color:var(--amber,#f0a035);box-shadow:inset 4px 0 0 var(--amber,#f0a035)}
+.idfb ul{margin:6px 0 0 18px;padding:0}
+.idfield{display:flex;flex-direction:column;gap:3px;min-width:150px}
+.idfield select{width:100%}
+.fbwrap.idmode svg{min-width:900px}
+.idc{cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.idhit{fill:currentColor;fill-opacity:0;stroke:none}
+.idc:hover .idhit{fill-opacity:.08}
+.idc:focus-visible .idhit{fill-opacity:.12;stroke:var(--amber,#f0a035);stroke-width:2.5}
+.idpip{fill:var(--dim,#888);opacity:.5} .idc:hover .idpip{opacity:1}
+.idring{fill:none;stroke:var(--dim,#888);stroke-width:1.2;stroke-dasharray:3 3;opacity:.6}
+.idsub rect{fill:var(--card,#17171c);stroke:var(--card-bd,#666);stroke-width:1}
+.idsub text{fill:var(--ink,#e9eaee)}
+/* header lock button + its panel */
+.themebtn.gatebtn{right:auto;left:0}
+.themebtn.gatebtn[aria-pressed="true"]{color:var(--amber)}
+.gset{display:flex;flex-direction:column;gap:12px}
+.gwarn{margin:0;padding:8px 12px;border-radius:10px;border-left:4px solid var(--amber,#f0a035);background:var(--chip,#17171c);color:var(--ink);font:500 13px/1.5 var(--sans)}
+/* the unlock pop-up */
+#gate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(8,8,12,.78);overflow:auto;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#gate[hidden]{display:none}
+.gatecard{width:min(1000px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 70px rgba(0,0,0,.55);color:var(--ink)}
+.gatecard h2{margin:0;font:700 28px/1.15 var(--hfont,var(--cond));color:var(--ink)}
+.gatecard h2 b{color:var(--amber,#f0a035)}
+.gatecard p{margin:0}
+.gatetag{align-self:flex-start;padding:3px 10px;border-radius:999px;font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;background:var(--chip,#17171c);border:1px solid var(--amber,#f0a035);color:var(--ink)}
+body.gating{overflow:hidden}
+@media (max-width:560px){.qname{font-size:40px}.idbig{font-size:30px}.gatecard h2{font-size:23px}}
+@media(max-width:520px){header h1{padding:0 50px}header h1 small{margin:4px -50px 0}}

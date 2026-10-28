@@ -788,8 +788,8 @@ html[data-theme] .engr .soft{opacity:.92}
 html[data-theme] .chip small,html[data-theme] .chip.rt small{opacity:.9}
 html[data-theme] .pos span,html[data-theme] .pos.on span{opacity:1}
 html[data-theme] .wedge text{opacity:1!important}
-@media(max-width:520px){html[data-theme] header h1{padding:0 44px}
-html[data-theme] header h1 small{margin:4px -44px 0}
+@media(max-width:520px){html[data-theme] header h1{padding:0 50px}
+html[data-theme] header h1 small{margin:4px -50px 0}
 }
 
 /* ===== 20-picker.raw.css ===== */
@@ -836,6 +836,71 @@ header{position:relative}
 .tp-keys i.l{background:var(--pk-lit-w);box-shadow:inset 0 -6px 0 var(--h-r)}
 .tp-keys i.m{box-shadow:inset 0 -6px 0 var(--h-l)}
 .meter{display:none}
+
+/* ===== 22-identify.raw.css ===== */
+/* Clear / Identify, Chord Quiz and the Chord unlock pop-up. Raw (unprefixed) rules for every theme: colours come from the theme's variables, with fallbacks for Silver. */
+.idpanel .idcard{display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.idbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.idbar .sp{flex:1}
+.idbar .btn[disabled]{opacity:.45;cursor:default}
+.idshape{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.idshape code{font:700 18px var(--mono);letter-spacing:.14em;padding:4px 12px;border-radius:8px;background:var(--chip,#17171c);border:1px solid var(--chip-bd,#2f3038);color:var(--ink)}
+.idres{min-height:88px;display:flex;flex-direction:column;gap:8px}
+.idbig{font:700 36px/1.1 var(--hfont,var(--cond));letter-spacing:.02em;color:var(--ink);overflow-wrap:anywhere}
+.idsub2{font:500 14px/1.45 var(--sans);color:var(--ink2,#b5b7c0)}
+.idsub2 b{color:var(--ink)}
+.idchips{display:flex;flex-wrap:wrap;gap:6px}
+.idn{display:inline-flex;align-items:baseline;gap:6px;padding:4px 12px;border-radius:999px;font:700 15px var(--sans);background:#6b6f7b;color:#fff}
+.idn small{font:700 11px var(--sans);opacity:.92}
+.idn[data-tone="root"]{background:var(--t-root,#e8463e);color:var(--t-root-fg,#fff)}
+.idn[data-tone="third"]{background:var(--t-third,#f0b43c);color:var(--t-third-fg,#2a1a00)}
+.idn[data-tone="fifth"]{background:var(--t-fifth,#58c75a);color:var(--t-fifth-fg,#06210a)}
+.idn[data-tone="seventh"]{background:var(--t-seventh,#4a86e8);color:var(--t-seventh-fg,#fff)}
+.idn[data-tone="ext"]{background:var(--t-ext,#a06be0);color:var(--t-ext-fg,#fff)}
+.idn[data-tone="scale"]{background:var(--t-scale,#58c75a);color:var(--t-scale-fg,#06210a)}
+.idalt{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;font:500 13px/1.4 var(--sans);color:var(--ink2,#b5b7c0)}
+.idaltn b{font:700 15px var(--sans);color:var(--ink)}
+.qtarget{display:flex;flex-direction:column;gap:4px}
+.qname{font:800 48px/1.05 var(--hfont,var(--cond));letter-spacing:.02em;color:var(--ink)}
+.idscore{font:700 13px var(--sans);color:var(--ink2,#b5b7c0);letter-spacing:.04em}
+.idfb{border-radius:10px;padding:10px 12px;border:1px solid var(--chip-bd,#444);background:var(--chip,#17171c);color:var(--ink);font:500 14px/1.45 var(--sans)}
+.idfb.ok{border-color:#3fae42;box-shadow:inset 4px 0 0 #3fae42}
+.idfb.no{border-color:#d9433b;box-shadow:inset 4px 0 0 #d9433b}
+.idfb.info{border-color:var(--amber,#f0a035);box-shadow:inset 4px 0 0 var(--amber,#f0a035)}
+.idfb ul{margin:6px 0 0 18px;padding:0}
+.idfield{display:flex;flex-direction:column;gap:3px;min-width:150px}
+.idfield select{width:100%}
+.fbwrap.idmode svg{min-width:900px}
+.idc{cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.idhit{fill:currentColor;fill-opacity:0;stroke:none}
+.idc:hover .idhit{fill-opacity:.08}
+.idc:focus-visible .idhit{fill-opacity:.12;stroke:var(--amber,#f0a035);stroke-width:2.5}
+.idpip{fill:var(--dim,#888);opacity:.5}
+.idc:hover .idpip{opacity:1}
+.idring{fill:none;stroke:var(--dim,#888);stroke-width:1.2;stroke-dasharray:3 3;opacity:.6}
+.idsub rect{fill:var(--card,#17171c);stroke:var(--card-bd,#666);stroke-width:1}
+.idsub text{fill:var(--ink,#e9eaee)}
+/* header lock button + its panel */
+.themebtn.gatebtn{right:auto;left:0}
+.themebtn.gatebtn[aria-pressed="true"]{color:var(--amber)}
+.gset{display:flex;flex-direction:column;gap:12px}
+.gwarn{margin:0;padding:8px 12px;border-radius:10px;border-left:4px solid var(--amber,#f0a035);background:var(--chip,#17171c);color:var(--ink);font:500 13px/1.5 var(--sans)}
+/* the unlock pop-up */
+#gate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(8,8,12,.78);overflow:auto;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#gate[hidden]{display:none}
+.gatecard{width:min(1000px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 70px rgba(0,0,0,.55);color:var(--ink)}
+.gatecard h2{margin:0;font:700 28px/1.15 var(--hfont,var(--cond));color:var(--ink)}
+.gatecard h2 b{color:var(--amber,#f0a035)}
+.gatecard p{margin:0}
+.gatetag{align-self:flex-start;padding:3px 10px;border-radius:999px;font:700 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;background:var(--chip,#17171c);border:1px solid var(--amber,#f0a035);color:var(--ink)}
+body.gating{overflow:hidden}
+@media (max-width:560px){.qname{font-size:40px}
+.idbig{font-size:30px}
+.gatecard h2{font-size:23px}
+}
+@media(max-width:520px){header h1{padding:0 50px}
+header h1 small{margin:4px -50px 0}
+}
 
 /* ===== 25-silver.css ===== */
 [data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}
@@ -1451,6 +1516,8 @@ html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)
   <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
     <button class="themebtn" id="themeBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="themePanel" title="Change the look"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.6" cy="11" r="1.2"/><circle cx="10.4" cy="7.2" r="1.2"/><circle cx="15" cy="7.4" r="1.2"/></svg></button>
     <div class="themepanel" id="themePanel" role="dialog" aria-label="Choose a theme" hidden></div>
+    <button class="themebtn gatebtn" id="gateBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="gatePanel" title="Chord unlock (optional fun gate)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span class="sr">Chord unlock settings</span></button>
+    <div class="themepanel" id="gatePanel" role="dialog" aria-label="Chord unlock settings" hidden></div>
   </header>
 
   <!-- ===== MUSIC CONTROL PANEL ===== -->
@@ -1482,6 +1549,7 @@ html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)
   <div id="live" class="sr" role="status" aria-live="polite"></div>
 </div>
 
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden></div>
 <nav class="dock" id="dock" aria-label="Sections"></nav>
 <script>
 // <THEORY>
@@ -2911,6 +2979,118 @@ const Theory = (() => {
     return res;
   }
 
+  /* ---------- Chord Quiz & chord gate: targets, grading, and a shape finder ----------
+     A target is a chord the player is asked to build on the fretboard: { root, quality, bass, bassPc, name, chord }.
+     `bass` is set for slash chords / inversions (the lowest sounding note must then be that note).                       */
+  const QUIZ_LEVELS = [
+    { id: 'open', name: 'Open chords', blurb: 'C, A, G, E, D, Am, Em and Dm: the first chords everyone learns.' },
+    { id: 'sevenths', name: '7th chords', blurb: 'Dominant 7, major 7 and minor 7 on seven roots.' },
+    { id: 'slash', name: 'Inversions & slash chords', blurb: 'The bass note matters: C/E, G/B, Am/G … the lowest note you play must be the one after the slash.' },
+    { id: 'all', name: 'All qualities', blurb: 'Any of the 50 chord types on any root. Hard mode.' },
+  ];
+  const QUIZ_ROOTS = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+  function makeTarget(root, quality, bass) {
+    const chord = buildChord(root, quality);
+    let bassName = null, bassPc = null;
+    if (bass) { const b = parseName(bass); bassName = b.name; bassPc = b.pc; if (bassPc === chord.pcs[0]) { bassName = null; bassPc = null; } }
+    return { root: chord.root, quality, bass: bassName, bassPc, name: chord.name + (bassName ? '/' + bassName : ''), chord };
+  }
+  const QUIZ_OPEN = [['C', 'major'], ['A', 'major'], ['G', 'major'], ['E', 'major'], ['D', 'major'], ['A', 'minor'], ['E', 'minor'], ['D', 'minor']];
+  const QUIZ_SLASH = [['C', 'major', 'E'], ['C', 'major', 'G'], ['G', 'major', 'B'], ['G', 'major', 'D'], ['D', 'major', 'F♯'], ['D', 'major', 'A'], ['F', 'major', 'A'], ['F', 'major', 'C'],
+    ['A', 'minor', 'C'], ['A', 'minor', 'E'], ['E', 'minor', 'G'], ['E', 'minor', 'B'], ['D', 'minor', 'F'], ['D', 'minor', 'A'], ['A', 'minor', 'G'], ['C', 'major', 'D'], ['G', 'major', 'F♯'], ['A', 'major', 'C♯'], ['E', 'major', 'G♯']];
+  function quizPool(level) {
+    if (level === 'open') return QUIZ_OPEN.map(([r, q]) => [r, q, null]);
+    if (level === 'sevenths') { const out = []; ['C', 'D', 'E', 'F', 'G', 'A', 'B'].forEach(r => ['dom7', 'maj7', 'min7'].forEach(q => out.push([r, q, null]))); return out; }
+    if (level === 'slash') return QUIZ_SLASH.slice();
+    const out = []; CHORD_ORDER.forEach(q => { if (q !== 'no5') QUIZ_ROOTS.forEach(r => out.push([r, q, null])); }); return out;
+  }
+  function quizTarget(level, rnd, avoidName) {
+    const pool = quizPool(QUIZ_LEVELS.some(l => l.id === level) ? level : 'open'), r = typeof rnd === 'function' ? rnd : Math.random;
+    for (let tries = 0; tries < 12; tries++) {
+      const [root, quality, bass] = pool[Math.min(pool.length - 1, Math.floor(r() * pool.length))], t = makeTarget(root, quality, bass);
+      if (t.name !== avoidName || pool.length < 2) return t;
+    }
+    return makeTarget(...pool[0]);
+  }
+  const toneWord = label => label === '1' ? 'root' : 'the ' + ordLabel(label);
+  // Grade the notes a player placed against a target. Right = every essential chord tone present, nothing foreign, and (for a slash chord) the right bass.
+  // opt.shape = array of MIDI notes for "this exact position". opt.flats chooses the spelling of foreign notes.
+  function gradeChordAttempt(midis, target, opt = {}) {
+    const flats = !!opt.flats, ms = (midis || []).filter(Number.isFinite).sort((a, b) => a - b);
+    const out = { ok: false, empty: !ms.length, missing: [], extra: [], omitted: [], bassNeeded: target.bassPc != null, bassOk: null, shapeOk: null, played: null, lines: [], answer: target.chord.tones.map(t => t.name) };
+    if (!ms.length) { out.lines.push('Place some notes on the fretboard first.'); return out; }
+    const pcs = [...new Set(ms.map(m => mod(m, 12)))], ch = target.chord, ess = essentialTones(ch);
+    out.played = identifyChord(ms, { flats }).title;
+    ess.forEach(t => { if (!pcs.includes(t.pc)) out.missing.push({ name: t.name, label: t.label, word: toneWord(t.label) }); });
+    ch.tones.forEach(t => { if (!ess.includes(t) && !pcs.includes(t.pc)) out.omitted.push(t.label); });
+    pcs.forEach(pc => { if (!ch.pcs.includes(pc) && pc !== target.bassPc) out.extra.push(pcName(pc, flats)); });
+    if (target.bassPc != null) {
+      out.bassOk = mod(ms[0], 12) === target.bassPc;
+      if (!out.bassOk) {
+        const have = ch.tones.find(t => t.pc === target.bassPc);
+        out.lines.push(`${target.name} needs ${target.bass}${have ? ' (' + toneWord(have.label) + ')' : ''} as the lowest note; yours is ${pcName(mod(ms[0], 12), flats)}.`);
+      }
+    }
+    out.missing.forEach(m => out.lines.push(`Missing ${m.word} (${m.name}).`));
+    out.extra.forEach(n => out.lines.push(`${n} is not part of ${target.name}.`));
+    if (opt.shape) {
+      const a = [...new Set(opt.shape)].sort((x, y) => x - y), b = [...new Set(ms)];
+      out.shapeOk = a.length === b.length && a.every((m, i) => m === b[i]);
+      if (!out.shapeOk && !out.missing.length && !out.extra.length && out.bassOk !== false) out.lines.push('Right notes, but not the position that was asked for.');
+    }
+    out.ok = !out.missing.length && !out.extra.length && out.bassOk !== false && out.shapeOk !== false;
+    if (out.ok) {
+      out.lines.push(`That is ${target.name}${out.bassNeeded ? ', with ' + target.bass + ' in the bass' : ''}.`);
+      if (out.omitted.length) out.lines.push(`You left out the ${out.omitted.join(', ')}, which is fine.`);
+    }
+    return out;
+  }
+  // Find a playable shape for a target on any tuning (needed for slash chords, which the position finder does not build).
+  function chordShape(target, openMidi, opt = {}) {
+    const span = opt.span ?? 3, maxFret = opt.maxFret ?? 12, n = openMidi.length, ch = target.chord;
+    const ok = new Set(ch.pcs); if (target.bassPc != null) ok.add(target.bassPc);
+    const need = essentialTones(ch).map(t => t.pc), minStr = Math.min(n, Math.max(3, need.length));
+    let best = null;
+    for (let w = 1; w + span <= maxFret + 1 && w <= maxFret; w++) {
+      const cur = new Array(n).fill(-1);
+      const dfs = si => {
+        if (si === n) {
+          const played = cur.map((f, i) => (f >= 0 ? openMidi[i] + f : null)).filter(m => m != null);
+          if (played.length < minStr) return;
+          const pcs = new Set(played.map(m => mod(m, 12)));
+          if (!need.every(p => pcs.has(p))) return;
+          if (target.bassPc != null && mod(played[0], 12) !== target.bassPc) return;
+          const fg = fingering(cur); if (fg.count > 4) return;
+          const fr = cur.filter(f => f > 0), score = fg.count * 1.2 + (n - played.length) * 0.8 + (fr.length ? Math.max(...fr) - Math.min(...fr) : 0) * 0.4 + (fr.length ? (Math.min(...fr) - 1) * 0.3 : 0) - cur.filter(f => f === 0).length * 0.5 + (fg.barre ? 1 : 0);
+          if (!best || score < best.score) best = { score, frets: cur.slice(), midis: played.slice(), fingers: fg };
+          return;
+        }
+        const anyPlayed = cur.slice(0, si).some(f => f >= 0);
+        const opts = [];
+        if (!anyPlayed || si > 0) opts.push(-1);
+        opts.push(0); for (let f = w; f <= w + span; f++) opts.push(f);
+        for (const f of opts) {
+          if (f === -1) { if (anyPlayed) { for (let j = si; j < n; j++) cur[j] = -1; dfs(n); } else { cur[si] = -1; dfs(si + 1); } continue; }   // after a mute that follows played notes, the rest stay muted
+          if (!ok.has(mod(openMidi[si] + f, 12))) continue;
+          cur[si] = f; dfs(si + 1);
+        }
+        cur[si] = -1;
+      };
+      dfs(0);
+    }
+    return best ? { frets: best.frets, midis: best.midis, fingers: best.fingers } : null;
+  }
+  // The answer for a target: the n-th standard position when it is an ordinary chord, otherwise a searched shape.
+  function quizAnswer(target, openMidi, posIdx) {
+    if (target.bassPc == null) {
+      const ps = chordPositions(target.chord, openMidi);
+      const v = ps[posIdx != null && ps[posIdx] ? posIdx : 0];
+      if (v) return { frets: v.frets.slice(), midis: v.midi.filter(m => m != null), position: ps.indexOf(v) };
+    }
+    const s = chordShape(target, openMidi);
+    return s ? { frets: s.frets, midis: s.midis, position: null } : null;
+  }
+
   return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
     mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
     spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
@@ -2919,7 +3099,7 @@ const Theory = (() => {
     scalePositions, modeInfo, scaleFingers, CHORD_GROUPS, CORE_QUALITIES, isMinorQuality,
     findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs,
     SONG_RHYTHMS, SONG_FORMS, songGrid, slotAccent, songCounts, playableRange, melodyWindow, generateSong, songFrets, songTab, songTimeline, pianoChordLine, songText,
-    identifyChord, intervalName, GUITAR_STANDARD, lessonTabMidi, parseLessonNote, parseLessonSteps, lessonPlan, staffStep, STAFF_BOTTOM, LESSONS, lessonById, lessonStats };
+    identifyChord, intervalName, QUIZ_LEVELS, makeTarget, quizPool, quizTarget, gradeChordAttempt, chordShape, quizAnswer, GUITAR_STANDARD, lessonTabMidi, parseLessonNote, parseLessonSteps, lessonPlan, staffStep, STAFF_BOTTOM, LESSONS, lessonById, lessonStats };
 })();
 // </THEORY>
 const T = Theory;
@@ -2934,11 +3114,23 @@ const DEFAULTS = {
   prExact: false, prHow: 'together', midiSound: false, midiOn: false,
   songSeed: 11, songForm: 'full', songStyle: 'smart', songLoop: false,
   lesson: null, lpart: 0, lessons: {}, lblind: false, lspeed: 'normal',
+  idOn: false, qOn: false, idFrets: [], idPiano: false,                       // Clear / Identify and Chord Quiz (idOn and qOn are never restored: you always start on the normal board)
+  quiz: { level: 'open', pos: 'any', right: 0, total: 0, streak: 0, best: 0 },
+  gateOn: false, gateRoot: 'C', gateQ: 'major',                                // optional chord-unlock pop-up (off by default)
 };
 const S = Object.assign({}, DEFAULTS);
 const STORE = 'bpgw.v3';
 try { Object.assign(S, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
 S.metro = false;                                   // never auto-start a click track
+S.idOn = false; S.qOn = false;
+S.quiz = Object.assign({}, DEFAULTS.quiz, S.quiz && typeof S.quiz === 'object' ? S.quiz : {});
+['right', 'total', 'streak', 'best'].forEach(k => { S.quiz[k] = Math.max(0, Math.floor(+S.quiz[k]) || 0); });
+if (!T.QUIZ_LEVELS.some(l => l.id === S.quiz.level)) S.quiz.level = 'open';
+if (!(S.quiz.pos === 'any' || /^[1-6]$/.test(String(S.quiz.pos)))) S.quiz.pos = 'any';
+S.gateOn = S.gateOn === true;
+try { S.gateRoot = T.parseName(String(S.gateRoot)).name; } catch (e) { S.gateRoot = 'C'; }
+if (!T.CHORDS[S.gateQ] || S.gateQ === 'no5') S.gateQ = 'major';
+if (!Array.isArray(S.idFrets)) S.idFrets = [];
 
 /* ================================================================
    SOUND — WebAudio. Three voices: Karplus-Strong pluck, soft electric-piano keys, mellow synth.
@@ -3055,6 +3247,7 @@ const curScalePos = () => (S.mode === 'chord' || S.scalePos == null ? null : cur
 // What is "picked" on the neck right now: one chord voicing, or one scale box. null = show everything.
 let SEL = null, PP = null;
 function selection() {
+  if (idActive()) return null;
   if (S.mode === 'chord') {
     const v = curVoicing(); if (!v) return null;
     const map = new Map(); v.frets.forEach((f, si) => { if (f >= 0) map.set(si + ':' + f, v.fingers[si]); });
@@ -3082,7 +3275,7 @@ const keyTitle = () => `${keyName()} ${T.SCALES[S.scale].name}`;
 const fmtHz = f => (f >= 1000 ? f.toFixed(1) : f >= 100 ? f.toFixed(2) : f.toFixed(3));
 const minus = n => (n < 0 ? '−' + Math.abs(n) : String(n));
 
-function save() { try { const { metro, ...rest } = S; localStorage.setItem(STORE, JSON.stringify(rest)); } catch (e) {} }
+function save() { try { const { metro, idOn, qOn, ...rest } = S; localStorage.setItem(STORE, JSON.stringify(rest)); } catch (e) {} }
 function updateHash() {
   const parts = [S.tab, 'root=' + encodeURIComponent(keyName()), 'scale=' + S.scale, 'tuning=' + S.tuning];
   if (S.scalePos != null) parts.push('sp=' + S.scalePos);
@@ -3092,6 +3285,7 @@ function updateHash() {
     parts.push('mode=' + S.mode, 'pp=' + (ch ? S.pcPos : S.psPos), 'hd=' + (ch ? S.chHand : S.scHand), 'po=' + S.pOct);
     if (!ch) parts.push('pn=' + S.pOcts);
   }
+  if ((S.tab === 'play' || S.tab === 'chord') && S.idOn && !S.qOn) parts.push('id=' + idFix(S.idFrets, curTuning().strings.length).map(f => (f === null ? '_' : f === -1 ? 'x' : f)).join(','));
   if (S.tab === 'song') parts.push('ss=' + S.songSeed, 'sf=' + S.songForm, 'sst=' + S.songStyle);
   if (S.tab === 'lessons' && S.lesson) parts.push('les=' + S.lesson, 'lp=' + S.lpart);
   const h = parts.join('&');
@@ -3100,6 +3294,7 @@ function updateHash() {
 function applyHash() {
   const raw = location.hash.replace(/^#/, ''); if (!raw) return;
   const X = {};
+  if (!/(^|&)id=/.test(raw)) { S.idOn = false; S.qOn = false; }
   raw.split('&').forEach((tok, i) => {
     if (!tok.includes('=')) { if (['play','chord','circle','math','song','lessons'].includes(tok)) S.tab = tok; return; }
     const [k, v0] = tok.split('='); const v = decodeURIComponent(v0);
@@ -3120,6 +3315,7 @@ function applyHash() {
       else if (k === 'ss') S.songSeed = Math.max(1, Math.min(99999, +v || 11));
       else if (k === 'sf' && (v === 'full' || v === 'short')) S.songForm = v;
       else if (k === 'sst' && (v === 'smart' || v === 'pop')) S.songStyle = v;
+      else if (k === 'id') { const a = v.split(',').map(x => (x === 'x' ? -1 : /^\d+$/.test(x) ? +x : null)); S.idFrets = idFix(a, a.length); S.idOn = true; S.qOn = false; if (S.tab !== 'play' && S.tab !== 'chord') S.tab = 'play'; }
       else if (['pp', 'hd', 'po', 'pn'].includes(k)) X[k] = v;
     } catch (e) {}
   });
@@ -3141,6 +3337,7 @@ function toneStyle(deg, isRoot) {                      // tone = the role of the
 }
 function activeNotes() {
   const map = new Map();
+  if (idActive()) return map;                                     // the note-placing board starts blank
   if (S.mode === 'chord') {
     keyNotes().forEach(n => map.set(n.pc, { name: n.name, label: T.dotLabel(n.label), ctx: true }));
     curChord().tones.forEach(t => { const st = toneStyle(t.deg, t.semis === 0); map.set(t.pc, { name: t.name, label: T.dotLabel(t.label), bg: st.bg, fg: st.fg, tone: st.tone, root: t.semis === 0 }); });
@@ -3228,14 +3425,14 @@ const UI = { fbScroll: null, piScroll: null, gid: 0 };
 // Faint horizontal wood-grain lines for themes that fill the fretboard with a grain (see .fbwood in the theme CSS). Deterministic.
 function grainPaths(h) { let o = '', x = 7; for (let i = 0; i < 17; i++) { x = (x * 73 + 41) % 257; const y = (i + 0.5) * h / 17 + ((x % 7) - 3) * 0.6, w = 0.6 + (x % 5) * 0.35; o += `<path class="fbg" d="M0 ${y.toFixed(1)}c60 ${(x % 9) - 4} 120 ${4 - (x % 7)} 260 ${((x * 3) % 5) - 2}" stroke-width="${w.toFixed(2)}" fill="none" opacity="${(0.35 + (x % 6) / 10).toFixed(2)}"/>`; } return o; }
 const FRETS = 15;
-function fretboardSVG() {
-  const t = curTuning(), n = t.strings.length, act = activeNotes();
+function fretboardSVG(cfg = null) {
+  const t = cfg ? cfg.tuning : curTuning(), n = t.strings.length, act = cfg ? new Map() : activeNotes();
   const W = 1000, nutX = 80, L = (985 - nutX) / (1 - Math.pow(2, -FRETS / 12));
   const fx = f => nutX + L * (1 - Math.pow(2, -f / 12));
   const top = 24, gap = n > 6 ? 32 : n < 6 ? 44 : 36, H = top + gap * (n - 1) + 48;
   const yRow = si => top + (n - 1 - si) * gap;
   const mid = top + gap * (n - 1) / 2;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="Fretboard, frets 0 to ${FRETS}, ${t.name} tuning. Arrow keys move between notes, Enter plays.">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="${cfg ? 'Note-placing fretboard' : 'Fretboard'}, frets 0 to ${FRETS}, ${t.name} tuning. ${cfg ? 'Arrow keys move between cells, Enter places or removes a note.' : 'Arrow keys move between notes, Enter plays.'}">`;
   const gid = 'fbg' + (++UI.gid);                                    // per-render id: a theme can fill the board with this grain pattern
   s += `<defs><pattern id="${gid}" width="260" height="${gap * (n - 1) + 24}" patternUnits="userSpaceOnUse" patternTransform="translate(0 ${top - 12})"><rect class="fbp" width="260" height="${gap * (n - 1) + 24}"/>${grainPaths(gap * (n - 1) + 24)}</pattern></defs>`;
   s += `<rect class="fbwood" style="--fbg:url(#${gid})" x="${nutX}" y="${top - 12}" width="${W - nutX - 8}" height="${gap * (n - 1) + 24}" fill="#0b0b0e"/>`;
@@ -3263,6 +3460,7 @@ function fretboardSVG() {
   let minFr = 99;
   t.strings.forEach((m, si) => {
     const y = yRow(si);
+    if (cfg) { s += idRowSVG(cfg, si, y, fx, gap, n); return; }
     if (SEL && SEL.muted.has(si)) s += `<text x="44" y="${y}" class="fbx" style="fill:#e8463e;font:700 18px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`;
     else {
       const open = dot(44, y, m, si, 0);
@@ -3274,11 +3472,273 @@ function fretboardSVG() {
     }
   });
   if (SEL && SEL.kind === 'scale') minFr = Math.max(1, SEL.p.minFret);
-  UI.focusFrac = SEL && minFr < 99 ? fx(Math.max(0, minFr - 1.4)) / W : null;
+  if (!cfg) UI.focusFrac = SEL && minFr < 99 ? fx(Math.max(0, minFr - 1.4)) / W : null;
   for (let f = 1; f <= FRETS; f++) s += `<text class="fbnum${[3,5,7,9,12,15].includes(f) ? ' hi' : ''}" x="${(fx(f - 1) + fx(f)) / 2}" y="${H - 12}" style="fill:${[3,5,7,9,12,15].includes(f) ? '#aeb0b8' : '#5a5c65'};font:600 12px var(--sans);text-anchor:middle">${f}</text>`;
   s += `<text class="fbnum" x="44" y="${H - 12}" style="fill:#5a5c65;font:600 11px var(--sans);text-anchor:middle">open</text></svg>`;
   return s;
 }
+/* ================================================================
+   CLEAR / IDENTIFY · CHORD QUIZ · CHORD UNLOCK
+   One note-placing engine. The fretboard is cleared and each tap places (or removes) a note: one per string.
+   frets[si]: null = nothing, -1 = muted (×), 0 = open string, 1..FRETS = fretted. The same board powers
+     · Identify  – names the chord live (theory engine: identifyChord)
+     · Quiz      – a target chord, you build it, it is graded (theory engine: gradeChordAttempt)
+     · Unlock    – an optional "play this chord to enter" pop-up (just for fun, never security).
+   ================================================================ */
+const ID_TONES = { root: { bg: RED, fg: '#fff' }, fifth: { bg: GREEN, fg: '#06210a' }, seventh: { bg: BLUE, fg: '#fff' }, third: { bg: AMBER, fg: '#2a1a00' }, ext: { bg: VIOLET, fg: '#fff' }, scale: { bg: GREEN, fg: '#06210a' }, bad: { bg: '#5b5f6b', fg: '#fff' } };
+const idActive = () => !!S.idOn && (S.tab === 'play' || S.tab === 'chord');
+function idFix(src, n) {                                  // keep a placement valid when the tuning changes (pad or cut at the low-string end)
+  const a = Array.isArray(src) ? src.slice(-n) : [];
+  while (a.length < n) a.unshift(null);
+  return a.map(v => (v === -1 || (Number.isInteger(v) && v >= 0 && v <= FRETS) ? v : null));
+}
+function idFretsNow() { const n = curTuning().strings.length; if (S.qOn) return (UI.qFrets = idFix(UI.qFrets, n)); return (S.idFrets = idFix(S.idFrets, n)); }
+const idMidis = (fr, strings) => fr.map((f, i) => (f != null && f >= 0 ? strings[i] + f : null)).filter(m => m != null);   // (null >= 0 is true in JS, hence the explicit check)
+let _idMemo = null;
+function idResult() {
+  const t = curTuning(), fr = idFretsNow(), key = t.id + '|' + fr.join(',');
+  if (_idMemo && _idMemo.key === key) return _idMemo.r;
+  const r = T.identifyChord(idMidis(fr, t.strings), { flats: t.flats }); _idMemo = { key, r }; return r;
+}
+function idToggle(frets, si, f) {                         // returns the new state of that string
+  const cur = frets[si];
+  if (f === 0) frets[si] = cur === null ? 0 : cur === 0 ? -1 : null;       // open column: blank → open ○ → muted × → blank
+  else frets[si] = cur === f ? null : f;                                   // a fret: place, tap again to remove, another fret moves it
+  return frets[si];
+}
+const shapeText = fr => fr.map(f => (f === null || f < 0 ? 'x' : f)).join(' ');
+// How each placed dot looks: { name, sub, tone } for string si (or null).
+function infoByChord(target, tuning, frets) {              // colour by a chord's tones (the quiz after Check, the unlock gate)
+  return si => {
+    const f = frets[si]; if (f == null || f < 0) return null;
+    const pc = T.mod(tuning.strings[si] + f, 12), tn = target.chord.tones.find(x => x.pc === pc);
+    if (tn) return { name: tn.name, sub: T.dotLabel(tn.label), tone: toneStyle(tn.deg, tn.semis === 0).tone };
+    if (pc === target.bassPc) return { name: T.pcName(pc, tuning.flats), sub: 'bass', tone: 'ext' };
+    return { name: T.pcName(pc, tuning.flats), sub: '✕', tone: 'bad', bad: true };
+  };
+}
+function idBoardCfg() {
+  const t = curTuning(), fr = idFretsNow(), q = UI.quiz;
+  if (S.qOn && q.target && (q.res || q.revealed)) return { board: 'main', tuning: t, frets: fr, info: infoByChord(q.target, t, fr) };
+  if (S.qOn) return { board: 'main', tuning: t, frets: fr, info: si => { const f = fr[si]; return f == null || f < 0 ? null : { name: T.pcName(t.strings[si] + f, t.flats), sub: '', tone: 'scale' }; } };
+  const r = idResult();
+  return { board: 'main', tuning: t, frets: fr, info: si => { const f = fr[si]; if (f == null || f < 0) return null; const midi = t.strings[si] + f, p = r.placed.find(x => x.midi === midi); return p ? { name: p.name, sub: p.dot, tone: p.tone } : { name: T.pcName(midi, t.flats), sub: '', tone: 'scale' }; } };
+}
+// One string of the note-placing board: a tappable cell for the open/mute column and for every fret.
+function idRowSVG(cfg, si, y, fx, gap, n) {
+  const t = cfg.tuning, m = t.strings[si], st = cfg.frets[si], inf = cfg.info(si), lm = LM();
+  let s = '';
+  for (let f = 0; f <= FRETS; f++) {
+    const cx = f === 0 ? 44 : (fx(f - 1) + fx(f)) / 2, x0 = f === 0 ? 6 : fx(f - 1), w = f === 0 ? 70 : fx(f) - fx(f - 1);
+    const placed = st === f, muted = f === 0 && st === -1, nm = T.midiName(m + f, t.flats), sn = n - si;
+    const label = f === 0 ? `String ${sn}, ${T.pcName(m, t.flats)}, open column: ${st === 0 ? 'open string, sounding' : muted ? 'muted' : 'empty'}. Activate to change`
+      : `${nm}, string ${sn}, fret ${f}: ${placed ? 'placed' : 'empty'}`;
+    let inner = `<rect class="idhit" x="${x0}" y="${y - gap / 2}" width="${w}" height="${gap}"/>`;
+    if (placed && inf) {
+      const prim = lm === 'intervals' ? inf.sub : lm === 'off' ? '' : inf.name, sec = lm === 'notes' ? inf.sub : lm === 'intervals' ? inf.name : '';
+      const bg = (ID_TONES[inf.tone] || ID_TONES.scale).bg, fg = (ID_TONES[inf.tone] || ID_TONES.scale).fg;
+      inner += `<g class="dot${inf.tone === 'root' ? ' root' : ''}" data-tone="${inf.tone}"><circle cx="${cx}" cy="${y}" r="${lm === 'off' ? 8 : 12.5}" fill="${bg}"${inf.bad ? ' style="stroke:#e8463e;stroke-width:3.5"' : ''}/><text x="${cx}" y="${y}" style="fill:${fg}">${esc(prim)}</text></g>`;
+      if (sec && lm !== 'off') { const wv = Math.max(14, sec.length * 6 + 7); inner += `<g class="idsub" aria-hidden="true"><rect x="${cx + 6}" y="${y - 22}" width="${wv}" height="11" rx="5.5"/><text x="${cx + 6 + wv / 2}" y="${y - 16.5}" style="text-anchor:middle;dominant-baseline:central;font:700 8.5px var(--sans)">${esc(sec)}</text></g>`; }
+    } else if (muted) inner += `<text class="fbx" x="44" y="${y}" style="fill:#e8463e;font:700 18px var(--sans);text-anchor:middle;dominant-baseline:central">×</text>`;
+    else if (f === 0) inner += `<circle class="idring" cx="44" cy="${y}" r="10.5"/><text class="fbo" x="44" y="${y}" style="fill:#3d3f47;font:600 11px var(--sans);text-anchor:middle;dominant-baseline:central">${T.pcName(m, t.flats)}</text>`;
+    else inner += `<circle class="idpip" cx="${cx}" cy="${y}" r="3.2"/>`;
+    s += `<g class="idc${placed ? ' on' : ''}" data-idc="${cfg.board}" data-si="${si}" data-f="${f}" role="button" tabindex="-1" aria-label="${esc(label)}" aria-pressed="${placed || muted}">${inner}</g>`;
+  }
+  return s;
+}
+function playBoardNote(midi) { Snd.ensure(); Snd.note(midi, undefined, 1.6, 0.85); flash(midi); }
+function idPress(si, f) {                                  // a tap on the main board
+  const t = curTuning(), fr = idFretsNow(), now = idToggle(fr, si, f);
+  if (S.qOn && UI.quiz.res) UI.quiz.res = null;            // changed after Check: grade again
+  if (now != null && now >= 0) playBoardNote(t.strings[si] + now);
+  if (!S.qOn && !(S.tab === 'play' || S.tab === 'chord')) return;
+  UI.keepIdFocus = true; render(); save(); updateHash();
+  if (!S.qOn) { const r = idResult(); announce(r.status === 'empty' ? 'Board empty' : r.title + '. ' + r.detail); }
+}
+function idHear(midis) {
+  Snd.ensure(); const t0 = Snd.now() + 0.03; midis.forEach((m, i) => { Snd.note(m, t0 + i * 0.045, 2, 0.75); flash(m, (0.03 + i * 0.045) * 1000); });
+}
+function idEnter(quiz) {
+  S.idOn = true; S.qOn = !!quiz;
+  if (S.tab !== 'play' && S.tab !== 'chord') S.tab = 'play';
+  if (quiz) { if (!UI.quiz || !UI.quiz.target) quizNew(); else UI.qFrets = []; }
+  setTab(S.tab, { keepMode: true, noScroll: true });
+  announce(quiz ? 'Chord quiz. Build ' + UI.quiz.target.name : 'Clear and identify: the fretboard is cleared, tap frets to place notes');
+}
+function idExit() { S.idOn = false; S.qOn = false; S.idPiano = false; setTab(S.tab, { keepMode: true, noScroll: true }); announce('Back to the normal fretboard'); }
+function idClear() { if (S.qOn) { UI.qFrets = []; UI.quiz.res = null; } else S.idFrets = []; render(); save(); updateHash(); announce('Fretboard cleared'); }
+
+/* ---------- identify panel ---------- */
+const chipHTML = (name, sub, tone) => `<span class="idn" data-tone="${tone}"><b>${esc(name)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>`;
+function identifyPanelHTML() {
+  const fr = idFretsNow(), r = idResult(), t = curTuning(), has = r.count > 0;
+  let body = '';
+  if (r.status === 'empty') body = `<div class="idbig">Place some notes</div><div class="idsub2">Tap frets on the board above, one note per string. Tap a note again to remove it. In the left column, tap a string to cycle <b>open ○</b>, <b>muted ×</b> and blank.</div>`;
+  else {
+    const chips = r.status === 'chord' || r.best ? '' : '';
+    const uniq = []; r.placed.forEach(p => { if (!uniq.some(u => u.pc === p.pc)) uniq.push(p); });
+    const nameChips = uniq.map(p => chipHTML(p.name, p.dot, p.tone)).join('');
+    body = `<div class="idbig">${esc(r.title)}</div><div class="idsub2">${esc(r.detail)}</div><div class="idchips" aria-label="Notes you placed">${nameChips}</div>`;
+    if (r.alternatives.length) body += `<div class="idalt"><span class="engr sm">Also named</span>${r.alternatives.map(a => `<span class="idaltn"><b>${esc(a.name)}</b> <span>${esc(a.position)}</span></span>`).join('')}</div>`;
+    if (r.suggestions.length) body += `<div class="idalt"><span class="engr sm">Could grow into</span>${r.suggestions.map(a => `<span class="idaltn"><b>${esc(a.name)}</b> <span>add ${esc(a.add.join(' '))}</span></span>`).join('')}</div>`;
+  }
+  const piano = `<button class="btn sm tog${S.idPiano ? ' on' : ''}" data-act="idpiano" aria-pressed="${!!S.idPiano}" ${has ? '' : 'disabled'}>Show on piano</button>`;
+  return `<div class="posblock idpanel" id="idPanel">
+    <div class="poshead"><span class="engr sm">Clear / Identify</span><span class="sp"></span><span class="hint">${esc(t.name)} · ${t.strings.length} strings</span></div>
+    <div class="card idcard">
+      <div class="idbar"><button class="btn sm" data-act="idclear" ${has || fr.some(f => f !== null) ? '' : 'disabled'}>Clear board</button><button class="btn sm" data-act="idhear" ${has ? '' : 'disabled'}>▶ Hear it</button>${piano}<button class="btn sm" data-act="idquiz">Chord Quiz</button><span class="sp"></span><button class="btn sm" data-act="idexit">Exit</button></div>
+      <div class="idshape"><span class="engr sm">Shape</span><code aria-label="Frets from the lowest string to the highest">${esc(shapeText(fr))}</code><span class="hint">low string → high string, x = not played</span></div>
+      <div class="idres" id="idRes">${body}</div>
+    </div></div>`;
+}
+
+/* ---------- chord quiz ---------- */
+function quizRecord(ok) {
+  const q = S.quiz; q.total++; if (ok) { q.right++; q.streak++; q.best = Math.max(q.best, q.streak); } else q.streak = 0; save();
+}
+function quizNew(avoid) {
+  UI.quiz = { target: T.quizTarget(S.quiz.level, Math.random, avoid), res: null, revealed: false, counted: false, hint: false, answer: null };
+  UI.qFrets = [];
+}
+function quizPositions() { const q = UI.quiz; return q && q.target && q.target.bassPc == null ? T.chordPositions(q.target.chord, curTuning().strings) : []; }
+function quizPosIdx() { const p = S.quiz.pos; if (p === 'any') return null; const i = +p - 1; return quizPositions()[i] ? i : null; }
+function quizShape() { const i = quizPosIdx(); return i == null ? null : quizPositions()[i].midi.filter(m => m != null); }
+function quizCheck() {
+  const q = UI.quiz, t = curTuning(), midis = idMidis(idFretsNow(), t.strings);
+  q.res = T.gradeChordAttempt(midis, q.target, { flats: t.flats, shape: quizShape() });
+  if (!q.res.empty && !q.counted && !q.revealed) { q.counted = true; quizRecord(q.res.ok); }
+  if (q.res.ok) idHear(midis);
+  UI.keepIdFocus = false; render(); announce((q.res.ok ? 'Correct. ' : 'Not yet. ') + q.res.lines.join(' '));
+}
+function quizReveal() {
+  const q = UI.quiz, t = curTuning(), a = T.quizAnswer(q.target, t.strings, quizPosIdx());
+  if (!q.counted) { q.counted = true; quizRecord(false); }
+  q.revealed = true; q.res = null; q.answer = a;
+  UI.qFrets = a ? idFix(a.frets, t.strings.length) : [];
+  if (a) idHear(a.midis);
+  render(); announce(a ? 'Answer shown: ' + shapeText(a.frets) : 'No comfortable shape in this tuning');
+}
+function quizNext() { quizNew(UI.quiz && UI.quiz.target && UI.quiz.target.name); render(); announce('New chord: ' + UI.quiz.target.name); }
+function quizPanelHTML() {
+  const q = UI.quiz, tg = q.target, t = curTuning(), s = S.quiz, res = q.res, fr = idFretsNow();
+  const lv = T.QUIZ_LEVELS.find(l => l.id === s.level) || T.QUIZ_LEVELS[0];
+  const levels = T.QUIZ_LEVELS.map(l => `<button data-act="qlevel" data-v="${l.id}" class="${l.id === s.level ? 'on' : ''}" aria-pressed="${l.id === s.level}">${esc(l.name)}</button>`).join('');
+  const ps = quizPositions(), pi = quizPosIdx();
+  const posOpts = `<option value="any"${pi == null ? ' selected' : ''}>Any voicing</option>` + ps.map((v, i) => `<option value="${i + 1}"${pi === i ? ' selected' : ''}>Position ${i + 1} · ${v.base === 0 ? 'open' : 'fret ' + v.base}</option>`).join('');
+  const posNote = tg.bassPc != null ? 'Slash chords: any voicing with the right lowest note.' : '';
+  let fb = '';
+  if (q.revealed) {
+    const a = q.answer;
+    fb = a ? `<div class="idfb info"><b>Answer: ${esc(tg.name)}</b> · ${esc(shapeText(a.frets))}<div class="idsub2">Notes: ${esc(tg.chord.tones.map(x => x.name).join(' '))}${tg.bass ? ' · bass ' + esc(tg.bass) : ''}. Press Next for another chord.</div></div>`
+      : `<div class="idfb info"><b>${esc(tg.name)}</b> has no comfortable shape on ${esc(t.name)}.<div class="idsub2">Notes: ${esc(tg.chord.tones.map(x => x.name).join(' '))}</div></div>`;
+  } else if (res) {
+    fb = `<div class="idfb ${res.ok ? 'ok' : 'no'}"><b>${res.ok ? '✓ Correct!' : res.empty ? 'Nothing placed' : '✗ Not quite'}</b>${res.played && !res.empty ? ` <span class="idsub2">You played <b>${esc(res.played)}</b>.</span>` : ''}<ul>${res.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>`;
+  }
+  const hint = q.hint ? `<div class="idsub2">Hint: ${esc(tg.name)} is <b>${esc(tg.chord.tones.map(x => x.name).join(' '))}</b>${tg.bass ? ` with <b>${esc(tg.bass)}</b> as the lowest note` : ''} (${esc(tg.chord.tones.map(x => T.dotLabel(x.label)).join('–'))}).</div>` : '';
+  const done = !!(res || q.revealed);
+  return `<div class="posblock idpanel idquizp" id="idPanel">
+    <div class="poshead"><span class="engr sm">Chord Quiz</span><span class="sp"></span><span class="idscore" aria-label="Score">✓ ${s.right}/${s.total} · streak ${s.streak} · best ${s.best}</span></div>
+    <div class="card idcard">
+      <div class="qtarget"><span class="engr sm">Build this chord</span><div class="qname" id="qName">${esc(tg.name)}</div><div class="idsub2">${tg.bass ? 'The lowest note you play must be ' + esc(tg.bass) + '.' : (pi != null ? 'Play it as position ' + (pi + 1) + '.' : '')}</div>${hint}</div>
+      <div class="idbar"><div class="seg" role="group" aria-label="Difficulty">${levels}</div></div>
+      <div class="idbar"><div class="field idfield"><label for="qPos">Voicing</label><select id="qPos" data-qsel="pos">${posOpts}</select></div><span class="hint">${esc(posNote || lv.blurb)}</span></div>
+      <div class="idbar"><button class="btn sm pri" data-act="qcheck">Check</button><button class="btn sm" data-act="qhint">Hint</button><button class="btn sm" data-act="qshow">Show answer</button><button class="btn sm" data-act="qnext">Next chord</button><button class="btn sm" data-act="idclear">Clear</button><span class="sp"></span><button class="btn sm" data-act="idexit">Exit</button></div>
+      <div class="idshape"><span class="engr sm">Shape</span><code aria-label="Frets from the lowest string to the highest">${esc(shapeText(fr))}</code>${done ? `<button class="btn sm tog${S.idPiano ? ' on' : ''}" data-act="idpiano" aria-pressed="${!!S.idPiano}">Show on piano</button>` : ''}<button class="btn sm" data-act="qreset" title="Reset the score and streak">Reset score</button></div>
+      <div class="idres" id="idRes" role="status" aria-live="polite">${fb || '<div class="idsub2">Place the notes on the cleared fretboard, then press <b>Check</b>.</div>'}</div>
+    </div></div>`;
+}
+const idPanelHTML = () => (S.qOn ? quizPanelHTML() : identifyPanelHTML());
+
+/* ---------- piano: show the placed notes ---------- */
+function idPianoPlan() {
+  const r = idResult(); if (!r.midis.length) return null;
+  if (S.qOn && !(UI.quiz.res || UI.quiz.revealed)) return null;                 // never leak the answer before Check
+  const sorted = r.midis.slice(), med = sorted[Math.floor(sorted.length / 2)], shift = med < 55 ? 12 * Math.ceil((55 - med) / 12) : 0, ms = sorted.map(m => m + shift);
+  const ch = S.qOn ? UI.quiz.target.chord : (r.best ? r.best.chord : null);
+  const plan = T.pianoMatchPlan(ch, ms), notes = [];
+  const nm = x => { const tone = x.tone; return { midi: x.midi, finger: x.finger, name: tone ? tone.name : T.midiName(x.midi, curTuning().flats), root: !!tone && tone.semis === 0, deg: tone ? tone.label : '' }; };
+  plan.L.map(nm).forEach(n => notes.push({ hand: 'L', ...n })); plan.R.map(nm).forEach(n => notes.push({ hand: 'R', ...n }));
+  const title = S.qOn ? UI.quiz.target.name : r.best ? r.best.name : 'Your notes';
+  return { kind: 'chord', id: true, title: `${title} · from your fretboard`, label: 'Your notes', desc: `The notes you placed on the guitar${shift ? ', moved up ' + (shift / 12 === 1 ? 'an octave' : shift / 12 + ' octaves') : ''}, shared between the hands so each stays comfortable.`, notes, match: true, hand: 'auto', source: 'chord' };
+}
+
+/* ---------- chord unlock (a fun gate, NOT security) ---------- */
+const GATE_KEY = 'bpgw.gate.ok';
+const GATE = { frets: [], open: false, preview: false, done: false, timer: 0 };
+const gateTuning = () => T.tuningById('standard') || T.TUNINGS[0];
+const gateTarget = () => T.makeTarget(S.gateRoot, S.gateQ);
+function gateNeeded() { if (!S.gateOn) return false; try { return sessionStorage.getItem(GATE_KEY) !== '1'; } catch (e) { return true; } }
+function gateCfg() { const t = gateTuning(), fr = GATE.frets = idFix(GATE.frets, t.strings.length); return { board: 'gate', tuning: t, frets: fr, info: infoByChord(gateTarget(), t, fr) }; }
+function gateResultHTML() {
+  const tg = gateTarget(), t = gateTuning(), ms = idMidis(GATE.frets, t.strings);
+  if (GATE.done) return `<div class="idfb ok"><b>✓ ${esc(tg.name)}. Welcome in!</b></div>`;
+  if (!ms.length) return `<div class="idsub2">Tap frets to place notes. Any voicing works: just play the notes <b>${esc(tg.chord.tones.map(x => x.name).join(' '))}</b>.</div>`;
+  const g = T.gradeChordAttempt(ms, tg, { flats: t.flats });
+  return `<div class="idfb no"><b>You are playing ${esc(g.played)}</b><ul>${g.lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div>`;
+}
+function gatePaint() {
+  const w = $('#gateWrap'); if (!w) return;
+  const fk = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.idc === 'gate' ? `[data-idc="gate"][data-si="${document.activeElement.dataset.si}"][data-f="${document.activeElement.dataset.f}"]` : null;
+  w.innerHTML = fretboardSVG(gateCfg()); $('#gateRes').innerHTML = gateResultHTML();
+  if (fk) { const n = w.querySelector(fk); if (n) n.focus({ preventScroll: true }); }
+}
+function gateOpen(preview) {
+  const g = $('#gate'); if (!g) return;
+  GATE.open = true; GATE.preview = !!preview; GATE.done = false; GATE.frets = [];
+  const tg = gateTarget();
+  g.innerHTML = `<div class="card gatecard" role="document">
+    <div class="gatetag">Chord unlock · just for fun, not security</div>
+    <h2 id="gateTitle" tabindex="-1">Play <b>${esc(tg.name)}</b> to come in</h2>
+    <p class="hint">Place the notes on the fretboard: one per string, any voicing. Tap the left column to cycle open ○ / muted ×. This is only a game: the page is public and anyone can turn the gate off in the lock menu.</p>
+    <div class="fbwrap idmode" id="gateWrap" tabindex="0" role="region" aria-label="Unlock fretboard (scrolls sideways; arrow keys move between cells, Enter places a note)"></div>
+    <div class="idres" id="gateRes" role="status" aria-live="polite"></div>
+    <div class="idbar"><button class="btn sm" data-act="gateclear">Clear</button><button class="btn sm" data-act="gatehear">▶ Hear it</button><button class="btn sm" data-act="gateshow">Show me</button><span class="sp"></span>${preview ? '<button class="btn sm" data-act="gateclose">Close preview</button>' : ''}</div></div>`;
+  g.hidden = false; document.body.classList.add('gating');
+  ['.wrap', '#dock', '.skip'].forEach(sel => { const e = $(sel); if (e) e.inert = true; });
+  gatePaint(); const h = $('#gateTitle'); if (h) h.focus({ preventScroll: true });
+}
+function gateClose() {
+  const g = $('#gate'); if (!g) return;
+  clearTimeout(GATE.timer); GATE.open = false; g.hidden = true; g.innerHTML = ''; document.body.classList.remove('gating');
+  ['.wrap', '#dock', '.skip'].forEach(sel => { const e = $(sel); if (e) e.inert = false; });
+}
+function gatePress(si, f) {
+  if (GATE.done) return;
+  const t = gateTuning(), fr = (GATE.frets = idFix(GATE.frets, t.strings.length)), now = idToggle(fr, si, f);
+  if (now != null && now >= 0) playBoardNote(t.strings[si] + now);
+  gatePaint();
+  const ms = idMidis(fr, t.strings);
+  if (ms.length && T.gradeChordAttempt(ms, gateTarget(), { flats: t.flats }).ok) gateSuccess(ms);
+}
+function gateSuccess(ms) {
+  GATE.done = true; try { sessionStorage.setItem(GATE_KEY, '1'); } catch (e) {}
+  idHear(ms); gatePaint(); announce('Unlocked: ' + gateTarget().name);
+  clearTimeout(GATE.timer); GATE.timer = setTimeout(gateClose, GATE.preview ? 1100 : 900);
+}
+function gateShow() {
+  const t = gateTuning(), a = T.quizAnswer(gateTarget(), t.strings, null); if (!a) return;
+  GATE.frets = idFix(a.frets, t.strings.length); gatePaint(); idHear(a.midis);
+  gateSuccess(a.midis);                                   // "Show me" also lets you in: the gate must never trap anybody
+}
+function gatePanelHTML() {
+  const qs = T.CHORD_ORDER.filter(q => q !== 'no5'), tg = gateTarget();
+  const roots = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+  return `<div class="tpHead"><b>Chord unlock</b><span>An optional pop-up that asks you to play a chord to come in.</span><button class="btn sm" data-act="gatepanelclose" aria-label="Close chord unlock settings">Close</button></div>
+    <div class="gset">
+      <p class="gwarn"><b>Just for fun, not security.</b> This is a public static page: the gate only asks a question, it keeps nobody out, and anyone can switch it off here or read the page's source. It asks once per browser session.</p>
+      <div class="idbar"><button class="btn tog${S.gateOn ? ' on' : ''}" data-act="gatetoggle" aria-pressed="${!!S.gateOn}">Chord unlock: ${S.gateOn ? 'On' : 'Off'}</button><button class="btn" data-act="gatetry">Try it now</button></div>
+      <div class="idbar"><div class="field idfield"><label for="gRoot">Chord root</label><select id="gRoot" data-gsel="root">${roots.map(r => `<option${r === S.gateRoot ? ' selected' : ''}>${r}</option>`).join('')}</select></div>
+        <div class="field idfield"><label for="gQ">Chord type</label><select id="gQ" data-gsel="q">${qs.map(q => `<option value="${q}"${q === S.gateQ ? ' selected' : ''}>${esc(T.CHORDS[q].name)}${T.CHORDS[q].sym ? ' (' + esc(T.CHORDS[q].sym) + ')' : ''}</option>`).join('')}</select></div></div>
+      <div class="hint">The visitor must play: <b id="gTarget">${esc(tg.name)}</b> (${esc(tg.chord.tones.map(x => x.name).join(' '))}). Any voicing counts.</div>
+    </div>`;
+}
+function gatePanelOpen(open) {
+  const p = $('#gatePanel'), b = $('#gateBtn'); if (!p) return;
+  if (open === undefined) open = p.hidden;
+  if (open) { themeOpen(false); p.innerHTML = gatePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const f = $('[data-act="gatetoggle"]', p); if (f) f.focus({ preventScroll: true }); }
+  else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
+}
+
 const isBlackPc = pc => [1, 3, 6, 8, 10].includes(pc);
 
 /* ================================================================
@@ -3289,6 +3749,7 @@ const HANDS = { R: 'Right hand', L: 'Left hand', B: 'Both hands', S: 'Both hands
 const HAND_ABBR = { R: 'RH', L: 'LH' };
 function pianoPlan() {
   if (S.tab === 'lessons') return lessonPlanUI();
+  if (idActive() && S.idPiano) { const ip = idPianoPlan(); if (ip) return ip; }
   const notes = [], push = (hand, arr) => arr.forEach(n => notes.push({ hand, midi: n.midi, finger: n.finger, name: n.name, root: !!n.root, deg: n.deg || '' }));
   if (S.mode === 'chord') {
     const ch = curChord(), vs = T.pianoVoicings(ch), g = S.pcPos === 'g' ? curVoicing() : null;
@@ -3333,7 +3794,7 @@ function fingerLine(plan) {                               // "RH: C(1) E(3) G(5)
   return plan.kind === 'scale' ? ps.map(x => `<div>${x}</div>`).join('') : ps.join(' <span class="sepd">·</span> ');
 }
 function pianoPanelHTML() {
-  const chordMode = S.mode === 'chord', P = PP, ch = chordMode ? curChord() : null;
+  const P = PP, chordMode = S.mode === 'chord' || !!P.id, ch = chordMode ? curChord() : null;
   const hand = chordMode ? S.chHand : S.scHand;
   const handItems = [{ v: 'R', big: 'R', full: 'Right hand', abbr: 'Right', title: 'Right hand only' }, { v: 'L', big: 'L', full: 'Left hand', abbr: 'Left', title: 'Left hand only' },
     chordMode ? { v: 'B', big: 'L+R', full: 'Bass + chord', abbr: 'Bass+chord', title: 'Left hand plays the bass, right hand plays the chord' } : { v: 'B', big: 'L+R', full: 'Hands together', abbr: 'Together', title: 'Both hands together, an octave apart' }]
@@ -3362,8 +3823,8 @@ function pianoPanelHTML() {
   return `<section class="metal panel pcontrol" aria-label="Piano control">
     <div class="panel-top"><span class="engr">Piano Control</span><span class="engr sm">separate from the guitar</span></div>
     <div class="pc-sec"><span class="engr sm">Hand${P.match ? ' <span class="soft">· automatic with Match guitar</span>' : ''}</span>${handRow}</div>
-    <div class="pc-grid${chordMode ? ' one' : ''}">${drum}${octs}</div>
-    <div class="pc-sec"><span class="engr sm">${esc(posLab)}</span>${posRowHTML(posItems, String(sel), 'ppos', 'Piano positions')}</div>
+    <div class="pc-grid${chordMode ? ' one' : ''}${P.id ? ' dis' : ''}">${drum}${octs}</div>
+    <div class="pc-sec${P.id ? ' dis' : ''}"><span class="engr sm">${esc(posLab)}${P.id ? ' <span class="soft">· your own notes from the fretboard</span>' : ''}</span>${posRowHTML(posItems, P.id ? 'none' : String(sel), 'ppos', 'Piano positions')}</div>
     <div class="pc-play">${plays}</div>
     <div class="pc-sec"><span class="engr sm">Practice <span class="soft">· MIDI piano, on-screen keys or computer keys</span></span>
       <div class="pc-prac"><button class="btn tog${UI.pr.on ? ' on' : ''}" data-act="prtog" aria-pressed="${UI.pr.on}" title="Wait for you to play each note or chord, and score it">● Practice</button><button class="btn tog${S.prExact ? ' on' : ''}" data-act="prexact" aria-pressed="${!!S.prExact}" title="On: the key must be the exact one lit. Off: any octave counts.">Exact octave</button>${chordMode ? `<button class="btn tog" data-act="prhow" title="Play the whole chord at once, or its notes one by one">${S.prHow === 'single' ? 'One by one' : 'Together'}</button>` : ''}<button class="btn tog midi" data-act="midi" aria-pressed="false" title="Connect a MIDI piano (Chrome / Edge, USB or Bluetooth)">MIDI</button></div>
@@ -3411,9 +3872,11 @@ function pianoFocusScroll() {                                         // bring t
   return Math.max(0, whitesBelow(lo) * 24 - 36);
 }
 function instrumentsHTML({ mid = '' } = {}) {
+  const idm = idActive();
+  if (idm) mid = idPanelHTML();                                                    // Clear / Identify or Chord Quiz replaces the position block
   const t = curTuning(), chordMode = S.mode === 'chord', ch = curChord();
   const where = SEL ? (SEL.kind === 'chord' ? ` · position ${S.chordPos + 1}` : ` · position ${S.scalePos + 1}`) : '';
-  const ctx = (chordMode ? `${ch.name} — ${t.name}` : `${keyTitle()} — ${t.name}`) + where;
+  const ctx = idm ? `${S.qOn ? 'Chord Quiz' : 'Clear / Identify'} — ${t.name}` : (chordMode ? `${ch.name} — ${t.name}` : `${keyTitle()} — ${t.name}`) + where;
   const lm = LM(), seg = (v, l) => `<button data-act="labels" data-v="${v}" class="${lm === v ? 'on' : ''}">${l}</button>`;
   const playLbl = SEL && SEL.kind === 'scale' ? `▶ Position ${S.scalePos + 1}` : '▶ Scale';
   return `
@@ -3421,11 +3884,13 @@ function instrumentsHTML({ mid = '' } = {}) {
   <div class="toolbar">
     <div class="seg" role="group" aria-label="Labels">${seg('notes', 'NOTES')}${seg('intervals', 'INTERVALS')}${SEL ? seg('fingers', 'FINGERS') : ''}${seg('off', 'OFF')}</div>
     <span class="sp"></span>
-    <button class="btn sm" data-act="playScale">${playLbl}</button>
-    <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>
+    <button class="btn sm tog${idm && !S.qOn ? ' on' : ''}" data-act="idtoggle" aria-pressed="${idm && !S.qOn}" title="Clear the fretboard, place notes, and have the chord named">✎ Clear / Identify</button>
+    <button class="btn sm tog${idm && S.qOn ? ' on' : ''}" data-act="quiztoggle" aria-pressed="${idm && S.qOn}" title="Name a chord, you build it, it is graded">? Chord Quiz</button>
+    ${idm ? '' : `<button class="btn sm" data-act="playScale">${playLbl}</button>
+    <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>`}
   </div>
-  <div class="fbwrap" id="fbWrap" tabindex="0" role="region" aria-label="Fretboard (scrolls sideways; arrow keys move between notes)">${fretboardSVG()}</div>
-  <div class="legend" style="margin-top:8px">${legendHTML()}<span style="margin-left:auto">tap any note to hear it · scroll sideways on a phone</span></div>
+  <div class="fbwrap${idm ? ' idmode' : ''}" id="fbWrap" tabindex="0" role="region" aria-label="${idm ? 'Note-placing fretboard (scrolls sideways; arrow keys move between cells, Enter places or removes a note)' : 'Fretboard (scrolls sideways; arrow keys move between notes)'}">${fretboardSVG(idm ? idBoardCfg() : null)}</div>
+  <div class="legend" style="margin-top:8px">${idm ? `<span><i data-tone="root" style="background:${RED}"></i>root</span><span><i data-tone="third" style="background:${AMBER}"></i>3rd / sus</span><span><i data-tone="fifth" style="background:${GREEN}"></i>5th</span><span><i data-tone="seventh" style="background:${BLUE}"></i>7th</span><span><i data-tone="ext" style="background:${VIOLET}"></i>extension / bass</span>` : legendHTML()}<span style="margin-left:auto">${idm ? 'tap a fret to place a note · tap again to remove · scroll sideways on a phone' : 'tap any note to hear it · scroll sideways on a phone'}</span></div>
   ${mid}
   <h2>Piano <span class="ctx">${esc(PP.title)} · ${esc(PP.hand === 'auto' ? 'both hands' : HANDS[PP.hand] || '')}</span></h2>
   ${pianoPanelHTML()}
@@ -4446,10 +4911,12 @@ function onChange(id) {
 function pickKey(pc, scale) { S.rootPc = pc; S.scale = scale; S.pref = 'auto'; }
 
 document.addEventListener('click', e => {
+  const ic = e.target.closest('[data-idc]');                                   // a cell of the note-placing board
+  if (ic) { const si = +ic.dataset.si, f = +ic.dataset.f; if (ic.dataset.idc === 'gate') gatePress(si, f); else idPress(si, f); return; }
   const act = e.target.closest('[data-act]');
   if (!act) { const m = e.target.closest('[data-midi]'); if (m) { if (m.classList.contains('pk')) tapNote(+m.dataset.midi); else playMidi(+m.dataset.midi); } return; }
   const v = act.dataset.v, A = act.dataset.act;
-  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed', 'theme', 'themeclose'].includes(A)) UI.piFocus = true;
+  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed', 'theme', 'themeclose'].includes(A) && !/^(id|q[a-z]|gate)/.test(A)) UI.piFocus = true;
   switch (A) {
     case 'tab': setTab(v); break;
     case 'labels': S.labels = v; render(); save(); break;
@@ -4539,7 +5006,32 @@ document.addEventListener('click', e => {
     case 'install': pwaInstall(); break;
     case 'reloadapp': location.reload(); break;
     case 'power': break;
+    case 'idtoggle': if (idActive() && !S.qOn) idExit(); else idEnter(false); updateHash(); save(); break;
+    case 'quiztoggle': if (idActive() && S.qOn) idExit(); else idEnter(true); updateHash(); save(); break;
+    case 'idquiz': idEnter(true); updateHash(); break;
+    case 'idexit': idExit(); updateHash(); save(); break;
+    case 'idclear': idClear(); break;
+    case 'idhear': idHear(idMidis(idFretsNow(), curTuning().strings)); break;
+    case 'idpiano': S.idPiano = !S.idPiano; UI.piFocus = true; render(); save(); break;
+    case 'qlevel': S.quiz.level = v; quizNew(); render(); save(); announce('Level: ' + (T.QUIZ_LEVELS.find(l => l.id === v) || {}).name + '. Build ' + UI.quiz.target.name); break;
+    case 'qcheck': quizCheck(); break;
+    case 'qhint': UI.quiz.hint = true; render(); break;
+    case 'qshow': quizReveal(); break;
+    case 'qnext': quizNext(); break;
+    case 'qreset': S.quiz.right = S.quiz.total = S.quiz.streak = S.quiz.best = 0; save(); render(); announce('Score reset'); break;
+    case 'gatepanelclose': gatePanelOpen(false); break;
+    case 'gatetoggle': S.gateOn = !S.gateOn; save(); gatePanelOpen(true); announce('Chord unlock ' + (S.gateOn ? 'on' : 'off')); break;
+    case 'gatetry': gatePanelOpen(false); gateOpen(true); break;
+    case 'gateclear': GATE.frets = []; gatePaint(); break;
+    case 'gatehear': idHear(idMidis(GATE.frets, gateTuning().strings)); break;
+    case 'gateshow': gateShow(); break;
+    case 'gateclose': gateClose(); break;
   }
+});
+document.addEventListener('change', e => {
+  const g = e.target.closest('[data-gsel]'), q = e.target.closest('[data-qsel]');
+  if (g) { if (g.dataset.gsel === 'root') S.gateRoot = g.value; else S.gateQ = g.value; save(); const tg = gateTarget(), el = $('#gTarget'); if (el) el.textContent = tg.name; return; }
+  if (q) { S.quiz.pos = q.value; UI.quiz.res = null; UI.qFrets = []; render(); save(); }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-act]')) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
@@ -4590,7 +5082,7 @@ function a11yPass(el) {
   const fix = [], word = (h, n) => new RegExp('(^|[^a-z0-9])' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])').test(h);
   const wide = WIDE_MQ.matches;
   el.querySelectorAll('button[aria-label],[role="button"][aria-label]').forEach(b => {
-    if (b.matches('.knob,.pk,.dot,.lcol,.cdiag')) return;
+    if (b.matches('.knob,.pk,.dot,.idc,.lcol,.cdiag')) return;
     const lab = b.getAttribute('aria-label'), sig = (wide ? 'w' : 'n') + '|' + b.className + '|' + lab + '|' + b.textContent;
     let nl = A11Y_NAMES.get(sig);
     if (nl === undefined) {                    // innerText forces a layout, so each distinct button is measured once, then remembered
@@ -4606,16 +5098,17 @@ function a11yPass(el) {
 // Piano / fretboard by keyboard: Tab onto the instrument, arrows move between notes, Enter or Space plays.
 document.addEventListener('keydown', e => {
   const t = e.target; if (!t || !t.closest || e.ctrlKey || e.metaKey || e.altKey) return;
-  const host = t.closest('#pianoWrap, #fbWrap'); if (!host) return;
+  const host = t.closest('#pianoWrap, #fbWrap, #gateWrap'); if (!host) return;
   const piano = host.id === 'pianoWrap', k = e.key;
-  const keys = [...host.querySelectorAll(piano ? '.pk' : '.dot')];
-  const cur = t.matches(piano ? '.pk' : '.dot') ? t : null;
+  const kSel = piano ? '.pk' : host.querySelector('.idc') ? '.idc' : '.dot';
+  const keys = [...host.querySelectorAll(kSel)];
+  const cur = t.matches(kSel) ? t : null;
   if (cur && (k === 'Enter' || k === ' ')) { e.preventDefault(); cur.dispatchEvent(new MouseEvent('click', { bubbles: true })); return; }
   const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
   if (!dirs[k] && !(piano && /^(Home|End|PageUp|PageDown)$/.test(k))) return;
   e.preventDefault();
   let next = null;
-  if (!cur) next = piano ? (host.querySelector('.pk.target') || host.querySelector('.pk.lit') || host.querySelector('.pk[data-midi="60"]')) : (host.querySelector('.dot:not(.off)') || host.querySelector('.dot'));
+  if (!cur) next = piano ? (host.querySelector('.pk.target') || host.querySelector('.pk.lit') || host.querySelector('.pk[data-midi="60"]')) : (host.querySelector('.idc') ? (host.querySelector('.idc.on') || host.querySelector('.idc[data-f="3"][data-si="2"]') || host.querySelector('.idc')) : (host.querySelector('.dot:not(.off)') || host.querySelector('.dot')));
   else if (piano) {
     const m = +cur.dataset.midi; let to = m;
     if (k === 'ArrowLeft') to = m - (e.shiftKey ? 12 : 1); else if (k === 'ArrowRight') to = m + (e.shiftKey ? 12 : 1);
@@ -4738,7 +5231,9 @@ const Meter = {
   },
 };
 document.addEventListener('visibilitychange', () => Meter.sync());
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#themePanel').hidden) { themeOpen(false); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#themePanel').hidden) { themeOpen(false); } if (e.key === 'Escape' && !$('#gatePanel').hidden) gatePanelOpen(false); if (e.key === 'Escape' && GATE.open && GATE.preview) gateClose(); });
+document.addEventListener('click', e => { const p = $('#gatePanel'); if (!p || p.hidden) return; if (!e.target.closest('#gatePanel') && !e.target.closest('#gateBtn') && !e.target.closest('[data-act^="gate"]')) gatePanelOpen(false); });
+$('#gateBtn').addEventListener('click', () => gatePanelOpen());
 document.addEventListener('click', e => {
   const p = $('#themePanel'); if (!p || p.hidden) return;
   if (!e.target.closest('#themePanel') && !e.target.closest('#themeBtn')) themeOpen(false);
@@ -4753,8 +5248,9 @@ UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
 setTheme(THEMES.some(t => t.id === curThemeId()) ? curThemeId() : DEFAULT_THEME, { noSave: true });
 UI.booted = true; pwaPaint(); document.body.classList.add('ready');
+if (gateNeeded()) gateOpen(false);
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
+window.BPGW = { idEnter, idExit, idPress, idResult, idFretsNow, quizNew, quizCheck, quizReveal, quizNext, gateOpen, gateClose, gatePress, gateShow, GATE, THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>
 </body>
 </html>
