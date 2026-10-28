@@ -2892,7 +2892,7 @@ const Theory = (() => {
         const omitted = q.pts.filter(p => !set.has(mod(root + p.s, 12)));
         const rootNm = spellRoot(root, id, flats), spelled = buildChord(rootNm, id);
         const accs = spelled.tones.map(t => Math.abs(parseName(t.name).acc));
-        let cost = qualityBase(id) + omitted.reduce((a, p) => a + (p.d === 5 ? 0.9 : 1.4), 0) + accs.filter(x => x > 1).length * 0.9 + accs.filter(x => x === 1).length * 0.02 + spelled.notes.filter(n => /^(E♯|B♯|C♭|F♭)/.test(n)).length * 0.3;
+        let cost = qualityBase(id) + omitted.reduce((a, p) => a + (p.d === 5 ? 0.9 : 0.4), 0) + accs.filter(x => x > 1).length * 0.9 + accs.filter(x => x === 1).length * 0.02 + spelled.notes.filter(n => /^(E♯|B♯|C♭|F♭)/.test(n)).length * 0.3;
         let bassTone = null;
         if (outside) cost += 2.6;
         else {

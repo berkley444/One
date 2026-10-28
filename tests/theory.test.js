@@ -1057,5 +1057,121 @@ group('lessons — progress statistics');
   eq(T.lessonStats({ 'fingers/numbers': 1 }).lessons[0], { id: 'fingers', parts: 3, done: 1, complete: false }, 'one part done');
 }
 
+group('identify — name the chord from placed notes');
+{
+  const std = [40, 45, 50, 55, 59, 64];
+  const frets = (s, tun = std) => s.split('').map((c, i) => (c === 'x' ? null : tun[i] + parseInt(c, 16))).filter(x => x != null);
+  const id = (s, tun) => T.identifyChord(frets(s, tun));
+  const best = s => { const r = id(s); return r.best ? r.best.name : r.title; };
+  const alts = s => id(s).alternatives.map(a => a.name);
+  // open-position and barre shapes (best name)
+  [['x32010', 'C'], ['022100', 'E'], ['x02220', 'A'], ['320003', 'G'], ['xx0232', 'D'], ['133211', 'F'], ['x13331', 'B♭'], ['355433', 'G'], ['x35553', 'C'], ['xx3211', 'F'], ['x32013', 'C'],
+   ['x02210', 'Am'], ['022000', 'Em'], ['xx0231', 'Dm'], ['x35543', 'Cm'], ['133111', 'Fm'],
+   ['x32310', 'C7'], ['xx0212', 'D7'], ['020100', 'E7'], ['x2120x', 'B7'], ['x02010', 'Am7'], ['x24232', 'Bm7'], ['x35343', 'Cm7'], ['x24342', 'Bmaj7'],
+   ['x02200', 'Asus2'], ['x02230', 'Asus4'], ['xx0230', 'Dsus2'], ['xx0233', 'Dsus4'], ['x32030', 'Cadd9'], ['xx0131', 'Ddim'], ['x02212', 'Am6']
+  ].forEach(([s, n]) => eq(best(s), n, `shape ${s} is ${n}`));
+  // positions: root / first / second inversion and slash chords
+  eq(id('x32010').best.position, 'root position', 'open C is root position');
+  eq(best('xx2010'), 'C/E', 'xx2010 is C/E'); eq(id('xx2010').best.kind, 'first', 'C/E is a 1st inversion'); eq(id('xx2010').best.bass, 'E', 'bass of C/E is E');
+  eq(best('332010'), 'C/G', '332010 is C/G'); eq(id('332010').best.kind, 'second', 'C/G is a 2nd inversion');
+  eq(best('xx0787'), 'G/D', 'xx0787 is G/D'); eq(best('xxx565'), 'F/C', 'xxx565 is F/C'); eq(best('x00232'), 'D/A', 'D/A');
+  eq(best('x3221x'), 'Am/C', 'Am/C wins as a minor-triad inversion'); eq(alts('x3221x'), ['C6'], '… with C6 as the alternative name');
+  eq(best('xx9988'), 'Cmaj7/B', 'Cmaj7/B (7th in the bass)'); eq(id('xx9988').best.kind, 'third', 'Cmaj7/B is a 3rd inversion');
+  eq(id('xx0220').best.kind, 'outside', 'A/D has a bass note that is not in the chord'); eq(best('xx0220'), 'A/D', 'xx0220 is A/D');
+  eq(id('x32010').best.slash, false, 'C is not a slash chord'); eq(id('xx2010').best.slash, true, 'C/E is a slash chord');
+  // the same notes, several honest names
+  eq(best('x02210'), 'Am', 'A C E A... is Am'); ok(alts('x02210').includes('C6/A'), 'Am also reads as C6/A');
+  eq(best('x02010'), 'Am7', 'A E G C E is Am7'); ok(alts('x02010').includes('C6/A'), 'Am7 (no 5th, no) / C6/A alternative');
+  { const r = T.identifyChord([48, 52, 55, 57]); eq(r.best.name, 'C6', 'C E G A is C6'); eq(r.alternatives.map(a => a.name), ['Am7/C'], 'C6 is also Am7/C'); }
+  { const r = T.identifyChord([45, 48, 52, 55]); eq(r.best.name, 'Am7', 'A C E G is Am7'); ok(r.alternatives.some(a => a.name === 'C6/A'), 'Am7 is also C6/A'); }
+  { const r = T.identifyChord([48, 51, 54, 57]); eq(r.best.name, 'Cdim7', 'C E♭ G♭ A is Cdim7'); ok(r.alternatives.length >= 1, 'dim7 has enharmonic alternatives'); }
+  { const r = T.identifyChord([48, 52, 56]); eq(r.best.name, 'Caug', 'C E G♯ is Caug'); ok(r.alternatives.some(a => /aug/.test(a.name)), 'augmented triads are named from every note'); }
+  // sevenths, sus, extended
+  eq(T.identifyChord([43, 47, 50, 53]).best.name, 'G7', 'G B D F is G7'); eq(T.identifyChord([43, 46, 50, 54]).best.name, 'GmMaj7', 'G B♭ D F♯ is G minor-major 7');
+  eq(T.identifyChord([43, 47, 50, 54]).best.name, 'Gmaj7', 'Gmaj7'); eq(T.identifyChord([43, 46, 50, 53]).best.name, 'Gm7', 'Gm7'); eq(T.identifyChord([43, 46, 49, 52]).best.name, 'Gdim7', 'Gdim7 spelled from the lowest note');
+  eq(T.identifyChord([43, 47, 50, 53, 57]).best.name, 'G9', 'G9'); eq(T.identifyChord([50, 55, 57]).best.name, 'Dsus4', 'D G A is Dsus4'); ok(T.identifyChord([50, 55, 57]).alternatives.some(a => a.name === 'Gsus2/D'), 'Dsus4 is also Gsus2/D');
+  eq(T.identifyChord([40, 43, 47, 50, 54, 57]).best.name, 'Em11', 'a loose E minor 11 leaves out the 9th'); // E G B D (F#) A -> without F#
+  eq(T.identifyChord(T.TUNINGS.find(t => t.id === 'standard').strings).best.name, 'Em11', 'the open strings of a guitar are an Em11');
+  eq(T.identifyChord(T.TUNINGS.find(t => t.id === 'dadgad').strings).best.name, 'Dsus4', 'DADGAD open strings are Dsus4');
+  eq(T.identifyChord(T.TUNINGS.find(t => t.id === 'openG').strings).best.name, 'G/D', 'open G tuning is G/D');
+  eq(T.identifyChord(T.TUNINGS.find(t => t.id === 'openE').strings).best.name, 'E', 'open E tuning is E');
+  // power chords and two-note sets
+  { const r = id('355xxx'); eq([r.status, r.best.name, r.title], ['interval', 'G5', 'G5'], 'G D is the power chord G5'); ok(/perfect 5th/.test(r.detail) && /third is needed/.test(r.detail), 'power chord detail says what is missing'); ok(r.suggestions.some(s => s.name === 'G'), 'G5 can grow into G'); ok(r.suggestions.some(s => s.name === 'Gm'), '… or into Gm'); }
+  { const r = id('xx0xx0'.replace('x0', 'x0').slice(0, 6)); ok(r.status === 'interval' || r.status === 'single', 'two open strings are an interval, not a chord'); }
+  { const r = id('x32xxx'); eq([r.status, r.title], ['interval', 'major 3rd (C – E)'], 'C E is a major 3rd'); ok(r.suggestions.some(s => s.name === 'C'), 'a major 3rd suggests C'); }
+  { const r = id('x3x2xx'); eq(r.title, 'major 6th (C – A)', 'C A is a major 6th'); }
+  { const r = T.identifyChord([60, 63]); eq([r.interval.semis, r.interval.name], [3, 'minor 3rd'], 'interval object'); }
+  eq(T.identifyChord([60, 72]).status, 'single', 'the same note in two octaves is one note');
+  { const r = id('x3xxxx'); eq([r.status, r.title], ['single', 'C'], 'one note'); }
+  { const r = T.identifyChord([]); eq([r.status, r.count, r.best], ['empty', 0, null], 'nothing placed'); }
+  // no match, and the intervals are listed
+  { const r = T.identifyChord([48, 53, 59]); eq(r.status, 'unknown', 'C F B has no chord name'); eq(r.title, 'No chord match', 'title says so'); eq(r.notes, ['C', 'F', 'B'], 'the notes are listed'); eq(r.intervals.map(i => i.label), ['1', '4', '7'], 'with intervals above the lowest'); ok(/perfect 4th/.test(r.detail) && /major 7th/.test(r.detail), 'and the interval names'); }
+  // spelling follows the key signature of the tuning's accidentals preference
+  eq(T.identifyChord([49, 53, 56], { flats: true }).best.name, 'D♭', 'D♭ major keeps the easy spelling (not C♯ with E♯)'); eq(T.identifyChord([49, 53, 56], { flats: false }).best.name, 'D♭', '… whatever the flats flag'); eq([T.identifyChord([49], { flats: true }).title, T.identifyChord([49], { flats: false }).title], ['D♭', 'C♯'], 'a single note follows the flats flag');
+  eq(T.identifyChord([46, 50, 53], { flats: true }).best.name, 'B♭', 'B♭ major'); eq(T.identifyChord([46, 50, 53]).best.name, 'B♭', 'B♭ is spelled B♭ even without the flats flag');
+  // the placed notes carry names and interval labels for the fretboard dots
+  { const r = id('x32010'); eq(r.best.placed.map(p => p.name + p.dot), ['CR', 'E3', 'G5', 'CR', 'E3'], 'placed note names + interval dots'); eq(r.best.placed.map(p => p.tone), ['root', 'third', 'fifth', 'root', 'third'], 'tone classes match the app colours'); eq(r.best.placed.filter(p => p.isBass).length, 1, 'exactly one bass note'); }
+  // every quality, every root, every inversion: the true name is always the best name or one of the alternatives
+  {
+    let tot = 0, bad = [], first = 0;
+    T.CHORD_ORDER.filter(q => q !== 'no5').forEach(q => {
+      for (let pc = 0; pc < 12; pc++) {
+        const ch = T.buildChord(T.rootName(pc, 'major', 'auto'), q), offs = ch.tones.map(t => t.semis);
+        offs.forEach((bassOff, k) => {
+          const midis = offs.map((o, i) => (i === k ? 36 + ((pc + o) % 12) : 48 + ((pc + o) % 12)));
+          const r = T.identifyChord(midis), want = ((pc + bassOff) % 12);
+          const cand = [r.best].concat(r.alternatives).filter(Boolean);
+          const hit = cand.some(c => c.rootPc === pc && c.quality === q && c.bassPc === want);
+          tot++; if (!hit) bad.push(ch.name + '/' + bassOff);
+          if (r.best && r.best.rootPc === pc && r.best.quality === q) first++;
+        });
+      }
+    });
+    eq(bad.slice(0, 5), [], `all ${tot} chord/inversion voicings are recognised (best or alternative)`); ok(first / tot > 0.7, `at least 70% are the best name (${(100 * first / tot).toFixed(0)}%)`);
+  }
+}
+
+group('quiz — targets, grading and answers');
+{
+  const std = T.TUNINGS[0].strings;
+  const tg = (r, q, b) => T.makeTarget(r, q, b);
+  eq(tg('C', 'major').name, 'C', 'target name'); eq(tg('A', 'minor', 'C').name, 'Am/C', 'slash target'); eq(tg('C', 'major', 'C').name, 'C', 'the root as bass is not a slash chord'); eq(tg('C', 'major', 'D').bassPc, 2, 'outside bass');
+  eq(T.QUIZ_LEVELS.map(l => l.id), ['open', 'sevenths', 'slash', 'all'], 'four levels');
+  eq(T.quizPool('open').map(p => tg(...p).name), ['C', 'A', 'G', 'E', 'D', 'Am', 'Em', 'Dm'], 'open level = 8 chords');
+  eq(T.quizPool('sevenths').length, 21, '7th level = 21 chords'); ok(T.quizPool('slash').every(p => p[2]), 'slash level always has a bass'); ok(T.quizPool('all').length >= 50 * 12 - 12, 'all level covers every quality and root');
+  let n = 0; const rnd = () => ((n = (n * 7 + 3) % 11) / 11);
+  const t1 = T.quizTarget('open', rnd), t2 = T.quizTarget('open', rnd, t1.name); ok(t2.name !== t1.name, 'next target avoids the previous one'); eq(T.quizTarget('nope', () => 0).name, 'C', 'unknown level falls back to open');
+  // grading
+  const g = (ms, t, o) => T.gradeChordAttempt(ms, t, o);
+  ok(g([48, 52, 55, 60, 64], tg('C', 'major')).ok, 'open C is a correct C'); ok(g([36, 55, 60, 64], tg('C', 'major')).ok, 'any inversion is fine when no bass is asked for');
+  { const r = g([48, 55, 60], tg('C', 'major')); ok(!r.ok && r.missing.map(m => m.name).join() === 'E', 'missing the third'); ok(r.lines[0] === 'Missing the 3rd (E).', 'explains the missing note: ' + r.lines[0]); }
+  { const r = g([48, 52, 55, 58], tg('C', 'major'), { flats: true }); ok(!r.ok && r.extra.join() === 'B♭', 'a foreign note is extra'); ok(/B♭ is not part of C/.test(r.lines.join(' ')), 'explains the extra note'); eq(r.played, 'C7', 'and says what you did play'); }
+  { const r = g([48, 52, 55], tg('C', 'maj7')); ok(!r.ok && r.missing.length === 1 && r.missing[0].name === 'B', 'Cmaj7 without the 7th'); }
+  { const r = g([48, 52, 59], tg('C', 'maj7')); ok(r.ok && r.omitted.join() === '5', 'the 5th may be left out'); ok(/left out the 5/.test(r.lines.join(' ')), 'and the answer says so'); }
+  { const r = g([52, 55, 60, 64], tg('C', 'major', 'E')); ok(r.ok && r.bassOk, 'C/E with E in the bass is correct'); }
+  { const r = g([48, 52, 55, 64], tg('C', 'major', 'E')); ok(!r.ok && r.bassOk === false && /needs E \(the 3rd\) as the lowest note; yours is C/.test(r.lines.join(' ')), 'C/E with C in the bass is wrong, and explained: ' + r.lines.join(' | ')); }
+  { const r = g([38, 48, 52, 55], tg('C', 'major', 'D')); ok(r.ok, 'C/D (outside bass) with D below the C chord is correct'); }
+  { const r = g([48, 52, 55, 62], tg('C', 'major', 'D')); ok(!r.ok && r.bassOk === false, 'C/D with the D above is not C/D'); }
+  { const r = g([], tg('C', 'major')); ok(r.empty && !r.ok, 'nothing placed is not an answer'); }
+  { const pos = [48, 52, 55, 60, 64]; ok(g(pos, tg('C', 'major'), { shape: pos }).shapeOk, 'the asked-for position'); const r = g([48, 52, 55, 60, 67], tg('C', 'major'), { shape: pos }); ok(!r.ok && r.shapeOk === false && /not the position/.test(r.lines.join(' ')), 'right notes, wrong position: ' + r.lines.join(' | ')); }
+  { const r = g([45, 52, 55, 59], tg('A', 'min7')); ok(!r.ok && r.missing[0].label === '♭3' && r.extra.join() === 'B', 'Am7 with B instead of C'); }
+  // answers exist and grade as correct for every target on every level, in standard tuning
+  let bad = [];
+  T.QUIZ_LEVELS.forEach(l => T.quizPool(l.id).forEach(p => { const t = tg(...p), a = T.quizAnswer(t, std, null); if (!a) { bad.push(t.name + ' (no answer)'); return; } if (!g(a.midis, t).ok) bad.push(t.name + ' (answer not accepted)'); }));
+  eq(bad, [], 'every quiz target has an answer that is accepted');
+  // shapes honour the bass note
+  { const a = T.quizAnswer(tg('C', 'major', 'E'), std, null); ok(a && T.mod(a.midis[0], 12) === 4, 'C/E answer has E at the bottom'); const b = T.quizAnswer(tg('G', 'major', 'B'), std, null); ok(b && T.mod(b.midis[0], 12) === 11, 'G/B answer has B at the bottom'); }
+  { const a = T.quizAnswer(tg('C', 'major'), std, 0); eq(a.frets, [-1, 3, 2, 0, 1, 0], 'position 1 of C is the open C'); const b = T.quizAnswer(tg('C', 'major'), std, 2); ok(b.position === 2, 'position 3 answer comes from the position finder'); }
+  // on every tuning there is an answer for the open chords where a shape exists, and it grades correct
+  T.TUNINGS.forEach(tu => { const t = tg('E', 'minor'), a = T.quizAnswer(t, tu.strings, null); if (a) ok(g(a.midis, t).ok, `${tu.id}: Em answer is accepted`); else ok(tu.strings.length < 4, `${tu.id}: no Em answer only for very short tunings`); });
+}
+
+group('chord gate — settings are plain chord targets');
+{
+  const t = T.makeTarget('G', 'major');
+  ok(T.gradeChordAttempt([43, 47, 50], t).ok, 'G B D opens a G gate'); ok(!T.gradeChordAttempt([43, 46, 50], t).ok, 'G B♭ D (minor) does not');
+  const a = T.quizAnswer(t, T.TUNINGS[0].strings, null); ok(a && T.gradeChordAttempt(a.midis, t).ok, '"Show me" produces notes that pass the gate');
+}
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
