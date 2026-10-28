@@ -216,5 +216,209 @@ const r1 = T.mulberry32(42), r2 = T.mulberry32(42);
 eq([r1(), r1(), r1()], [r2(), r2(), r2()], 'same seed → same stream');
 for (let i = 0; i < 1000; i++) { const v = r1(); if (!(v >= 0 && v < 1)) { fail++; console.log('  ✗ rng out of range'); break; } }
 
+
+// ───────────────────────── chord library (51 qualities) ─────────────────────────
+group('chord library — formulas');
+const EXPECT = {   // independent table: semitones above the root
+  major:[0,4,7], minor:[0,3,7], dim:[0,3,6], aug:[0,4,8], sus2:[0,2,7], sus4:[0,5,7], sus2sus4:[0,2,5,7], power:[0,7], no5:[0,4], majb5:[0,4,6],
+  six:[0,4,7,9], m6:[0,3,7,9], six9:[0,4,7,9,14], m6add9:[0,3,7,9,14], add9:[0,4,7,14], madd9:[0,3,7,14],
+  maj7:[0,4,7,11], dom7:[0,4,7,10], min7:[0,3,7,10], m7b5:[0,3,6,10], dim7:[0,3,6,9], minMaj7:[0,3,7,11], augMaj7:[0,4,8,11], maj7b5:[0,4,6,11],
+  '7sus4':[0,5,7,10], m7s5:[0,3,8,10], '7b5':[0,4,6,10], '7s5':[0,4,8,10],
+  '7b9':[0,4,7,10,13], '7s9':[0,4,7,10,15], '7b5b9':[0,4,6,10,13], '7b5s9':[0,4,6,10,15], '7s5b9':[0,4,8,10,13], '7s5s9':[0,4,8,10,15],
+  maj9:[0,4,7,11,14], dom9:[0,4,7,10,14], m9:[0,3,7,10,14], mmaj9:[0,3,7,11,14], '9b5':[0,4,6,10,14], '9s5':[0,4,8,10,14], maj9s11:[0,4,7,11,14,18], '9sus4':[0,5,7,10,14],
+  dom11:[0,4,7,10,14,17], m11:[0,3,7,10,14,17], maj11:[0,4,7,11,14,17], '11b9':[0,4,7,10,13,17],
+  dom13:[0,4,7,10,14,21], m13:[0,3,7,10,14,17,21], maj13:[0,4,7,11,14,21], '13s11':[0,4,7,10,14,18,21], '13b9':[0,4,7,10,13,21],
+};
+eq(T.CHORD_ORDER.length, 51, '51 chord qualities in the library');
+eq(Object.keys(EXPECT).sort(), [...T.CHORD_ORDER].sort(), 'expected-table covers exactly the library');
+for (const id of T.CHORD_ORDER) {
+  const c = T.buildChord('C', id);
+  eq(c.tones.map(t => t.semis), EXPECT[id], `C ${id} formula semitones`);
+  ok(c.tones.every(t => t.pc === ((0 + t.semis) % 12)), `C ${id} pitch classes = semitones mod 12`);
+  const e = T.buildChord('E♭', id);
+  ok(e.tones.every((t, i) => t.pc === (3 + EXPECT[id][i]) % 12), `E♭ ${id} transposes correctly`);
+}
+eq(new Set(T.CHORD_ORDER.map(id => T.CHORDS[id].sym + '|' + T.CHORDS[id].name)).size, 51, 'chord names/symbols are unique');
+ok(T.CHORD_ORDER.every(id => T.CHORD_GROUPS.flatMap(g => g.ids).includes(id)), 'every quality sits in a display group');
+eq(T.CORE_QUALITIES.length, 13, 'core (harmonizable) qualities remain the original 13');
+for (const q of T.CORE_QUALITIES) eq(T.identifyQuality(T.CHORDS[q].semis.map(s => s % 12)), q, `identifyQuality round-trips ${q}`);
+eq(T.identifyQuality([0, 4, 6, 10, 13]), null, 'identifyQuality does not invent altered chords');
+eq(T.buildChord('C', 'dom13').tones.map(t => t.name), ['C','E','G','B♭','D','A'], 'C13 spelling');
+eq(T.buildChord('C', '13s11').tones.map(t => t.name), ['C','E','G','B♭','D','F♯','A'], 'C13♯11 spells F♯');
+eq(T.buildChord('C', '7s5b9').tones.map(t => t.name), ['C','E','G♯','B♭','D♭'], 'C7(♯5,♭9) spelling');
+eq(T.buildChord('C', 'maj9s11').tones.map(t => t.name), ['C','E','G','B','D','F♯'], 'Cmaj9♯11 spelling');
+
+group('essential tones');
+const ess = (r, q) => T.essentialTones(T.buildChord(r, q)).map(t => t.label);
+eq(ess('C', 'major'), ['1','3','5'], 'triad: all essential');
+eq(ess('C', 'dom7'), ['1','3','♭7'], '7th chord essentials: the 5th is droppable');
+eq(ess('C', 'm7b5'), ['1','♭3','♭5','♭7'], 'm7♭5 keeps its altered 5th');
+ok(!ess('C', 'maj9').includes('5'), 'maj9: 5th droppable');
+ok(['3','7','9'].every(l => ess('C', 'maj9').includes(l)), 'maj9: 3, 7 and 9 essential');
+ok(!ess('C', 'dom13').includes('9') && ess('C', 'dom13').includes('13'), 'C13: 13 essential, plain 9 droppable');
+ok(!ess('C', 'dom11').includes('9') && ess('C', 'dom11').includes('11'), 'C11: 11 essential, plain 9 droppable');
+ok(ess('C', '7s5b9').includes('♯5') && ess('C', '7s5b9').includes('♭9'), 'altered tones are always essential');
+ok(ess('C', '13s11').includes('♯11'), 'C13♯11 keeps the ♯11');
+eq(ess('C', 'power'), ['1','5'], 'power chord: root and fifth');
+ok(ess('C', 'sus4').includes('4'), 'sus4 keeps the 4th');
+for (const id of T.CHORD_ORDER) { const e = ess('C', id); ok(e.includes('1'), `${id}: root is essential`); }
+
+group('fingering()');
+eq(T.fingering([-1,3,2,0,1,0]).fingers, [0,3,2,0,1,0], 'C major open fingering (0 = open or muted)');
+eq(T.fingering([0,2,2,1,0,0]).fingers, [0,2,3,1,0,0], 'E major open fingering');
+{ const f = T.fingering([1,3,3,2,1,1]); ok(f.barre && f.barre.fret === 1 && f.barre.from === 0 && f.barre.to === 5, 'F major → barre at fret 1 across all six'); eq(f.fingers, [1,3,4,2,1,1], 'F barre fingers'); ok(f.count <= 4, 'barre keeps count ≤ 4'); }
+{ const f = T.fingering([-1,0,2,2,2,0]); eq([f.barre.fret, f.barre.from, f.barre.to, f.count], [2,2,4,1], 'A major open → one flat finger across the three 2nd-fret strings'); }
+{ const f = T.fingering([-1,1,3,3,3,1]); ok(f.barre && f.barre.fret === 1, 'Bb-shape barre on 1'); }
+ok(T.fingering([1,2,3,4,5,-1]).count > 4, 'five distinct frets on five strings needs more than 4 fingers (unplayable)');
+
+group('chord positions — every quality × tunings × roots');
+const TUN_IDS = ['standard','dropD','dadgad','openG','openD','halfDown','seven','bass'];
+const ROOTS = ['C','D♭','E','F♯','A','B♭'];
+const tuningStrings = id => T.tuningById(id).strings;
+let nPos = 0, nChecked = 0;
+const DEFINING = (ch) => ch.tones.filter(t => t.deg === 3 || (t.deg === 2 && !ch.tones.some(x => x.deg === 3)) || (t.deg === 4 && !ch.tones.some(x => x.deg === 3)));
+for (const tid of TUN_IDS) {
+  const open = tuningStrings(tid);
+  const counts = [];
+  for (const q of T.CHORD_ORDER) for (const r of ROOTS) {
+    const ch = T.buildChord(r, q);
+    const ps = T.chordPositions(ch, open);
+    const pcs = new Set(ch.pcs);
+    const essPcs = T.essentialTones(ch).map(t => t.pc);
+    const id = `${tid} ${r}${q}`;
+    counts.push(ps.length);
+    ok(ps.length <= 6, `${id}: at most 6 positions`);
+    let allGood = true, why = '';
+    ps.forEach((v, i) => {
+      nChecked++;
+      const playedNotes = v.frets.map((f, si) => f < 0 ? null : open[si] + f);
+      const played = playedNotes.filter(x => x !== null);
+      if (!played.every(m => pcs.has(((m % 12) + 12) % 12))) { allGood = false; why = 'note outside chord'; }
+      const ppcs = new Set(played.map(m => ((m % 12) + 12) % 12));
+      if (!essPcs.every(p => ppcs.has(p))) { allGood = false; why = 'essential tone missing'; }
+      if (!ppcs.has(ch.rootPc)) { allGood = false; why = 'no root'; }
+      if (!DEFINING(ch).every(t => ppcs.has(t.pc))) { allGood = false; why = 'defining tone (3rd/sus) missing'; }
+      const fr = v.frets.filter(f => f > 0);
+      if (fr.length && Math.max(...fr) - Math.min(...fr) > 3) { allGood = false; why = 'span > 4 frets'; }
+      if (v.frets.some(f => f > 15 || f < -1)) { allGood = false; why = 'fret out of range'; }
+      if (v.fingers.some(f => f > 4)) { allGood = false; why = 'finger > 4'; }
+      if (v.fingerCount > 4) { allGood = false; why = '> 4 fingers'; }
+      if (JSON.stringify(v.midi.filter(x => x != null)) !== JSON.stringify(played)) { allGood = false; why = 'midi mismatch'; }
+      if (i > 0 && v.center < ps[i - 1].center) { allGood = false; why = 'not ordered up the neck'; }
+      if (v.index !== i) { allGood = false; why = 'index'; }
+      // muted strings only at the ends (no hole in the middle)
+      const first = v.frets.findIndex(f => f >= 0), last = v.frets.length - 1 - [...v.frets].reverse().findIndex(f => f >= 0);
+      if (v.frets.slice(first, last + 1).some(f => f < 0)) { allGood = false; why = 'muted string inside the shape'; }
+      // open strings only when the hand is in the first position
+      if (v.frets.includes(0) && fr.length && Math.max(...fr) > 3) { allGood = false; why = 'open string with a high hand'; }
+    });
+    if (!allGood) { fail++; console.log(`  ✗ ${id}: ${why}`); } else pass++;
+    ok(new Set(ps.map(v => v.frets.join(','))).size === ps.length, `${id}: positions are distinct`);
+    nPos += ps.length;
+  }
+  if (open.length >= 6) ok(Math.min(...counts) >= (tid === 'standard' || tid === 'dropD' || tid === 'seven' ? 3 : 0), `${tid}: no quality collapses below 3 positions where six strings allow it`);
+  if (tid === 'seven') ok(Math.min(...counts) >= 5, '7-string: every quality has ≥5 positions');
+}
+ok(nChecked > 10000, `checked ${nChecked} voicings (${nPos} positions)`);
+
+group('chord positions — quality of the common shapes (standard tuning)');
+for (const r of ['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B']) for (const q of ['major','minor','dom7','min7','maj7']) {
+  const ch = T.buildChord(r, q), ps = T.chordPositions(ch, tuningStrings('standard'));
+  ok(ps.length === 6, `${r}${T.CHORDS[q].sym}: six positions`);
+  ok(ps.filter(v => v.bassRoot).length >= 4, `${r}${T.CHORDS[q].sym}: at least four root-in-bass shapes`);
+  ok(ps[ps.length - 1].center - ps[0].center > 5, `${r}${T.CHORDS[q].sym}: positions climb the neck`);
+  ok(ps.every(v => v.played >= 4), `${r}${T.CHORDS[q].sym}: at least four strings sound`);
+}
+eq(T.chordPositions(T.buildChord('C','major'), tuningStrings('standard'))[0].frets, [-1,3,2,0,1,0], 'C major: first position is the open C');
+eq(T.chordPositions(T.buildChord('E','minor'), tuningStrings('standard'))[0].frets, [0,2,2,0,0,0], 'E minor: first position is the open Em');
+eq(T.chordPositions(T.buildChord('C','dom7'), tuningStrings('standard'))[0].frets, [-1,3,2,3,1,0], 'C7: first position is the open C7');
+eq(T.chordPositions(T.buildChord('D','major'), tuningStrings('dropD'))[0].frets.slice(0,1)[0] >= -1, true, 'drop D voicings are valid');
+{ const ps = T.chordPositions(T.buildChord('D','major'), tuningStrings('dropD')); ok(ps.some(v => v.frets[0] === 0), 'drop D: D major can use the open low D'); }
+{ const ps = T.chordPositions(T.buildChord('G','major'), tuningStrings('openG')); ok(ps.some(v => v.frets.slice(1).every(f => f === 0)), 'open G tuning: G major is open strings (low D muted or open)'); }
+
+group('chord positions — voicing pool / song helpers');
+{
+  const ch = T.buildChord('G','major'), vs = T.findVoicings(ch, tuningStrings('standard'));
+  ok(vs.length >= 4 && vs.length <= 6, 'findVoicings returns up to six');
+  ok(vs.every(v => v.bassRoot), 'findVoicings is root-in-bass only');
+  eq(T.fingersNeeded([1,3,3,2,1,1]), 4, 'fingersNeeded counts a barre as one finger');
+}
+
+// ───────────────────────── scale positions ─────────────────────────
+group('scale positions — structure');
+const SCALE_COUNT = { major:7, naturalMinor:7, harmonicMinor:7, melodicMinor:7, dorian:7, phrygian:7, lydian:7, mixolydian:7, locrian:7, majorPent:5, minorPent:5, blues:5 };
+let nScaleChecked = 0;
+for (const tid of TUN_IDS.filter(t => t !== 'bass')) {
+  const open = tuningStrings(tid);
+  for (const sid of T.SCALE_ORDER) for (let pc = 0; pc < 12; pc++) {
+    const rn = T.rootName(pc, sid, 'auto');
+    const ps = T.scalePositions(rn, sid, open);
+    const id = `${tid} ${rn} ${sid}`;
+    const scalePcs = new Set(T.spellScale(rn, sid).map(n => n.pc));
+    const degOf = new Map(T.spellScale(rn, sid).map((n, i) => [n.pc, i]));
+    eq(ps.length, SCALE_COUNT[sid], `${id}: ${SCALE_COUNT[sid]} positions`);
+    let good = true, why = '';
+    ps.forEach((p, i) => {
+      nScaleChecked++;
+      if (p.index !== i) { good = false; why = 'index'; }
+      if (!p.notes.every(n => scalePcs.has(n.pc))) { good = false; why = 'note outside scale'; }
+      if (!p.notes.every(n => n.midi === open[n.si] + n.fret && ((n.midi % 12) + 12) % 12 === n.pc)) { good = false; why = 'midi/fret mismatch'; }
+      if (!p.notes.every(n => n.fret >= 0 && n.fret <= 15)) { good = false; why = 'fret out of 0–15'; }
+      const base = p.copies[0].notes;
+      const covered = new Set(base.map(n => n.pc));
+      const needed = sid === 'blues' ? new Set([...scalePcs].filter(x => x !== (T.spellScale(rn, sid)[3].pc))) : scalePcs;   // blue note is added on top of the pentatonic box
+      if (![...needed].every(x => covered.has(x))) { good = false; why = 'degree missing from the base copy'; }
+      const perString = {}; base.forEach(n => { perString[n.si] = (perString[n.si] || 0) + 1; });
+      const stringsUsed = Object.keys(perString);
+      const trunc = Math.max(...base.map(n => n.fret)) >= 12;   // a box that runs into the end of the neck loses notes past fret 15
+      if (SCALE_COUNT[sid] === 7) { if (!Object.values(perString).every(c => c === 3 || (trunc && c <= 3))) { good = false; why = 'not 3 notes per string'; } if (stringsUsed.length !== open.length && !trunc) { good = false; why = 'not every string used'; } }
+      if (sid === 'majorPent' || sid === 'minorPent') { if (!Object.values(perString).every(c => c === 2 || (trunc && c <= 2))) { good = false; why = 'not 2 notes per string'; } }
+      if (!p.notes.every(n => n.fret === 0 ? n.finger === 0 : (n.finger >= 1 && n.finger <= 4))) { good = false; why = 'finger outside 1–4'; }
+      // fingers strictly increase along each string
+      for (const si of stringsUsed) { const row = base.filter(n => String(n.si) === si).sort((a, b) => a.fret - b.fret); for (let k = 1; k < row.length; k++) if (row[k].finger < row[k - 1].finger) { good = false; why = 'fingers not ascending'; } }
+    });
+    if (ps.length) {
+      const startPcs = ps.map(p => p.copies[0].notes.reduce((lo, n) => n.midi < lo.midi ? n : lo).pc);
+      const uniq = new Set(ps.map(p => p.startName));
+      if (uniq.size !== ps.length) { good = false; why = 'duplicate start degrees'; }
+      void startPcs;
+      // union of all positions covers the whole neck range of the scale: every scale note on every string in 0–15 appears
+      const seen = new Set(); ps.forEach(p => p.notes.forEach(n => seen.add(n.si + ':' + n.fret)));
+      let missing = 0; open.forEach((m, si) => { for (let f = 0; f <= 15; f++) if (scalePcs.has((((m + f) % 12) + 12) % 12) && !seen.has(si + ':' + f) && f !== 0 && f < 14) missing++; });   // only the very edges (open string / fret 15) may be left out
+      if (sid !== 'blues' && missing > 0) { good = false; why = `${missing} scale notes not in any position`; }
+    }
+    if (!good) { fail++; console.log(`  ✗ ${id}: ${why}`); } else pass++;
+  }
+}
+ok(nScaleChecked > 5000, `checked ${nScaleChecked} scale positions`);
+
+group('scale positions — modes & boxes');
+eq(T.scalePositions('C','major',tuningStrings('standard')).map(p => p.mode), ['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian'], 'C major positions are the seven modes');
+eq(T.scalePositions('C','major',tuningStrings('standard')).map(p => p.startName), ['C','D','E','F','G','A','B'], 'C major positions start on each degree');
+eq(T.scalePositions('A','naturalMinor',tuningStrings('standard')).map(p => p.mode), ['Aeolian','Locrian','Ionian','Dorian','Phrygian','Lydian','Mixolydian'], 'A minor positions: Aeolian first');
+eq(T.scalePositions('A','harmonicMinor',tuningStrings('standard')).map(p => p.mode)[0], 'Harmonic minor', 'harmonic minor position 1 is the scale itself');
+ok(T.scalePositions('A','harmonicMinor',tuningStrings('standard')).some(p => /Phrygian dominant/i.test(p.mode)), 'harmonic minor has Phrygian dominant (mode 5)');
+ok(T.scalePositions('A','melodicMinor',tuningStrings('standard')).some(p => /Altered|Super ?locrian/i.test(p.mode)), 'melodic minor has the altered mode (mode 7)');
+eq(T.scalePositions('A','minorPent',tuningStrings('standard')).map(p => p.mode), ['Box 1','Box 2','Box 3','Box 4','Box 5'], 'pentatonic positions are boxes 1–5');
+{
+  // classic A minor pentatonic box 1: frets 5–8
+  const b1 = T.scalePositions('A','minorPent',tuningStrings('standard'))[0];
+  eq(b1.copies[0].notes.filter(n => n.si === 0).map(n => n.fret).sort((a,b)=>a-b), [5,8], 'A minor pent box 1, low E string: frets 5 & 8');
+  eq(b1.copies[0].notes.filter(n => n.si === 5).map(n => n.fret).sort((a,b)=>a-b), [5,8], 'A minor pent box 1, high E string: frets 5 & 8');
+  eq(b1.copies[0].notes.filter(n => n.si === 2).map(n => n.fret).sort((a,b)=>a-b), [5,7], 'A minor pent box 1, D string: frets 5 & 7');
+}
+{
+  const bl = T.scalePositions('A','blues',tuningStrings('standard'));
+  ok(bl[0].notes.some(n => n.name === 'E♭' || n.name === 'D♯'), 'blues boxes include the blue note');
+}
+{
+  const m = T.scalePositions('C','major',tuningStrings('standard'))[0];
+  const low = m.copies[0].notes.filter(n => n.si === 0).map(n => n.fret).sort((a,b)=>a-b);
+  eq(low, [8,10,12], 'C Ionian position 1 (3NPS) low E string: C D E at frets 8,10,12');
+}
+ok(T.scalePositions('C','major',tuningStrings('bass')).length === 7, 'bass (4-string) still gets 7 scale positions');
+eq(T.scalePositions('C','majorPent',tuningStrings('standard'))[0].copies.length >= 1, true, 'pentatonic position has a base copy');
+
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

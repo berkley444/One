@@ -4,6 +4,19 @@ Newest first. One entry per decision: what, why, and what it costs.
 
 ---
 
+## 2026-10-27 — Position buttons 1–6 for chords and 1–7 / 1–5 for scales (modelled on all-guitar-chords.com)
+**Decision:** Under the fretboard, a single row of small buttons picks a *position*. The selected one is dark (amber edge); the row never wraps, even at 390 px.
+- **Chords:** up to 6 real voicings up the neck, generated algorithmically for the *current tuning* (not a lookup table, so DADGAD, open G, 7-string and bass all work). Rules: ≤ 4-fret span, ≤ 4 fingers (a barre counts as one), strings muted only at the ends, open strings only when the hand is in the first position, root in the bass preferred, every essential tone present. The 5th may be dropped on 4+ note chords; a plain 9th is dropped when an 11th/13th is present; altered tones (♭5 ♯5 ♭9 ♯9 ♯11) are never dropped. Each position shows a numbered-finger diagram (root dot red, barre bar, × muted, ○ open), Strum / Arpeggio / Block buttons, a thumbnail of all six, and the same notes ringed on the fretboard and the piano ("Piano shows: GUITAR VOICING" by default).
+- **Scales:** 7-note scales get **7 positions** (three notes per string), each button labelled with its mode — C major gives Ionian…Locrian, harmonic and melodic minor use their own mode names (Phrygian dominant, Altered, …). Pentatonics and blues get **5 boxes** (blues = minor-pentatonic boxes plus the ♭5 blue note). "All" stays the full-neck default. Picking a position dims everything outside it to faint pips, ringed notes are the ones to play, finger suggestions replace the labels, and a fret/finger-by-string table appears. "Play position N" plays it up and down.
+**Why:** He liked that the 1–6 buttons make chord shapes learnable and that the scale positions make the *modes* visible — the same notes, played from a different start. This is the "tutorial, not engine" idea applied to the neck.
+**Chord library:** 51 qualities (the 50 he listed plus the major-♭5 triad), as a one-tap root strip and a one-tap grouped quality grid (Triads, 6ths & add9, 7ths, Altered 7ths, 9ths, 11ths & 13ths). Formulas are checked against an independent table in the tests. Only the original 13 qualities are used when *harmonising* a scale and in `identifyQuality`, so Roman-numeral and progression behaviour did not change.
+**Cost / limits:**
+- Dense altered chords in open tunings (e.g. 7(♭5,♭9) in DADGAD) can have fewer than 4 comfortable shapes or none; the UI says so and still lights the chord's notes. Power chords have only ~4–5 root-in-bass shapes, so inversions fill the rest.
+- Scale boxes near the end of the neck drop notes beyond fret 15; a ±12 copy of a box is drawn only if at least half of it fits.
+- Finger numbers are *suggestions* (1 + proportional to the fret within the box), not a teaching method.
+- Storage key is now `bpgw.v2` (new defaults: piano follows the guitar voicing, positions stored). Old saved settings are ignored once.
+**Implementation notes:** theory (voicing search, positions, mode names) is inside the `<THEORY>` block so node tests cover it; the UI uses event delegation (`data-act="spos|cpos"`); hash links carry `sp=` (scale position) and `cp=` (chord position).
+
 ## 2026-10-27 — Ship a single-file web app, served by GitHub Pages
 **Decision:** `index.html` at the repo root is a complete, dependency-free web version of Big Pear Guitar Works (HTML + CSS + JS in one file; fonts optional via CDN).
 **Why:** The fastest way to make the project real, shareable by link, and testable. It runs on a phone browser today without Xcode. It is also a living specification of the design.

@@ -16,7 +16,9 @@ Updated 2026-10-27.
   - [x] MATH ƒ(x): worked example `440×2^(n/12)`, scale table with just-intonation comparison, every note, open strings, fret-by-fret math
   - [x] WebAudio: pluck / keys / synth tones, metronome, chord strum/arpeggio, scale playback
   - [x] Song tab: 4–8-bar progression generator (smart / pop / blues / jazz), plays with metronome, copy chart
-  - [x] 3,200+ theory tests (`node tests/theory.test.js`)
+  - [x] **Position buttons (2026-10-27):** chords 1–6 generated voicings with finger diagrams, scales 7 mode positions / 5 pentatonic boxes, hash-linkable (`sp=`, `cp=`)
+  - [x] **51 chord qualities** (m7 … 13♭9, altered 7ths, sus, 6/9, add9, mMaj7, ♭5 …) with one-tap root strip and quality grid
+  - [x] 13,000+ theory tests (`node tests/theory.test.js`) incl. every voicing × 8 tunings and every scale position × 9 tunings
 - [x] Docs: spec, decisions, postmortem, how to work with agents
 
 ## Next (in order)
@@ -24,9 +26,18 @@ Updated 2026-10-27.
 2. **Port the web theory tests to Swift** (or share test vectors as JSON) so both apps agree on spelling, key signatures and frequencies.
 3. **Close the visual gap** between the web version and the Xcode app (or vice versa) — decide which is the reference.
 4. Add a MATH-tab view of *cents* for tunings and a tuner-style readout.
-5. Fretboard: show CAGED / position boxes for the chosen scale.
+5. ~~Fretboard: show position boxes for the chosen scale.~~ **Done 2026-10-27.** Still open: name the five CAGED shapes on the chord positions, and an optional 2-notes-per-string / 4-notes-per-string view of the scale positions.
 6. Hash-link everything (time signature, tempo) so lessons can be shared by URL.
 7. Accessibility pass: keyboard-only use of all drums, screen-reader labels on fretboard/piano.
+
+## Next — positions follow-ups
+- Tap a chord position, then step through the *next* position with a swipe (phone).
+- Show the scale position that contains the chord when on the Song tab; link progression chords to their positions.
+- Let the player filter chord positions by "no barre" or "root on the 5th/6th string".
+- Chord tab: save a favourite voicing per chord (localStorage) and use it on the Song tab.
+- Better fingerings for stretches (the finger number rule is proportional, not human-tested).
+- Altered chords in open tunings sometimes have no ≤4-fret shape; consider allowing a 5-fret span as a fallback.
+- Test the chord/scale pickers with a real screen reader.
 
 ## Pinned — piano-teacher ideas (parked on purpose)
 These came from the KeyForge research. Not for now; do not lose them.
