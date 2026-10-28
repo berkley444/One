@@ -1,8 +1,9 @@
 # NEXT — done / next
 
-Updated 2026-10-27.
+Updated 2026-10-27 (piano control panel).
 
 ## Done
+- [x] **Piano control panel (2026-10-27):** replaces the thumbnail grid; hands R/L/both, octave C2–C6, inversions / named 5+ note voicings / modes on each degree / pentatonic boxes, Match guitar, Play / Arpeggio / Scale, finger numbers on the keys (green RH, blue LH), "RH: C(1) E(3) G(5)" readout, follow-along highlighting; ~115k theory tests + 700-check browser smoke test
 - [x] Original design captured (`screenshots/gm_original.png`) and written up (`SPEC.md`)
 - [x] Piano-teaching market research + build prompt (`research/`)
 - [x] Web app: `index.html`, single file, no dependencies
@@ -22,6 +23,7 @@ Updated 2026-10-27.
 - [x] Docs: spec, decisions, postmortem, how to work with agents
 
 ## Next (in order)
+0. **Piano follow-ups:** have a piano teacher check the algorithmic fingerings for exotic scales; optional fingering view for common progressions (voice-leading between chords); optional on-screen hand drawing; optional metronome-synced playback.
 1. **Add the Xcode project to this repo.** This is the real app. Copy the project folder into `/mac/` (or `/ios/`), commit, push. Until this is done the repo is not the single source of truth. (`.gitignore`: `xcuserdata/`, `DerivedData/`, `.DS_Store`.)
 2. **Port the web theory tests to Swift** (or share test vectors as JSON) so both apps agree on spelling, key signatures and frequencies.
 3. **Close the visual gap** between the web version and the Xcode app (or vice versa) — decide which is the reference.

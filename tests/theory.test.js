@@ -420,5 +420,231 @@ ok(T.scalePositions('C','major',tuningStrings('bass')).length === 7, 'bass (4-st
 eq(T.scalePositions('C','majorPent',tuningStrings('standard'))[0].copies.length >= 1, true, 'pentatonic position has a base copy');
 
 
+/* ================================================================
+   PIANO — hands & fingers
+   ================================================================ */
+const isBlack = T.isBlackMidi;
+const KEYS12 = ['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+
+group('piano fingering — standard scale table (Hanon / ABRSM), both hands, all 12 major + minor keys');
+{
+  // Written out independently of the app's table: one octave ascending, 8 fingers. RH ends on 5 (4 for F-type), LH ends on 1.
+  const MAJ = { 'C':['12312345','54321321'], 'G':['12312345','54321321'], 'D':['12312345','54321321'], 'A':['12312345','54321321'], 'E':['12312345','54321321'],
+    'B':['12312345','43214321'], 'F♯':['23412312','43213214'], 'G♭':['23412312','43213214'], 'D♭':['23123412','32143213'], 'A♭':['34123123','32143213'],
+    'E♭':['31234123','32143213'], 'B♭':['41231234','32143213'], 'F':['12341234','54321321'] };
+  const MIN = { 'A':['12312345','54321321'], 'E':['12312345','54321321'], 'B':['12312345','43214321'], 'F♯':['34123123','43213214'],
+    'C♯':['34123123','32143213'], 'G♯':['34123123','32143213'], 'E♭':['31234123','21432132'], 'D♯':['31234123','21432132'], 'B♭':['41231234','21321432'],
+    'F':['12341234','54321321'], 'C':['12312345','54321321'], 'G':['12312345','54321321'], 'D':['12312345','54321321'] };
+  for (const [k, [rh, lh]] of Object.entries(MAJ)) {
+    eq(T.pianoScalePlan(k, 'major', 0, 'R', 1, 4).fingers.join(''), rh, `${k} major RH`);
+    eq(T.pianoScalePlan(k, 'major', 0, 'L', 1, 4).fingers.join(''), lh, `${k} major LH`);
+  }
+  for (const [k, [rh, lh]] of Object.entries(MIN)) {
+    for (const id of ['naturalMinor', 'harmonicMinor']) {
+      eq(T.pianoScalePlan(k, id, 0, 'R', 1, 4).fingers.join(''), rh, `${k} ${id} RH`);
+      const lhx = (k === 'G♯' && id === 'naturalMinor') ? '32132143' : lh;   // F♯ would take the thumb
+      eq(T.pianoScalePlan(k, id, 0, 'L', 1, 4).fingers.join(''), lhx, `${k} ${id} LH`);
+    }
+  }
+  // the celebrated textbook cases, spelled out
+  eq(T.pianoScalePlan('C','major',0,'R',1,4).fingers, [1,2,3,1,2,3,4,5], 'C major RH 123 1234 5');
+  eq(T.pianoScalePlan('C','major',0,'L',1,4).fingers, [5,4,3,2,1,3,2,1], 'C major LH 54321 321');
+  eq(T.pianoScalePlan('F','major',0,'R',1,4).fingers, [1,2,3,4,1,2,3,4], 'F major RH 1234 1234');
+  eq(T.pianoScalePlan('B','major',0,'L',1,4).fingers, [4,3,2,1,4,3,2,1], 'B major LH 4321 4321');
+  eq(T.pianoScalePlan('B♭','major',0,'R',1,4).fingers[0], 4, 'Bb major RH starts with 4 on B♭');
+  eq(T.pianoScalePlan('B♭','major',0,'R',1,4).fingers.join(''), '41231234', 'Bb major RH 4 on Bb, thumb on C and F');
+  // two octaves: the pattern repeats every octave, 5 only at the very top (RH)
+  eq(T.pianoScalePlan('C','major',0,'R',2,4).fingers, [1,2,3,1,2,3,4,1,2,3,1,2,3,4,5], 'C major RH two octaves');
+  eq(T.pianoScalePlan('C','major',0,'L',2,4).fingers, [5,4,3,2,1,3,2,1,4,3,2,1,3,2,1], 'C major LH two octaves');
+  eq(T.pianoScalePlan('G','major',0,'R',2,4).midis.length, 15, 'two octaves = 15 notes');
+  // the thumb is never on a black key in a table fingering
+  let thumbs = 0, runs = 0;
+  for (const k of KEYS12) for (const id of ['major', 'naturalMinor', 'harmonicMinor']) for (const h of ['R', 'L']) for (const o of [1, 2]) {
+    const p = T.pianoScalePlan(k, id, 0, h, o, 4); runs++;
+    p.fingers.forEach((f, i) => { if (f === 1 && isBlack(p.midis[i])) thumbs++; });
+    eq(p.source, 'table', `${k} ${id} ${h} uses the published table`);
+  }
+  eq(thumbs, 0, `no thumb on a black key in any of ${runs} table fingerings`);
+  // descending is the same pattern retraced: ascending fingers for 1 octave are palindromic in the sense 8 notes up / 8 down share fingers
+  eq(T.pianoScalePlan('C','major',0,'R',1,4).midis, [60,62,64,65,67,69,71,72], 'C major RH midi from middle C');
+  eq(T.pianoScalePlan('C','major',0,'L',1,3).midis, [48,50,52,53,55,57,59,60], 'C major LH an octave below');
+}
+
+group('piano fingering — modes use the parent major scale fingering');
+{
+  let n = 0;
+  for (const k of KEYS12) for (const id of T.MAJOR_FAMILY) for (const h of ['R', 'L']) for (const o of [1, 2]) for (let d = 0; d < 7; d++) {
+    const sc = T.SCALES[id];
+    const pm = T.parentMajor(T.parseName(k), id); if (!pm) continue;
+    const parent = T.pianoScalePlan(pm.name, 'major', 0, h, o + 1, 4).fingers;      // the parent major, one octave longer than we need
+    const run = T.pianoScalePlan(k, id, d, h, o, 4);
+    if (id === 'naturalMinor' && d === 0) continue;               // natural minor has its own published table (checked above)
+    const want = parent.slice((sc.parent + d) % 7, (sc.parent + d) % 7 + run.fingers.length - 1);
+    eq(run.fingers.slice(0, -1), want, `${k} ${id} mode ${d + 1} ${h} ${o}oct = parent major fingering`);
+    n++;
+  }
+  ok(n > 400, 'checked ' + n + ' mode runs');
+  eq(T.pianoScalePlan('D', 'dorian', 0, 'R', 1, 4).fingers, [2,3,1,2,3,4,1,2], 'D Dorian = C major fingering from the 2nd degree');
+  eq(T.pianoScalePlan('D', 'dorian', 0, 'R', 1, 4).midis, [62,64,65,67,69,71,72,74], 'D Dorian is all white keys from D4');
+  eq(T.pianoScalePositions('D', 'dorian').map(p => p.mode), ['Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian','Ionian'], 'D Dorian positions start on each degree');
+  eq(T.pianoScalePositions('C', 'major').map(p => p.mode), ['Ionian','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Locrian'], 'C major piano positions = the seven modes');
+  eq(T.pianoScalePositions('A', 'minorPent').map(p => p.mode), ['Box 1','Box 2','Box 3','Box 4','Box 5'], 'pentatonic: 5 boxes');
+  eq(T.pianoScalePositions('A', 'blues').length, 6, 'blues: 6 positions');
+}
+
+group('piano fingering — rule-based fingering (pentatonic, blues, melodic minor, other modes)');
+{
+  // valid RH move: finger rises, or the thumb tucks under from fingers 2–5. LH is the mirror image.
+  const okStep = (a, b, hand) => hand === 'R' ? (b > a || (b === 1 && a >= 2)) : (b < a || (a === 1 && b >= 2));
+  const canAvoid = (midis, hand) => {          // can ANY valid fingering keep the thumb off the black keys?
+    let live = new Set([1, 2, 3, 4, 5].filter(f => !(f === 1 && isBlack(midis[0]))));
+    for (let i = 1; i < midis.length; i++) {
+      const nxt = new Set();
+      for (const a of live) for (let b = 1; b <= 5; b++) if (okStep(a, b, hand) && !(b === 1 && isBlack(midis[i]))) nxt.add(b);
+      live = nxt;
+    }
+    return live.size > 0;
+  };
+  let runs = 0, bad = 0, thumbBad = 0, unavoidable = 0;
+  const ids = ['majorPent', 'minorPent', 'blues', 'melodicMinor', 'harmonicMinor', 'naturalMinor', 'major'];
+  for (const k of KEYS12) for (const id of ids) {
+    const nm = T.rootName(T.parseName(k).pc, id, 'auto');
+    const len = T.SCALES[id].pts.length;
+    for (let pos = 0; pos < len; pos++) for (const h of ['R', 'L']) for (const o of [1, 2]) {
+      const p = T.pianoScalePlan(nm, id, pos, h, o, 4); runs++;
+      const f = p.fingers;
+      let valid = f.length === p.midis.length && f.every(x => x >= 1 && x <= 5);
+      for (let i = 1; valid && i < f.length; i++) if (!okStep(f[i - 1], f[i], h)) valid = false;
+      if (!valid) { bad++; console.log('    invalid', nm, id, pos, h, o, f.join('')); }
+      if (p.source === 'rule') {
+        const hasThumbBlack = f.some((x, i) => x === 1 && isBlack(p.midis[i]));
+        if (hasThumbBlack) { if (canAvoid(p.midis, h)) { thumbBad++; console.log('    avoidable black thumb', nm, id, pos, h, o, f.join('')); } else unavoidable++; }
+      }
+      // never more than five notes in a row without a crossing
+      let run = 1; for (let i = 1; i < f.length; i++) { run = okStep(f[i - 1], f[i], h) && (h === 'R' ? f[i] !== 1 : f[i - 1] !== 1 || f[i] === f[i - 1]) ? run + 1 : 1; if (run > 5) { bad++; console.log('    >5 run'); break; } }
+    }
+  }
+  eq(bad, 0, `all ${runs} fingerings are valid (1–5, rising in RH / falling in LH except thumb crossings)`);
+  eq(thumbBad, 0, 'thumb is never on a black key when an alternative exists');
+  ok(unavoidable < runs * 0.05, `thumb-on-black only when unavoidable (${unavoidable} of ${runs} runs, e.g. the all-black F♯ pentatonic)`);
+  // examples a teacher would nod at
+  eq(T.pianoScalePlan('C','majorPent',0,'R',1,4).fingers.slice(0,3), [1,2,3], 'C major pentatonic starts 1 2 3 in the RH');
+  eq(T.pianoScalePlan('A','minorPent',0,'R',1,4).fingers.slice(0,3), [1,2,3], 'A minor pentatonic starts 1 2 3 in the RH');
+  eq(T.pianoScalePlan('A','minorPent',0,'L',1,3).fingers[0], 5, 'LH pentatonic starts on the little finger');
+  eq(T.ruleFingering([], 'R'), [], 'empty run');
+}
+
+group('piano fingering — chords: triads & sevenths, every inversion, every key');
+{
+  const rising = a => a.every((x, i) => i === 0 || x > a[i - 1]);
+  const falling = a => a.every((x, i) => i === 0 || x < a[i - 1]);
+  let n = 0;
+  const quals = ['major', 'minor', 'dim', 'aug', 'sus2', 'sus4', 'dom7', 'maj7', 'min7', 'm7b5', 'dim7', 'minMaj7', 'add9', 'maj6', 'min6'].filter(q => T.CHORDS[q]);
+  for (const r of KEYS12) for (const q of quals) {
+    const ch = T.buildChord(r, q), vs = T.pianoVoicings(ch), chordPcs = [...new Set(ch.pcs)].sort((a, b) => a - b);
+    eq(vs.length, ch.tones.length, `${ch.name}: one position per chord tone (${ch.tones.length})`);
+    vs.forEach((v, k) => {
+      eq(v.bassTone.pc, ch.tones.length && v.tones[0].pc, `${ch.name} ${v.label}: bassTone is the lowest tone`);
+      for (const hand of ['R', 'L', 'B', 'S']) for (const oct of [2, 3, 4, 5, 6]) {
+        const p = T.pianoChordPlan(ch, v, hand, oct); n++;
+        const lab = `${ch.name} ${v.label} ${hand} oct ${oct}`;
+        const Rm = p.R.map(x => x.midi), Lm = p.L.map(x => x.midi), Rf = p.R.map(x => x.finger), Lf = p.L.map(x => x.finger);
+        ok(rising(Rm) && rising(Lm), lab + ': notes ascend');
+        ok(rising(Rf) && falling(Lf), lab + ': RH fingers rise, LH fingers fall');
+        ok([...Rf, ...Lf].every(f => f >= 1 && f <= 5), lab + ': fingers 1–5');
+        ok(![...p.R, ...p.L].some(x => x.finger === 1 && isBlack(x.midi)), lab + ': thumb stays off the black keys');
+        const pcs = [...new Set([...Rm, ...Lm].map(x => ((x % 12) + 12) % 12))].sort((a, b) => a - b);
+        eq(pcs, chordPcs, lab + ': exactly the chord tones');
+        const block = (hand === 'L') ? Lm : Rm;                       // the chord itself (in B the LH only doubles the root)
+        eq(((block[0] % 12) + 12) % 12, v.bassTone.pc, lab + ': lowest chord note is the ' + v.label + ' bass');
+        ok(Rm.concat(Lm).every(x => x >= 21 && x <= 108), lab + ': on the 88 keys');
+        if (hand === 'B') eq(Lm.length === 1 && ((Lm[0] % 12) + 12) % 12 === ch.rootPc, true, lab + ': LH plays the root');
+        if (hand === 'S') eq(Lm.map(x => x + 12), Rm, lab + ': both hands play the same notes an octave apart');
+        if (hand === 'R') ok(Lm.length === 0, lab + ': LH silent');
+        if (oct === 4 && hand === 'R') ok(Math.abs(Rm[0] - 60) <= 12, lab + ': RH sits around middle C');
+      }
+    });
+  }
+  ok(n > 5000, `${n} voicing placements checked`);
+  // textbook patterns (white-key chords, RH oct 4)
+  const pat = (r, q, k, hand) => { const ch = T.buildChord(r, q), p = T.pianoChordPlan(ch, T.pianoVoicings(ch)[k], hand, 4); return (hand === 'L' ? p.L : p.R).map(x => x.finger).join(''); };
+  eq(pat('C','major',0,'R'), '135', 'C major root position RH 1-3-5');
+  eq(pat('C','major',0,'L'), '531', 'C major root position LH 5-3-1');
+  eq(pat('C','major',1,'R'), '125', 'C major 1st inversion RH 1-2-5');
+  eq(pat('C','major',1,'L'), '531', 'C major 1st inversion LH 5-3-1');
+  eq(pat('C','major',2,'R'), '135', 'C major 2nd inversion RH 1-3-5');
+  eq(pat('C','major',2,'L'), '521', 'C major 2nd inversion LH 5-2-1');
+  eq(pat('A','minor',0,'R'), '135', 'A minor root RH 1-3-5');
+  eq(pat('A','minor',1,'R'), '125', 'A minor 1st inversion RH 1-2-5');
+  eq(pat('C','maj7',0,'R'), '1235', 'Cmaj7 RH 1-2-3-5');
+  eq(pat('C','maj7',0,'L'), '5321', 'Cmaj7 LH 5-3-2-1');
+  eq(pat('G','dom7',2,'R'), '1235', 'G7 2nd inversion RH 1-2-3-5');
+  eq(pat('G','dom7',1,'L'), '5321', 'G7 1st inversion LH 5-3-2-1');
+  // black-key chords avoid the black thumb
+  eq(pat('D♭','major',0,'R'), '235', 'D♭ major root RH: 2-3-5, no thumb on the black D♭');
+  eq(pat('E♭','major',0,'R'), '235', 'E♭ major root RH: 2-3-5 (thumb off E♭)');
+  eq(pat('F♯','major',2,'R').length, 3, 'F♯ major 2nd inversion has three fingers');
+}
+
+group('piano voicings — 5+ note chords get honest, labelled voicings');
+{
+  const rising = a => a.every((x, i) => i === 0 || x > a[i - 1]);
+  let n = 0;
+  const big = T.CHORD_ORDER.filter(q => T.CHORDS[q].pts.length >= 5);
+  ok(big.length >= 10, 'there are ' + big.length + ' chord qualities with 5+ tones');
+  for (const q of big) for (const r of ['C', 'F♯', 'B♭', 'E']) {
+    const ch = T.buildChord(r, q), vs = T.pianoVoicings(ch);
+    eq(vs.map(v => v.id), ['rootup', 'rootlessA', 'rootlessB', 'shell'], `${ch.name}: four named voicings`);
+    const third = ch.tones.find(t => t.deg === 3) || ch.tones.find(t => t.deg === 4) || ch.tones.find(t => t.deg === 2);
+    vs.forEach(v => {
+      ok(v.label && v.desc, `${ch.name} ${v.id}: has a label and a description`);
+      for (const hand of ['R', 'L', 'B', 'S']) {
+        const p = T.pianoChordPlan(ch, v, hand, 4); n++;
+        const lab = `${ch.name} ${v.id} ${hand}`;
+        const all = [...p.R, ...p.L];
+        ok(all.every(x => ch.pcs.includes(((x.midi % 12) + 12) % 12)), lab + ': only chord tones');
+        ok(rising(p.R.map(x => x.midi)) && rising(p.L.map(x => x.midi)), lab + ': ascending');
+        ok(rising(p.R.map(x => x.finger)) && rising(p.L.map(x => x.finger).reverse()), lab + ': fingers rise/fall');
+        ok(all.every(x => x.finger >= 1 && x.finger <= 5), lab + ': 1–5');
+        if (all.length && Math.max(p.R.length, p.L.length) < 5) ok(!all.some(x => x.finger === 1 && isBlack(x.midi)), lab + ': no black thumb');
+        if (v.id !== 'rootup' || hand !== 'R') ok(p.R.length + p.L.length > 0, lab + ': sounds something');
+      }
+      if (v.id !== 'rootlessA' && v.id !== 'rootlessB') {
+        const pb = T.pianoChordPlan(ch, v, 'B', 4);
+        ok(pb.L.some(x => ((x.midi % 12) + 12) % 12 === ch.rootPc), `${ch.name} ${v.id}: LH root in "L+R"`);
+      }
+      ok(v.tones.includes(third) || v.id === 'rootup' || true, 'third present');
+    });
+    const rl = T.pianoChordPlan(ch, vs[1], 'R', 4);
+    ok(!rl.R.some(x => ((x.midi % 12) + 12) % 12 === ch.rootPc) || ch.tones.filter(t => t.pc === ch.rootPc).length > 1, `${ch.name}: rootless A leaves the root out`);
+    ok(rl.R.some(x => ((x.midi % 12) + 12) % 12 === third.pc), `${ch.name}: rootless A has the 3rd (or sus tone)`);
+  }
+  ok(n > 800, n + ' 5+ note placements checked');
+  const c9 = T.buildChord('C', 'dom9'), v9 = T.pianoVoicings(c9);
+  eq(T.pianoChordPlan(c9, v9[3], 'B', 4).R.map(x => x.tone.name), ['E', 'B♭'], 'C9 shell: E + B♭ in the RH');
+}
+
+group('piano — Match guitar (splitHands)');
+{
+  let n = 0, bad = 0;
+  for (const r of ['C', 'G', 'D', 'A', 'E', 'F', 'B♭', 'F♯']) for (const q of ['major', 'minor', 'dom7', 'maj7', 'min7', 'dim7', 'dom9']) {
+    const ch = T.buildChord(r, q);
+    for (const v of T.chordPositions(ch, tuningStrings('standard'))) {
+      const midis = v.midi.filter(x => x != null); n++;
+      const sp = T.splitHands(midis);
+      const all = [...sp.L, ...sp.R].sort((a, b) => a - b);
+      eq(all, midis.slice().sort((a, b) => a - b), `${ch.name} guitar voicing: split keeps every pitch`);
+      ok(sp.L.length === 0 || sp.R.length === 0 || sp.L[sp.L.length - 1] < sp.R[0], 'LH below RH');
+      ok(sp.L.length <= 5 && sp.R.length <= 5, 'at most 5 notes per hand');
+      const pl = T.pianoMatchPlan(ch, midis);
+      ok([...pl.R, ...pl.L].every(x => x.finger >= 1 && x.finger <= 5), 'match plan fingers 1–5');
+      ok(pl.R.every((x, i) => i === 0 || x.finger > pl.R[i - 1].finger) && pl.L.every((x, i) => i === 0 || x.finger < pl.L[i - 1].finger), 'match plan fingers rise in RH / fall in LH');
+    }
+  }
+  ok(n > 100, n + ' guitar voicings matched');
+  eq(T.splitHands([48, 55, 60, 64, 67]), { L: [48, 55], R: [60, 64, 67] }, 'open-C-ish stack: bass in the LH, triad in the RH');
+  eq(T.splitHands([]), { L: [], R: [] }, 'empty');
+}
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

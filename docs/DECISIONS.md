@@ -4,6 +4,26 @@ Newest first. One entry per decision: what, why, and what it costs.
 
 ---
 
+## 2026-10-27 — Separate piano control panel with hand + finger guidance (replaces the "All positions at a glance" thumbnails)
+**Decision:** The chord tab's thumbnail grid is gone (it duplicated the 1–6 buttons). In its place — and on the PLAY tab for scales — the piano gets its **own metal control panel** that drives the keyboard independently of the guitar voicing.
+- **Hand:** R / L / L+R (left hand bass, right hand chord; for scales, hands together an octave apart) / L=R (chords: both hands the same notes, an octave apart).
+- **Octave:** drum selector C2–C6 for where the right hand starts (default C4 = middle C; the left hand sits one octave lower). Scales also get a 1- or 2-octave Length toggle.
+- **Position buttons (one line, never wrap):** chords show inversions — Root / 1st / 2nd / 3rd; chords with 5+ tones show named voicings instead — *Root + upper* (LH root and 5th, RH colour tones), *Rootless A*, *Rootless B* (3rd- or 7th-on-bottom, jazz style) and *Shell* (root, 3rd, 7th). Scales show the **mode started on each degree** (Dorian … Ionian for 7-note scales; Box 1–5 for pentatonics, 1–6 for blues). The last button, **Match guitar**, lights exactly the pitches of the chosen guitar voicing / box, split between the hands (chords: ≤5 notes per hand; scales: split at middle C).
+- **Play buttons:** Play chord / Arpeggio ↑↓, or Scale ↑↓ / Up / Arpeggio. Audio uses the electric-keys voice. While playing, each key lights in time with its finger number and a "Now: RH 3 · E" line.
+- **Showing what to play with which finger:** every lit key carries a dot with a finger number 1–5 (1 = thumb … 5 = pinky); **green = right hand, blue = left hand**, a red ring marks the root, and the note name is above the dot. A readout under the buttons gives the same thing in words ("RH: C(1) E(3) G(5) · LH: C(5)") plus a legend. The other notes of the chord/scale are faint pips. Where two hands share a key, the dots stack.
+**Fingering rules (so the numbers are not made up):**
+- Scales use the standard conservatory tables (Hanon / ABRSM): one fingering per major and minor key, both hands, for as many octaves as shown. Natural and harmonic minor share a table; melodic minor uses it unless the thumb would land on a black key. G♯ minor LH uses its own table.
+- **Modes borrow the parent major scale's fingering** (D Dorian = C major's notes, so it starts on finger 2). This is the usual teaching convention and keeps the fingers identical when the mode changes.
+- Pentatonic, blues and the exotic scales have no standard table, so a small dynamic-programming search picks fingers: avoid the thumb (and pinky mid-run) on black keys, minimise stretches and crossings, prefer ending on 5 (RH) / 1 (LH).
+- Chords: triads RH 1-3-5, LH 5-3-1; 1st inversion RH 1-2-5; 2nd inversion LH 5-2-1; 7ths RH 1-2-3-5, LH 5-3-2-1; if the thumb would fall on a black key an alternate pattern is used.
+**Why:** He wants to *learn* the piano and could not tell which hand or finger to use; the thumbnails were redundant with the numbered buttons. A panel dedicated to the piano makes that the learning surface and removes the old "Piano shows" switch.
+**Cost / limits:**
+- Fingerings are **suggestions** for the standard way of playing, not the only way; the exotic-scale and Match-guitar-scale fingerings are algorithmic and should be checked by a teacher.
+- The all-black-key F♯ major pentatonic must put the thumb on a black key — it is the one unavoidable case.
+- Voicings with more than 5 notes per hand are folded or reduced; 5+ note chords therefore omit tones (the 5th first), and the labels say which.
+- Storage key is now `bpgw.v3` (new piano state: hand, octave, positions); old saved settings are ignored once. Hash links carry `mode=`, `pp=` (piano position), `hd=` (hand), `po=` (octave), `pn=` (octaves).
+**Implementation notes:** all piano maths (`pianoVoicings`, `pianoChordPlan`, `pianoScalePlan`, `ruleFingering`, `chordFingers`, `splitHands`, match plans) is inside the `<THEORY>` block, so node tests cover it (≈115k checks now). UI is `pianoPanelHTML` / `playPiano` with event delegation (`data-act="phand|poct|poctn|ppos|pplay"`).
+
 ## 2026-10-27 — Position buttons 1–6 for chords and 1–7 / 1–5 for scales (modelled on all-guitar-chords.com)
 **Decision:** Under the fretboard, a single row of small buttons picks a *position*. The selected one is dark (amber edge); the row never wraps, even at 390 px.
 - **Chords:** up to 6 real voicings up the neck, generated algorithmically for the *current tuning* (not a lookup table, so DADGAD, open G, 7-string and bass all work). Rules: ≤ 4-fret span, ≤ 4 fingers (a barre counts as one), strings muted only at the ends, open strings only when the hand is in the first position, root in the bass preferred, every essential tone present. The 5th may be dropped on 4+ note chords; a plain 9th is dropped when an 11th/13th is present; altered tones (♭5 ♯5 ♭9 ♯9 ♯11) are never dropped. Each position shows a numbered-finger diagram (root dot red, barre bar, × muted, ○ open), Strum / Arpeggio / Block buttons, a thumbnail of all six, and the same notes ringed on the fretboard and the piano ("Piano shows: GUITAR VOICING" by default).
