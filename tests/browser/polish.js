@@ -27,8 +27,8 @@ const BASE=process.env.BPGW_BASE||'http://localhost:8123/';
   // ---------- service worker ----------
   const sw=await q(async()=>{const reg=await navigator.serviceWorker.ready; const keys=await caches.keys(); const c=await caches.open(keys.find(k=>/^bpgw-v/.test(k))); const urls=(await c.keys()).map(r=>new URL(r.url).pathname); return {state:reg.active.state,scope:reg.scope,keys,urls}});
   ok(sw.state==='activated','service worker activated');
-  ok(sw.urls.includes('/index.html') && sw.urls.includes('/manifest.webmanifest') && sw.urls.some(u=>/icon-512\.png/.test(u)),'core files precached: '+sw.urls.length+' entries');
-  await sleep(300);
+  ok(sw.urls.some(u=>/\/index\.html$/.test(u)) && sw.urls.some(u=>/\/manifest\.webmanifest$/.test(u)) && sw.urls.some(u=>/icon-512\.png/.test(u)),'core files precached: '+sw.urls.length+' entries');
+  await p.waitForFunction(()=>/offline/i.test((document.getElementById("pwaStatus")||{}).textContent||""),{timeout:8000}).catch(()=>{});
   ok(await q(()=>/offline/i.test(document.getElementById('pwaStatus').textContent) && !document.getElementById('pwa').hidden),'footer shows "Saved for offline use ✓"');
   // controlled page needed for offline fetch interception -> reload once so SW controls it
   await p.reload({waitUntil:'load'}); await sleep(300);
