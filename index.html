@@ -160,8 +160,8 @@ table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:v
 .worked b{color:var(--amber);font-weight:600}.worked i{color:var(--green);font-style:normal}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:760px){.grid2{grid-template-columns:1fr}}
-.pat{display:flex;gap:6px;flex-wrap:wrap}
-.pat span{background:#17171c;border:1px solid #2a2a31;border-radius:8px;padding:6px 10px;font:700 14px var(--mono)}
+.pat{display:flex;gap:4px;flex-wrap:nowrap}
+.pat span{flex:1 1 0;min-width:0;max-width:56px;text-align:center;background:#17171c;border:1px solid #2a2a31;border-radius:8px;padding:6px 0;font:700 14px var(--mono)}
 .pat span.W{color:var(--green)}.pat span.H{color:var(--red)}.pat span.WH{color:var(--amber)}
 
 /* circle */
@@ -992,8 +992,8 @@ function scaleReadoutHTML() {
   return `<div class="readout">
     <div class="ro" style="grid-column:span 2"><div class="k">${esc(keyTitle())}</div><div class="v big">${k.map(n => `<span style="color:${n.semis === 0 ? RED : '#e9eaee'}">${esc(n.name)}</span>`).join(' ')}</div></div>
     <div class="ro"><div class="k">Formula</div><div class="v" style="font-size:16px;letter-spacing:.02em;word-spacing:.1em">${k.map(n => esc(n.label)).join(' ')}</div></div>
-    <div class="ro"><div class="k">Step pattern</div><div class="pat" style="margin-top:6px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div></div>
     <div class="ro"><div class="k">Key signature</div><div class="v" style="font:600 18px var(--sans)">${esc(sigTxt)}${sigNote}</div></div>
+    <div class="ro" style="grid-column:span 2"><div class="k">Step pattern</div><div class="pat" style="margin-top:6px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div></div>
   </div>`;
 }
 function diatonicHTML() {
