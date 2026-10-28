@@ -328,6 +328,40 @@ footer a{color:#7b8aa8}
 .row.r6{grid-template-columns:repeat(6,1fr);align-items:end}
 .dot.flash circle{filter:brightness(1.7) drop-shadow(0 0 6px #fff)}
 .pk.flash{box-shadow:inset 0 0 0 3px #fff,0 0 14px 3px rgba(255,255,255,.7)}
+
+/* practice + MIDI */
+.pk.inp{box-shadow:inset 0 0 0 3px #c45bff,0 0 14px 3px rgba(196,91,255,.8)!important;background-image:linear-gradient(180deg,#e9c8ff,#c45bff 80%)!important}
+.pk.b.inp{background-image:linear-gradient(180deg,#8a3fc0,#4b1a78)!important}
+.piano.practicing .pk.lit .fd{opacity:.32;transform:scale(.82)}
+.piano.practicing .pk.lit .nm{opacity:.35}
+.piano.practicing .pk.target{box-shadow:inset 0 0 0 3px #ffd54a,0 0 16px 3px rgba(255,213,74,.85);animation:prpulse 1.1s ease-in-out infinite}
+.piano.practicing .pk.target .fd,.piano.practicing .pk.target .nm{opacity:1;transform:scale(1.25);z-index:3}
+.piano.practicing .pk.hit{box-shadow:inset 0 0 0 3px #3fcf6e,0 0 14px 3px rgba(63,207,110,.8)}
+.pk.good{animation:prgood .6s ease-out}.pk.bad{animation:prbad .6s ease-out}
+@keyframes prpulse{50%{filter:brightness(1.12)}}
+@keyframes prgood{0%{box-shadow:inset 0 0 0 4px #3fcf6e,0 0 22px 6px rgba(63,207,110,.95)}100%{box-shadow:none}}
+@keyframes prbad{0%{box-shadow:inset 0 0 0 4px #ff4040,0 0 22px 6px rgba(255,64,64,.95)}100%{box-shadow:none}}
+.pc-prac{display:flex;gap:8px}.pc-prac .btn{flex:1;padding:9px 4px;white-space:nowrap;border-color:#111}
+.btn.tog.on{background:linear-gradient(180deg,#2a2b31,#0b0b0e);color:var(--amber);border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+.btn.tog.midi.on{color:#e3b6ff;border-color:#c45bff;box-shadow:0 0 0 1px #c45bff,0 0 12px rgba(196,91,255,.4)}
+.pcontrol .btn.tog:not(.on){background:linear-gradient(180deg,#e9eaee,#a9abb2);color:#26272b;border-color:#5a5b62}
+.midirow{display:flex;gap:8px;align-items:center;margin-top:7px}
+.midistat{flex:1;font:500 11px/1.4 var(--sans);color:#3a3b42;min-width:0}
+.midistat.good{color:#14662d;font-weight:700}.midistat.warn{color:#8a2a20}
+.prac{margin-top:8px;border-top:1px solid #1d1d22;padding-top:9px}
+.prac[hidden]{display:none}
+.prhead{display:flex;align-items:center;gap:10px;font:700 12px var(--mono);color:#ffd54a}
+.prhead .btn{margin-left:auto}.prtime{color:#9a9ca6}
+.prtarget{margin-top:7px;font:600 13px/1.9 var(--mono);color:#fff}
+.prlab{color:#7d808a;font-size:11px}
+.pn{display:inline-block;padding:1px 8px;border-radius:12px;background:#17181d;margin-right:2px}
+.pn b{margin-right:4px}.pn.R b{color:#3fcf6e}.pn.L b{color:#6aa0ff}
+.prres{margin-top:4px;min-height:22px;font:800 16px var(--cond);letter-spacing:.03em;color:#9a9ca6}
+.prres.good{color:#3fcf6e}.prres.bad{color:#ff6a60}
+.prscore{font:600 12px var(--mono);color:#c5c7cf}.prscore .good,.prscore b.good{color:#3fcf6e}.prscore .bad,.prscore b.bad{color:#ff6a60}
+.prkeys{margin-top:6px;font:500 10.5px/1.4 var(--sans);color:#7d808a}
+.prac.done .prres{font-size:20px}
+@media (max-width:480px){.pc-prac{gap:5px}.pc-prac .btn{font-size:12px}.midistat{font-size:10.5px}.prtarget{font-size:12px}}
 </style>
 </head>
 <body>
@@ -1156,13 +1190,98 @@ const Theory = (() => {
     return rows.join('\n');
   }
 
+  /* ---------- MIDI input + practice (play-along) ----------
+     parseMidiMessage: the 1–3 bytes Web MIDI hands us -> a plain event.
+     keyToMidi: computer-keyboard piano (A W S E D F T G Y H U J K = C … C).
+     practiceSteps: a piano plan -> the list of "things to play" (a chord all at once, or one note / one pair of notes at a time).
+     createPractice: the matcher. Feed it noteOn / noteOff; it says ok / wrong / step / done and keeps score.
+       A step is complete when every required note is HELD at the same time, having been pressed during that step
+       (a note still held from the previous step does not count, so legato playing works and a chord must really be a chord).
+       Pitch-class mode (default): any octave is fine. Exact mode: the very MIDI note. Extra notes count as wrong. */
+  function parseMidiMessage(data) {
+    if (!data || data.length < 2) return null;
+    const b0 = data[0], st = b0 & 0xf0, ch = b0 & 0x0f;
+    if (b0 >= 0xf0 || b0 < 0x80) return null;
+    if (st === 0x90) return data.length >= 3 && data[2] > 0 ? { type: 'on', midi: data[1], vel: data[2], ch } : { type: 'off', midi: data[1], vel: 0, ch };
+    if (st === 0x80) return { type: 'off', midi: data[1], vel: data.length >= 3 ? data[2] : 0, ch };
+    if (st === 0xb0 && data.length >= 3) {
+      if (data[1] === 64) return { type: 'sustain', on: data[2] >= 64, value: data[2], ch };
+      if (data[1] === 123 || data[1] === 120) return { type: 'allOff', ch };
+    }
+    return null;
+  }
+  const KBD_KEYS = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k', 'o', 'l', 'p', ';'];   // C C# D D# E F F# G G# A A# B C C# D D# E
+  function keyToMidi(key, baseOct) {
+    const i = KBD_KEYS.indexOf(String(key).toLowerCase());
+    return i < 0 ? null : 12 * (baseOct + 1) + i;
+  }
+  const pcOf = m => ((m % 12) + 12) % 12;
+  function practiceSteps(plan, opts = {}) {
+    const N = plan.notes.slice(), by = (a, b) => a.midi - b.midi, how = opts.how || 'together', down = opts.down !== false;
+    const mk = arr => { const ns = arr.slice().sort(by); return { notes: ns, midis: ns.map(n => n.midi), pcs: [...new Set(ns.map(n => pcOf(n.midi)))].sort((a, b) => a - b) }; };
+    let seq;
+    if (plan.kind === 'chord') {
+      if (how === 'together') return [mk(N)];
+      const up = [...new Map(N.slice().sort(by).map(n => [n.midi, n])).values()].map(n => [n]);
+      seq = up;
+    } else {
+      const R = N.filter(n => n.hand === 'R').sort(by), L = N.filter(n => n.hand === 'L').sort(by);
+      if (plan.seqMode === 'parallel' && R.length === L.length && R.length) seq = R.map((n, i) => [L[i], n]);
+      else seq = [...new Map(N.slice().sort(by).map(n => [n.midi, n])).values()].map(n => [n]);
+    }
+    if (down) seq = seq.concat(seq.slice(0, -1).reverse());
+    return seq.map(mk);
+  }
+  function createPractice(steps, opts = {}) {
+    const exact = !!opts.exact, held = new Set();
+    let idx = 0, advT = -1e9, prevNeed = null, onsets = new Set(), counted = new Set(), correct = 0, wrong = 0, startedAt = null, endedAt = null, lastT = 0, done = false, wrongLog = [];
+    const stepLog = [];
+    const keyOf = m => (exact ? m : pcOf(m));
+    const needOf = i => new Set(exact ? steps[i].midis : steps[i].pcs);
+    let need = steps.length ? needOf(0) : new Set();
+    const have = () => { const h = new Set(); onsets.forEach(m => { if (held.has(m) && need.has(keyOf(m))) h.add(keyOf(m)); }); return h; };
+    const total = () => steps.reduce((a, s, i) => a + (exact ? s.midis.length : s.pcs.length), 0);
+    function noteOn(m, t = Date.now()) {
+      if (done || !steps.length) return { type: 'ignore' };
+      lastT = t; if (startedAt == null) startedAt = t;
+      held.add(m);
+      const k = keyOf(m);
+      if (!need.has(k)) {
+        if (!exact && prevNeed && prevNeed.has(k) && t - advT <= 250) return { type: 'partner', midi: m };     // the second hand's copy of the note we just accepted
+        wrong++; const sameName = exact && steps[idx].pcs.includes(pcOf(m));
+        wrongLog.push({ idx, midi: m, t }); return { type: 'wrong', midi: m, step: idx, octave: sameName };
+      }
+      onsets.add(m);
+      if (!counted.has(k)) { counted.add(k); correct++; }
+      const h = have();
+      if (h.size < need.size) return { type: 'ok', midi: m, step: idx, have: h.size, need: need.size };
+      stepLog.push({ idx, ms: t - startedAt }); const fin = idx;
+      idx++; onsets = new Set(); counted = new Set(); prevNeed = need; advT = t;
+      if (idx >= steps.length) { done = true; endedAt = t; return { type: 'done', step: fin, midi: m, summary: summary() }; }
+      need = needOf(idx);
+      return { type: 'step', step: fin, midi: m, next: idx };
+    }
+    function noteOff(m, t = Date.now()) { held.delete(m); onsets.delete(m); lastT = Math.max(lastT, t); return { type: 'release', midi: m }; }
+    function releaseAll() { held.clear(); onsets = new Set(); }
+    function summary() {
+      const ms = startedAt == null ? 0 : (endedAt != null ? endedAt : lastT) - startedAt, tot = total();
+      return { steps: steps.length, stepsDone: idx, done, correct, wrong, total: tot, accuracy: correct + wrong ? correct / (correct + wrong) : null, ms, perfect: done && wrong === 0 };
+    }
+    return {
+      noteOn, noteOff, releaseAll, summary,
+      get idx() { return idx; }, get t0() { return startedAt; }, get done() { return done; }, get started() { return startedAt != null; },
+      current: () => (done ? null : steps[idx]), have, exact, steps, held: () => [...held], log: () => stepLog.slice(), wrongs: () => wrongLog.slice(),
+    };
+  }
+  function fmtMs(ms) { const s = Math.round(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+
   return { LETTERS, SHARP_NAMES, FLAT_NAMES, SCALES, SCALE_ORDER, CHORDS, CHORD_ORDER, TUNINGS, METERS,
     mod, parseName, accSym, spellDegree, pcName, pcBoth, intervalLabel, dotLabel,
     spellScale, rootName, parentMajor, signatureScore, stepPattern, isMinorish, isHepta,
     keySignature, circle, circlePos, relativeMinor, relativeMajor, signatureFor,
     identifyQuality, buildChord, harmonize, midiOf, nFromA4, freq, midiName, ratio, tuningById,
     scalePositions, modeInfo, scaleFingers, CHORD_GROUPS, CORE_QUALITIES, isMinorQuality,
-    findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText };
+    findVoicings, voicingPool, chordPositions, essentialTones, fingering, fingersNeeded, pianoVoicing, chordMidi, isBlackMidi, chordFingers, pianoVoicings, pianoChordPlan, splitHands, pianoMatchPlan, SCALE_TABLE, MAJOR_FAMILY, ruleFingering, pianoScalePositions, pianoScalePlan, pulseSeconds, mulberry32, generateProgression, chartText, parseMidiMessage, keyToMidi, KBD_KEYS, practiceSteps, createPractice, fmtMs };
 })();
 // </THEORY>
 const T = Theory;
@@ -1174,6 +1293,7 @@ const DEFAULTS = {
   labels: 'notes', tone: 'pluck', vol: 0.7, tempo: 100, meter: '4/4', metro: false, power: true,
   chordRoot: 'C', chordQ: 'major', chHand: 'B', scHand: 'R', pOct: 4, pOcts: 1, pcPos: 0, psPos: 0, scalePos: null, chordPos: 0, sevenths: false, seed: 7, bars: 4, style: 'smart', feel: 'strum', loop: true,
   mathOct: 4, mathString: 0, selDeg: null,
+  prExact: false, prHow: 'together', midiSound: false, midiOn: false,
 };
 const S = Object.assign({}, DEFAULTS);
 const STORE = 'bpgw.v3';
@@ -1583,10 +1703,15 @@ function pianoPanelHTML() {
     <div class="pc-grid${chordMode ? ' one' : ''}">${drum}${octs}</div>
     <div class="pc-sec"><span class="engr sm">${esc(posLab)}</span>${posRowHTML(posItems, String(sel), 'ppos', 'Piano positions')}</div>
     <div class="pc-play">${plays}</div>
+    <div class="pc-sec"><span class="engr sm">Practice <span class="soft">· MIDI piano, on-screen keys or computer keys</span></span>
+      <div class="pc-prac"><button class="btn tog${UI.pr.on ? ' on' : ''}" data-act="prtog" aria-pressed="${UI.pr.on}" title="Wait for you to play each note or chord, and score it">● Practice</button><button class="btn tog${S.prExact ? ' on' : ''}" data-act="prexact" aria-pressed="${!!S.prExact}" title="On: the key must be the exact one lit. Off: any octave counts.">Exact octave</button>${chordMode ? `<button class="btn tog" data-act="prhow" title="Play the whole chord at once, or its notes one by one">${S.prHow === 'single' ? 'One by one' : 'Together'}</button>` : ''}<button class="btn tog midi" data-act="midi" aria-pressed="false" title="Connect a MIDI piano (Chrome / Edge, USB or Bluetooth)">MIDI</button></div>
+      <div class="midirow"><div class="midistat" role="status">${esc(midiStatusText())}</div><button class="btn sm tog" data-act="midisnd" title="Also play the sound of your MIDI keys through this device (leave off if the piano makes its own sound)">🔊 Echo</button></div>
+    </div>
     <div class="pread" aria-live="polite">
       <div class="ptitle">${esc(P.title)} <span class="phand">${P.hand === 'auto' ? 'hands split automatically' : esc(HANDS[P.hand] || '')}${P.kind === 'scale' && !P.match ? ' · ' + S.pOcts + ' octave' + (S.pOcts > 1 ? 's' : '') : ''}</span></div>
       <div class="pdesc">${P.desc}</div>
       <div class="pfing">${fingerLine(P)}</div>
+      <div class="prac" id="prac" hidden><div class="prhead"><span class="prstep"></span><span class="prtime"></span><button class="btn sm" data-act="prreset">Start over</button></div><div class="prtarget"></div><div class="prres" aria-live="assertive"></div><div class="prscore"></div><div class="prkeys"></div></div>
       <div class="nowline" data-idle="Press ▶ — each key lights up with its finger number as it sounds.">Press ▶ — each key lights up with its finger number as it sounds.</div>
       <div class="plegend"><span><b class="hR">R</b> = right hand</span><span><b class="hL">L</b> = left hand</span><span>1 thumb · 2 index · 3 middle · 4 ring · 5 pinky</span><span><i class="rr"></i>root</span></div>
     </div>
@@ -1686,6 +1811,176 @@ function flash(midi, delay = 0, ms = 280) {
   }, delay);
 }
 function playMidi(m) { Snd.ensure(); Snd.note(m, undefined, 1.6, 0.85); flash(m); }
+
+/* ================================================================
+   PRACTICE + MIDI INPUT
+   Input comes from three places and all of it goes through inputNote():
+     • a MIDI keyboard (Web MIDI — Chrome/Edge on desktop & Android; not iOS Safari)
+     • taps/clicks on the on-screen keys (a tapped note counts as "held" for 1.5 s so a chord can be tapped one key after another)
+     • the computer keyboard: A W S E D F T G Y H U J K = C … C (Z / X = octave down / up)
+   Incoming notes light the key purple. In Practice mode the matcher (Theory.createPractice) says what to play next.
+   ================================================================ */
+const TAP_HOLD = 1500;
+UI.held = new Map();               // midi -> 'midi' | 'tap' | 'kbd'
+UI.pr = { on: false, run: null, sig: '', res: null, lastStep: -1, tick: null };
+UI.kbShift = 0; UI.kbDown = new Map(); UI.tapT = new Map();
+const MIDI = { supported: typeof navigator !== 'undefined' && typeof navigator.requestMIDIAccess === 'function', access: null, inputs: [], state: 'idle', secure: typeof isSecureContext === 'undefined' ? true : isSecureContext };
+const IS_IOS = typeof navigator !== 'undefined' && (/iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+function midiStatusText() {
+  if (!MIDI.supported) return IS_IOS
+    ? 'MIDI isn’t available in iPhone/iPad browsers (Safari doesn’t support it). Practice still works: tap the keys above, or the keys on screen.'
+    : 'This browser can’t talk to MIDI. Use Chrome or Edge for a MIDI piano — or tap the on-screen keys / use your computer keyboard (A W S E D F T G Y H U J K).';
+  if (!MIDI.secure) return 'MIDI needs a secure (https) page. Open the https:// address of this app.';
+  switch (MIDI.state) {
+    case 'asking': return 'Asking the browser for MIDI access… choose Allow.';
+    case 'denied': return 'MIDI access was blocked. Click the lock icon in the address bar, allow MIDI, then press MIDI again.';
+    case 'error': return 'MIDI couldn’t start' + (MIDI.err ? ' (' + MIDI.err + ')' : '') + '. Try again, or use the on-screen keys.';
+    case 'none': return 'MIDI is on, but no piano was found. Plug it in with USB (or switch on its Bluetooth MIDI) — it will show up here by itself.';
+    case 'ready': { const n = MIDI.inputs.map(i => i.name || 'MIDI device'); return '● Connected: ' + n[0] + (n.length > 1 ? ' + ' + (n.length - 1) + ' more' : '') + ' — play any key.'; }
+    default: return 'Press MIDI to connect a digital piano (USB or Bluetooth MIDI).';
+  }
+}
+function midiPaint() {
+  $$('.midistat').forEach(e => { e.textContent = midiStatusText(); e.className = 'midistat ' + (MIDI.state === 'ready' ? 'good' : MIDI.state === 'denied' || MIDI.state === 'error' || !MIDI.supported ? 'warn' : ''); });
+  $$('[data-act="midi"]').forEach(e => { e.classList.toggle('on', MIDI.state === 'ready'); e.setAttribute('aria-pressed', MIDI.state === 'ready' || MIDI.state === 'none' ? 'true' : 'false'); });
+  $$('[data-act="midisnd"]').forEach(e => e.classList.toggle('on', !!S.midiSound));
+}
+function midiBind() {
+  if (!MIDI.access) return;
+  const ins = [...MIDI.access.inputs.values()];
+  ins.forEach(i => { i.onmidimessage = midiMessage; });
+  MIDI.inputs = ins.filter(i => i.state !== 'disconnected');
+  MIDI.state = MIDI.inputs.length ? 'ready' : 'none';
+  if (!MIDI.inputs.length) releaseSource('midi');
+  midiPaint();
+}
+async function midiConnect(silent) {
+  if (!MIDI.supported || !MIDI.secure) { MIDI.state = 'unsupported'; midiPaint(); return; }
+  if (MIDI.access) { midiDisconnect(); return; }                       // second press = turn it off
+  MIDI.state = 'asking'; midiPaint();
+  try {
+    MIDI.access = await navigator.requestMIDIAccess({ sysex: false });
+    MIDI.access.onstatechange = midiBind; S.midiOn = true; save(); midiBind();
+  } catch (e) {
+    MIDI.access = null; MIDI.err = e && e.name;
+    MIDI.state = e && (e.name === 'SecurityError' || e.name === 'NotAllowedError') ? 'denied' : 'error'; midiPaint();
+  }
+}
+function midiDisconnect() {
+  if (MIDI.access) { [...MIDI.access.inputs.values()].forEach(i => { i.onmidimessage = null; }); MIDI.access.onstatechange = null; }
+  MIDI.access = null; MIDI.inputs = []; MIDI.state = 'idle'; S.midiOn = false; save(); releaseSource('midi'); midiPaint();
+}
+function midiMessage(ev) {
+  const m = T.parseMidiMessage(ev.data); if (!m) return;
+  if (m.type === 'on') inputNote(m.midi, true, 'midi', m.vel);
+  else if (m.type === 'off') inputNote(m.midi, false, 'midi');
+  else if (m.type === 'allOff') releaseSource('midi');
+}
+function releaseSource(src) { [...UI.held].forEach(([m, s]) => { if (s === src) inputNote(m, false, src); }); }
+
+const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+function inputNote(m, on, src, vel = 90) {
+  const run = UI.pr.on ? UI.pr.run : null;
+  let res = null;
+  if (on) {
+    UI.held.set(m, src);
+    if (src !== 'midi' || S.midiSound) { Snd.ensure(); Snd.note(m, undefined, 1.4, 0.35 + vel / 127 * 0.5, 'keys'); }
+    if (run) res = run.noteOn(m, nowMs());
+  } else {
+    UI.held.delete(m);
+    if (run) run.noteOff(m, nowMs());
+  }
+  prPaint(res, m);
+  return res;
+}
+function tapNote(m) {                                       // a click/tap on the on-screen keyboard
+  clearTimeout(UI.tapT.get(m));
+  inputNote(m, true, 'tap');
+  UI.tapT.set(m, setTimeout(() => { UI.tapT.delete(m); if (UI.held.get(m) === 'tap') inputNote(m, false, 'tap'); }, TAP_HOLD));
+}
+function kbBaseOct() {
+  const lo = PP && PP.notes.length ? Math.min(...PP.notes.map(n => n.midi)) : 60;
+  return Math.max(0, Math.min(7, Math.floor(lo / 12) - 1 + UI.kbShift));
+}
+
+/* ---- practice run ---- */
+function prSteps() { return T.practiceSteps(PP, { how: S.prHow }); }
+function prBuild() {
+  const p = UI.pr;
+  if (!p.on) { p.run = null; return; }
+  const steps = prSteps(), sig = JSON.stringify([steps.map(s => s.midis), S.prExact, S.prHow]);
+  if (!p.run || sig !== p.sig) { p.run = T.createPractice(steps, { exact: !!S.prExact }); p.sig = sig; p.res = null; p.lastStep = -1; UI.held.forEach((s, m) => UI.held.delete(m)); }
+}
+function prReset() { const p = UI.pr; p.sig = ''; p.res = null; p.lastStep = -1; prBuild(); prPaint(); prFocusTarget(); }
+function prToggle(on) {
+  const p = UI.pr; p.on = on === undefined ? !p.on : on;
+  if (p.on) { Snd.ensure(); p.tick = p.tick || setInterval(prTime, 250); } else { clearInterval(p.tick); p.tick = null; p.res = null; }
+  prBuild(); render(); prFocusTarget();
+}
+function prTime() { const p = UI.pr; if (!p.on || !p.run) return; const s = p.run.summary(); if (p.run.started && !p.run.done) $$('.prtime').forEach(e => { e.textContent = '⏱ ' + T.fmtMs(Math.max(0, nowMs() - p.run.t0)); }); }
+function prHandName(n) { return (HAND_ABBR[n.hand] || '') + ' ' + n.finger; }
+function prFocusTarget() {
+  const p = UI.pr, cur = p.run && p.run.current(); if (!cur) return;
+  const pw = $('#pianoWrap', $('#tab-' + S.tab)); if (!pw) return;
+  const els = cur.midis.map(m => pw.querySelector(`.pk[data-midi="${m}"]`)).filter(Boolean); if (!els.length) return;
+  const lo = Math.min(...els.map(e => e.offsetLeft)), hi = Math.max(...els.map(e => e.offsetLeft + e.offsetWidth));
+  if (lo < pw.scrollLeft + 10 || hi > pw.scrollLeft + pw.clientWidth - 10) pw.scrollTo({ left: Math.max(0, (lo + hi) / 2 - pw.clientWidth / 2), behavior: 'smooth' });
+}
+function prPaint(res, midi) {
+  const tab = $('#tab-' + S.tab); if (!tab) return;
+  const p = UI.pr, run = p.on ? p.run : null, piano = $('.piano', tab);
+  if (piano) {
+    piano.classList.toggle('practicing', !!run);
+    $$('.pk', piano).forEach(e => { const m = +e.dataset.midi; e.classList.toggle('inp', UI.held.has(m)); e.classList.remove('target', 'hit'); });
+    if (run && !run.done) {
+      const cur = run.current(), have = run.have();
+      cur.midis.forEach(m => { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('target'); });
+      UI.held.forEach((s, m) => { const k = S.prExact ? m : m % 12; if (have.has(k)) { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('hit'); } });
+    }
+    if (res && midi != null && (res.type === 'wrong' || res.type === 'step' || res.type === 'done' || res.type === 'ok')) {
+      const e = piano.querySelector(`.pk[data-midi="${midi}"]`);
+      if (e) { const cls = res.type === 'wrong' ? 'bad' : 'good'; e.classList.remove('good', 'bad'); void e.offsetWidth; e.classList.add(cls); setTimeout(() => e.classList.remove(cls), 600); }
+    }
+  }
+  const box = $('#prac', tab); if (!box) return;
+  box.hidden = !run;
+  if (!run) return;
+  if (res) {
+    const cur = run.steps[Math.min(res.step != null ? res.step : run.idx, run.steps.length - 1)];
+    if (res.type === 'wrong') p.res = { cls: 'bad', txt: res.octave ? `Right note, wrong octave — play ${cur.notes.map(n => T.midiName(n.midi)).join(' + ')}.` : `✗ ${T.midiName(res.midi)} isn’t it — look for the glowing key${cur.midis.length > 1 ? 's' : ''}.` };
+    else if (res.type === 'step') p.res = { cls: 'good', txt: '✓ Correct' };
+    else if (res.type === 'ok') p.res = { cls: 'good', txt: `✓ ${T.midiName(res.midi)} — now hold the other${res.need - res.have > 1 ? 's' : ''} too` };
+    else if (res.type === 'done') { const s = res.summary; p.res = { cls: 'good', txt: '🎉 Finished!' }; if (UI.onPracticeDone) UI.onPracticeDone(s); }
+  }
+  const s = run.summary(), cur = run.current();
+  $('.prstep', box).textContent = run.done ? 'Done' : `Step ${run.idx + 1} of ${run.steps.length}`;
+  $('.prtime', box).textContent = '⏱ ' + T.fmtMs(s.ms);
+  $('.prtarget', box).innerHTML = run.done ? '' : `<span class="prlab">Play</span> ` + cur.notes.map(n => `<span class="pn ${n.hand}"><b>${HAND_ABBR[n.hand]} ${n.finger}</b> ${esc(S.prExact ? T.midiName(n.midi) : n.name)}</span>`).join(' ') + (cur.midis.length > 1 ? ` <span class="prlab">together</span>` : '') + (S.prExact ? '' : ` <span class="prlab">· any octave</span>`);
+  const r = $('.prres', box); r.className = 'prres ' + (p.res ? p.res.cls : ''); r.textContent = p.res ? p.res.txt : (run.started ? '' : 'Waiting for your first note…');
+  const pct = s.accuracy == null ? '–' : Math.round(s.accuracy * 100) + '%';
+  $('.prscore', box).innerHTML = run.done
+    ? `<b>${s.correct}</b> of ${s.total} notes right · <b class="${s.wrong ? 'bad' : 'good'}">${s.wrong}</b> wrong · accuracy <b>${pct}</b> · time <b>${T.fmtMs(s.ms)}</b>${s.perfect ? ' · <b class="good">perfect!</b>' : ''}`
+    : `<span class="good">✓ ${s.correct}</span> correct · <span class="${s.wrong ? 'bad' : ''}">✗ ${s.wrong}</span> wrong · accuracy ${pct}`;
+  $('.prkeys', box).textContent = S.prExact ? `Exact octave: the key must be the one lit. Computer keys A–K = ${T.midiName(12 * (kbBaseOct() + 1))}–${T.midiName(12 * (kbBaseOct() + 2))} (Z/X shift).` : `Any octave counts. Computer keys A–K = C–C (Z / X = octave down / up).`;
+  box.classList.toggle('done', run.done);
+  if (run.idx !== p.lastStep) { p.lastStep = run.idx; prFocusTarget(); }
+}
+function prAfterRender() { prBuild(); prPaint(); midiPaint(); }
+
+document.addEventListener('keydown', e => {
+  if (!UI.pr.on || e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+  const k = e.key;
+  if (k === 'z' || k === 'Z' || k === 'x' || k === 'X') { if (!e.repeat) { UI.kbShift += /z/i.test(k) ? -1 : 1; UI.kbShift = Math.max(-4, Math.min(4, UI.kbShift)); prPaint(); } e.preventDefault(); return; }
+  if (e.repeat) { if (T.keyToMidi(k, 4) != null) e.preventDefault(); return; }
+  const m = T.keyToMidi(k, kbBaseOct()); if (m == null || m < 21 || m > 108) return;
+  e.preventDefault(); UI.kbDown.set(k.toLowerCase(), m); inputNote(m, true, 'kbd');
+});
+document.addEventListener('keyup', e => {
+  const k = e.key.toLowerCase(), m = UI.kbDown.get(k); if (m == null) return;
+  UI.kbDown.delete(k); inputNote(m, false, 'kbd');
+});
+window.addEventListener('blur', () => { releaseSource('kbd'); UI.kbDown.clear(); });
 
 function scaleMidis() {
   const k = keyNotes(), r = 48 + T.mod(S.rootPc - 48, 12);
@@ -2133,6 +2428,7 @@ function render() {
   if (pw) { pw.scrollLeft = (UI.piFocus || UI.piScroll == null) ? pianoFocusScroll() : UI.piScroll; UI.piFocus = false; pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); }
   window.scrollTo(0, y);
   $$('#dock button').forEach(b => b.classList.toggle('on', b.dataset.v === S.tab));
+  prAfterRender();
 }
 function setTab(tab, opts = {}) {
   S.tab = tab; UI.piFocus = true;
@@ -2158,9 +2454,9 @@ function pickKey(pc, scale) { S.rootPc = pc; S.scale = scale; S.pref = 'auto'; }
 
 document.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
-  if (!act) { const m = e.target.closest('[data-midi]'); if (m) playMidi(+m.dataset.midi); return; }
+  if (!act) { const m = e.target.closest('[data-midi]'); if (m) { if (m.classList.contains('pk')) tapNote(+m.dataset.midi); else playMidi(+m.dataset.midi); } return; }
   const v = act.dataset.v, A = act.dataset.act;
-  if (A !== 'labels' && A !== 'pm' && A !== 'pplay') UI.piFocus = true;
+  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset'].includes(A)) UI.piFocus = true;
   switch (A) {
     case 'tab': setTab(v); break;
     case 'labels': S.labels = v; render(); save(); break;
@@ -2193,6 +2489,12 @@ document.addEventListener('click', e => {
       render(); save(); updateHash(); if (S.mode === 'chord') playPiano('block'); break;
     }
     case 'pplay': playPiano(v); break;
+    case 'prtog': prToggle(); break;
+    case 'prexact': S.prExact = !S.prExact; save(); render(); break;
+    case 'prhow': S.prHow = S.prHow === 'single' ? 'together' : 'single'; save(); render(); break;
+    case 'prreset': prReset(); break;
+    case 'midi': midiConnect(); break;
+    case 'midisnd': S.midiSound = !S.midiSound; save(); midiPaint(); break;
     case 'pm': playMidi(+act.dataset.m); break;
     case 'sv': { const x = window.__songShapes[+act.dataset.i]; if (x) playFrets(x.v); break; }
     case 'circ': {
@@ -2247,7 +2549,8 @@ buildDock();
 buildPanel();
 UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
-window.BPGW = { S, Theory, Snd, Player, setTab, render };
+if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
+window.BPGW = { S, Theory, Snd, Player, setTab, render, UI, MIDI, inputNote, prToggle, prSteps };
 </script>
 </body>
 </html>

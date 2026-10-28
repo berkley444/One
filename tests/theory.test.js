@@ -646,5 +646,173 @@ group('piano — Match guitar (splitHands)');
   eq(T.splitHands([]), { L: [], R: [] }, 'empty');
 }
 
+
+/* ============ MIDI input + practice ============ */
+group('MIDI message parsing (simulated device stream)');
+{
+  eq(T.parseMidiMessage([0x90, 60, 100]), { type: 'on', midi: 60, vel: 100, ch: 0 }, 'note on');
+  eq(T.parseMidiMessage([0x90, 60, 0]), { type: 'off', midi: 60, vel: 0, ch: 0 }, 'note on with velocity 0 is a note off (running-status pianos)');
+  eq(T.parseMidiMessage([0x80, 62, 40]), { type: 'off', midi: 62, vel: 40, ch: 0 }, 'note off');
+  eq(T.parseMidiMessage([0x93, 72, 90]).ch, 3, 'channel is parsed');
+  eq(T.parseMidiMessage([0xb0, 64, 127]), { type: 'sustain', on: true, value: 127, ch: 0 }, 'sustain pedal down');
+  eq(T.parseMidiMessage([0xb0, 64, 0]).on, false, 'sustain pedal up');
+  eq(T.parseMidiMessage([0xb0, 123, 0]), { type: 'allOff', ch: 0 }, 'all notes off');
+  eq(T.parseMidiMessage([0xb0, 7, 90]), null, 'other controllers ignored');
+  eq(T.parseMidiMessage([0xf8]), null, 'clock ignored');
+  eq(T.parseMidiMessage([0xfe]), null, 'active sensing ignored');
+  eq(T.parseMidiMessage([0xe0, 0, 64]), null, 'pitch bend ignored');
+  eq(T.parseMidiMessage([0xc0, 5]), null, 'program change ignored');
+  eq(T.parseMidiMessage([]), null, 'empty');
+  eq(T.parseMidiMessage(null), null, 'null');
+  eq(T.parseMidiMessage(new Uint8Array([0x90, 61, 77])).midi, 61, 'Uint8Array input (what Web MIDI gives)');
+  for (let ch = 0; ch < 16; ch++) for (let n = 21; n <= 108; n += 3) {
+    eq(T.parseMidiMessage([0x90 | ch, n, 64]), { type: 'on', midi: n, vel: 64, ch }, `ch ${ch} note ${n} on`);
+    eq(T.parseMidiMessage([0x80 | ch, n, 0]).type, 'off', `ch ${ch} note ${n} off`);
+  }
+}
+group('computer-keyboard piano');
+{
+  eq(['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k'].map(k => T.keyToMidi(k, 4)), [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72], 'A W S E D F T G Y H U J K = C4 … C5');
+  eq(T.keyToMidi('A', 3), 48, 'upper-case works, octave moves');
+  eq(T.keyToMidi('o', 4), 73, 'O = C#5');
+  eq(T.keyToMidi('z', 4), null, 'z is not a note key');
+  eq(T.keyToMidi('Enter', 4), null, 'Enter is not a note key');
+  for (let o = 0; o <= 7; o++) eq(T.keyToMidi('a', o) % 12, 0, `'a' is always a C (oct ${o})`);
+}
+group('practice steps from a plan');
+const scalePlanFor = (root, id, k, hand, octs, oct) => {
+  const hs = hand === 'B' ? ['L', 'R'] : [hand], notes = [];
+  hs.forEach(h => { const pl = T.pianoScalePlan(root, id, k, h, octs, h === 'R' ? oct : oct - 1); pl.midis.forEach((m, i) => notes.push({ hand: h, midi: m, finger: pl.fingers[i], name: pl.names[i] })); });
+  return { kind: 'scale', notes, seqMode: hand === 'B' ? 'parallel' : 'sorted' };
+};
+const chordPlanFor = (root, q, vi, hand, oct) => {
+  const ch = T.buildChord(root, q), vs = T.pianoVoicings(ch), pl = T.pianoChordPlan(ch, vs[Math.min(vi, vs.length - 1)], hand, oct), notes = [];
+  pl.L.forEach(x => notes.push({ hand: 'L', midi: x.midi, finger: x.finger, name: x.tone.name })); pl.R.forEach(x => notes.push({ hand: 'R', midi: x.midi, finger: x.finger, name: x.tone.name }));
+  return { kind: 'chord', notes };
+};
+{
+  const sp = T.practiceSteps(scalePlanFor('C', 'major', 0, 'R', 1, 4));
+  eq(sp.map(s => s.midis[0]), [60, 62, 64, 65, 67, 69, 71, 72, 71, 69, 67, 65, 64, 62, 60], 'C major RH: up then down, top note once (15 steps)');
+  eq(T.practiceSteps(scalePlanFor('C', 'major', 0, 'R', 1, 4), { down: false }).length, 8, 'up only = 8 steps');
+  eq(T.practiceSteps(scalePlanFor('C', 'major', 0, 'R', 2, 4), { down: false }).length, 15, 'two octaves up = 15 steps');
+  const both = T.practiceSteps(scalePlanFor('C', 'major', 0, 'B', 1, 4), { down: false });
+  eq(both.length, 8, 'both hands: one step per pair'); eq(both[0].midis, [48, 60], 'both hands: LH and RH start together'); eq(both[0].pcs, [0], 'pair has one pitch class');
+  const ch = T.practiceSteps(chordPlanFor('C', 'major', 0, 'B', 4));
+  eq(ch.length, 1, 'chord together = one step'); eq(ch[0].pcs, [0, 4, 7], 'C major pitch classes'); eq(ch[0].midis, [48, 60, 64, 67], 'LH bass + RH triad');
+  const one = T.practiceSteps(chordPlanFor('C', 'major', 0, 'R', 4), { how: 'single' });
+  eq(one.map(s => s.midis[0]), [60, 64, 67, 64, 60], 'chord one by one: up and back');
+  eq(T.practiceSteps({ kind: 'chord', notes: [] }).length, 1, 'empty chord does not crash');
+}
+group('practice matcher — scenarios');
+{
+  let t = 0; const T0 = () => (t += 100);
+  const mk = (plan, o, so) => T.createPractice(T.practiceSteps(plan, so), o);
+  // 1. C major scale up, played legato (overlapping notes), any octave
+  let pr = mk(scalePlanFor('C', 'major', 0, 'R', 1, 4), {}, { down: false }); t = 1000;
+  const seq = [60, 62, 64, 65, 67, 69, 71, 72]; let last, evs = [];
+  seq.forEach((m, i) => { last = pr.noteOn(m + (i % 2 ? 12 : -12), T0()); evs.push(last.type); /* alternate octaves, never released = fully legato */ });
+  eq(evs, ['step', 'step', 'step', 'step', 'step', 'step', 'step', 'done'], 'legato scale in odd octaves advances every note, then done');
+  eq(pr.summary().correct, 8, '8 correct'); eq(pr.summary().wrong, 0, '0 wrong'); ok(pr.done && pr.summary().perfect, 'perfect');
+  eq(pr.summary().ms, 700, 'time = first note to last (700 ms)');
+  eq(pr.noteOn(60, T0()).type, 'ignore', 'input after done is ignored');
+  // 2. wrong note counts and does not advance; right note then advances
+  pr = mk(scalePlanFor('C', 'major', 0, 'R', 1, 4), {}, { down: false });
+  eq(pr.noteOn(61, 10).type, 'wrong', 'C# is wrong at step 1'); eq(pr.idx, 0, 'still step 1'); eq(pr.noteOn(60, 20).type, 'step', 'C then advances'); eq(pr.summary().wrong, 1, 'one wrong');
+  eq(pr.noteOn(64, 30).type, 'wrong', 'skipping to E is wrong'); eq(pr.summary().accuracy, 1 / 3, 'accuracy = correct/(correct+wrong)');
+  // 3. exact octave
+  pr = mk(scalePlanFor('C', 'major', 0, 'R', 1, 4), { exact: true }, { down: false });
+  const w = pr.noteOn(72, 1); eq(w.type, 'wrong', 'exact: C5 is wrong when C4 is needed'); eq(w.octave, true, 'and it says "right note, wrong octave"'); eq(pr.noteOn(60, 2).type, 'step', 'exact: C4 ok');
+  // 4. a chord must be held together
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); 
+  eq(pr.noteOn(60, 1).type, 'ok', 'C of C-E-G: ok but not done'); pr.noteOff(60, 2); eq(pr.noteOn(64, 3).type, 'ok', 'E alone after releasing C: still waiting'); pr.noteOff(64, 4);
+  eq(pr.idx, 0, 'arpeggiating a block chord does not complete it');
+  pr.noteOn(60, 5); pr.noteOn(64, 6); eq(pr.noteOn(67, 7).type, 'done', 'all three held: done'); eq(pr.summary().wrong, 0, 'no wrong notes');
+  // 5. any octave for chord, mixed
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); pr.noteOn(36, 1); pr.noteOn(76, 2); eq(pr.noteOn(91, 3).type, 'done', 'C2 + E5 + G6 counts in pitch-class mode');
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), { exact: true }); eq(pr.noteOn(36, 1).type, 'wrong', 'exact: C2 is not the C4 needed'); pr.noteOn(64, 2); pr.noteOn(67, 3); eq(pr.idx, 0, 'exact chord not complete');
+  // 6. extra note in a chord is wrong but chord still completes
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); pr.noteOn(60, 1); eq(pr.noteOn(62, 2).type, 'wrong', 'D is not in C major'); pr.noteOn(64, 3); eq(pr.noteOn(67, 4).type, 'done', 'chord completes'); eq(pr.summary().wrong, 1, 'with 1 wrong note on the score');
+  // 7. a note still held from the previous step does not count for the next chord
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}, { how: 'single' }); // C E G E C
+  pr.noteOn(60, 1); pr.noteOn(64, 2); pr.noteOn(67, 3); pr.noteOn(64, 4); eq(pr.idx, 4, 'one by one: 4 steps in'); eq(pr.noteOn(72, 5).type, 'done', 'last C (octave up) ends it');
+  // 8. repeated press of a satisfied note is not an error
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); pr.noteOn(60, 1); eq(pr.noteOn(72, 2).type, 'ok', 'second C is just another C'); eq(pr.summary().correct, 1, 'counted once');
+  // 9. time before the first note does not count; reset-like behaviour
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); eq(pr.summary().ms, 0, 'no time before the first note'); eq(pr.started, false, 'not started');
+  pr.noteOn(60, 5000); pr.noteOn(64, 5300); pr.noteOn(67, 6500); eq(pr.summary().ms, 1500, 'chord time 1.5 s');
+  eq(T.fmtMs(1500), '0:02', 'format 1.5s'); eq(T.fmtMs(83000), '1:23', 'format 83 s'); eq(T.fmtMs(0), '0:00', 'format 0');
+  // 10. noteOff for a note never pressed is harmless; releaseAll
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); eq(pr.noteOff(50, 1).type, 'release', 'stray off ok'); pr.noteOn(60, 2); pr.releaseAll(); pr.noteOn(64, 3); eq(pr.noteOn(67, 4).type, 'ok', 'releaseAll forgets the C');
+  // 11. empty plan
+  pr = T.createPractice([], {}); eq(pr.noteOn(60, 1).type, 'ignore', 'no steps: ignore');
+  // 12. simulated MIDI stream: bytes -> parser -> matcher, C major triad then the D dorian scale
+  const feed = (pr, bytes, t) => { const e = T.parseMidiMessage(bytes); return e && (e.type === 'on' ? pr.noteOn(e.midi, t) : e.type === 'off' ? pr.noteOff(e.midi, t) : null); };
+  pr = mk(chordPlanFor('C', 'major', 0, 'R', 4), {}); const stream = [[0xf8], [0x90, 64, 80], [0xfe], [0x90, 60, 70], [0xb0, 64, 127], [0x90, 67, 90]]; let r2; stream.forEach((b, i) => { r2 = feed(pr, b, 100 * i) || r2; });
+  eq(r2.type, 'done', 'MIDI byte stream with clock/sustain noise completes the chord');
+  pr = mk(scalePlanFor('D', 'dorian', 0, 'R', 1, 4), {}, { down: false }); const dd = [62, 64, 65, 67, 69, 71, 72, 74]; dd.forEach((m, i) => { feed(pr, [0x90, m, 80], i * 400); feed(pr, [0x80, m, 0], i * 400 + 300); }); ok(pr.done && pr.summary().perfect, 'D Dorian played through "MIDI" is perfect');
+}
+group('practice matcher — both hands, same note (partner press)');
+{
+  const steps = T.practiceSteps(scalePlanFor('C', 'major', 0, 'B', 1, 4), { down: false });
+  let pr = T.createPractice(steps, {}); pr.noteOn(48, 1000);                      // LH C accepted: step done
+  eq(pr.noteOn(60, 1100).type, 'partner', 'RH C a moment later is the partner, not an error'); eq(pr.summary().wrong, 0, 'no wrong');
+  pr = T.createPractice(steps, {}); pr.noteOn(48, 1000); eq(pr.noteOn(60, 1400).type, 'wrong', 'a repeated C 400 ms later is wrong (we are on D)');
+  pr = T.createPractice(steps, { exact: true }); pr.noteOn(48, 1000); eq(pr.idx, 0, 'exact mode needs both octaves'); eq(pr.noteOn(60, 1050).type, 'step', 'both hands pressed -> next');
+}
+group('practice matcher — every scale, every position, every root');
+{
+  const rng = T.mulberry32(7); let runs = 0;
+  const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  for (const id of T.SCALE_ORDER) for (const root of ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B']) {
+    const len = T.SCALES[id].pts.length;
+    for (let k = 0; k < len; k++) for (const hand of ['R', 'L', 'B']) {
+      let plan; try { plan = scalePlanFor(root, id, k, hand, k % 2 + 1, 4); } catch (e) { fail++; console.log('  ✗ plan ' + root + id + e.message); continue; }
+      for (const exact of [false, true]) {
+        if (exact && hand === 'B' && false) continue;
+        const steps = T.practiceSteps(plan), pr = T.createPractice(steps, { exact }); let t = 0, early = false;
+        steps.forEach((s, si) => {
+          const order = shuffle(s.midis.map(m => (exact ? m : m + 12 * (Math.floor(rng() * 5) - 2))));
+          const cov = new Set(); order.forEach(m => { cov.add(exact ? m : m % 12); const e = pr.noteOn(m, t += 50); if ((e.type === 'step' || e.type === 'done') && cov.size < (exact ? s.midis.length : s.pcs.length)) early = true; });
+          if (si % 2) order.forEach(m => pr.noteOff(m, t += 5));     // sometimes release, sometimes stay legato
+        });
+        runs++;
+        if (!(pr.done && pr.summary().wrong === 0 && !early && pr.summary().correct === pr.summary().total)) { fail++; console.log(`  ✗ ${root} ${id} pos ${k} ${hand} exact=${exact}: done=${pr.done} wrong=${pr.summary().wrong} early=${early}`); } else pass++;
+      }
+    }
+  }
+  ok(runs > 5000, runs + ' scale practice runs');
+}
+group('practice matcher — every chord quality, every root, every voicing and hand');
+{
+  const rng = T.mulberry32(11); let runs = 0;
+  for (const q of T.CHORD_ORDER) for (const root of ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B']) {
+    const ch = T.buildChord(root, q), nv = T.pianoVoicings(ch).length;
+    for (let vi = 0; vi < nv; vi++) for (const hand of ['R', 'L', 'B', 'S']) {
+      const plan = chordPlanFor(root, q, vi, hand, 4), steps = T.practiceSteps(plan);
+      if (steps.length !== 1) { fail++; console.log('  ✗ chord steps ' + root + q); continue; }
+      const need = steps[0].pcs, mids = steps[0].midis.slice();
+      const pcOk = need.every(pc => ch.tones.some(t => t.pc === pc)); ok(pcOk, `${root}${q}: step pitch classes belong to the chord`);
+      for (const exact of [false, true]) {
+        const pr = T.createPractice(steps, { exact }), order = mids.slice().sort(() => rng() - 0.5); let fin = false, t = 0; const cov = new Set();
+        order.forEach(m => { const mm = exact ? m : m + 12 * (Math.floor(rng() * 3) - 1); cov.add(exact ? mm : mm % 12); const ev = pr.noteOn(mm, t += 40); if (ev.type === 'done') { fin = true; if (cov.size < (exact ? mids.length : need.length)) { fail++; console.log('  ✗ completed early ' + root + q); } } });
+        runs++; ok(fin && pr.summary().wrong === 0, `${root}${q} v${vi} ${hand} exact=${exact} completes`);
+        // dropping one note before the last must not complete: press all but one, release, press the last
+        if (order.length > 1) { const p2 = T.createPractice(steps, { exact }); order.slice(0, -1).forEach(m => p2.noteOn(m, 1)); p2.noteOff(order[0], 2); const e2 = p2.noteOn(order[order.length - 1], 3); ok(e2.type === 'ok' || (need.length === 1 || new Set(order.map(x => exact ? x : x % 12)).size < order.length), `${root}${q}: released note must be re-pressed`); }
+      }
+    }
+  }
+  ok(runs > 5000, runs + ' chord practice runs');
+}
+group('practice matcher — wrong-note scoring is exact');
+{
+  const plan = scalePlanFor('C', 'major', 0, 'R', 1, 4), steps = T.practiceSteps(plan, { down: false });
+  for (let nWrong = 0; nWrong <= 12; nWrong++) {
+    const pr = T.createPractice(steps, {}); let t = 0, wr = 0;
+    steps.forEach((s, i) => { if (wr < nWrong) { const bad = [1, 3, 6, 8, 10][i % 5] + 60; pr.noteOn(bad, t += 10); wr++; pr.noteOff(bad, t += 1); } pr.noteOn(s.midis[0], t += 10); pr.noteOff(s.midis[0], t += 1); });
+    eq(pr.summary().wrong, Math.min(nWrong, 8), `${nWrong} wrong presses scored`); eq(pr.summary().correct, 8, 'and still 8 correct');
+    eq(pr.summary().accuracy, 8 / (8 + Math.min(nWrong, 8)), 'accuracy ' + nWrong);
+  }
+}
+
 console.log(`\n${fail ? '✗ FAILED' : '✓ ALL PASSED'} — ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

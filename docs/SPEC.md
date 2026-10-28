@@ -33,6 +33,7 @@ Taken from the original app (see `screenshots/gm_original.png`):
 9. **MATH ƒ(x) tab** — the frequency of every note, `f(n) = 440 × 2^(n/12)`, with `n` worked out step by step.
 10. **Sound** — notes, chords and scales play through WebAudio.
 11. **Rhythm** — time signature and tempo, a metronome, and a **Generate progression** button that writes 4–8 bars in the current key and plays them.
+12. **MIDI play-along & Practice** (2026-10-28) — connect a digital piano by Web MIDI (or tap the on-screen keys / use the computer keyboard); incoming notes light the keys; Practice waits for the next note or chord of the chosen scale position / chord, shows the fingering, scores right/wrong/time.
 
 ## In his words
 
@@ -58,4 +59,4 @@ What those four lines say about how he wants to work: **depth over minimum effor
 
 ## Out of scope (for now)
 
-Song import, tab/notation rendering, MIDI input, accounts, payments. The piano-teacher product (KeyForge) is researched in `research/` but is a separate effort; this app is its first stepping stone.
+Song import, tab/notation rendering, accounts, payments. (MIDI input was out of scope until 2026-10-28; it is now in — see DECISIONS.) The piano-teacher product (KeyForge) is researched in `research/` but is a separate effort; this app is its first stepping stone.

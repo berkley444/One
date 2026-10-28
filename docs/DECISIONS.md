@@ -4,6 +4,21 @@ Newest first. One entry per decision: what, why, and what it costs.
 
 ---
 
+## 2026-10-28 — MIDI play-along and Practice mode (slice 1 of the 2026-10-28 plan)
+**Decision:** The piano panel gets a **Practice** row: `● Practice` · `Exact octave` · (chords: `Together / One by one`) · `MIDI`.
+- **Input, three ways, one code path (`inputNote`)**: (1) a MIDI keyboard through the Web MIDI API (`MIDI` button; remembered, auto-reconnects next visit); (2) taps/clicks on the on-screen keys — a tapped note counts as *held* for 1.5 s, so a chord can be tapped one key after another, which is what makes practice work on an iPhone; (3) the computer keyboard, `A W S E D F T G Y H U J K` = C…C (plus `O L P ;`), `Z`/`X` shift the octave. Incoming notes light the key **purple**.
+- **iOS/unsupported:** if `navigator.requestMIDIAccess` is missing (all iPhone/iPad browsers, Firefox, Safari) or the page is not https, the MIDI button shows a plain-language message and everything else still works. Permission denied / no device / device hot-plug each have their own message.
+- **Practice:** the matcher waits for the next step — one note (scales; both hands together = one pair), or the whole chord at once (or one note at a time). The target key pulses yellow with its finger number, held correct notes turn green, a wrong key flashes red, and the line under the keyboard says what to play ("RH 3 · A"), whether it was right, the step count, a clock and the score (correct, wrong, accuracy %, time). Scales go up then back down. At the end: "Finished — 15 of 15, 0 wrong, perfect!" and **Start over**.
+- **Rules (all in the THEORY block, so node tests cover them):** a step is complete when every required note is **held at the same time**, each pressed during *that* step — so a note still held from the previous step doesn't count (legato playing works) and a block chord can't be cheated by arpeggiating it. Default = any octave counts (pitch classes); **Exact octave** = the very key. Extra notes in the chord are *wrong* but don't block. The second hand's copy of a note in "hands together" scales (same pitch class, other octave) arriving within 250 ms of the step completing is accepted as a partner, not scored wrong.
+- **Sound:** MIDI keys are silent by default (the piano makes its own sound); `🔊 Echo` plays them through the device too. Taps and computer keys always sound (electric-keys voice).
+**Why:** He has a MIDI-capable Williams digital piano, and the way he said he wants to learn is by *doing the fingerings*. Practice turns the fingering display into a loop he can check.
+**Cost / limits:**
+- Web MIDI needs Chrome/Edge (desktop or Android) over https; iOS cannot do MIDI at all. Bluetooth MIDI on desktop needs the OS to pair the piano first.
+- Velocity is used only for the echo loudness; the sustain pedal is ignored. The timer starts at the first note, not at "Start".
+- Computer-keyboard input can only reach one octave at a time: in "hands together" scales with *Exact octave* on, use MIDI or the on-screen keys.
+- Practice state is not saved between sessions (slice 3 adds lesson progress).
+**Tests:** 168k node checks now (≈53k new: the MIDI byte parser, the keyboard map, step building, the matcher through simulated MIDI streams — every scale × position × root × hand × both modes, every chord quality × root × voicing × hand × both modes, wrong-note scoring) and a 40-check browser test with a fake MIDI device (`prac.js`).
+
 ## 2026-10-27 — Separate piano control panel with hand + finger guidance (replaces the "All positions at a glance" thumbnails)
 **Decision:** The chord tab's thumbnail grid is gone (it duplicated the 1–6 buttons). In its place — and on the PLAY tab for scales — the piano gets its **own metal control panel** that drives the keyboard independently of the guitar voicing.
 - **Hand:** R / L / L+R (left hand bass, right hand chord; for scales, hands together an octave apart) / L=R (chords: both hands the same notes, an octave apart).
