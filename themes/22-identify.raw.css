@@ -58,3 +58,5 @@ body.gating{overflow:hidden}
 
 /* the small engraved captions sit on a card here, not on the metal panel: plain readable text in every theme */
 html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:none}
+/* labels above the fretboard row ("Root", "Position") sit on the page, not on a metal panel */
+html body .fbstrip .fgrp>.engr{color:var(--lab);text-shadow:none}
