@@ -5,7 +5,7 @@
 const puppeteer = require('puppeteer-core');
 const URL = process.env.BPGW_URL || 'file:///workspace/One_repo/index.html';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const THEMES = ['silver', 'console', 'pedal', 'tube', 'minimal', 'minimal-dark', 'synth', 'wood'];
+const THEMES = ['silver', 'console', 'pedal', 'tube', 'minimal', 'navy-light', 'minimal-dark', 'synth', 'wood', 'sunburst', 'surf', 'rosewood', 'sheet'];
 (async () => {
   const b = await puppeteer.launch({ executablePath: process.env.CHROME || '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox'] });
   let checks = 0, bad = 0; const errs = [];

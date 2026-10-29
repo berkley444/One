@@ -1184,7 +1184,7 @@ html[data-theme="tube"] .fbwrap,html[data-theme="tube"] .pianowrap{border-width:
 html[data-theme="tube"] .dot circle{stroke-width:1.2}
 
 /* ===== 60-minimal.css ===== */
-/*@also minimal-dark*/
+/*@also minimal-dark navy-light sheet*/
 /* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
    iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
    65-minimal-dark.css only swaps the variables. */
@@ -1263,7 +1263,7 @@ html[data-theme="minimal"] nav.dock button{font-weight:600}
 html[data-theme="minimal"] .fbwrap,html[data-theme="minimal"] .pianowrap{border-width:1px}
 
 /* ===== 60-minimal.css (shared with minimal-dark) ===== */
-/*@also minimal-dark*/
+/*@also minimal-dark navy-light sheet*/
 /* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
    iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
    65-minimal-dark.css only swaps the variables. */
@@ -1341,6 +1341,164 @@ html[data-theme="minimal-dark"] nav.dock{backdrop-filter:saturate(180%) blur(18p
 html[data-theme="minimal-dark"] nav.dock button{font-weight:600}
 html[data-theme="minimal-dark"] .fbwrap,html[data-theme="minimal-dark"] .pianowrap{border-width:1px}
 
+/* ===== 60-minimal.css (shared with navy-light) ===== */
+/*@also minimal-dark navy-light sheet*/
+/* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
+   iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
+   65-minimal-dark.css only swaps the variables. */
+[data-theme="navy-light"]{
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:var(--sans);
+  --bg:#f2f2f7; --ink:#1c1c1e; --dim:#5f5f66; --faint:#6b6b73; --amber:#0a5fd1; --green:#17692e; --red:#d12c2c; --gold:#6b6b73; --blue:#0a5fd1; --violet:#7a35c4; --engrave:#1c1c1e;
+  --page:#f2f2f7; --hfont:var(--sans); --lab-font:var(--sans); --drum-font:var(--sans); --h1-ls:-.01em; --h1-tt:none; --lcd-font:var(--mono);
+  --h2:#1c1c1e; --h2s:#5f5f66; --h2c:#5f5f66; --ink2:#3a3a3c; --ink3:#55555b; --mute:#5f5f66; --lab:#5f5f66; --on-amber:#fff;
+  --card:#fff; --card-bd:#e5e5ea; --card-r:16px; --inset:#f2f2f7; --inset-bd:#e5e5ea; --inset-ink:#1c1c1e;
+  --raise:#fff; --raise-bd:#e0e0e6; --raise-bd-h:#0a5fd1; --raise-r:12px; --chip:#e9e9ee; --chip-bd:#d8d8de; --hair:#ececf0; --hair2:#d8d8de;
+  --now-bg:#e6effd; --now-sh:0 0 0 2px #0a5fd1; --step-off:#d1d1d6;
+  --panel:#fff; --panel-bd:#e5e5ea; --panel-r:22px; --panel-sh:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(0,0,0,.08);
+  --panel-ink:#1c1c1e; --panel-ink2:#5f5f66; --engr-sh:none; --ok-p:#17692e; --warn-p:#c4271d;
+  --led-off:#c7c7cc; --led-off-sh:none; --led-on:#34c759; --led-on-sh:0 0 0 4px rgba(52,199,89,.25);
+  --drum-bg:#f2f2f7; --drum-sh:0 0 0 1px #e0e0e6; --drum-r:12px; --drum-ink:#1c1c1e; --drum-line-o:0;
+  --edge-bg:transparent; --edge-ink:#0a5fd1;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #d8d8de,0 3px 8px rgba(0,0,0,.16); --ind:#0a5fd1; --ind-sh:none; --tick:#8a8a92; --knobread:#1c1c1e;
+  --tog-bg:#d1d1d6; --tog-sh:none; --tog-on:#34c759; --tog-thumb:#fff;
+  --btn-bg:#e9e9ee; --btn-bd:transparent; --btn-bd-h:#0a5fd1; --btn-ink:#0a5fd1; --btn-r:10px; --btn-sh:none;
+  --pri-bg:#0a5fd1; --pri-bd:#0a5fd1; --pri-ink:#fff;
+  --key-bg:#f2f2f7; --key-bd:#dcdce2; --key-ink:#1c1c1e; --key-sh:none; --key-r:10px;
+  --on-bg:#0a5fd1; --on-bd:#0a5fd1; --on-ink:#fff; --on-sh:none;
+  --sel-bg:#0a5fd1; --sel-bd:#0a5fd1; --sel-ink:#fff; --sel-sub:#fff; --sel-sh:none;
+  --seg-bg:#e3e3e8; --seg-bd:transparent; --seg-on:#fff; --seg-on-ink:#1c1c1e; --seg-r:10px;
+  --dock-bg:rgba(255,255,255,.86); --dock-bd:rgba(0,0,0,.08); --dock-ink:#5f5f66; --dock-on:#e6effd; --dock-on-ink:#0a5fd1; --dock-sh:0 8px 30px rgba(0,0,0,.16); --dock-r:22px; --dock-item-r:14px;
+  --fbwrap-bd:#dcdce2; --fbwrap-bg:#fff; --fbwrap-r:14px;
+  --fb-wood:#f6f1e6; --fb-grain:rgba(0,0,0,0); --fb-fret:#c9c3b4; --fb-nut:#8e8878; --fb-str:#8a8a92; --fb-inlay:#ddd6c4; --fb-inlay-bd:#ddd6c4; --fb-num:#6b6b73; --fb-numhi:#1c1c1e; --fb-open:#5f5f66;
+  --ctx-bg:#fff; --ctx-bd:#a8a8b0; --ctx-fg:#5f5f66; --dot-ring:rgba(0,0,0,.28); --dot-in:#1c1c1e;
+  --t-root:#d12c2c; --t-root-fg:#fff; --t-root-txt:#c4271d; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#17692e; --t-fifth-fg:#fff; --t-seventh:#0a5fd1; --t-seventh-fg:#fff; --t-ext:#8e3bd8; --t-ext-fg:#fff; --t-scale:#17692e; --t-scale-fg:#fff;
+  --h-r:#17692e; --h-r-fg:#fff; --h-l:#0a5fd1; --h-l-fg:#fff; --hr-txt:#17692e; --hl-txt:#0a5fd1; --ring-root:#d12c2c; --now:#0a5fd1; --now-fg:#0a5fd1; --inp:#7a35c4; --good:#17692e; --bad:#c4271d;
+  --pk-wrap-bd:#dcdce2; --pk-wrap-bg:#fff; --pk-wrap-r:14px;
+  --pk-w:#fff; --pk-w-bd:#c7c7cc; --pk-w-sh:none; --pk-w-r:0 0 8px 8px; --pk-lit-w:#cfe1ff;
+  --pk-b:#1c1c1e; --pk-b-bd:#1c1c1e; --pk-lit-b:#3b5fa0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#c4271d; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#0a5fd1;
+  --lcd-bg:#f2f2f7; --lcd-bd:#e5e5ea; --lcd-sh:none; --lcd-ink:#1c1c1e; --lcd-ink2:#3a3a3c; --lcd-hi:#0a5fd1; --lcd-dim:#5f5f66;
+  --stf-sl:#b0b0b8; --stf-sl2:#8a8a92; --stf-tl:#c7c7cc; --stf-ink:#1c1c1e; --stf-fret:#0a5fd1;
+  --c-tonic:#0a5fd1; --c-tonic-fg:#fff; --c-nb:#cfe1ff; --c-nb-fg:#0a3d8f; --c-rel:#e3e3e8; --c-maj:#f2f2f7; --c-min:#e9e9ee; --c-off-fg:#4a4a50; --c-rel-fg:#3a3a3c; --c-t1:#1c1c1e; --c-t2:#5f5f66; --c-bg:#fff; --c-centre:#f2f2f7; --c-line:#fff; --c-t3:#0a5fd1;
+  --cd-line:#c7c7cc; --cd-str:#8a8a92; --cd-dot:#1c1c1e; --cd-dot-fg:#fff; --cd-lab:#5f5f66; --cd-fn:#0a5fd1;
+  --bar-n:#6b6b73; --ok:#17692e; --ok-bg:#e3f4e8; --ok-ink:#17692e; --hook-bg:#eef4ff; --hook-ink:#1c3d73; --code-ink:#1c1c1e;
+}
+html[data-theme="navy-light"] h1{font-weight:800;font-size:26px}
+html[data-theme="navy-light"] h2{font-weight:800;font-size:22px;letter-spacing:-.01em}
+html[data-theme="navy-light"] .card,html[data-theme="navy-light"] .pfc,html[data-theme="navy-light"] .lcard{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+html[data-theme="navy-light"] .engr{font-weight:600;letter-spacing:.06em;font-size:11px}
+html[data-theme="navy-light"] .engr.sm{font-weight:600;letter-spacing:.07em;font-size:10px}
+html[data-theme="navy-light"] .panel-top .engr{font-size:12px}
+html[data-theme="navy-light"] .metal::before,html[data-theme="navy-light"] .metal::after{display:none}
+/* stepper fields */
+html[data-theme="navy-light"] .drum .val{inset:0 28px;font-weight:600;font-size:15px;letter-spacing:0}
+html[data-theme="navy-light"] .drum.small .val{font-size:14px}
+html[data-theme="navy-light"] .drum .val.long{font-size:12.5px}
+html[data-theme="navy-light"] .drum .val.xl{font-size:11px}
+html[data-theme="navy-light"] .drum .edge{width:28px;border:0;box-shadow:none}
+html[data-theme="navy-light"] .drum .edge::after{display:block}
+html[data-theme="navy-light"] .drum .edge:hover{background:rgba(10,95,209,.1)}
+html[data-theme="navy-light"] .drum::before,html[data-theme="navy-light"] .drum::after{display:none}
+/* knobs: flat dial + accent arc */
+html[data-theme="navy-light"] .knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 86%);mask:radial-gradient(circle closest-side,transparent 84%,#000 86%)}
+html[data-theme="navy-light"] .knob .ticks{display:none}
+html[data-theme="navy-light"] .knob .cap{inset:10px}
+html[data-theme="navy-light"] .knob .cap i{width:3px;height:9px;margin-left:-1.5px;top:4px;border-radius:2px}
+html[data-theme="navy-light"] .knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+html[data-theme="navy-light"] .knobread{font-weight:600}
+/* iOS switch */
+html[data-theme="navy-light"] .toggle{width:51px;height:31px;border-radius:16px}
+html[data-theme="navy-light"] .toggle::after{top:2px;left:2px;width:27px;height:27px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+html[data-theme="navy-light"] .toggle.on::after{transform:translateX(20px)}
+html[data-theme="navy-light"] .power .led{width:10px;height:10px}
+html[data-theme="navy-light"] .btn{font-weight:600}
+html[data-theme="navy-light"] .btn:active,html[data-theme="navy-light"] .pos:active,html[data-theme="navy-light"] .chip:active{opacity:.7}
+html[data-theme="navy-light"] .seg button.on{box-shadow:0 1px 3px rgba(0,0,0,.22);font-weight:700}
+html[data-theme="navy-light"] nav.dock{backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+html[data-theme="navy-light"] nav.dock button{font-weight:600}
+html[data-theme="navy-light"] .fbwrap,html[data-theme="navy-light"] .pianowrap{border-width:1px}
+
+/* ===== 60-minimal.css (shared with sheet) ===== */
+/*@also minimal-dark navy-light sheet*/
+/* Minimal — flat, airy, iOS-style: grouped white cards on a soft grey page, segmented controls, stepper fields with blue chevrons,
+   iOS switch, knobs reduced to a flat dial with an accent value arc. This file also carries the structure for Minimal Dark;
+   65-minimal-dark.css only swaps the variables. */
+[data-theme="sheet"]{
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:var(--sans);
+  --bg:#f2f2f7; --ink:#1c1c1e; --dim:#5f5f66; --faint:#6b6b73; --amber:#0a5fd1; --green:#17692e; --red:#d12c2c; --gold:#6b6b73; --blue:#0a5fd1; --violet:#7a35c4; --engrave:#1c1c1e;
+  --page:#f2f2f7; --hfont:var(--sans); --lab-font:var(--sans); --drum-font:var(--sans); --h1-ls:-.01em; --h1-tt:none; --lcd-font:var(--mono);
+  --h2:#1c1c1e; --h2s:#5f5f66; --h2c:#5f5f66; --ink2:#3a3a3c; --ink3:#55555b; --mute:#5f5f66; --lab:#5f5f66; --on-amber:#fff;
+  --card:#fff; --card-bd:#e5e5ea; --card-r:16px; --inset:#f2f2f7; --inset-bd:#e5e5ea; --inset-ink:#1c1c1e;
+  --raise:#fff; --raise-bd:#e0e0e6; --raise-bd-h:#0a5fd1; --raise-r:12px; --chip:#e9e9ee; --chip-bd:#d8d8de; --hair:#ececf0; --hair2:#d8d8de;
+  --now-bg:#e6effd; --now-sh:0 0 0 2px #0a5fd1; --step-off:#d1d1d6;
+  --panel:#fff; --panel-bd:#e5e5ea; --panel-r:22px; --panel-sh:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(0,0,0,.08);
+  --panel-ink:#1c1c1e; --panel-ink2:#5f5f66; --engr-sh:none; --ok-p:#17692e; --warn-p:#c4271d;
+  --led-off:#c7c7cc; --led-off-sh:none; --led-on:#34c759; --led-on-sh:0 0 0 4px rgba(52,199,89,.25);
+  --drum-bg:#f2f2f7; --drum-sh:0 0 0 1px #e0e0e6; --drum-r:12px; --drum-ink:#1c1c1e; --drum-line-o:0;
+  --edge-bg:transparent; --edge-ink:#0a5fd1;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #d8d8de,0 3px 8px rgba(0,0,0,.16); --ind:#0a5fd1; --ind-sh:none; --tick:#8a8a92; --knobread:#1c1c1e;
+  --tog-bg:#d1d1d6; --tog-sh:none; --tog-on:#34c759; --tog-thumb:#fff;
+  --btn-bg:#e9e9ee; --btn-bd:transparent; --btn-bd-h:#0a5fd1; --btn-ink:#0a5fd1; --btn-r:10px; --btn-sh:none;
+  --pri-bg:#0a5fd1; --pri-bd:#0a5fd1; --pri-ink:#fff;
+  --key-bg:#f2f2f7; --key-bd:#dcdce2; --key-ink:#1c1c1e; --key-sh:none; --key-r:10px;
+  --on-bg:#0a5fd1; --on-bd:#0a5fd1; --on-ink:#fff; --on-sh:none;
+  --sel-bg:#0a5fd1; --sel-bd:#0a5fd1; --sel-ink:#fff; --sel-sub:#fff; --sel-sh:none;
+  --seg-bg:#e3e3e8; --seg-bd:transparent; --seg-on:#fff; --seg-on-ink:#1c1c1e; --seg-r:10px;
+  --dock-bg:rgba(255,255,255,.86); --dock-bd:rgba(0,0,0,.08); --dock-ink:#5f5f66; --dock-on:#e6effd; --dock-on-ink:#0a5fd1; --dock-sh:0 8px 30px rgba(0,0,0,.16); --dock-r:22px; --dock-item-r:14px;
+  --fbwrap-bd:#dcdce2; --fbwrap-bg:#fff; --fbwrap-r:14px;
+  --fb-wood:#f6f1e6; --fb-grain:rgba(0,0,0,0); --fb-fret:#c9c3b4; --fb-nut:#8e8878; --fb-str:#8a8a92; --fb-inlay:#ddd6c4; --fb-inlay-bd:#ddd6c4; --fb-num:#6b6b73; --fb-numhi:#1c1c1e; --fb-open:#5f5f66;
+  --ctx-bg:#fff; --ctx-bd:#a8a8b0; --ctx-fg:#5f5f66; --dot-ring:rgba(0,0,0,.28); --dot-in:#1c1c1e;
+  --t-root:#d12c2c; --t-root-fg:#fff; --t-root-txt:#c4271d; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#17692e; --t-fifth-fg:#fff; --t-seventh:#0a5fd1; --t-seventh-fg:#fff; --t-ext:#8e3bd8; --t-ext-fg:#fff; --t-scale:#17692e; --t-scale-fg:#fff;
+  --h-r:#17692e; --h-r-fg:#fff; --h-l:#0a5fd1; --h-l-fg:#fff; --hr-txt:#17692e; --hl-txt:#0a5fd1; --ring-root:#d12c2c; --now:#0a5fd1; --now-fg:#0a5fd1; --inp:#7a35c4; --good:#17692e; --bad:#c4271d;
+  --pk-wrap-bd:#dcdce2; --pk-wrap-bg:#fff; --pk-wrap-r:14px;
+  --pk-w:#fff; --pk-w-bd:#c7c7cc; --pk-w-sh:none; --pk-w-r:0 0 8px 8px; --pk-lit-w:#cfe1ff;
+  --pk-b:#1c1c1e; --pk-b-bd:#1c1c1e; --pk-lit-b:#3b5fa0;
+  --pk-nm:#1c1c1e; --pk-nm-root:#c4271d; --pk-bnm-root:#ffb3ad; --pk-oct:#55555b; --pk-str:#0a5fd1;
+  --lcd-bg:#f2f2f7; --lcd-bd:#e5e5ea; --lcd-sh:none; --lcd-ink:#1c1c1e; --lcd-ink2:#3a3a3c; --lcd-hi:#0a5fd1; --lcd-dim:#5f5f66;
+  --stf-sl:#b0b0b8; --stf-sl2:#8a8a92; --stf-tl:#c7c7cc; --stf-ink:#1c1c1e; --stf-fret:#0a5fd1;
+  --c-tonic:#0a5fd1; --c-tonic-fg:#fff; --c-nb:#cfe1ff; --c-nb-fg:#0a3d8f; --c-rel:#e3e3e8; --c-maj:#f2f2f7; --c-min:#e9e9ee; --c-off-fg:#4a4a50; --c-rel-fg:#3a3a3c; --c-t1:#1c1c1e; --c-t2:#5f5f66; --c-bg:#fff; --c-centre:#f2f2f7; --c-line:#fff; --c-t3:#0a5fd1;
+  --cd-line:#c7c7cc; --cd-str:#8a8a92; --cd-dot:#1c1c1e; --cd-dot-fg:#fff; --cd-lab:#5f5f66; --cd-fn:#0a5fd1;
+  --bar-n:#6b6b73; --ok:#17692e; --ok-bg:#e3f4e8; --ok-ink:#17692e; --hook-bg:#eef4ff; --hook-ink:#1c3d73; --code-ink:#1c1c1e;
+}
+html[data-theme="sheet"] h1{font-weight:800;font-size:26px}
+html[data-theme="sheet"] h2{font-weight:800;font-size:22px;letter-spacing:-.01em}
+html[data-theme="sheet"] .card,html[data-theme="sheet"] .pfc,html[data-theme="sheet"] .lcard{box-shadow:0 1px 2px rgba(0,0,0,.04)}
+html[data-theme="sheet"] .engr{font-weight:600;letter-spacing:.06em;font-size:11px}
+html[data-theme="sheet"] .engr.sm{font-weight:600;letter-spacing:.07em;font-size:10px}
+html[data-theme="sheet"] .panel-top .engr{font-size:12px}
+html[data-theme="sheet"] .metal::before,html[data-theme="sheet"] .metal::after{display:none}
+/* stepper fields */
+html[data-theme="sheet"] .drum .val{inset:0 28px;font-weight:600;font-size:15px;letter-spacing:0}
+html[data-theme="sheet"] .drum.small .val{font-size:14px}
+html[data-theme="sheet"] .drum .val.long{font-size:12.5px}
+html[data-theme="sheet"] .drum .val.xl{font-size:11px}
+html[data-theme="sheet"] .drum .edge{width:28px;border:0;box-shadow:none}
+html[data-theme="sheet"] .drum .edge::after{display:block}
+html[data-theme="sheet"] .drum .edge:hover{background:rgba(10,95,209,.1)}
+html[data-theme="sheet"] .drum::before,html[data-theme="sheet"] .drum::after{display:none}
+/* knobs: flat dial + accent arc */
+html[data-theme="sheet"] .knob::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) calc(var(--f,.5) * 270deg),rgba(120,120,128,.28) 270deg,transparent 270deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent 84%,#000 86%);mask:radial-gradient(circle closest-side,transparent 84%,#000 86%)}
+html[data-theme="sheet"] .knob .ticks{display:none}
+html[data-theme="sheet"] .knob .cap{inset:10px}
+html[data-theme="sheet"] .knob .cap i{width:3px;height:9px;margin-left:-1.5px;top:4px;border-radius:2px}
+html[data-theme="sheet"] .knob:focus-visible{box-shadow:0 0 0 3px #6aa5ff}
+html[data-theme="sheet"] .knobread{font-weight:600}
+/* iOS switch */
+html[data-theme="sheet"] .toggle{width:51px;height:31px;border-radius:16px}
+html[data-theme="sheet"] .toggle::after{top:2px;left:2px;width:27px;height:27px;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+html[data-theme="sheet"] .toggle.on::after{transform:translateX(20px)}
+html[data-theme="sheet"] .power .led{width:10px;height:10px}
+html[data-theme="sheet"] .btn{font-weight:600}
+html[data-theme="sheet"] .btn:active,html[data-theme="sheet"] .pos:active,html[data-theme="sheet"] .chip:active{opacity:.7}
+html[data-theme="sheet"] .seg button.on{box-shadow:0 1px 3px rgba(0,0,0,.22);font-weight:700}
+html[data-theme="sheet"] nav.dock{backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+html[data-theme="sheet"] nav.dock button{font-weight:600}
+html[data-theme="sheet"] .fbwrap,html[data-theme="sheet"] .pianowrap{border-width:1px}
+
 /* ===== 65-minimal-dark.css ===== */
 /* Minimal Dark — true-black iOS dark mode. Structure comes from 60-minimal.css (@also); this file only swaps the variables. */
 [data-theme="minimal-dark"]{
@@ -1381,6 +1539,41 @@ html[data-theme="minimal-dark"] .card,html[data-theme="minimal-dark"] .pfc,html[
 html[data-theme="minimal-dark"] .knob::before{background:conic-gradient(from -135deg,var(--amber) 0,var(--amber) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) calc(var(--f,.5) * 270deg),rgba(235,235,245,.22) 270deg,transparent 270deg)}
 html[data-theme="minimal-dark"] .drum .edge:hover{background:rgba(90,169,255,.15)}
 html[data-theme="minimal-dark"] .seg button.on{box-shadow:none}
+
+/* ===== 66-navy-light.css ===== */
+/* Navy Light — Minimal Light's structure (shared via @also in 60-minimal.css) in a blue-and-white tone: every piece of text is navy #000055,
+   secondary text is a navy tint, accents are cobalt blue, surfaces are white and blue-white. Minimal Light itself is untouched. */
+[data-theme="navy-light"]{
+  --bg:#eaf0fa; --page:#eaf0fa; --ink:#000055; --dim:#3d4476; --faint:#4a5185; --amber:#0b4fd0; --blue:#0b4fd0; --gold:#4a5185; --violet:#6a2fb8; --engrave:#000055;
+  --h2:#000055; --h2s:#3d4476; --h2c:#3d4476; --ink2:#000055; --ink3:#1b2068; --mute:#3d4476; --lab:#3d4476; --on-amber:#fff;
+  --card:#fff; --card-bd:#cfdaf0; --inset:#f1f5fc; --inset-bd:#d4def2; --inset-ink:#000055;
+  --raise:#fff; --raise-bd:#c9d6ef; --raise-bd-h:#0b4fd0; --chip:#e1e9f8; --chip-bd:#c5d2ec; --hair:#dde5f4; --hair2:#c5d2ec;
+  --now-bg:#dde9ff; --now-sh:0 0 0 2px #0b4fd0; --step-off:#c3cde5;
+  --panel:#fff; --panel-bd:#cfdaf0; --panel-sh:0 1px 2px rgba(0,0,85,.06),0 10px 30px rgba(20,60,160,.13);
+  --panel-ink:#000055; --panel-ink2:#3d4476;
+  --led-off:#bcc6e0;
+  --drum-bg:#eef3fc; --drum-sh:0 0 0 1px #cfdaf0; --drum-ink:#000055; --edge-ink:#0b4fd0;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #c5d2ec,0 3px 8px rgba(0,0,85,.18); --ind:#0b4fd0; --tick:#7f89b8; --knobread:#000055;
+  --tog-bg:#c3cde5; --tog-on:#1d63e0;
+  --btn-bg:#e1e9f8; --btn-bd-h:#0b4fd0; --btn-ink:#0b4fd0; --pri-bg:#0b4fd0; --pri-bd:#0b4fd0;
+  --key-bg:#eef3fc; --key-bd:#c9d6ef; --key-ink:#000055;
+  --on-bg:#0b4fd0; --on-bd:#0b4fd0; --sel-bg:#0b4fd0; --sel-bd:#0b4fd0;
+  --seg-bg:#d9e3f6; --seg-on:#fff; --seg-on-ink:#000055;
+  --dock-bg:rgba(255,255,255,.9); --dock-bd:rgba(0,0,85,.1); --dock-ink:#3d4476; --dock-on:#dde9ff; --dock-on-ink:#0b4fd0; --dock-sh:0 8px 30px rgba(20,60,160,.22);
+  --fbwrap-bd:#c9d6ef; --fbwrap-bg:#fff;
+  --fb-wood:#f3f7fd; --fb-fret:#b3c1e2; --fb-nut:#5b6797; --fb-str:#6f7aa3; --fb-inlay:#d3ddf3; --fb-inlay-bd:#d3ddf3; --fb-num:#4a5185; --fb-numhi:#000055; --fb-open:#3d4476;
+  --ctx-bg:#fff; --ctx-bd:#9aa6cf; --ctx-fg:#3d4476; --dot-ring:rgba(0,0,85,.3); --dot-in:#000055;
+  --t-third-fg:#000055; --t-seventh:#0b4fd0; --h-l:#0b4fd0; --hl-txt:#0b4fd0; --now:#0b4fd0; --now-fg:#0b4fd0;
+  --pk-wrap-bd:#c9d6ef; --pk-w-bd:#b8c4e2; --pk-lit-w:#cfe0ff; --pk-b:#000055; --pk-b-bd:#000055; --pk-lit-b:#3b5fd0; --pk-nm:#000055; --pk-oct:#3d4476; --pk-str:#0b4fd0;
+  --lcd-bg:#eef3fc; --lcd-bd:#cfdaf0; --lcd-ink:#000055; --lcd-ink2:#1b2068; --lcd-hi:#0b4fd0; --lcd-dim:#3d4476;
+  --stf-sl:#b4c0e0; --stf-sl2:#8a96c4; --stf-tl:#c5d0ea; --stf-ink:#000055; --stf-fret:#0b4fd0;
+  --c-tonic:#0b4fd0; --c-nb:#c9dcff; --c-nb-fg:#0a3d8f; --c-rel:#dbe4f5; --c-maj:#eef3fc; --c-min:#e1e9f8; --c-off-fg:#3d4476; --c-rel-fg:#000055; --c-t1:#000055; --c-t2:#3d4476; --c-centre:#eef3fc; --c-t3:#0b4fd0;
+  --cd-line:#b4c0e0; --cd-str:#8a96c4; --cd-dot:#000055; --cd-lab:#3d4476; --cd-fn:#0b4fd0;
+  --bar-n:#4a5185; --hook-bg:#e6eeff; --hook-ink:#000055; --code-ink:#000055;
+}
+html[data-theme="navy-light"] .drum .edge:hover{background:rgba(11,79,208,.1)}
+html[data-theme="navy-light"] .knob:focus-visible{box-shadow:0 0 0 3px #7da6f0}
+html[data-theme="navy-light"] select,html[data-theme="navy-light"] option{color:#000055}
 
 /* ===== 70-synth.css ===== */
 /* Modular Synth — a Eurorack case: bone anodised panels with black mono print, orange accent, small dark knobs with printed scale
@@ -1544,6 +1737,268 @@ html[data-theme="wood"] .fbwrap,html[data-theme="wood"] .pianowrap{border-width:
 html[data-theme="wood"] .dot circle{stroke-width:1.2}
 html[data-theme="wood"] body,html[data-theme="wood"] .drum .val,html[data-theme="wood"] .knobread,html[data-theme="wood"] .btn,html[data-theme="wood"] .pos,html[data-theme="wood"] .chip,html[data-theme="wood"] nav.dock button,html[data-theme="wood"] h1,html[data-theme="wood"] h2{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
 html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+
+/* ===== 85-sunburst.css ===== */
+/* Sunburst — a Les Paul in a dark room: honey-to-cherry sunburst lacquer panels with cream binding, black top-hat knobs with gold caps,
+   a dark-rosewood fretboard with nickel frets and a bone nut, ebony-and-ivory keys. Cinzel for the engraving, Barlow for the text. */
+[data-theme="sunburst"]{
+  --sans:"Barlow","Segoe UI",Roboto,sans-serif; --cond:"Cinzel",Georgia,serif;
+  --bg:#140705; --ink:#fbeed0; --dim:#dcc3a0; --faint:#bfa27c; --amber:#ffb23e; --green:#a6d96a; --red:#ff7a5c; --gold:#ffb23e; --blue:#7fb8e8; --violet:#d4a6e0; --engrave:#2a0e05;
+  --page:radial-gradient(1000px 520px at 50% -90px,rgba(200,80,18,.55) 0,rgba(120,30,8,.32) 42%,rgba(0,0,0,0) 78%) no-repeat,#140705;
+  --hfont:"Cinzel",Georgia,serif; --lab-font:"Barlow","Segoe UI",sans-serif; --drum-font:var(--sans); --h1-ls:.1em; --h1-tt:uppercase;
+  --h2:#ffd08a; --h2s:#dcc3a0; --h2c:#e5cfae; --ink2:#f2e0be; --ink3:#dcc6a0; --mute:#d0b690; --lab:#dcc3a0; --on-amber:#2a0e05;
+  --card:#1f0c07; --card-bd:#5b2b16; --card-r:10px; --inset:#140704; --inset-bd:#4a2212; --inset-ink:#fff1d0;
+  --raise:linear-gradient(180deg,#2d130b,#21100a); --raise-bd:#6a331b; --raise-bd-h:#ffb23e; --raise-r:8px; --chip:#2d130b; --chip-bd:#6a331b; --hair:#33180d; --hair2:#55281a;
+  --now-bg:linear-gradient(180deg,#6a2a0b,#401808); --now-sh:0 0 0 1px #ffb23e,0 0 14px rgba(255,178,62,.35); --step-off:#5a3220;
+  --panel:radial-gradient(130% 150% at 50% 15%,#9a410c 0,#82300e 24%,#5c1c08 56%,#240a05 100%); --panel-bd:#1a0805; --panel-r:12px;
+  --panel-sh:0 0 0 2px #1a0805,0 0 0 4px #f2e6c0,0 0 0 6px #1a0805,0 14px 28px rgba(0,0,0,.65);
+  --panel-ink:#fff3d6; --panel-ink2:#ffe6b8; --engr-sh:0 1px 0 rgba(0,0,0,.55); --ok-p:#b6f08c; --warn-p:#ffc2b0;
+  --led-off:radial-gradient(circle at 36% 30%,#6a2218,#2a0a05 70%); --led-off-sh:0 0 0 2px #f2e6c0,0 0 0 3px #1a0805;
+  --led-on:radial-gradient(circle at 36% 28%,#fff6d8 0 6%,#ffd070 18%,#ff8a1f 54%,#a03a00); --led-on-sh:0 0 0 2px #f2e6c0,0 0 0 3px #1a0805,0 0 14px 5px rgba(255,150,40,.6);
+  --drum-bg:#120604; --drum-sh:0 0 0 1px #000,0 0 0 2px #d9c796,inset 0 3px 8px #000; --drum-r:6px; --drum-ink:#fff1d0; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#ecd9a2,#a98a42); --edge-ink:#1a0805;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='g' cx='38%25' cy='30%25' r='80%25'%3E%3Cstop offset='0' stop-color='%23fff3c4'/%3E%3Cstop offset='.4' stop-color='%23e2b04a'/%3E%3Cstop offset='1' stop-color='%237a4e12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%230d0402'/%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%234a2410' stroke-width='7' stroke-dasharray='2 2.2'/%3E%3Ccircle cx='50' cy='50' r='38' fill='url(%23g)' stroke='%233a1c08' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='25' fill='none' stroke='%237a4e12' stroke-opacity='.55' stroke-width='1.4'/%3E%3Ccircle cx='50' cy='50' r='10' fill='%230d0402' fill-opacity='.85'/%3E%3Cellipse cx='40' cy='33' rx='15' ry='7' fill='%23fff' fill-opacity='.32' transform='rotate(-30 40 33)'/%3E%3Crect x='47.5' y='8' width='5' height='25' rx='2.5' fill='%231a0805'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#1a0805; --ind-sh:none; --tick:#f2e6c0; --knobread:#fff3d6;
+  --tog-bg:#120604; --tog-sh:0 0 0 2px #d9c796,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a3410,#ffb23e); --tog-thumb:linear-gradient(180deg,#fbf2d6,#b8a066);
+  --btn-bg:linear-gradient(180deg,#3a1a0e,#240e08); --btn-bd:#b98a4a; --btn-bd-h:#ffd08a; --btn-ink:#fbeed0; --btn-r:6px; --btn-sh:0 1px 0 rgba(255,220,150,.15) inset,0 2px 3px rgba(0,0,0,.5);
+  --pri-bg:linear-gradient(180deg,#ffc15c,#d9801a); --pri-bd:#6a3408; --pri-ink:#2a0e05;
+  --key-bg:linear-gradient(180deg,#f8edca,#e0cf9c); --key-bd:#5a2a12; --key-ink:#2a0e05; --key-sh:0 1px 0 rgba(255,255,255,.5) inset,0 2px 3px rgba(0,0,0,.5); --key-r:6px;
+  --on-bg:linear-gradient(180deg,#ffcb6a,#e8892a); --on-bd:#6a3408; --on-ink:#2a1000; --on-sh:0 0 12px rgba(255,170,50,.5),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#8a2a10,#5a1608); --sel-bd:#f2e6c0; --sel-ink:#fff3d6; --sel-sub:#ffe0a0; --sel-sh:0 0 0 1px #f2e6c0;
+  --seg-bg:#140704; --seg-bd:#5b2b16; --seg-on:#7a2a10; --seg-on-ink:#fff3d6; --seg-r:7px;
+  --dock-bg:rgba(30,10,6,.95); --dock-bd:#f2e6c0; --dock-ink:#f0dcb8; --dock-on:linear-gradient(180deg,#ffcb6a,#e8892a); --dock-on-ink:#2a1000; --dock-sh:0 0 0 2px #1a0805,0 12px 26px rgba(0,0,0,.7); --dock-r:20px; --dock-item-r:14px;
+  --fbwrap-bd:#f2e6c0; --fbwrap-bg:#140704; --fbwrap-r:8px;
+  --fb-wood:#2a110a; --fb-grain:rgba(255,170,110,.09); --fb-fret:#d8d2c2; --fb-nut:#f2e6c0; --fb-str:#e8e2d0; --fb-inlay:#f4ead0; --fb-inlay-bd:#a8956a; --fb-num:#dcc3a0; --fb-numhi:#fff1d0; --fb-open:#d0b690;
+  --ctx-bg:#1d0c07; --ctx-bd:#a8855a; --ctx-fg:#e5cfae; --dot-ring:#000; --dot-in:#fff1d0;
+  --t-root:#d8341f; --t-root-fg:#fff; --t-root-txt:#ff8a70; --t-third:#ffb23e; --t-third-fg:#2a1400; --t-fifth:#8fd16b; --t-fifth-fg:#0d2205; --t-seventh:#5aa0e0; --t-seventh-fg:#06182a; --t-ext:#c58ad8; --t-ext-fg:#2a0a38; --t-scale:#8fd16b; --t-scale-fg:#0d2205;
+  --h-r:#8fd16b; --h-r-fg:#0d2205; --h-l:#6aaeea; --h-l-fg:#06182a; --hr-txt:#a6e08a; --hl-txt:#8fc0f0; --ring-root:#ff7a5c; --now:#ffcb6a; --now-fg:#ffcb6a; --inp:#d4a6e0; --good:#a6d96a; --bad:#ff8a70;
+  --pk-wrap-bd:#f2e6c0; --pk-wrap-bg:#140704; --pk-wrap-r:8px;
+  --pk-w:linear-gradient(180deg,#f0e2bc,#fff8e0 70%,#d9c791); --pk-w-bd:#2a0e05; --pk-w-sh:0 2px 0 #8d7a4a; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe2a0,#ffb23e 70%,#e08a1c);
+  --pk-b:linear-gradient(180deg,#2b1a12,#080302); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#9a4a1a,#4a1c08);
+  --pk-nm:#2a0e05; --pk-nm-root:#a3200f; --pk-bnm-root:#ffb09a; --pk-oct:#6a4a2a; --pk-str:#ffb23e;
+  --lcd-bg:#140704; --lcd-bd:#5b2b16; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #8a5a2a; --lcd-ink:#fff1d0; --lcd-ink2:#e5cfae; --lcd-hi:#ffb23e; --lcd-dim:#dcc3a0;
+  --stf-sl:#8a6a50; --stf-sl2:#b89a7a; --stf-tl:#6a4a36; --stf-ink:#fbeed0; --stf-fret:#ffb23e;
+  --c-tonic:#ffb23e; --c-tonic-fg:#2a0e05; --c-nb:#9a3a1c; --c-rel:#5a3220; --c-maj:#2a120a; --c-min:#1d0c07; --c-off-fg:#e5cfae; --c-bg:#140704; --c-centre:#1f0c07; --c-line:#140704; --c-t1:#fbeed0; --c-t2:#dcc3a0; --c-t3:#ffb23e;
+  --cd-line:#8a6a50; --cd-nut:#f2e6c0; --cd-str:#dcc3a0; --cd-dot:#fbeed0; --cd-dot-fg:#2a0e05; --cd-lab:#dcc3a0; --cd-fn:#ffb23e;
+  --bar-n:#bfa27c; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#33160c; --hook-ink:#fbeed0; --code-ink:#f2e0be;
+}
+html[data-theme="sunburst"] h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.6);font-size:25px}
+html[data-theme="sunburst"] h1::after{content:"";display:block;width:150px;height:3px;margin:8px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#c25a14 25%,#ffb23e 50%,#c25a14 75%,transparent)}
+html[data-theme="sunburst"] h2{font-weight:700;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #6a331b;padding-bottom:4px}
+html[data-theme="sunburst"] .card,html[data-theme="sunburst"] .pfc,html[data-theme="sunburst"] .lcard{box-shadow:0 0 0 1px #0d0402,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,220,150,.08) inset}
+html[data-theme="sunburst"] .engr{font-weight:700;letter-spacing:.12em;font-size:11px}
+html[data-theme="sunburst"] .drum .val{font-weight:600;font-size:15px}
+html[data-theme="sunburst"] .drum.small .val{font-size:14px}
+html[data-theme="sunburst"] .drum .val.long{font-size:12.5px}
+html[data-theme="sunburst"] .drum .val.xl{font-size:11px}
+html[data-theme="sunburst"] .drum .edge{width:17px}
+html[data-theme="sunburst"] .drum .edge::after{display:block}
+html[data-theme="sunburst"] .knob{width:72px;height:72px}
+html[data-theme="sunburst"] .knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.55))}
+html[data-theme="sunburst"] .knob .cap i{display:none}
+html[data-theme="sunburst"] .knob:focus-visible{box-shadow:0 0 0 3px #7fb8e8}
+html[data-theme="sunburst"] .knobread{font-weight:700;font-size:11px}
+html[data-theme="sunburst"] .toggle{width:54px}
+html[data-theme="sunburst"] .toggle.on::after{transform:translateX(24px)}
+html[data-theme="sunburst"] .power .led{width:15px;height:15px}
+html[data-theme="sunburst"] .btn{font-weight:700;letter-spacing:.02em}
+html[data-theme="sunburst"] .btn:active,html[data-theme="sunburst"] .pos:active,html[data-theme="sunburst"] .chip:active{transform:translateY(1px)}
+html[data-theme="sunburst"] .pos,html[data-theme="sunburst"] .chip{font-weight:700}
+html[data-theme="sunburst"] nav.dock{border-width:2px}
+html[data-theme="sunburst"] nav.dock button{font-weight:700;letter-spacing:.03em}
+html[data-theme="sunburst"] .fbwrap,html[data-theme="sunburst"] .pianowrap{border-width:3px;border-style:double}
+html[data-theme="sunburst"] .dot circle{stroke-width:1.2}
+
+/* ===== 86-surf.css ===== */
+/* Surf Green — a seafoam-green Strat-era guitar and a blackface amp: seafoam lacquer panels edged in chrome, a cream pickguard for cards,
+   chrome skirted knobs with a teal cap, a maple neck with black dot inlays and nickel frets, white keys. Righteous for the lettering. */
+[data-theme="surf"]{
+  --sans:"Nunito Sans","Segoe UI",Roboto,sans-serif; --cond:"Righteous","Trebuchet MS",sans-serif;
+  --bg:#d3eae3; --ink:#0a2e2b; --dim:#2f5d57; --faint:#3e6b65; --amber:#0b6b72; --green:#1d6b3a; --red:#c4392b; --gold:#6a5a1a; --blue:#0b5aa0; --violet:#6a3aa8; --engrave:#0a2e2b;
+  --page:radial-gradient(900px 420px at 50% -80px,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 70%) no-repeat,linear-gradient(180deg,#e4f3ee,#cbe6de);
+  --hfont:"Righteous","Trebuchet MS",sans-serif; --lab-font:"Righteous","Trebuchet MS",sans-serif; --drum-font:var(--sans); --h1-ls:.05em; --h1-tt:none;
+  --h2:#0a2e2b; --h2s:#2f5d57; --h2c:#2f5d57; --ink2:#123f3b; --ink3:#24504b; --mute:#2f5d57; --lab:#2f5d57; --on-amber:#fff;
+  --card:#fbfaf2; --card-bd:#b3d2c7; --card-r:14px; --inset:#eef6f1; --inset-bd:#c3dcd2; --inset-ink:#0a2e2b;
+  --raise:#fff; --raise-bd:#b3d2c7; --raise-bd-h:#0b6b72; --raise-r:12px; --chip:#dff0ea; --chip-bd:#b3d2c7; --hair:#d6e8e1; --hair2:#b3d2c7;
+  --now-bg:#d8f1ee; --now-sh:0 0 0 2px #0b6b72; --step-off:#b9d3ca;
+  --panel:linear-gradient(180deg,#b1e2d5,#86c9b8); --panel-bd:#4f9a89; --panel-r:16px;
+  --panel-sh:0 0 0 3px #f1f7f4,0 0 0 4px #7aa89c,0 10px 24px rgba(10,60,50,.3);
+  --panel-ink:#0a2e2b; --panel-ink2:#0f3a36; --engr-sh:0 1px 0 rgba(255,255,255,.55); --ok-p:#0d5a28; --warn-p:#8a1d12;
+  --led-off:#8fb0a7; --led-off-sh:0 0 0 2px #f1f7f4,0 0 0 3px #7aa89c;
+  --led-on:radial-gradient(circle at 36% 28%,#ffe6dc 0 6%,#ff9a7a 18%,#ff5a36 54%,#a82010); --led-on-sh:0 0 0 2px #f1f7f4,0 0 0 3px #7aa89c,0 0 12px 4px rgba(255,90,54,.55);
+  --drum-bg:#0a2e2b; --drum-sh:0 0 0 2px #f1f7f4,0 0 0 3px #6f9a90,inset 0 3px 8px #000; --drum-r:8px; --drum-ink:#e8fbf5; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#f4fbf9,#9db3af); --edge-ink:#0a2e2b;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='c' cx='36%25' cy='28%25' r='85%25'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='.5' stop-color='%23cfdad8'/%3E%3Cstop offset='1' stop-color='%237d8f8c'/%3E%3C/radialGradient%3E%3ClinearGradient id='s' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4fbf9'/%3E%3Cstop offset='.5' stop-color='%238fa29f'/%3E%3Cstop offset='1' stop-color='%23e6f0ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%232d4a46'/%3E%3Ccircle cx='50' cy='50' r='46' fill='url(%23s)'/%3E%3Ccircle cx='50' cy='50' r='43' fill='none' stroke='%235f7773' stroke-width='5' stroke-dasharray='1.4 2'/%3E%3Ccircle cx='50' cy='50' r='35' fill='url(%23c)' stroke='%235f7773' stroke-width='1.5'/%3E%3Ccircle cx='50' cy='50' r='22' fill='%230b6b72' stroke='%23064a50' stroke-width='2'/%3E%3Cellipse cx='43' cy='42' rx='9' ry='5' fill='%23fff' fill-opacity='.35' transform='rotate(-30 43 42)'/%3E%3Crect x='47' y='7' width='6' height='30' rx='3' fill='%230a2e2b'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#0a2e2b; --ind-sh:none; --tick:#0a2e2b; --knobread:#0a2e2b;
+  --tog-bg:#0a2e2b; --tog-sh:0 0 0 2px #f1f7f4,0 0 0 3px #6f9a90,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#0b6b72,#2ec4c0); --tog-thumb:linear-gradient(180deg,#ffffff,#a9bcb8);
+  --btn-bg:linear-gradient(180deg,#ffffff,#cddbd7); --btn-bd:#6f9a90; --btn-bd-h:#0b6b72; --btn-ink:#0a4a50; --btn-r:9px; --btn-sh:0 1px 0 #fff inset,0 2px 3px rgba(10,60,50,.25);
+  --pri-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --pri-bd:#064a50; --pri-ink:#fff;
+  --key-bg:linear-gradient(180deg,#ffffff,#e4eee9); --key-bd:#7aa89c; --key-ink:#0a2e2b; --key-sh:0 1px 0 #fff inset,0 2px 3px rgba(10,60,50,.22); --key-r:9px;
+  --on-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --on-bd:#064a50; --on-ink:#fff; --on-sh:0 0 0 2px rgba(255,255,255,.7) inset;
+  --sel-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --sel-bd:#064a50; --sel-ink:#fff; --sel-sub:#e8fbf5; --sel-sh:0 0 0 2px #f1f7f4,0 0 0 3px #0b6b72;
+  --seg-bg:#bfdcd2; --seg-bd:#8fb8ad; --seg-on:#fff; --seg-on-ink:#0a2e2b; --seg-r:10px;
+  --dock-bg:rgba(250,253,251,.94); --dock-bd:#7aa89c; --dock-ink:#24504b; --dock-on:linear-gradient(180deg,#0d7c84,#0a5f66); --dock-on-ink:#fff; --dock-sh:0 0 0 2px #f1f7f4,0 10px 26px rgba(10,60,50,.3); --dock-r:26px; --dock-item-r:20px;
+  --fbwrap-bd:#7aa89c; --fbwrap-bg:#fbfaf2; --fbwrap-r:12px;
+  --fb-wood:#f0d9a2; --fb-grain:rgba(150,100,30,.14); --fb-fret:#a3a39a; --fb-nut:#fffdf0; --fb-str:#4a4a46; --fb-inlay:#1a1a1a; --fb-inlay-bd:none; --fb-num:#5a4a2a; --fb-numhi:#1a1208; --fb-open:#4a3c20;
+  --ctx-bg:#fff; --ctx-bd:#8a7a50; --ctx-fg:#4a3c20; --dot-ring:rgba(0,0,0,.45); --dot-in:#1a1208;
+  --t-root:#c4392b; --t-root-fg:#fff; --t-root-txt:#b02a1c; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#1d6b3a; --t-fifth-fg:#fff; --t-seventh:#0b5aa0; --t-seventh-fg:#fff; --t-ext:#7a35c4; --t-ext-fg:#fff; --t-scale:#1d6b3a; --t-scale-fg:#fff;
+  --h-r:#1d6b3a; --h-r-fg:#fff; --h-l:#1565d8; --h-l-fg:#fff; --hr-txt:#1d6b3a; --hl-txt:#1565d8; --ring-root:#c4392b; --now:#0b6b72; --now-fg:#0b6b72; --inp:#6a3aa8; --good:#1d6b3a; --bad:#b02a1c;
+  --pk-wrap-bd:#7aa89c; --pk-wrap-bg:#fbfaf2; --pk-wrap-r:12px;
+  --pk-w:linear-gradient(180deg,#f4f8f6,#fff 70%,#dfe8e4); --pk-w-bd:#7f9a93; --pk-w-sh:0 2px 0 #a9bcb6; --pk-w-r:0 0 6px 6px; --pk-lit-w:linear-gradient(180deg,#d6f4ee,#9fe0d6 70%,#6fcabd);
+  --pk-b:linear-gradient(180deg,#26403d,#07100f); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#1c8a90,#0a4a50);
+  --pk-nm:#0a2e2b; --pk-nm-root:#a8281a; --pk-bnm-root:#ffb3a8; --pk-oct:#3e6b65; --pk-str:#0b6b72;
+  --lcd-bg:#eef6f1; --lcd-bd:#b3d2c7; --lcd-sh:inset 0 2px 5px rgba(10,60,50,.18),0 0 0 2px #f1f7f4; --lcd-ink:#0a2e2b; --lcd-ink2:#123f3b; --lcd-hi:#0b6b72; --lcd-dim:#2f5d57;
+  --stf-sl:#9fc0b6; --stf-sl2:#6f9a90; --stf-tl:#bcd6cd; --stf-ink:#0a2e2b; --stf-fret:#0b6b72;
+  --c-tonic:#0b6b72; --c-tonic-fg:#fff; --c-nb:#bfeae2; --c-nb-fg:#07423f; --c-rel:#cfe3dc; --c-rel-fg:#0a2e2b; --c-maj:#eef6f1; --c-min:#e1efe9; --c-off-fg:#2f5d57; --c-bg:#fff; --c-centre:#eef6f1; --c-line:#fff; --c-t1:#0a2e2b; --c-t2:#2f5d57; --c-t3:#0b6b72;
+  --cd-line:#8fb8ad; --cd-nut:#0a2e2b; --cd-str:#6f9a90; --cd-dot:#0a2e2b; --cd-dot-fg:#fff; --cd-lab:#2f5d57; --cd-fn:#0b6b72;
+  --bar-n:#3e6b65; --ok:#1d6b3a; --ok-bg:#dff3e4; --ok-ink:#145a2c; --hook-bg:#e1f3ee; --hook-ink:#0a3e3a; --code-ink:#0a2e2b;
+}
+html[data-theme="surf"] h1{font-weight:400;font-size:28px;text-shadow:0 2px 0 rgba(255,255,255,.7)}
+html[data-theme="surf"] h1::after{content:"";display:block;width:150px;height:6px;margin:8px auto 0;border-radius:3px;background:linear-gradient(90deg,#f1f7f4 0 30%,#19a6ae 30% 70%,#f1f7f4 70%);box-shadow:0 0 0 1px #7aa89c}
+html[data-theme="surf"] h2{font-weight:400;font-size:24px;letter-spacing:.03em}
+html[data-theme="surf"] .card,html[data-theme="surf"] .pfc,html[data-theme="surf"] .lcard{box-shadow:0 1px 0 #fff inset,0 3px 8px rgba(10,60,50,.12)}
+html[data-theme="surf"] .engr{font-weight:400;letter-spacing:.1em;font-size:12px}
+html[data-theme="surf"] .engr.sm{font-size:11px}
+html[data-theme="surf"] .drum .val{font-weight:700;font-size:15px}
+html[data-theme="surf"] .drum.small .val{font-size:14px}
+html[data-theme="surf"] .drum .val.long{font-size:12.5px}
+html[data-theme="surf"] .drum .val.xl{font-size:11px}
+html[data-theme="surf"] .drum .edge{width:17px}
+html[data-theme="surf"] .drum .edge::after{display:block}
+html[data-theme="surf"] .knob{width:72px;height:72px}
+html[data-theme="surf"] .knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(10,60,50,.4))}
+html[data-theme="surf"] .knob .cap i{display:none}
+html[data-theme="surf"] .knob:focus-visible{box-shadow:0 0 0 3px #0b6b72}
+html[data-theme="surf"] .knobread{font-weight:800;font-size:11px}
+html[data-theme="surf"] .toggle{width:54px}
+html[data-theme="surf"] .toggle.on::after{transform:translateX(24px)}
+html[data-theme="surf"] .power .led{width:15px;height:15px}
+html[data-theme="surf"] .btn{font-weight:800}
+html[data-theme="surf"] .btn:active,html[data-theme="surf"] .pos:active,html[data-theme="surf"] .chip:active{transform:translateY(1px)}
+html[data-theme="surf"] .pos,html[data-theme="surf"] .chip{font-weight:800}
+html[data-theme="surf"] nav.dock{border-width:2px}
+html[data-theme="surf"] nav.dock button{font-weight:800}
+html[data-theme="surf"] .fbwrap,html[data-theme="surf"] .pianowrap{border-width:3px;border-style:double}
+html[data-theme="surf"] .dot circle{stroke-width:1.2}
+html[data-theme="surf"] select,html[data-theme="surf"] option{color:#0a2e2b}
+
+/* ===== 87-rosewood.css ===== */
+/* Rosewood & Pearl — a dark rosewood fingerboard with mother-of-pearl inlays: oxblood-brown grained panels bound in pearl, pearl window drums
+   and abalone-tinted knobs, aqua pearl highlights, bone nut and nickel frets. Cormorant for the headings, Jost for the text. */
+[data-theme="rosewood"]{
+  --sans:"Jost","Segoe UI",Roboto,sans-serif; --cond:"Cormorant Garamond",Georgia,serif;
+  --bg:#130808; --ink:#f3eef4; --dim:#cdbfd0; --faint:#a898ac; --amber:#8fe0d4; --green:#9ee0a8; --red:#ff8a80; --gold:#e6d8a8; --blue:#8ec8f0; --violet:#d2b0f0; --engrave:#1a0c0c;
+  --page:repeating-linear-gradient(92deg,rgba(255,255,255,.014) 0 2px,rgba(0,0,0,.05) 2px 5px),radial-gradient(900px 480px at 50% -100px,rgba(140,50,62,.45) 0,rgba(0,0,0,0) 70%) no-repeat,#140909;
+  --hfont:"Cormorant Garamond",Georgia,serif; --lab-font:"Jost","Segoe UI",sans-serif; --drum-font:var(--sans); --h1-ls:.08em; --h1-tt:none;
+  --h2:#e9ddee; --h2s:#cdbfd0; --h2c:#d8cbdb; --ink2:#e6dce8; --ink3:#cdbfd0; --mute:#bdaec1; --lab:#cdbfd0; --on-amber:#04201c;
+  --card:#211010; --card-bd:#5a2a2e; --card-r:10px; --inset:#150a0a; --inset-bd:#4a2326; --inset-ink:#fff;
+  --raise:linear-gradient(180deg,#2d1617,#241112); --raise-bd:#6a3338; --raise-bd-h:#8fe0d4; --raise-r:8px; --chip:#2d1617; --chip-bd:#6a3338; --hair:#331a1b; --hair2:#55292d;
+  --now-bg:linear-gradient(180deg,#24474a,#193033); --now-sh:0 0 0 1px #8fe0d4,0 0 14px rgba(143,224,212,.3); --step-off:#55393c;
+  --panel:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 2px,rgba(0,0,0,.08) 2px 6px),linear-gradient(180deg,#4a1f20,#331314); --panel-bd:#120808; --panel-r:12px;
+  --panel-sh:0 0 0 2px #120808,0 0 0 4px #e8e0ec,0 0 0 6px #120808,0 14px 28px rgba(0,0,0,.65);
+  --panel-ink:#f3eef4; --panel-ink2:#e6dae8; --engr-sh:0 1px 0 rgba(0,0,0,.5); --ok-p:#a8f0b4; --warn-p:#ffb4ab;
+  --led-off:radial-gradient(circle at 36% 30%,#5a3438,#241012 70%); --led-off-sh:0 0 0 2px #e8e0ec,0 0 0 3px #120808;
+  --led-on:radial-gradient(circle at 36% 28%,#f4fffd 0 6%,#a8f0e4 18%,#4fd6c4 54%,#168a7e); --led-on-sh:0 0 0 2px #e8e0ec,0 0 0 3px #120808,0 0 14px 5px rgba(100,230,210,.55);
+  --drum-bg:linear-gradient(180deg,#f8f4fa,#dcd2e0); --drum-sh:0 0 0 2px #120808,0 0 0 3px #bfb0c4,inset 0 2px 6px rgba(60,30,60,.25); --drum-r:6px; --drum-ink:#2a1214; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#d9cfdc,#9d8fa4); --edge-ink:#2a1214;
+  --knob-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='p' cx='34%25' cy='28%25' r='90%25'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='.35' stop-color='%23f1e6f4'/%3E%3Cstop offset='.62' stop-color='%23cfeee9'/%3E%3Cstop offset='.85' stop-color='%23e5cde8'/%3E%3Cstop offset='1' stop-color='%23a99bb0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='49' fill='%23120606'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%235a2a2e' stroke-width='5' stroke-dasharray='1.6 2'/%3E%3Ccircle cx='50' cy='50' r='40' fill='url(%23p)' stroke='%232a1214' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='26' fill='none' stroke='%23a99bb0' stroke-opacity='.6' stroke-width='1.4'/%3E%3Cellipse cx='40' cy='33' rx='15' ry='7' fill='%23fff' fill-opacity='.5' transform='rotate(-30 40 33)'/%3E%3Crect x='47.5' y='9' width='5' height='25' rx='2.5' fill='%232a1214'/%3E%3C/svg%3E"); --knob-sh:none; --ind:#2a1214; --ind-sh:none; --tick:#e8e0ec; --knobread:#f3eef4;
+  --tog-bg:#120808; --tog-sh:0 0 0 2px #e8e0ec,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#1d7a70,#8fe0d4); --tog-thumb:linear-gradient(180deg,#ffffff,#cdbfd6);
+  --btn-bg:linear-gradient(180deg,#3a1c1e,#2a1214); --btn-bd:#8a5a60; --btn-bd-h:#8fe0d4; --btn-ink:#f3eef4; --btn-r:7px; --btn-sh:0 1px 0 rgba(255,255,255,.1) inset,0 2px 3px rgba(0,0,0,.5);
+  --pri-bg:linear-gradient(180deg,#b6f2e8,#5fc9bb); --pri-bd:#1a6a60; --pri-ink:#04201c;
+  --key-bg:linear-gradient(180deg,#f8f4fa,#ddd2e2); --key-bd:#4a2326; --key-ink:#2a1214; --key-sh:0 1px 0 rgba(255,255,255,.6) inset,0 2px 3px rgba(0,0,0,.5); --key-r:7px;
+  --on-bg:linear-gradient(180deg,#b6f2e8,#6fd4c6); --on-bd:#1a6a60; --on-ink:#04201c; --on-sh:0 0 12px rgba(120,230,215,.5),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#7a2a30,#521a1f); --sel-bd:#e8e0ec; --sel-ink:#fff; --sel-sub:#f4dfe3; --sel-sh:0 0 0 1px #e8e0ec;
+  --seg-bg:#150a0a; --seg-bd:#5a2a2e; --seg-on:#6a3338; --seg-on-ink:#fff; --seg-r:8px;
+  --dock-bg:rgba(28,12,13,.95); --dock-bd:#bfb0c4; --dock-ink:#e0d3e3; --dock-on:linear-gradient(180deg,#b6f2e8,#6fd4c6); --dock-on-ink:#04201c; --dock-sh:0 0 0 2px #120808,0 12px 26px rgba(0,0,0,.7); --dock-r:22px; --dock-item-r:16px;
+  --fbwrap-bd:#bfb0c4; --fbwrap-bg:#0f0606; --fbwrap-r:8px;
+  --fb-wood:#2a0f0e; --fb-grain:rgba(255,150,130,.08); --fb-fret:#d4d8dc; --fb-nut:#f1ecf0; --fb-str:#dfe3e6; --fb-inlay:#eef2f4; --fb-inlay-bd:#8fa0a8; --fb-num:#cdbfd0; --fb-numhi:#f3eef4; --fb-open:#bdaec1;
+  --ctx-bg:#1b0b0b; --ctx-bd:#9a8a9e; --ctx-fg:#dccfdf; --dot-ring:#000; --dot-in:#fff;
+  --t-root:#c9301d; --t-root-fg:#fff; --t-root-txt:#ff9a88; --t-third:#f2b84b; --t-third-fg:#2a1a00; --t-fifth:#86d49a; --t-fifth-fg:#06210f; --t-seventh:#6fb0e8; --t-seventh-fg:#06182a; --t-ext:#c49be8; --t-ext-fg:#240a3a; --t-scale:#86d49a; --t-scale-fg:#06210f;
+  --h-r:#9ee26a; --h-r-fg:#06210f; --h-l:#6fb0e8; --h-l-fg:#06182a; --hr-txt:#a8e676; --hl-txt:#8fc3ee; --ring-root:#ff8a80; --now:#8fe0d4; --now-fg:#8fe0d4; --inp:#d2b0f0; --good:#86d49a; --bad:#ff9a88;
+  --pk-wrap-bd:#bfb0c4; --pk-wrap-bg:#0f0606; --pk-wrap-r:8px;
+  --pk-w:linear-gradient(180deg,#ece5d4,#fbf7ea 70%,#d8cfb4); --pk-w-bd:#1a0c0c; --pk-w-sh:0 2px 0 #8a7e66; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#d4faf4,#8fe0d4 70%,#5fc9bb);
+  --pk-b:linear-gradient(180deg,#3a1a1a,#120606); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#2a7a70,#0f3a36);
+  --pk-nm:#2a1214; --pk-nm-root:#a3200f; --pk-bnm-root:#ffb0a0; --pk-oct:#6a5a60; --pk-str:#8fe0d4;
+  --lcd-bg:#150a0a; --lcd-bd:#5a2a2e; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #8a6a70; --lcd-ink:#f3eef4; --lcd-ink2:#dccfdf; --lcd-hi:#8fe0d4; --lcd-dim:#cdbfd0;
+  --stf-sl:#7a5a60; --stf-sl2:#a88a90; --stf-tl:#5a4046; --stf-ink:#f3eef4; --stf-fret:#8fe0d4;
+  --c-tonic:#8fe0d4; --c-tonic-fg:#04201c; --c-nb:#1f5a58; --c-rel:#4a2c30; --c-maj:#2a1414; --c-min:#1d0e0e; --c-off-fg:#dccfdf; --c-bg:#0f0606; --c-centre:#211010; --c-line:#0f0606; --c-t1:#f3eef4; --c-t2:#cdbfd0; --c-t3:#8fe0d4;
+  --cd-line:#7a5a60; --cd-nut:#f1ecf0; --cd-str:#cdbfd0; --cd-dot:#f3eef4; --cd-dot-fg:#1a0c0c; --cd-lab:#cdbfd0; --cd-fn:#8fe0d4;
+  --bar-n:#a898ac; --ok:#3f9a5a; --ok-bg:#12301c; --ok-ink:#a8f0b4; --hook-bg:#2d1617; --hook-ink:#f3eef4; --code-ink:#e6dce8;
+}
+html[data-theme="rosewood"] h1{font-weight:700;font-style:italic;font-size:32px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+html[data-theme="rosewood"] h1::after{content:"◆  ◆  ◆";display:block;margin-top:3px;font-size:10px;letter-spacing:.3em;color:#e8e0ec;font-style:normal;font-weight:400;line-height:1}
+html[data-theme="rosewood"] h2{font-weight:700;font-style:italic;font-size:28px;letter-spacing:.02em}
+html[data-theme="rosewood"] .card,html[data-theme="rosewood"] .pfc,html[data-theme="rosewood"] .lcard{box-shadow:0 0 0 1px #0d0505,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.05) inset}
+html[data-theme="rosewood"] .engr{font-weight:600;letter-spacing:.14em;font-size:11px}
+html[data-theme="rosewood"] .drum .val{font-weight:600;font-size:15px}
+html[data-theme="rosewood"] .drum.small .val{font-size:14px}
+html[data-theme="rosewood"] .drum .val.long{font-size:12.5px}
+html[data-theme="rosewood"] .drum .val.xl{font-size:11px}
+html[data-theme="rosewood"] .drum .edge{width:17px}
+html[data-theme="rosewood"] .drum .edge::after{display:block}
+html[data-theme="rosewood"] .knob{width:72px;height:72px}
+html[data-theme="rosewood"] .knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.55))}
+html[data-theme="rosewood"] .knob .cap i{display:none}
+html[data-theme="rosewood"] .knob:focus-visible{box-shadow:0 0 0 3px #8fe0d4}
+html[data-theme="rosewood"] .knobread{font-weight:600;font-size:11px}
+html[data-theme="rosewood"] .toggle{width:54px}
+html[data-theme="rosewood"] .toggle.on::after{transform:translateX(24px)}
+html[data-theme="rosewood"] .power .led{width:15px;height:15px}
+html[data-theme="rosewood"] .btn{font-weight:600;letter-spacing:.02em}
+html[data-theme="rosewood"] .btn:active,html[data-theme="rosewood"] .pos:active,html[data-theme="rosewood"] .chip:active{transform:translateY(1px)}
+html[data-theme="rosewood"] .pos,html[data-theme="rosewood"] .chip{font-weight:600}
+html[data-theme="rosewood"] nav.dock{border-width:2px}
+html[data-theme="rosewood"] nav.dock button{font-weight:600;letter-spacing:.03em}
+html[data-theme="rosewood"] .fbwrap,html[data-theme="rosewood"] .pianowrap{border-width:3px;border-style:double}
+html[data-theme="rosewood"] .dot circle{stroke-width:1.2}
+
+/* ===== 88-sheet.css ===== */
+/* Sheet Music — printed manuscript paper: cream stock, black ink, oxblood accents, serif headings and a bar-line under the title.
+   Structure comes from 60-minimal.css (@also); this file swaps the variables and adds the serif / hairline-rule feel. */
+[data-theme="sheet"]{
+  --sans:"Source Sans 3","Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:"Crimson Pro",Georgia,serif;
+  --bg:#f6efdc; --ink:#17120a; --dim:#4a4033; --faint:#5a4e3d; --amber:#8c1c13; --green:#1f6a30; --red:#b3261e; --gold:#7a5a10; --blue:#1c4f9c; --violet:#6a2f9a; --engrave:#17120a;
+  --page:linear-gradient(180deg,rgba(60,40,10,.045) 1px,transparent 1px) 0 0/100% 15px,#f6efdc;
+  --hfont:"Crimson Pro",Georgia,serif; --lab-font:"Source Sans 3",var(--sans); --drum-font:var(--sans); --h1-ls:.01em; --h1-tt:none;
+  --h2:#17120a; --h2s:#4a4033; --h2c:#4a4033; --ink2:#2a2217; --ink3:#3c3326; --mute:#4a4033; --lab:#4a4033; --on-amber:#fff;
+  --card:#fffdf6; --card-bd:#cfc4a8; --card-r:4px; --inset:#f3ecd8; --inset-bd:#d6cbb0; --inset-ink:#17120a;
+  --raise:#fffdf6; --raise-bd:#c9bd9e; --raise-bd-h:#8c1c13; --raise-r:3px; --chip:#efe6cf; --chip-bd:#cfc4a8; --hair:#e6dcc2; --hair2:#cfc4a8;
+  --now-bg:#f3e0d8; --now-sh:0 0 0 2px #8c1c13; --step-off:#cfc4a8;
+  --panel:#fffdf6; --panel-bd:#17120a; --panel-r:4px; --panel-sh:0 0 0 3px #fffdf6,0 0 0 4px #17120a,0 8px 18px rgba(60,40,10,.18);
+  --panel-ink:#17120a; --panel-ink2:#3c3326; --ok-p:#1a5a28; --warn-p:#8c1c13;
+  --led-off:#cfc4a8; --led-on:radial-gradient(circle at 35% 30%,#ff9a8a,#c4281c 55%,#7a0f08); --led-on-sh:0 0 0 3px rgba(196,40,28,.22);
+  --drum-bg:#f3ecd8; --drum-sh:0 0 0 1px #17120a; --drum-r:2px; --drum-ink:#17120a; --edge-ink:#8c1c13;
+  --knob-bg:#fffdf6; --knob-sh:0 0 0 1.5px #17120a,0 2px 4px rgba(60,40,10,.2); --ind:#8c1c13; --tick:#6a5e46; --knobread:#17120a;
+  --tog-bg:#cfc4a8; --tog-on:#8c1c13; --tog-thumb:#fffdf6;
+  --btn-bg:#efe6cf; --btn-bd:#17120a; --btn-bd-h:#8c1c13; --btn-ink:#17120a; --btn-r:3px; --btn-sh:0 1px 0 #17120a;
+  --pri-bg:#17120a; --pri-bd:#17120a; --pri-ink:#fffdf6;
+  --key-bg:#fffdf6; --key-bd:#8a7d5c; --key-ink:#17120a; --key-r:3px;
+  --on-bg:#17120a; --on-bd:#17120a; --on-ink:#fffdf6;
+  --sel-bg:#8c1c13; --sel-bd:#8c1c13; --sel-ink:#fff; --sel-sub:#fff;
+  --seg-bg:#e6dcc2; --seg-on:#fffdf6; --seg-on-ink:#17120a; --seg-r:3px;
+  --dock-bg:rgba(255,253,246,.94); --dock-bd:rgba(23,18,10,.4); --dock-ink:#4a4033; --dock-on:#efe0c8; --dock-on-ink:#8c1c13; --dock-sh:0 6px 20px rgba(60,40,10,.25); --dock-r:8px; --dock-item-r:5px;
+  --fbwrap-bd:#8a7d5c; --fbwrap-bg:#fffdf6; --fbwrap-r:3px;
+  --fb-wood:#fffdf6; --fb-fret:#c9bd9e; --fb-nut:#17120a; --fb-str:#4a4033; --fb-inlay:#e6dcc2; --fb-inlay-bd:#cfc4a8; --fb-num:#5a4e3d; --fb-numhi:#17120a; --fb-open:#4a4033;
+  --ctx-bg:#fffdf6; --ctx-bd:#8a7d5c; --ctx-fg:#4a4033; --dot-ring:rgba(23,18,10,.5); --dot-in:#17120a;
+  --t-root:#b3261e; --t-root-txt:#a01f18; --t-third:#f0a830; --t-third-fg:#17120a; --t-fifth:#1f6a30; --t-seventh:#1c4f9c; --t-ext:#6a2f9a; --t-scale:#1f6a30;
+  --h-r:#1f6a30; --h-l:#1a5fd8; --hr-txt:#1f6a30; --hl-txt:#1a5fd8; --ring-root:#b3261e; --now:#8c1c13; --now-fg:#8c1c13; --inp:#6a2f9a; --good:#1f6a30; --bad:#a01f18;
+  --pk-wrap-bd:#8a7d5c; --pk-wrap-bg:#fffdf6; --pk-wrap-r:3px; --pk-w:#fffdf6; --pk-w-bd:#8a7d5c; --pk-w-r:0 0 3px 3px; --pk-lit-w:#f2cfc2;
+  --pk-b:#17120a; --pk-b-bd:#17120a; --pk-lit-b:#6a3a2a; --pk-nm:#17120a; --pk-nm-root:#a01f18; --pk-oct:#4a4033; --pk-str:#8c1c13;
+  --lcd-bg:#f3ecd8; --lcd-bd:#d6cbb0; --lcd-ink:#17120a; --lcd-ink2:#2a2217; --lcd-hi:#8c1c13; --lcd-dim:#4a4033;
+  --stf-sl:#9a8d6c; --stf-sl2:#6a5e46; --stf-tl:#b8ab8a; --stf-ink:#17120a; --stf-fret:#8c1c13;
+  --c-tonic:#8c1c13; --c-nb:#ecc9bd; --c-nb-fg:#5a0f08; --c-rel:#e6dcc2; --c-rel-fg:#17120a; --c-maj:#f6efdc; --c-min:#efe6cf; --c-off-fg:#4a4033; --c-t1:#17120a; --c-t2:#4a4033; --c-bg:#fffdf6; --c-centre:#f6efdc; --c-line:#fffdf6; --c-t3:#8c1c13;
+  --cd-line:#9a8d6c; --cd-str:#6a5e46; --cd-dot:#17120a; --cd-lab:#4a4033; --cd-fn:#8c1c13;
+  --bar-n:#5a4e3d; --ok:#1f6a30; --ok-bg:#e3f1de; --ok-ink:#1a5a28; --hook-bg:#f3e6d2; --hook-ink:#3a1a10; --code-ink:#17120a;
+}
+html[data-theme="sheet"] h1{font-weight:700;font-size:30px}
+html[data-theme="sheet"] h1::after{content:"";display:block;width:132px;height:5px;margin:7px auto 0;border-top:1px solid #17120a;border-bottom:3px solid #17120a}
+html[data-theme="sheet"] h2{font-weight:700;font-style:italic;font-size:26px;letter-spacing:0}
+html[data-theme="sheet"] .engr{font-weight:700;letter-spacing:.1em}
+html[data-theme="sheet"] .card,html[data-theme="sheet"] .pfc,html[data-theme="sheet"] .lcard{box-shadow:none}
+html[data-theme="sheet"] .btn,html[data-theme="sheet"] .pos,html[data-theme="sheet"] .chip{border:1px solid var(--btn-bd);font-weight:600}
+html[data-theme="sheet"] .pos,html[data-theme="sheet"] .chip{border-color:#8a7d5c}
+html[data-theme="sheet"] .seg button.on{box-shadow:0 0 0 1px #17120a;font-weight:700}
+html[data-theme="sheet"] .knob:focus-visible{box-shadow:0 0 0 3px #c97a70}
+html[data-theme="sheet"] .drum .edge:hover{background:rgba(140,28,19,.1)}
+html[data-theme="sheet"] select,html[data-theme="sheet"] option{color:#17120a}
 
 /*THEMES:END*/
 </style>
@@ -5250,9 +5705,14 @@ const THEMES = [
   { id: 'pedal',        name: 'Boutique Pedal', note: 'Chunky enamel stompbox, fat pointer knobs, a jewel lamp.', color: '#1b1630', fonts: 'family=Rubik:wght@400;500;600;700;800&family=Bowlby+One' },
   { id: 'tube',         name: 'Tube Amp',       note: 'Black tolex, cream chicken-head knobs, gold plate, grille cloth.', color: '#0d0c0b', fonts: 'family=Josefin+Sans:wght@600;700&family=Oswald:wght@400;500;600' },
   { id: 'minimal',      name: 'Minimal Light',  note: 'The default. Flat and airy, iOS-style segmented controls.', color: '#f2f2f7', fonts: 'family=Inter:wght@500;600;700;800' },
+  { id: 'navy-light',   name: 'Navy Light',     note: 'Minimal Light in blue and white: navy text, cobalt accents.', color: '#eaf0fa', fonts: 'family=Inter:wght@500;600;700;800' },
   { id: 'minimal-dark', name: 'Minimal Dark',   note: 'The same flat controls on true black.', color: '#000000', fonts: 'family=Inter:wght@500;600;700;800' },
   { id: 'synth',        name: 'Modular Synth',  note: 'Eurorack panels, small knobs, mono labels, patch points.', color: '#101114', meter: true, fonts: 'family=IBM+Plex+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;700' },
   { id: 'wood',         name: 'Vintage Wood',   note: 'Walnut cabinet, brass fittings, warm paper labels.', color: '#1a0f08', fonts: 'family=Playfair+Display:wght@600;700;800&family=Alegreya+Sans:wght@500;700;800' },
+  { id: 'sunburst',     name: 'Sunburst',       note: 'Honey-to-cherry lacquer, cream binding, gold top-hat knobs, rosewood neck.', color: '#140705', fonts: 'family=Cinzel:wght@600;700;800&family=Barlow:wght@500;600;700' },
+  { id: 'surf',         name: 'Surf Green',     note: 'Seafoam lacquer and chrome, cream pickguard, maple neck.', color: '#cbe6de', fonts: 'family=Righteous&family=Nunito+Sans:wght@500;600;700;800' },
+  { id: 'rosewood',     name: 'Rosewood & Pearl', note: 'Dark rosewood, pearl inlays and window drums, aqua shimmer.', color: '#140909', fonts: 'family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600;700' },
+  { id: 'sheet',        name: 'Sheet Music',    note: 'Cream manuscript paper, black ink, oxblood accents, serif type.', color: '#f6efdc', fonts: 'family=Crimson+Pro:wght@500;600;700&family=Source+Sans+3:wght@500;600;700' },
 ];
 const THEME_KEY = 'bpgw.theme', DEFAULT_THEME = 'minimal';
 const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];

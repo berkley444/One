@@ -1,0 +1,48 @@
+/* Sheet Music — printed manuscript paper: cream stock, black ink, oxblood accents, serif headings and a bar-line under the title.
+   Structure comes from 60-minimal.css (@also); this file swaps the variables and adds the serif / hairline-rule feel. */
+:theme{
+  --sans:"Source Sans 3","Segoe UI",Roboto,Helvetica,Arial,sans-serif; --cond:"Crimson Pro",Georgia,serif;
+  --bg:#f6efdc; --ink:#17120a; --dim:#4a4033; --faint:#5a4e3d; --amber:#8c1c13; --green:#1f6a30; --red:#b3261e; --gold:#7a5a10; --blue:#1c4f9c; --violet:#6a2f9a; --engrave:#17120a;
+  --page:linear-gradient(180deg,rgba(60,40,10,.045) 1px,transparent 1px) 0 0/100% 15px,#f6efdc;
+  --hfont:"Crimson Pro",Georgia,serif; --lab-font:"Source Sans 3",var(--sans); --drum-font:var(--sans); --h1-ls:.01em; --h1-tt:none;
+  --h2:#17120a; --h2s:#4a4033; --h2c:#4a4033; --ink2:#2a2217; --ink3:#3c3326; --mute:#4a4033; --lab:#4a4033; --on-amber:#fff;
+  --card:#fffdf6; --card-bd:#cfc4a8; --card-r:4px; --inset:#f3ecd8; --inset-bd:#d6cbb0; --inset-ink:#17120a;
+  --raise:#fffdf6; --raise-bd:#c9bd9e; --raise-bd-h:#8c1c13; --raise-r:3px; --chip:#efe6cf; --chip-bd:#cfc4a8; --hair:#e6dcc2; --hair2:#cfc4a8;
+  --now-bg:#f3e0d8; --now-sh:0 0 0 2px #8c1c13; --step-off:#cfc4a8;
+  --panel:#fffdf6; --panel-bd:#17120a; --panel-r:4px; --panel-sh:0 0 0 3px #fffdf6,0 0 0 4px #17120a,0 8px 18px rgba(60,40,10,.18);
+  --panel-ink:#17120a; --panel-ink2:#3c3326; --ok-p:#1a5a28; --warn-p:#8c1c13;
+  --led-off:#cfc4a8; --led-on:radial-gradient(circle at 35% 30%,#ff9a8a,#c4281c 55%,#7a0f08); --led-on-sh:0 0 0 3px rgba(196,40,28,.22);
+  --drum-bg:#f3ecd8; --drum-sh:0 0 0 1px #17120a; --drum-r:2px; --drum-ink:#17120a; --edge-ink:#8c1c13;
+  --knob-bg:#fffdf6; --knob-sh:0 0 0 1.5px #17120a,0 2px 4px rgba(60,40,10,.2); --ind:#8c1c13; --tick:#6a5e46; --knobread:#17120a;
+  --tog-bg:#cfc4a8; --tog-on:#8c1c13; --tog-thumb:#fffdf6;
+  --btn-bg:#efe6cf; --btn-bd:#17120a; --btn-bd-h:#8c1c13; --btn-ink:#17120a; --btn-r:3px; --btn-sh:0 1px 0 #17120a;
+  --pri-bg:#17120a; --pri-bd:#17120a; --pri-ink:#fffdf6;
+  --key-bg:#fffdf6; --key-bd:#8a7d5c; --key-ink:#17120a; --key-r:3px;
+  --on-bg:#17120a; --on-bd:#17120a; --on-ink:#fffdf6;
+  --sel-bg:#8c1c13; --sel-bd:#8c1c13; --sel-ink:#fff; --sel-sub:#fff;
+  --seg-bg:#e6dcc2; --seg-on:#fffdf6; --seg-on-ink:#17120a; --seg-r:3px;
+  --dock-bg:rgba(255,253,246,.94); --dock-bd:rgba(23,18,10,.4); --dock-ink:#4a4033; --dock-on:#efe0c8; --dock-on-ink:#8c1c13; --dock-sh:0 6px 20px rgba(60,40,10,.25); --dock-r:8px; --dock-item-r:5px;
+  --fbwrap-bd:#8a7d5c; --fbwrap-bg:#fffdf6; --fbwrap-r:3px;
+  --fb-wood:#fffdf6; --fb-fret:#c9bd9e; --fb-nut:#17120a; --fb-str:#4a4033; --fb-inlay:#e6dcc2; --fb-inlay-bd:#cfc4a8; --fb-num:#5a4e3d; --fb-numhi:#17120a; --fb-open:#4a4033;
+  --ctx-bg:#fffdf6; --ctx-bd:#8a7d5c; --ctx-fg:#4a4033; --dot-ring:rgba(23,18,10,.5); --dot-in:#17120a;
+  --t-root:#b3261e; --t-root-txt:#a01f18; --t-third:#f0a830; --t-third-fg:#17120a; --t-fifth:#1f6a30; --t-seventh:#1c4f9c; --t-ext:#6a2f9a; --t-scale:#1f6a30;
+  --h-r:#1f6a30; --h-l:#1a5fd8; --hr-txt:#1f6a30; --hl-txt:#1a5fd8; --ring-root:#b3261e; --now:#8c1c13; --now-fg:#8c1c13; --inp:#6a2f9a; --good:#1f6a30; --bad:#a01f18;
+  --pk-wrap-bd:#8a7d5c; --pk-wrap-bg:#fffdf6; --pk-wrap-r:3px; --pk-w:#fffdf6; --pk-w-bd:#8a7d5c; --pk-w-r:0 0 3px 3px; --pk-lit-w:#f2cfc2;
+  --pk-b:#17120a; --pk-b-bd:#17120a; --pk-lit-b:#6a3a2a; --pk-nm:#17120a; --pk-nm-root:#a01f18; --pk-oct:#4a4033; --pk-str:#8c1c13;
+  --lcd-bg:#f3ecd8; --lcd-bd:#d6cbb0; --lcd-ink:#17120a; --lcd-ink2:#2a2217; --lcd-hi:#8c1c13; --lcd-dim:#4a4033;
+  --stf-sl:#9a8d6c; --stf-sl2:#6a5e46; --stf-tl:#b8ab8a; --stf-ink:#17120a; --stf-fret:#8c1c13;
+  --c-tonic:#8c1c13; --c-nb:#ecc9bd; --c-nb-fg:#5a0f08; --c-rel:#e6dcc2; --c-rel-fg:#17120a; --c-maj:#f6efdc; --c-min:#efe6cf; --c-off-fg:#4a4033; --c-t1:#17120a; --c-t2:#4a4033; --c-bg:#fffdf6; --c-centre:#f6efdc; --c-line:#fffdf6; --c-t3:#8c1c13;
+  --cd-line:#9a8d6c; --cd-str:#6a5e46; --cd-dot:#17120a; --cd-lab:#4a4033; --cd-fn:#8c1c13;
+  --bar-n:#5a4e3d; --ok:#1f6a30; --ok-bg:#e3f1de; --ok-ink:#1a5a28; --hook-bg:#f3e6d2; --hook-ink:#3a1a10; --code-ink:#17120a;
+}
+h1{font-weight:700;font-size:30px}
+h1::after{content:"";display:block;width:132px;height:5px;margin:7px auto 0;border-top:1px solid #17120a;border-bottom:3px solid #17120a}
+h2{font-weight:700;font-style:italic;font-size:26px;letter-spacing:0}
+.engr{font-weight:700;letter-spacing:.1em}
+.card,.pfc,.lcard{box-shadow:none}
+.btn,.pos,.chip{border:1px solid var(--btn-bd);font-weight:600}
+.pos,.chip{border-color:#8a7d5c}
+.seg button.on{box-shadow:0 0 0 1px #17120a;font-weight:700}
+.knob:focus-visible{box-shadow:0 0 0 3px #c97a70}
+.drum .edge:hover{background:rgba(140,28,19,.1)}
+select,option{color:#17120a}

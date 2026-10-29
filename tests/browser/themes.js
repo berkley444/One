@@ -14,7 +14,7 @@ const puppeteer = require('puppeteer-core'); const fs = require('fs'); const cp 
 const axeSrc = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const URL0 = process.env.BPGW_URL || 'http://localhost:8123/index.html';
-const ALL = ['silver', 'console', 'pedal', 'tube', 'minimal', 'minimal-dark', 'synth', 'wood'];
+const ALL = ['silver', 'console', 'pedal', 'tube', 'minimal', 'navy-light', 'minimal-dark', 'synth', 'wood', 'sunburst', 'surf', 'rosewood', 'sheet'];
 const THEMES = (process.argv[2] || '').split(',').filter(Boolean).length ? process.argv[2].split(',') : ALL;
 const TABS = ['play', 'chord', 'circle', 'math', 'song', 'lessons', 'lessons-open', 'practice', 'identify-done', 'quiz-checked', 'gate', 'gate-menu'];
 let checks = 0, bad = 0, soft = 0;

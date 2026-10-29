@@ -1,0 +1,65 @@
+/* Sunburst — a Les Paul in a dark room: honey-to-cherry sunburst lacquer panels with cream binding, black top-hat knobs with gold caps,
+   a dark-rosewood fretboard with nickel frets and a bone nut, ebony-and-ivory keys. Cinzel for the engraving, Barlow for the text. */
+:theme{
+  --sans:"Barlow","Segoe UI",Roboto,sans-serif; --cond:"Cinzel",Georgia,serif;
+  --bg:#140705; --ink:#fbeed0; --dim:#dcc3a0; --faint:#bfa27c; --amber:#ffb23e; --green:#a6d96a; --red:#ff7a5c; --gold:#ffb23e; --blue:#7fb8e8; --violet:#d4a6e0; --engrave:#2a0e05;
+  --page:radial-gradient(1000px 520px at 50% -90px,rgba(200,80,18,.55) 0,rgba(120,30,8,.32) 42%,rgba(0,0,0,0) 78%) no-repeat,#140705;
+  --hfont:"Cinzel",Georgia,serif; --lab-font:"Barlow","Segoe UI",sans-serif; --drum-font:var(--sans); --h1-ls:.1em; --h1-tt:uppercase;
+  --h2:#ffd08a; --h2s:#dcc3a0; --h2c:#e5cfae; --ink2:#f2e0be; --ink3:#dcc6a0; --mute:#d0b690; --lab:#dcc3a0; --on-amber:#2a0e05;
+  --card:#1f0c07; --card-bd:#5b2b16; --card-r:10px; --inset:#140704; --inset-bd:#4a2212; --inset-ink:#fff1d0;
+  --raise:linear-gradient(180deg,#2d130b,#21100a); --raise-bd:#6a331b; --raise-bd-h:#ffb23e; --raise-r:8px; --chip:#2d130b; --chip-bd:#6a331b; --hair:#33180d; --hair2:#55281a;
+  --now-bg:linear-gradient(180deg,#6a2a0b,#401808); --now-sh:0 0 0 1px #ffb23e,0 0 14px rgba(255,178,62,.35); --step-off:#5a3220;
+  --panel:radial-gradient(130% 150% at 50% 15%,#9a410c 0,#82300e 24%,#5c1c08 56%,#240a05 100%); --panel-bd:#1a0805; --panel-r:12px;
+  --panel-sh:0 0 0 2px #1a0805,0 0 0 4px #f2e6c0,0 0 0 6px #1a0805,0 14px 28px rgba(0,0,0,.65);
+  --panel-ink:#fff3d6; --panel-ink2:#ffe6b8; --engr-sh:0 1px 0 rgba(0,0,0,.55); --ok-p:#b6f08c; --warn-p:#ffc2b0;
+  --led-off:radial-gradient(circle at 36% 30%,#6a2218,#2a0a05 70%); --led-off-sh:0 0 0 2px #f2e6c0,0 0 0 3px #1a0805;
+  --led-on:radial-gradient(circle at 36% 28%,#fff6d8 0 6%,#ffd070 18%,#ff8a1f 54%,#a03a00); --led-on-sh:0 0 0 2px #f2e6c0,0 0 0 3px #1a0805,0 0 14px 5px rgba(255,150,40,.6);
+  --drum-bg:#120604; --drum-sh:0 0 0 1px #000,0 0 0 2px #d9c796,inset 0 3px 8px #000; --drum-r:6px; --drum-ink:#fff1d0; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#ecd9a2,#a98a42); --edge-ink:#1a0805;
+  --knob-bg:@art(sunburst-knob); --knob-sh:none; --ind:#1a0805; --ind-sh:none; --tick:#f2e6c0; --knobread:#fff3d6;
+  --tog-bg:#120604; --tog-sh:0 0 0 2px #d9c796,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#8a3410,#ffb23e); --tog-thumb:linear-gradient(180deg,#fbf2d6,#b8a066);
+  --btn-bg:linear-gradient(180deg,#3a1a0e,#240e08); --btn-bd:#b98a4a; --btn-bd-h:#ffd08a; --btn-ink:#fbeed0; --btn-r:6px; --btn-sh:0 1px 0 rgba(255,220,150,.15) inset,0 2px 3px rgba(0,0,0,.5);
+  --pri-bg:linear-gradient(180deg,#ffc15c,#d9801a); --pri-bd:#6a3408; --pri-ink:#2a0e05;
+  --key-bg:linear-gradient(180deg,#f8edca,#e0cf9c); --key-bd:#5a2a12; --key-ink:#2a0e05; --key-sh:0 1px 0 rgba(255,255,255,.5) inset,0 2px 3px rgba(0,0,0,.5); --key-r:6px;
+  --on-bg:linear-gradient(180deg,#ffcb6a,#e8892a); --on-bd:#6a3408; --on-ink:#2a1000; --on-sh:0 0 12px rgba(255,170,50,.5),0 1px 0 rgba(255,255,255,.5) inset;
+  --sel-bg:linear-gradient(180deg,#8a2a10,#5a1608); --sel-bd:#f2e6c0; --sel-ink:#fff3d6; --sel-sub:#ffe0a0; --sel-sh:0 0 0 1px #f2e6c0;
+  --seg-bg:#140704; --seg-bd:#5b2b16; --seg-on:#7a2a10; --seg-on-ink:#fff3d6; --seg-r:7px;
+  --dock-bg:rgba(30,10,6,.95); --dock-bd:#f2e6c0; --dock-ink:#f0dcb8; --dock-on:linear-gradient(180deg,#ffcb6a,#e8892a); --dock-on-ink:#2a1000; --dock-sh:0 0 0 2px #1a0805,0 12px 26px rgba(0,0,0,.7); --dock-r:20px; --dock-item-r:14px;
+  --fbwrap-bd:#f2e6c0; --fbwrap-bg:#140704; --fbwrap-r:8px;
+  --fb-wood:#2a110a; --fb-grain:rgba(255,170,110,.09); --fb-fret:#d8d2c2; --fb-nut:#f2e6c0; --fb-str:#e8e2d0; --fb-inlay:#f4ead0; --fb-inlay-bd:#a8956a; --fb-num:#dcc3a0; --fb-numhi:#fff1d0; --fb-open:#d0b690;
+  --ctx-bg:#1d0c07; --ctx-bd:#a8855a; --ctx-fg:#e5cfae; --dot-ring:#000; --dot-in:#fff1d0;
+  --t-root:#d8341f; --t-root-fg:#fff; --t-root-txt:#ff8a70; --t-third:#ffb23e; --t-third-fg:#2a1400; --t-fifth:#8fd16b; --t-fifth-fg:#0d2205; --t-seventh:#5aa0e0; --t-seventh-fg:#06182a; --t-ext:#c58ad8; --t-ext-fg:#2a0a38; --t-scale:#8fd16b; --t-scale-fg:#0d2205;
+  --h-r:#8fd16b; --h-r-fg:#0d2205; --h-l:#6aaeea; --h-l-fg:#06182a; --hr-txt:#a6e08a; --hl-txt:#8fc0f0; --ring-root:#ff7a5c; --now:#ffcb6a; --now-fg:#ffcb6a; --inp:#d4a6e0; --good:#a6d96a; --bad:#ff8a70;
+  --pk-wrap-bd:#f2e6c0; --pk-wrap-bg:#140704; --pk-wrap-r:8px;
+  --pk-w:linear-gradient(180deg,#f0e2bc,#fff8e0 70%,#d9c791); --pk-w-bd:#2a0e05; --pk-w-sh:0 2px 0 #8d7a4a; --pk-w-r:0 0 4px 4px; --pk-lit-w:linear-gradient(180deg,#ffe2a0,#ffb23e 70%,#e08a1c);
+  --pk-b:linear-gradient(180deg,#2b1a12,#080302); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#9a4a1a,#4a1c08);
+  --pk-nm:#2a0e05; --pk-nm-root:#a3200f; --pk-bnm-root:#ffb09a; --pk-oct:#6a4a2a; --pk-str:#ffb23e;
+  --lcd-bg:#140704; --lcd-bd:#5b2b16; --lcd-sh:inset 0 2px 8px #000,0 0 0 1px #8a5a2a; --lcd-ink:#fff1d0; --lcd-ink2:#e5cfae; --lcd-hi:#ffb23e; --lcd-dim:#dcc3a0;
+  --stf-sl:#8a6a50; --stf-sl2:#b89a7a; --stf-tl:#6a4a36; --stf-ink:#fbeed0; --stf-fret:#ffb23e;
+  --c-tonic:#ffb23e; --c-tonic-fg:#2a0e05; --c-nb:#9a3a1c; --c-rel:#5a3220; --c-maj:#2a120a; --c-min:#1d0c07; --c-off-fg:#e5cfae; --c-bg:#140704; --c-centre:#1f0c07; --c-line:#140704; --c-t1:#fbeed0; --c-t2:#dcc3a0; --c-t3:#ffb23e;
+  --cd-line:#8a6a50; --cd-nut:#f2e6c0; --cd-str:#dcc3a0; --cd-dot:#fbeed0; --cd-dot-fg:#2a0e05; --cd-lab:#dcc3a0; --cd-fn:#ffb23e;
+  --bar-n:#bfa27c; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#33160c; --hook-ink:#fbeed0; --code-ink:#f2e0be;
+}
+h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.6);font-size:25px}
+h1::after{content:"";display:block;width:150px;height:3px;margin:8px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#c25a14 25%,#ffb23e 50%,#c25a14 75%,transparent)}
+h2{font-weight:700;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #6a331b;padding-bottom:4px}
+.card,.pfc,.lcard{box-shadow:0 0 0 1px #0d0402,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,220,150,.08) inset}
+.engr{font-weight:700;letter-spacing:.12em;font-size:11px}
+.drum .val{font-weight:600;font-size:15px}
+.drum.small .val{font-size:14px}
+.drum .val.long{font-size:12.5px}.drum .val.xl{font-size:11px}
+.drum .edge{width:17px}.drum .edge::after{display:block}
+.knob{width:72px;height:72px}
+.knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.55))}
+.knob .cap i{display:none}
+.knob:focus-visible{box-shadow:0 0 0 3px #7fb8e8}
+.knobread{font-weight:700;font-size:11px}
+.toggle{width:54px}.toggle.on::after{transform:translateX(24px)}
+.power .led{width:15px;height:15px}
+.btn{font-weight:700;letter-spacing:.02em}
+.btn:active,.pos:active,.chip:active{transform:translateY(1px)}
+.pos,.chip{font-weight:700}
+nav.dock{border-width:2px}
+nav.dock button{font-weight:700;letter-spacing:.03em}
+.fbwrap,.pianowrap{border-width:3px;border-style:double}
+.dot circle{stroke-width:1.2}

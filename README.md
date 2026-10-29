@@ -38,8 +38,13 @@ The look is a setting: tap the **theme button** (top right of the header) or add
 | Tube Amp | [`?theme=tube`](https://berkley444.github.io/One/?theme=tube) | black tolex, gold plate, cream chicken-head knobs, grille cloth |
 | Minimal Light (default) | [`?theme=minimal`](https://berkley444.github.io/One/?theme=minimal) | flat iOS-style, segmented controls and steppers |
 | Minimal Dark | [`?theme=minimal-dark`](https://berkley444.github.io/One/?theme=minimal-dark) | the same on true black |
+| Navy Light | [`?theme=navy-light`](https://berkley444.github.io/One/?theme=navy-light) | Minimal Light in blue and white: navy `#000055` text, cobalt accents |
 | Modular Synth | [`?theme=synth`](https://berkley444.github.io/One/?theme=synth) | Eurorack panels, small knobs, patch jacks, mono labels, LED meter |
 | Vintage Wood | [`?theme=wood`](https://berkley444.github.io/One/?theme=wood) | walnut cabinet, brass knobs, paper label tags |
+| Sunburst | [`?theme=sunburst`](https://berkley444.github.io/One/?theme=sunburst) | honey-to-cherry lacquer panels, cream binding, gold top-hat knobs, rosewood neck |
+| Surf Green | [`?theme=surf`](https://berkley444.github.io/One/?theme=surf) | seafoam lacquer and chrome, cream pickguard cards, maple neck with black dots |
+| Rosewood & Pearl | [`?theme=rosewood`](https://berkley444.github.io/One/?theme=rosewood) | dark rosewood, pearl window drums and inlays, aqua highlights |
+| Sheet Music | [`?theme=sheet`](https://berkley444.github.io/One/?theme=sheet) | cream manuscript paper, black ink, oxblood accents, serif type |
 
 Side by side: [PLAY](docs/screenshots/themes_play.png) · [CHORD](docs/screenshots/themes_chord.png) · [LEARN on a phone](docs/screenshots/themes_learn_phone.png).
 

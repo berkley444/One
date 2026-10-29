@@ -179,7 +179,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     await q(() => sessionStorage.clear()); await p.reload({ waitUntil: 'load' }); await sleep(300); ok(await q(() => document.querySelector('#gate').hidden), `${tag} off means no gate`);
 
     /* ---- every theme: identify board is readable and the page fits ---- */
-    for (const th of ['minimal', 'silver', 'console', 'pedal', 'tube', 'minimal-dark', 'synth', 'wood']) {
+    for (const th of ['minimal', 'silver', 'console', 'pedal', 'tube', 'navy-light', 'minimal-dark', 'synth', 'wood', 'sunburst', 'surf', 'rosewood', 'sheet']) {
       await fresh('#play', '?theme=' + th); await tap('[data-act="idtoggle"]'); await place('x32010'); await sleep(80);
       ok(await q(t => (document.documentElement.dataset.theme || 'silver') === t, th), `${tag} theme ${th} applied`);
       ok(await text('.idbig') === 'C' && await noOverflow(), `${tag} ${th}: identify works and fits`);

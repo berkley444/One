@@ -1,0 +1,33 @@
+/* Navy Light — Minimal Light's structure (shared via @also in 60-minimal.css) in a blue-and-white tone: every piece of text is navy #000055,
+   secondary text is a navy tint, accents are cobalt blue, surfaces are white and blue-white. Minimal Light itself is untouched. */
+:theme{
+  --bg:#eaf0fa; --page:#eaf0fa; --ink:#000055; --dim:#3d4476; --faint:#4a5185; --amber:#0b4fd0; --blue:#0b4fd0; --gold:#4a5185; --violet:#6a2fb8; --engrave:#000055;
+  --h2:#000055; --h2s:#3d4476; --h2c:#3d4476; --ink2:#000055; --ink3:#1b2068; --mute:#3d4476; --lab:#3d4476; --on-amber:#fff;
+  --card:#fff; --card-bd:#cfdaf0; --inset:#f1f5fc; --inset-bd:#d4def2; --inset-ink:#000055;
+  --raise:#fff; --raise-bd:#c9d6ef; --raise-bd-h:#0b4fd0; --chip:#e1e9f8; --chip-bd:#c5d2ec; --hair:#dde5f4; --hair2:#c5d2ec;
+  --now-bg:#dde9ff; --now-sh:0 0 0 2px #0b4fd0; --step-off:#c3cde5;
+  --panel:#fff; --panel-bd:#cfdaf0; --panel-sh:0 1px 2px rgba(0,0,85,.06),0 10px 30px rgba(20,60,160,.13);
+  --panel-ink:#000055; --panel-ink2:#3d4476;
+  --led-off:#bcc6e0;
+  --drum-bg:#eef3fc; --drum-sh:0 0 0 1px #cfdaf0; --drum-ink:#000055; --edge-ink:#0b4fd0;
+  --knob-bg:#fff; --knob-sh:0 0 0 1px #c5d2ec,0 3px 8px rgba(0,0,85,.18); --ind:#0b4fd0; --tick:#7f89b8; --knobread:#000055;
+  --tog-bg:#c3cde5; --tog-on:#1d63e0;
+  --btn-bg:#e1e9f8; --btn-bd-h:#0b4fd0; --btn-ink:#0b4fd0; --pri-bg:#0b4fd0; --pri-bd:#0b4fd0;
+  --key-bg:#eef3fc; --key-bd:#c9d6ef; --key-ink:#000055;
+  --on-bg:#0b4fd0; --on-bd:#0b4fd0; --sel-bg:#0b4fd0; --sel-bd:#0b4fd0;
+  --seg-bg:#d9e3f6; --seg-on:#fff; --seg-on-ink:#000055;
+  --dock-bg:rgba(255,255,255,.9); --dock-bd:rgba(0,0,85,.1); --dock-ink:#3d4476; --dock-on:#dde9ff; --dock-on-ink:#0b4fd0; --dock-sh:0 8px 30px rgba(20,60,160,.22);
+  --fbwrap-bd:#c9d6ef; --fbwrap-bg:#fff;
+  --fb-wood:#f3f7fd; --fb-fret:#b3c1e2; --fb-nut:#5b6797; --fb-str:#6f7aa3; --fb-inlay:#d3ddf3; --fb-inlay-bd:#d3ddf3; --fb-num:#4a5185; --fb-numhi:#000055; --fb-open:#3d4476;
+  --ctx-bg:#fff; --ctx-bd:#9aa6cf; --ctx-fg:#3d4476; --dot-ring:rgba(0,0,85,.3); --dot-in:#000055;
+  --t-third-fg:#000055; --t-seventh:#0b4fd0; --h-l:#0b4fd0; --hl-txt:#0b4fd0; --now:#0b4fd0; --now-fg:#0b4fd0;
+  --pk-wrap-bd:#c9d6ef; --pk-w-bd:#b8c4e2; --pk-lit-w:#cfe0ff; --pk-b:#000055; --pk-b-bd:#000055; --pk-lit-b:#3b5fd0; --pk-nm:#000055; --pk-oct:#3d4476; --pk-str:#0b4fd0;
+  --lcd-bg:#eef3fc; --lcd-bd:#cfdaf0; --lcd-ink:#000055; --lcd-ink2:#1b2068; --lcd-hi:#0b4fd0; --lcd-dim:#3d4476;
+  --stf-sl:#b4c0e0; --stf-sl2:#8a96c4; --stf-tl:#c5d0ea; --stf-ink:#000055; --stf-fret:#0b4fd0;
+  --c-tonic:#0b4fd0; --c-nb:#c9dcff; --c-nb-fg:#0a3d8f; --c-rel:#dbe4f5; --c-maj:#eef3fc; --c-min:#e1e9f8; --c-off-fg:#3d4476; --c-rel-fg:#000055; --c-t1:#000055; --c-t2:#3d4476; --c-centre:#eef3fc; --c-t3:#0b4fd0;
+  --cd-line:#b4c0e0; --cd-str:#8a96c4; --cd-dot:#000055; --cd-lab:#3d4476; --cd-fn:#0b4fd0;
+  --bar-n:#4a5185; --hook-bg:#e6eeff; --hook-ink:#000055; --code-ink:#000055;
+}
+.drum .edge:hover{background:rgba(11,79,208,.1)}
+.knob:focus-visible{box-shadow:0 0 0 3px #7da6f0}
+select,option{color:#000055}

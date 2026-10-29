@@ -1,0 +1,67 @@
+/* Surf Green — a seafoam-green Strat-era guitar and a blackface amp: seafoam lacquer panels edged in chrome, a cream pickguard for cards,
+   chrome skirted knobs with a teal cap, a maple neck with black dot inlays and nickel frets, white keys. Righteous for the lettering. */
+:theme{
+  --sans:"Nunito Sans","Segoe UI",Roboto,sans-serif; --cond:"Righteous","Trebuchet MS",sans-serif;
+  --bg:#d3eae3; --ink:#0a2e2b; --dim:#2f5d57; --faint:#3e6b65; --amber:#0b6b72; --green:#1d6b3a; --red:#c4392b; --gold:#6a5a1a; --blue:#0b5aa0; --violet:#6a3aa8; --engrave:#0a2e2b;
+  --page:radial-gradient(900px 420px at 50% -80px,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 70%) no-repeat,linear-gradient(180deg,#e4f3ee,#cbe6de);
+  --hfont:"Righteous","Trebuchet MS",sans-serif; --lab-font:"Righteous","Trebuchet MS",sans-serif; --drum-font:var(--sans); --h1-ls:.05em; --h1-tt:none;
+  --h2:#0a2e2b; --h2s:#2f5d57; --h2c:#2f5d57; --ink2:#123f3b; --ink3:#24504b; --mute:#2f5d57; --lab:#2f5d57; --on-amber:#fff;
+  --card:#fbfaf2; --card-bd:#b3d2c7; --card-r:14px; --inset:#eef6f1; --inset-bd:#c3dcd2; --inset-ink:#0a2e2b;
+  --raise:#fff; --raise-bd:#b3d2c7; --raise-bd-h:#0b6b72; --raise-r:12px; --chip:#dff0ea; --chip-bd:#b3d2c7; --hair:#d6e8e1; --hair2:#b3d2c7;
+  --now-bg:#d8f1ee; --now-sh:0 0 0 2px #0b6b72; --step-off:#b9d3ca;
+  --panel:linear-gradient(180deg,#b1e2d5,#86c9b8); --panel-bd:#4f9a89; --panel-r:16px;
+  --panel-sh:0 0 0 3px #f1f7f4,0 0 0 4px #7aa89c,0 10px 24px rgba(10,60,50,.3);
+  --panel-ink:#0a2e2b; --panel-ink2:#0f3a36; --engr-sh:0 1px 0 rgba(255,255,255,.55); --ok-p:#0d5a28; --warn-p:#8a1d12;
+  --led-off:#8fb0a7; --led-off-sh:0 0 0 2px #f1f7f4,0 0 0 3px #7aa89c;
+  --led-on:radial-gradient(circle at 36% 28%,#ffe6dc 0 6%,#ff9a7a 18%,#ff5a36 54%,#a82010); --led-on-sh:0 0 0 2px #f1f7f4,0 0 0 3px #7aa89c,0 0 12px 4px rgba(255,90,54,.55);
+  --drum-bg:#0a2e2b; --drum-sh:0 0 0 2px #f1f7f4,0 0 0 3px #6f9a90,inset 0 3px 8px #000; --drum-r:8px; --drum-ink:#e8fbf5; --drum-line-o:0;
+  --edge-bg:linear-gradient(180deg,#f4fbf9,#9db3af); --edge-ink:#0a2e2b;
+  --knob-bg:@art(surf-knob); --knob-sh:none; --ind:#0a2e2b; --ind-sh:none; --tick:#0a2e2b; --knobread:#0a2e2b;
+  --tog-bg:#0a2e2b; --tog-sh:0 0 0 2px #f1f7f4,0 0 0 3px #6f9a90,inset 0 3px 6px #000; --tog-on:linear-gradient(180deg,#0b6b72,#2ec4c0); --tog-thumb:linear-gradient(180deg,#ffffff,#a9bcb8);
+  --btn-bg:linear-gradient(180deg,#ffffff,#cddbd7); --btn-bd:#6f9a90; --btn-bd-h:#0b6b72; --btn-ink:#0a4a50; --btn-r:9px; --btn-sh:0 1px 0 #fff inset,0 2px 3px rgba(10,60,50,.25);
+  --pri-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --pri-bd:#064a50; --pri-ink:#fff;
+  --key-bg:linear-gradient(180deg,#ffffff,#e4eee9); --key-bd:#7aa89c; --key-ink:#0a2e2b; --key-sh:0 1px 0 #fff inset,0 2px 3px rgba(10,60,50,.22); --key-r:9px;
+  --on-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --on-bd:#064a50; --on-ink:#fff; --on-sh:0 0 0 2px rgba(255,255,255,.7) inset;
+  --sel-bg:linear-gradient(180deg,#0d7c84,#0a5f66); --sel-bd:#064a50; --sel-ink:#fff; --sel-sub:#e8fbf5; --sel-sh:0 0 0 2px #f1f7f4,0 0 0 3px #0b6b72;
+  --seg-bg:#bfdcd2; --seg-bd:#8fb8ad; --seg-on:#fff; --seg-on-ink:#0a2e2b; --seg-r:10px;
+  --dock-bg:rgba(250,253,251,.94); --dock-bd:#7aa89c; --dock-ink:#24504b; --dock-on:linear-gradient(180deg,#0d7c84,#0a5f66); --dock-on-ink:#fff; --dock-sh:0 0 0 2px #f1f7f4,0 10px 26px rgba(10,60,50,.3); --dock-r:26px; --dock-item-r:20px;
+  --fbwrap-bd:#7aa89c; --fbwrap-bg:#fbfaf2; --fbwrap-r:12px;
+  --fb-wood:#f0d9a2; --fb-grain:rgba(150,100,30,.14); --fb-fret:#a3a39a; --fb-nut:#fffdf0; --fb-str:#4a4a46; --fb-inlay:#1a1a1a; --fb-inlay-bd:none; --fb-num:#5a4a2a; --fb-numhi:#1a1208; --fb-open:#4a3c20;
+  --ctx-bg:#fff; --ctx-bd:#8a7a50; --ctx-fg:#4a3c20; --dot-ring:rgba(0,0,0,.45); --dot-in:#1a1208;
+  --t-root:#c4392b; --t-root-fg:#fff; --t-root-txt:#b02a1c; --t-third:#ffb340; --t-third-fg:#2a1500; --t-fifth:#1d6b3a; --t-fifth-fg:#fff; --t-seventh:#0b5aa0; --t-seventh-fg:#fff; --t-ext:#7a35c4; --t-ext-fg:#fff; --t-scale:#1d6b3a; --t-scale-fg:#fff;
+  --h-r:#1d6b3a; --h-r-fg:#fff; --h-l:#1565d8; --h-l-fg:#fff; --hr-txt:#1d6b3a; --hl-txt:#1565d8; --ring-root:#c4392b; --now:#0b6b72; --now-fg:#0b6b72; --inp:#6a3aa8; --good:#1d6b3a; --bad:#b02a1c;
+  --pk-wrap-bd:#7aa89c; --pk-wrap-bg:#fbfaf2; --pk-wrap-r:12px;
+  --pk-w:linear-gradient(180deg,#f4f8f6,#fff 70%,#dfe8e4); --pk-w-bd:#7f9a93; --pk-w-sh:0 2px 0 #a9bcb6; --pk-w-r:0 0 6px 6px; --pk-lit-w:linear-gradient(180deg,#d6f4ee,#9fe0d6 70%,#6fcabd);
+  --pk-b:linear-gradient(180deg,#26403d,#07100f); --pk-b-bd:#000; --pk-lit-b:linear-gradient(180deg,#1c8a90,#0a4a50);
+  --pk-nm:#0a2e2b; --pk-nm-root:#a8281a; --pk-bnm-root:#ffb3a8; --pk-oct:#3e6b65; --pk-str:#0b6b72;
+  --lcd-bg:#eef6f1; --lcd-bd:#b3d2c7; --lcd-sh:inset 0 2px 5px rgba(10,60,50,.18),0 0 0 2px #f1f7f4; --lcd-ink:#0a2e2b; --lcd-ink2:#123f3b; --lcd-hi:#0b6b72; --lcd-dim:#2f5d57;
+  --stf-sl:#9fc0b6; --stf-sl2:#6f9a90; --stf-tl:#bcd6cd; --stf-ink:#0a2e2b; --stf-fret:#0b6b72;
+  --c-tonic:#0b6b72; --c-tonic-fg:#fff; --c-nb:#bfeae2; --c-nb-fg:#07423f; --c-rel:#cfe3dc; --c-rel-fg:#0a2e2b; --c-maj:#eef6f1; --c-min:#e1efe9; --c-off-fg:#2f5d57; --c-bg:#fff; --c-centre:#eef6f1; --c-line:#fff; --c-t1:#0a2e2b; --c-t2:#2f5d57; --c-t3:#0b6b72;
+  --cd-line:#8fb8ad; --cd-nut:#0a2e2b; --cd-str:#6f9a90; --cd-dot:#0a2e2b; --cd-dot-fg:#fff; --cd-lab:#2f5d57; --cd-fn:#0b6b72;
+  --bar-n:#3e6b65; --ok:#1d6b3a; --ok-bg:#dff3e4; --ok-ink:#145a2c; --hook-bg:#e1f3ee; --hook-ink:#0a3e3a; --code-ink:#0a2e2b;
+}
+h1{font-weight:400;font-size:28px;text-shadow:0 2px 0 rgba(255,255,255,.7)}
+h1::after{content:"";display:block;width:150px;height:6px;margin:8px auto 0;border-radius:3px;background:linear-gradient(90deg,#f1f7f4 0 30%,#19a6ae 30% 70%,#f1f7f4 70%);box-shadow:0 0 0 1px #7aa89c}
+h2{font-weight:400;font-size:24px;letter-spacing:.03em}
+.card,.pfc,.lcard{box-shadow:0 1px 0 #fff inset,0 3px 8px rgba(10,60,50,.12)}
+.engr{font-weight:400;letter-spacing:.1em;font-size:12px}
+.engr.sm{font-size:11px}
+.drum .val{font-weight:700;font-size:15px}
+.drum.small .val{font-size:14px}
+.drum .val.long{font-size:12.5px}.drum .val.xl{font-size:11px}
+.drum .edge{width:17px}.drum .edge::after{display:block}
+.knob{width:72px;height:72px}
+.knob .cap{inset:6px;background:var(--knob-bg) center/100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 4px 3px rgba(10,60,50,.4))}
+.knob .cap i{display:none}
+.knob:focus-visible{box-shadow:0 0 0 3px #0b6b72}
+.knobread{font-weight:800;font-size:11px}
+.toggle{width:54px}.toggle.on::after{transform:translateX(24px)}
+.power .led{width:15px;height:15px}
+.btn{font-weight:800}
+.btn:active,.pos:active,.chip:active{transform:translateY(1px)}
+.pos,.chip{font-weight:800}
+nav.dock{border-width:2px}
+nav.dock button{font-weight:800}
+.fbwrap,.pianowrap{border-width:3px;border-style:double}
+.dot circle{stroke-width:1.2}
+select,option{color:#0a2e2b}

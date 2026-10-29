@@ -16,8 +16,8 @@ fails if the pasted copy is stale (`tests/browser/themes.js` runs it).
 | `20-picker.raw.css` | The Theme picker panel and its preview chips (visible in every theme, including Silver) |
 | `24-keycontrols.raw.css` | The Scale / Tuning selects (`select.kc`), the tuning picker over the board's top corner and the wrapping Root + Scale bar on CIRCLE / MATH / SONG; reads the same semantic variables in every theme |
 | `25-silver.css` | Silver's variables for `[data-theme="silver"]` only, so the picker's Silver preview chip can use them (the page itself never gets this attribute) |
-| `30-console.css` ... `80-wood.css` | One theme each |
-| `60-minimal.css` / `65-minimal-dark.css` | Minimal Light; Minimal Dark. The first line of `60-minimal.css`, `/*@also minimal-dark*/`, makes the build emit that file for both ids, then `65-` overrides only the colours |
+| `30-console.css` ... `87-rosewood.css` | One theme each (console, pedal, tube, synth, wood, sunburst `85-`, surf `86-`, rosewood `87-`) |
+| `60-minimal.css` / `65-minimal-dark.css` / `66-navy-light.css` / `88-sheet.css` | Minimal Light, Minimal Dark, Navy Light, Sheet Music. The first line of `60-minimal.css`, `/*@also minimal-dark navy-light sheet*/`, makes the build emit that file (structure and Minimal Light's variables) for all four ids; the later `65-`, `66-` and `88-` files override the colours (and, for Sheet Music, add serif titles and a bar-line). Minimal Light itself is the default and is never changed by them |
 | `art/*.svg` | Texture and knob artwork. `@art(name)` inside a CSS value is replaced by a data URI of `art/name.svg` |
 
 Build rules: `*.raw.css` is copied as written. In any other file `:theme{...}` becomes `[data-theme="id"]{...}` (the id is the file name after `NN-`) and every other rule gets the `html[data-theme="id"]` prefix.

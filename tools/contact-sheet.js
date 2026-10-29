@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 /* Builds labelled contact sheets from tools/theme-shots.js output.
- *   node tools/contact-sheet.js [--in=/workspace/ts_fold (from theme-shots --fold=1)] [--out=/workspace]
- * Writes themes_play.png, themes_chord.png (desktop, 4 x 2) and themes_learn_phone.png (phone, 4 x 2). */
+ *   node tools/contact-sheet.js [--in=/workspace/ts_fold (from theme-shots --fold=1)] [--out=/workspace] [--only=sunburst,surf,...]
+ * Writes themes_play.png, themes_chord.png (desktop) and themes_learn_phone.png (phone), 4 columns, one cell per theme.
+ * With --only=<ids> it writes just the CHORD sheet of those themes to themes_new_sheet.png (e.g. the themes added most recently). */
 const puppeteer = require(process.env.PPTR || '/workspace/pt/node_modules/puppeteer-core');
 const fs = require('fs');
 const arg = (k, d) => { const a = process.argv.find(x => x.startsWith('--' + k + '=')); return a ? a.split('=')[1] : d; };
 const IN = arg('in', '/workspace/ts_fold'), OUT = arg('out', '/workspace');
-const T = [['silver', 'Silver Hi-Fi (default)'], ['console', 'Studio Console'], ['pedal', 'Boutique Pedal'], ['tube', 'Tube Amp'], ['minimal', 'Minimal Light'], ['minimal-dark', 'Minimal Dark'], ['synth', 'Modular Synth'], ['wood', 'Vintage Wood']];
+const ALLT = [['silver', 'Silver Hi-Fi (default)'], ['console', 'Studio Console'], ['pedal', 'Boutique Pedal'], ['tube', 'Tube Amp'], ['minimal', 'Minimal Light'], ['navy-light', 'Navy Light'], ['minimal-dark', 'Minimal Dark'], ['synth', 'Modular Synth'], ['wood', 'Vintage Wood'], ['sunburst', 'Sunburst'], ['surf', 'Surf Green'], ['rosewood', 'Rosewood & Pearl'], ['sheet', 'Sheet Music']];
+const ONLY = arg('only', ''), T = ONLY ? ALLT.filter(([id]) => ONLY.split(',').includes(id)) : ALLT;
 const img = f => 'data:image/png;base64,' + fs.readFileSync(f).toString('base64');
 function sheet(scene, vp, cols, w, h, title) {
   const cells = T.map(([id, name]) => `<figure><figcaption><b>${name}</b><code>?theme=${id}</code></figcaption><div class="im" style="width:${w}px;height:${h}px"><img src="${img(`${IN}/${id}_${scene}_${vp}.png`)}" style="width:${w}px"></div></figure>`).join('');
@@ -14,9 +16,10 @@ function sheet(scene, vp, cols, w, h, title) {
 }
 (async () => {
   const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox'] });
-  const jobs = [['themes_play.png', sheet('play', 'desktop', 4, 560, 617, 'PLAY tab, desktop: every theme (A Dorian, position 3, fingers on)'), 1200],
-    ['themes_chord.png', sheet('chord', 'desktop', 4, 560, 617, 'CHORD tab, desktop: every theme (G maj7, position 2, fingers on)'), 1200],
-    ['themes_learn_phone.png', sheet('learn', 'phone', 4, 390, 844, 'LEARN tab, phone 390px: every theme (first screen)'), 1700]];
+  const jobs = ONLY ? [['themes_new_sheet.png', sheet('chord', 'desktop', 3, 560, 617, 'CHORD tab, desktop: the newest themes (G maj7, position 2, fingers on)'), 1800]] : [
+    ['themes_play.png', sheet('play', 'desktop', 4, 560, 617, 'PLAY tab, desktop: every theme (A Dorian, position 3, fingers on)'), 2400],
+    ['themes_chord.png', sheet('chord', 'desktop', 4, 560, 617, 'CHORD tab, desktop: every theme (G maj7, position 2, fingers on)'), 2400],
+    ['themes_learn_phone.png', sheet('learn', 'phone', 5, 390, 844, 'LEARN tab, phone 390px: every theme (first screen)'), 2100]];
   for (const [name, html, w] of jobs) {
     const p = await b.newPage(); await p.setViewport({ width: w, height: 800 }); await p.setContent(html, { waitUntil: 'load' });
     await p.screenshot({ path: `${OUT}/${name}`, fullPage: true }); await p.close(); console.log('wrote', `${OUT}/${name}`);
