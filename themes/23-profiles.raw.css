@@ -1,4 +1,4 @@
-/* on-device profiles: header avatar button, the Players panel and the first-visit "Who's playing?" welcome */
+/* on-device profiles: header avatar button, the Musicians panel and the first-visit "Who's playing?" welcome */
 .themebtn.profbtn{right:52px}
 .av{display:inline-grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;font:800 15px/1 var(--sans);text-transform:uppercase;letter-spacing:0;box-shadow:0 0 0 1px rgba(0,0,0,.22)}
 .av.big{width:56px;height:56px;font-size:26px}

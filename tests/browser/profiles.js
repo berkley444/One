@@ -1,4 +1,4 @@
-/* On-device profiles (headless Chrome): migration of the pre-profiles keys, the first-visit welcome, isolation between players,
+/* On-device profiles (headless Chrome): migration of the pre-profiles keys, the first-visit welcome, isolation between musicians,
  * create / rename / recolour / delete-with-confirm / switch, export + import (incl. hostile files), the LocalStore interface on its own,
  * keyboard + focus + axe on the panel and the welcome, phone (390) and desktop (1280).
  *   BPGW_URL=http://localhost:8123/index.html node tests/browser/profiles.js */
@@ -30,7 +30,7 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       const seed = { 'bpgw.v3': JSON.stringify(legacy), 'bpgw.theme': 'tube' };
       const { ctx, p, q } = await mk({ human: true, seed });
       const ix = await q(() => BPGW.PS.index());
-      ok(ix.list.length === 1 && ix.active === ix.list[0].id && ix.list[0].name === 'Player 1', `${tag} migration: one default profile exists (${JSON.stringify(ix.list)})`);
+      ok(ix.list.length === 1 && ix.active === ix.list[0].id && ix.list[0].name === 'Musician 1', `${tag} migration: one default profile exists (${JSON.stringify(ix.list)})`);
       ok(ix.welcomed === true && await q(() => document.getElementById('welcome').hidden), `${tag} migration: an existing visitor is not asked "Who's playing?"`);
       const st = await q(() => BPGW.stored());
       ok(st.quiz.right === 9 && st.quiz.total === 12 && st.quiz.streak === 3 && st.quiz.best === 7, `${tag} migration keeps the quiz score / streak / best`);
@@ -66,7 +66,7 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       await ctx.close();
       const s2 = await mk({ human: true });
       await s2.p.keyboard.press('Escape'); await sleep(100);
-      ok(await s2.q(() => document.getElementById('welcome').hidden && BPGW.PS.index().welcomed === true && BPGW.PS.active().name === 'Player 1' && document.activeElement.id === 'profileBtn'), `${tag} Escape skips: default "Player 1" is kept, focus goes to the profile button`);
+      ok(await s2.q(() => document.getElementById('welcome').hidden && BPGW.PS.index().welcomed === true && BPGW.PS.active().name === 'Musician 1' && document.activeElement.id === 'profileBtn'), `${tag} Escape skips: default "Musician 1" is kept, focus goes to the profile button`);
       await s2.ctx.close();
       const s3 = await mk({ human: true });
       await s3.p.click('#welcome [data-pf=skip]'); await sleep(100);
@@ -83,14 +83,14 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       const g = await q(() => { const r = s => { const e = document.querySelector(s).getBoundingClientRect(); return { l: e.left, r: e.right, t: e.top, b: e.bottom, w: e.width, h: e.height }; }; return { lock: r('#gateBtn'), prof: r('#profileBtn'), pal: r('#themeBtn'), h1: r('header h1') }; });
       ok(g.prof.l > g.lock.r && g.prof.r <= g.pal.l && Math.abs(g.prof.t - g.pal.t) < 2 && g.prof.w >= 36 && g.prof.h >= 36, `${tag} profile button sits between the lock and the palette, same row, tap-size (${JSON.stringify(g.prof)})`);
       ok(await q(() => { const s = document.querySelector('header h1').getBoundingClientRect(), t = document.querySelector('#profileBtn').getBoundingClientRect(); const r = document.createRange(); r.selectNodeContents(document.querySelector('header h1').firstChild); return [...r.getClientRects()].every(x => x.right <= t.left + 1 || x.top >= t.bottom - 1 || x.bottom <= t.top + 1); }), `${tag} the title text does not run under the profile button`);
-      ok(await q(() => document.querySelector('#profileBtn').getAttribute('aria-haspopup') === 'dialog' && /Playing as Player 1/.test(document.querySelector('#profileBtn').textContent) && document.querySelector('#profilePanel').getAttribute('aria-label') === 'Players'), `${tag} button name says who is playing; the panel is a labelled dialog`);
+      ok(await q(() => document.querySelector('#profileBtn').getAttribute('aria-haspopup') === 'dialog' && /Playing as Musician 1/.test(document.querySelector('#profileBtn').textContent) && document.querySelector('#profilePanel').getAttribute('aria-label') === 'Musicians'), `${tag} button name says who is playing; the panel is a labelled dialog`);
       await openPanel(p);
       ok(await q(() => !document.getElementById('profilePanel').hidden && document.getElementById('profileBtn').getAttribute('aria-expanded') === 'true' && document.activeElement.classList.contains('pfWho')), `${tag} the button opens the panel and focus moves into it`);
-      ok(await q(() => document.querySelectorAll('#profilePanel .pfRow').length === 1 && !document.querySelector('#profilePanel [data-pf=del]')), `${tag} the only player cannot be deleted (no Delete button)`);
+      ok(await q(() => document.querySelectorAll('#profilePanel .pfRow').length === 1 && !document.querySelector('#profilePanel [data-pf=del]')), `${tag} the only musician cannot be deleted (no Delete button)`);
       await p.keyboard.press('Escape'); await sleep(100);
       ok(await q(() => document.getElementById('profilePanel').hidden && document.activeElement.id === 'profileBtn'), `${tag} Escape closes the panel and returns focus`);
       await openPanel(p); await p.click('#themeBtn'); await sleep(150);
-      ok(await q(() => document.getElementById('profilePanel').hidden && !document.getElementById('themePanel').hidden), `${tag} opening the theme picker closes the players panel`);
+      ok(await q(() => document.getElementById('profilePanel').hidden && !document.getElementById('themePanel').hidden), `${tag} opening the theme picker closes the musicians panel`);
       await p.keyboard.press('Escape'); await openPanel(p); await p.mouse.click(w / 2, 700); await sleep(150);
       ok(await q(() => document.getElementById('profilePanel').hidden), `${tag} clicking outside closes the panel`);
       await ctx.close();
@@ -104,31 +104,31 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       await dirty(); await q(() => BPGW.setTheme('tube'));                                         // setTheme saves the theme; the switch itself saves S first (profileSwitch -> save())
       await openPanel(p);
       await p.click('#profilePanel [data-pf=new]'); await sleep(100);
-      ok(await q(() => document.activeElement.id === 'pfName' && !!document.querySelector('#profilePanel form')), `${tag} "+ New player" opens a form with the name field focused`);
+      ok(await q(() => document.activeElement.id === 'pfName' && !!document.querySelector('#profilePanel form')), `${tag} "+ New musician" opens a form with the name field focused`);
       await p.click('#profilePanel form button[type=submit]'); await sleep(100);
       ok(await q(() => /name/i.test(document.querySelector('#profilePanel .pfErr').textContent)), `${tag} an empty name is refused with a message`);
       await p.type('#pfName', 'Sam'); await p.click('#profilePanel [data-pf=color][data-c="#d6336c"]');
       await nav(p, () => p.click('#profilePanel form button[type=submit]'));
       const B = await q(() => BPGW.ME.id);
-      ok(B !== A && await q(() => BPGW.PS.active().name === 'Sam' && BPGW.PS.active().color === '#d6336c'), `${tag} creating a player switches to them (page reloaded)`);
-      ok(await q(() => BPGW.S.tempo === 100 && BPGW.S.scale === 'major' && BPGW.S.quiz.best === 0 && BPGW.S.quiz.total === 0 && Object.keys(BPGW.S.lessons).length === 0 && BPGW.S.gateOn === false && document.documentElement.dataset.theme === 'minimal'), `${tag} the new player starts clean: defaults, quiz 0, no lessons, gate off, default theme`);
+      ok(B !== A && await q(() => BPGW.PS.active().name === 'Sam' && BPGW.PS.active().color === '#d6336c'), `${tag} creating a musician switches to them (page reloaded)`);
+      ok(await q(() => BPGW.S.tempo === 100 && BPGW.S.scale === 'major' && BPGW.S.quiz.best === 0 && BPGW.S.quiz.total === 0 && Object.keys(BPGW.S.lessons).length === 0 && BPGW.S.gateOn === false && document.documentElement.dataset.theme === 'minimal'), `${tag} the new musician starts clean: defaults, quiz 0, no lessons, gate off, default theme`);
       ok(await q(() => !document.body.classList.contains('gating')), `${tag} the unlock gate (off for Sam) is not shown`);
       await q(() => { BPGW.S.tempo = 77; BPGW.S.quiz.best = 2; BPGW.S.lessons = { 'z/z': { acc: 50, ms: 1, wrong: 0, perfect: false, at: 1 } }; BPGW.setTheme('sheet'); });
-      // switch back to the first player
+      // switch back to the first musician
       await p.keyboard.press('Escape'); await openPanel(p);
-      ok(await q(() => document.querySelectorAll('#profilePanel .pfRow').length === 2 && document.querySelector('#profilePanel .pfRow.on .pfName').textContent === 'Sam' && document.querySelectorAll('#profilePanel [data-pf=del]').length === 2), `${tag} the panel lists both players, Sam is marked "Playing"`);
+      ok(await q(() => document.querySelectorAll('#profilePanel .pfRow').length === 2 && document.querySelector('#profilePanel .pfRow.on .pfName').textContent === 'Sam' && document.querySelectorAll('#profilePanel [data-pf=del]').length === 2), `${tag} the panel lists both musicians, Sam is marked "Playing"`);
       await nav(p, () => p.click(`#profilePanel [data-pf=switch][data-id="${A}"]`));
-      ok(await q(a => BPGW.ME.id === a && document.documentElement.dataset.theme === 'tube', A), `${tag} switching back restores the first player's theme`);
+      ok(await q(a => BPGW.ME.id === a && document.documentElement.dataset.theme === 'tube', A), `${tag} switching back restores the first musician's theme`);
       ok(await q(() => BPGW.S.tempo === 144 && BPGW.S.scale === 'dorian' && BPGW.S.quiz.best === 5 && BPGW.S.quiz.streak === 4 && BPGW.S.lessons['x/y'] && BPGW.S.gateOn === true), `${tag} ...and their settings, quiz score / streak / best, lesson progress and unlock setting`);
-      ok(await q(() => location.hash.length < 5 || !/tempo/.test(location.hash)), `${tag} the URL hash of the other player did not leak`);
-      ok(await q(B2 => { const d = BPGW.PS.readData(B2); return d.state.tempo === 77 && d.state.quiz.best === 2 && d.state.lessons['z/z'] && d.theme === 'sheet' && d.state.gateOn !== true; }, B), `${tag} Sam's stored data is untouched by the first player's session`);
-      // gate: the first player's unlock setting applies on switch (session flag cleared)
-      ok(await q(() => BPGW.S.gateOn === true && !document.getElementById('gate').hidden), `${tag} switching to a player with the unlock on asks the chord question again`);
+      ok(await q(() => location.hash.length < 5 || !/tempo/.test(location.hash)), `${tag} the URL hash of the other musician did not leak`);
+      ok(await q(B2 => { const d = BPGW.PS.readData(B2); return d.state.tempo === 77 && d.state.quiz.best === 2 && d.state.lessons['z/z'] && d.theme === 'sheet' && d.state.gateOn !== true; }, B), `${tag} Sam's stored data is untouched by the first musician's session`);
+      // gate: the first musician's unlock setting applies on switch (session flag cleared)
+      ok(await q(() => BPGW.S.gateOn === true && !document.getElementById('gate').hidden), `${tag} switching to a musician with the unlock on asks the chord question again`);
       await q(() => { BPGW.gateClose(); BPGW.S.gateOn = false; });
       // rename + recolour
       await openPanel(p); await p.click(`#profilePanel [data-pf=edit][data-id="${B}"]`); await sleep(100);
       ok(await q(() => document.getElementById('pfName').value === 'Sam' && document.querySelector('.pfSw[aria-checked=true]').dataset.c === '#d6336c'), `${tag} Edit opens the form with the current name and colour`);
-      await p.click('#pfName', { clickCount: 3 }); await p.type('#pfName', 'Player 1'); await p.click('#profilePanel form button[type=submit]'); await sleep(100);
+      await p.click('#pfName', { clickCount: 3 }); await p.type('#pfName', 'Musician 1'); await p.click('#profilePanel form button[type=submit]'); await sleep(100);
       ok(await q(() => /already/.test(document.querySelector('#profilePanel .pfErr').textContent)), `${tag} a duplicate name is refused`);
       await p.click('#pfName', { clickCount: 3 }); await p.type('#pfName', 'Samira'); await p.keyboard.press('Tab'); await p.keyboard.press('ArrowRight'); await sleep(50);
       ok(await q(() => document.querySelector('.pfSw[aria-checked=true]').dataset.c !== '#d6336c' && document.activeElement.classList.contains('pfSw')), `${tag} arrow keys move through the colour swatches`);
@@ -142,21 +142,21 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       await p.click('#profilePanel [data-pf=delno]'); await sleep(100);
       ok(await q(b2 => BPGW.PS.get(b2) !== null && !document.querySelector('.pfConfirm'), B), `${tag} Keep cancels the delete`);
       await p.click(`#profilePanel [data-pf=del][data-id="${B}"]`); await sleep(100); await p.click('#profilePanel [data-pf=delyes]'); await sleep(150);
-      ok(await q(b2 => BPGW.PS.get(b2) === null && localStorage.getItem('bpgw.p.' + b2) === null && BPGW.PS.index().list.length === 1, B), `${tag} confirmed delete removes the player and their stored data`);
-      ok(await q(() => BPGW.S.tempo === 144 && !document.querySelector('#profilePanel [data-pf=del]')), `${tag} the other player is untouched; the last one cannot be deleted`);
+      ok(await q(b2 => BPGW.PS.get(b2) === null && localStorage.getItem('bpgw.p.' + b2) === null && BPGW.PS.index().list.length === 1, B), `${tag} confirmed delete removes the musician and their stored data`);
+      ok(await q(() => BPGW.S.tempo === 144 && !document.querySelector('#profilePanel [data-pf=del]')), `${tag} the other musician is untouched; the last one cannot be deleted`);
       await ctx.close();
     }
 
-    /* ---------- 5. deleting the player you are playing as ---------- */
+    /* ---------- 5. deleting the musician you are playing as ---------- */
     {
       const { ctx, p, q } = await mk();
       const A = await q(() => BPGW.ME.id);
       const m = await q(() => BPGW.PS.create({ name: 'Kid', color: '#2f9e44', data: { state: { tempo: 90 }, theme: 'surf' } }));
       await nav(p, () => q(id => BPGW.profileSwitch(id), m.id));
-      ok(await q(() => BPGW.S.tempo === 90 && document.documentElement.dataset.theme === 'surf'), `${tag} switching programmatically loads that player's tempo and theme`);
+      ok(await q(() => BPGW.S.tempo === 90 && document.documentElement.dataset.theme === 'surf'), `${tag} switching programmatically loads that musician's tempo and theme`);
       await openPanel(p); await p.click(`#profilePanel [data-pf=del][data-id="${m.id}"]`); await sleep(100);
       await nav(p, () => p.click('#profilePanel [data-pf=delyes]'));
-      ok(await q(a => BPGW.ME.id === a && BPGW.PS.index().list.length === 1, A), `${tag} deleting the active player falls back to the remaining one`);
+      ok(await q(a => BPGW.ME.id === a && BPGW.PS.index().list.length === 1, A), `${tag} deleting the active musician falls back to the remaining one`);
       await ctx.close();
     }
 
@@ -169,18 +169,18 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       await q(() => { window.__dl = null; const o = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { if (this.download) { window.__dl = { name: this.download, href: this.href }; fetch(this.href).then(r => r.text()).then(t => { window.__dlText = t; }); return; } return o.call(this); }; });
       await openPanel(p); await p.click('#profilePanel [data-pf=export]'); await sleep(300);
       const dl = await q(() => ({ d: window.__dl, t: window.__dlText }));
-      ok(dl.d && /^bpgw-profile-player-1\.json$/.test(dl.d.name), `${tag} export downloads a .json file named after the player (${dl.d && dl.d.name})`);
+      ok(dl.d && /^bpgw-profile-musician-1\.json$/.test(dl.d.name), `${tag} export downloads a .json file named after the musician (${dl.d && dl.d.name})`);
       const file = JSON.parse(dl.t);
-      ok(file.app === 'bpgw' && file.kind === 'profile' && file.v === 1 && file.profile.name === 'Player 1' && file.data.theme === 'rosewood' && file.data.state.tempo === 123 && file.data.state.quiz.best === 6 && file.data.state.lessons['a/b'] && !('metro' in file.data.state) && !('idOn' in file.data.state), `${tag} the file holds the name, colour, theme, settings, quiz and lessons`);
-      ok(await q(() => /Saved Player 1/.test(document.querySelector('#profilePanel .pfMsg').textContent)), `${tag} the panel confirms the export`);
+      ok(file.app === 'bpgw' && file.kind === 'profile' && file.v === 1 && file.profile.name === 'Musician 1' && file.data.theme === 'rosewood' && file.data.state.tempo === 123 && file.data.state.quiz.best === 6 && file.data.state.lessons['a/b'] && !('metro' in file.data.state) && !('idOn' in file.data.state), `${tag} the file holds the name, colour, theme, settings, quiz and lessons`);
+      ok(await q(() => /Saved Musician 1/.test(document.querySelector('#profilePanel .pfMsg').textContent)), `${tag} the panel confirms the export`);
       const tmp = path.join(os.tmpdir(), 'bpgw-test-' + w + '.json'); fs.writeFileSync(tmp, dl.t);
       const inp = await p.$('#pfFile'); await inp.uploadFile(tmp); await sleep(400);
-      ok(await q(() => BPGW.PS.index().list.length === 2 && BPGW.PS.index().list.some(x => x.name === 'Player 1 (2)') && /Added Player 1 \(2\)/.test(document.querySelector('#profilePanel .pfMsg').textContent)), `${tag} importing adds a NEW player (same name gets "(2)"), the current one is not overwritten`);
-      const imp = await q(() => BPGW.PS.index().list.find(x => x.name === 'Player 1 (2)'));
+      ok(await q(() => BPGW.PS.index().list.length === 2 && BPGW.PS.index().list.some(x => x.name === 'Musician 1 (2)') && /Added Musician 1 \(2\)/.test(document.querySelector('#profilePanel .pfMsg').textContent)), `${tag} importing adds a NEW musician (same name gets "(2)"), the current one is not overwritten`);
+      const imp = await q(() => BPGW.PS.index().list.find(x => x.name === 'Musician 1 (2)'));
       const impD = await q(id => BPGW.PS.readData(id), imp.id);
-      ok(impD.state.tempo === 123 && impD.state.quiz.best === 6 && impD.state.lessons['a/b'] && impD.theme === 'rosewood' && impD.state.gateRoot === 'E', `${tag} the imported player has all the exported data`);
+      ok(impD.state.tempo === 123 && impD.state.quiz.best === 6 && impD.state.lessons['a/b'] && impD.theme === 'rosewood' && impD.state.gateRoot === 'E', `${tag} the imported musician has all the exported data`);
       await nav(p, () => p.click(`#profilePanel [data-pf=switch][data-id="${imp.id}"]`));
-      ok(await q(() => BPGW.S.tempo === 123 && document.documentElement.dataset.theme === 'rosewood' && BPGW.S.quiz.best === 6), `${tag} switching to the imported player restores everything (as on a new device)`);
+      ok(await q(() => BPGW.S.tempo === 123 && document.documentElement.dataset.theme === 'rosewood' && BPGW.S.quiz.best === 6), `${tag} switching to the imported musician restores everything (as on a new device)`);
       // hostile / broken files
       const bads = {
         'notjson': 'this is not json',
@@ -213,7 +213,7 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       const file = JSON.stringify({ app: 'bpgw', kind: 'profile', v: 1, profile: { name: 'Mia', color: '#7e3fc4' }, data: { theme: 'surf', state: { tempo: 88 } } });
       const f = path.join(os.tmpdir(), 'bpgw-mia.json'); fs.writeFileSync(f, file);
       await Promise.all([p.waitForNavigation({ waitUntil: 'load' }), (async () => { await (await p.$('#pfFile')).uploadFile(f); })()]); await sleep(450);
-      ok(await q(() => BPGW.PS.index().list.length === 1 && BPGW.PS.active().name === 'Mia' && BPGW.S.tempo === 88 && document.documentElement.dataset.theme === 'surf' && document.getElementById('welcome').hidden), `${tag} importing from the welcome makes that file the player (the empty default is dropped) and skips the question`);
+      ok(await q(() => BPGW.PS.index().list.length === 1 && BPGW.PS.active().name === 'Mia' && BPGW.S.tempo === 88 && document.documentElement.dataset.theme === 'surf' && document.getElementById('welcome').hidden), `${tag} importing from the welcome makes that file the musician (the empty default is dropped) and skips the question`);
       await ctx.close();
     }
 
@@ -233,7 +233,7 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
         s.update(a.id, { name: 'A2', color: '#f2b705' }); o.push(s.get(a.id).name === 'A2' && s.get(a.id).color === '#f2b705');
         const na = s.remove(b.id); o.push(s.get(b.id) === null && mem.getItem('bpgw.p.' + b.id) === null && na === s.index().active && s.index().list.length === 2);
         const ex = s.exportProfile(a.id); o.push(ex.app === 'bpgw' && ex.profile.name === 'A2' && ex.data.theme === 'sheet' && s.exportProfile('nope') === null);
-        s.remove(a.id); const last = s.remove(s.index().list[0].id); o.push(s.index().list.length === 1 && s.active().name === 'Player 1' && s.index().active === last);
+        s.remove(a.id); const last = s.remove(s.index().list[0].id); o.push(s.index().list.length === 1 && s.active().name === 'Musician 1' && s.index().active === last);
         mem.setItem('bpgw.profiles', '{broken'); o.push(s.index() === null && s.init().list.length === 1);                       // corrupt index: a fresh default, no crash
         mem.setItem('bpgw.profiles', JSON.stringify({ v: 1, active: 'gone', list: [{ id: 'q1', name: 'Q' }] })); o.push(s.index().active === 'q1');   // dangling active pointer repaired
         const fresh = new BPGW.LocalStore(BPGW.memStorage()); fresh.st.setItem('bpgw.v3', '{"tempo":99}'); const mi = fresh.init(); o.push(mi.welcomed === true && fresh.readData(mi.active).state.tempo === 99 && fresh.st.getItem('bpgw.v3') === '{"tempo":99}');
@@ -251,7 +251,7 @@ const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
       await run(p, 'welcome');
       await p.click('#welcome [data-pf=skip]'); await sleep(100);
       await q(() => { BPGW.PS.create({ name: 'Sam', color: '#d6336c' }); }); await openPanel(p);
-      await run(p, 'players panel'); await p.click('#profilePanel [data-pf=edit]'); await sleep(100); await run(p, 'edit form');
+      await run(p, 'musicians panel'); await p.click('#profilePanel [data-pf=edit]'); await sleep(100); await run(p, 'edit form');
       await p.click('#profilePanel [data-pf=cancel]'); await sleep(100);
       await p.click('#profilePanel [data-pf=del]'); await sleep(100); await run(p, 'delete confirm');
       await ctx.close();

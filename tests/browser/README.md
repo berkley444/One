@@ -12,7 +12,7 @@ node tests/browser/identify.js         # Clear / Identify, Chord Quiz and the ch
 node tests/browser/layout.js           # CHORD/PLAY order: root + position row directly above the fretboard, Chord Builder below it, nothing under the tab bar; Music Control at the bottom, mode/scale/tuning controls, shared root; 8 themes, 1280 + 390
 node tests/browser/profiles.js         # on-device profiles: migration, welcome, isolation, create/rename/delete, export/import (incl. hostile files), the LocalStore interface, axe; phone + desktop
 node tests/browser/axe.js $BPGW_URL    # axe-core on every tab and on the identify / quiz / unlock views, phone + desktop widths
-node tests/browser/themes.js [id,id]   # every theme x 390/1280 x 16 views (incl. players panel / edit form / welcome, piano with practice strip open, identify, quiz, unlock, lock menu): axe, overflow, contrast pass, finger colours, picker (~6 min for all)
+node tests/browser/themes.js [id,id]   # every theme x 390/1280 x 16 views (incl. musicians panel / edit form / welcome, piano with practice strip open, identify, quiz, unlock, lock menu): axe, overflow, contrast pass, finger colours, picker (~6 min for all)
 node tests/browser/frame.js            # render → next frames, 4× CPU throttle (edit the two URLs to compare builds)
 node tests/browser/cls.js              # layout-shift entries on load
 node tests/browser/mkicons.js          # regenerate icons/*.png from icons/*.svg

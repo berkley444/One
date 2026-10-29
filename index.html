@@ -951,7 +951,7 @@ html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:
 html body .fbstrip .fgrp>.engr{color:var(--lab);text-shadow:none}
 
 /* ===== 23-profiles.raw.css ===== */
-/* on-device profiles: header avatar button, the Players panel and the first-visit "Who's playing?" welcome */
+/* on-device profiles: header avatar button, the Musicians panel and the first-visit "Who's playing?" welcome */
 .themebtn.profbtn{right:52px}
 .av{display:inline-grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;font:800 15px/1 var(--sans);text-transform:uppercase;letter-spacing:0;box-shadow:0 0 0 1px rgba(0,0,0,.22)}
 .av.big{width:56px;height:56px;font-size:26px}
@@ -2092,8 +2092,8 @@ html[data-theme="sheet"] select,html[data-theme="sheet"] option{color:#17120a}
   <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
     <button class="themebtn" id="themeBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="themePanel" title="Change the look"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.6" cy="11" r="1.2"/><circle cx="10.4" cy="7.2" r="1.2"/><circle cx="15" cy="7.4" r="1.2"/></svg></button>
     <div class="themepanel" id="themePanel" role="dialog" aria-label="Choose a theme" hidden></div>
-    <button class="themebtn profbtn" id="profileBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="profilePanel" title="Players"></button>
-    <div class="themepanel" id="profilePanel" role="dialog" aria-label="Players" hidden></div>
+    <button class="themebtn profbtn" id="profileBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="profilePanel" title="Musicians"></button>
+    <div class="themepanel" id="profilePanel" role="dialog" aria-label="Musicians" hidden></div>
     <button class="themebtn gatebtn" id="gateBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="gatePanel" title="Chord unlock (optional fun gate)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span class="sr">Chord unlock settings</span></button>
     <div class="themepanel" id="gatePanel" role="dialog" aria-label="Chord unlock settings" hidden></div>
   </header>
@@ -3699,7 +3699,7 @@ const DEFAULTS = {
 };
 
 /* ================================================================
-   PROFILES — on-device players: no passwords, no server. Everything that used to live in bpgw.v3 / bpgw.theme now belongs to a profile.
+   PROFILES — on-device musicians: no passwords, no server. Everything that used to live in bpgw.v3 / bpgw.theme now belongs to a profile.
    ProfileStore is the interface the app talks to; LocalStore (browser localStorage) is the only implementation today. A cloud backend
    (Firebase / Supabase) would implement the same methods; see docs/NEXT.md. Interface (all synchronous; a cloud store keeps a local cache and syncs behind it):
      kind                         'local'
@@ -3725,7 +3725,7 @@ class LocalStore {
   _newId(ix) { let id; do { id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); } while (ix.list.some(p => p.id === id)); return id; }
   index() {
     const ix = this._read(PROFILE_KEY); if (!ix || !Array.isArray(ix.list)) return null;
-    ix.list = ix.list.filter(p => p && typeof p.id === 'string' && /^[\w-]{1,32}$/.test(p.id)).map(p => ({ id: p.id, name: String(p.name || 'Player').slice(0, 24), color: typeof p.color === 'string' ? p.color : AVATAR_COLORS[4].c, created: +p.created || 0 }));
+    ix.list = ix.list.filter(p => p && typeof p.id === 'string' && /^[\w-]{1,32}$/.test(p.id)).map(p => ({ id: p.id, name: String(p.name || 'Musician').slice(0, 24), color: typeof p.color === 'string' ? p.color : AVATAR_COLORS[4].c, created: +p.created || 0 }));
     if (!ix.list.length) return null;
     if (!ix.list.some(p => p.id === ix.active)) ix.active = ix.list[0].id;
     ix.v = 1; ix.welcomed = ix.welcomed === true; return ix;
@@ -3735,7 +3735,7 @@ class LocalStore {
     const have = this.index(); if (have) return have;
     const legacy = this._read(LEGACY_STATE); let lt = null; try { lt = this.st.getItem(LEGACY_THEME); } catch (e) {}
     const had = !!(legacy && typeof legacy === 'object') || !!lt;                                  // an existing visitor: migrate, no welcome
-    const meta = { id: 'p1', name: 'Player 1', color: AVATAR_COLORS[4].c, created: Date.now() };
+    const meta = { id: 'p1', name: 'Musician 1', color: AVATAR_COLORS[4].c, created: Date.now() };
     this._write(PDATA_PREFIX + meta.id, { v: 1, state: had && legacy && typeof legacy === 'object' ? legacy : {}, theme: lt || null });
     const ix = { v: 1, active: meta.id, welcomed: had, list: [meta] }; this._save(ix); return ix;
   }
@@ -3744,7 +3744,7 @@ class LocalStore {
   setActive(id) { const ix = this.index(); if (!ix || !ix.list.some(p => p.id === id)) return false; ix.active = id; return this._save(ix); }
   markWelcomed() { const ix = this.index(); if (!ix) return; ix.welcomed = true; this._save(ix); }
   create({ name, color, data }) {
-    const ix = this.index() || this.init(); const meta = { id: this._newId(ix), name: String(name || 'Player').slice(0, 24), color: color || AVATAR_COLORS[0].c, created: Date.now() };
+    const ix = this.index() || this.init(); const meta = { id: this._newId(ix), name: String(name || 'Musician').slice(0, 24), color: color || AVATAR_COLORS[0].c, created: Date.now() };
     this._write(PDATA_PREFIX + meta.id, { v: 1, state: data && data.state ? data.state : {}, theme: data && data.theme ? data.theme : null });
     ix.list.push(meta); this._save(ix); return meta;
   }
@@ -3753,7 +3753,7 @@ class LocalStore {
     const ix = this.index(); if (!ix) return null;
     try { this.st.removeItem(PDATA_PREFIX + id); } catch (e) {}
     ix.list = ix.list.filter(p => p.id !== id);
-    if (!ix.list.length) { const m = { id: this._newId(ix), name: 'Player 1', color: AVATAR_COLORS[4].c, created: Date.now() }; ix.list.push(m); this._write(PDATA_PREFIX + m.id, { v: 1, state: {}, theme: null }); }
+    if (!ix.list.length) { const m = { id: this._newId(ix), name: 'Musician 1', color: AVATAR_COLORS[4].c, created: Date.now() }; ix.list.push(m); this._write(PDATA_PREFIX + m.id, { v: 1, state: {}, theme: null }); }
     if (!ix.list.some(p => p.id === ix.active)) ix.active = ix.list[0].id;
     this._save(ix); return ix.active;
   }
@@ -5945,8 +5945,8 @@ document.addEventListener('click', e => {
 $('#themeBtn').addEventListener('click', () => themeOpen());
 
 /* ================================================================
-   PROFILES UI — header avatar button, the Players panel (switch / new / edit / delete with confirm / export / import),
-   and the skippable first-visit "Who's playing?" welcome. Switching reloads the page so no state can leak between players.
+   PROFILES UI — header avatar button, the Musicians panel (switch / new / edit / delete with confirm / export / import),
+   and the skippable first-visit "Who's playing?" welcome. Switching reloads the page so no state can leak between musicians.
    ================================================================ */
 const cleanName = v => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 24);
 const colorOf = c => AVATAR_COLORS.find(x => x.c === c) || AVATAR_COLORS[4];
@@ -5971,12 +5971,12 @@ function profileFromFile(obj) {                                              // 
   if (!obj || typeof obj !== 'object' || obj.app !== 'bpgw' || obj.kind !== 'profile') throw new Error('That file is not a Big Pear Guitar Works profile.');
   if (obj.v !== 1) throw new Error('That profile file comes from a different version of the app.');
   const pr = obj.profile && typeof obj.profile === 'object' ? obj.profile : {}, d = obj.data && typeof obj.data === 'object' ? obj.data : {};
-  return { name: cleanName(pr.name) || 'Imported player', color: AVATAR_COLORS.some(c => c.c === pr.color) ? pr.color : AVATAR_COLORS[0].c,
+  return { name: cleanName(pr.name) || 'Imported musician', color: AVATAR_COLORS.some(c => c.c === pr.color) ? pr.color : AVATAR_COLORS[0].c,
     data: { state: sanitizeState(d.state), theme: THEMES.some(t => t.id === d.theme) ? d.theme : null } };
 }
 function profileBtnPaint() {
   const b = $('#profileBtn'); if (!b) return; const m = PS.active();
-  b.innerHTML = avatarHTML(m) + `<span class="sr">Players. Playing as ${esc(m.name)}</span>`; b.title = 'Players: ' + m.name;
+  b.innerHTML = avatarHTML(m) + `<span class="sr">Musicians. Playing as ${esc(m.name)}</span>`; b.title = 'Musicians: ' + m.name;
 }
 function pfSwatchesHTML() {
   return AVATAR_COLORS.map(c => `<button type="button" class="pfSw" role="radio" aria-checked="${c.c === PF.color}" tabindex="${c.c === PF.color ? 0 : -1}" data-pf="color" data-c="${c.c}" aria-label="${c.n}" style="background:${c.c};color:${c.ink}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`).join('');
@@ -5987,7 +5987,7 @@ function pfFormHTML(kind) {
     <div class="pfPrev">${avatarHTML({ name: PF.name, color: PF.color }, 'big')}<div class="field" style="flex:1;min-width:0"><label for="pfName">Name</label><input id="pfName" class="pfIn" type="text" maxlength="24" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Your name" value="${esc(PF.name)}"></div></div>
     <div class="field"><span class="flab" id="pfColLab">Colour</span><div class="pfCols" role="radiogroup" aria-labelledby="pfColLab">${pfSwatchesHTML()}</div></div>
     ${PF.err ? `<p class="pfErr" role="alert">${esc(PF.err)}</p>` : ''}
-    <div class="pfAct"><button type="submit" class="btn pri">${welcome ? 'Start' : kind === 'new' ? 'Add player' : 'Save'}</button>${welcome ? '<button type="button" class="btn" data-pf="skip">Skip for now</button>' : '<button type="button" class="btn" data-pf="cancel">Cancel</button>'}</div>
+    <div class="pfAct"><button type="submit" class="btn pri">${welcome ? 'Start' : kind === 'new' ? 'Add musician' : 'Save'}</button>${welcome ? '<button type="button" class="btn" data-pf="skip">Skip for now</button>' : '<button type="button" class="btn" data-pf="cancel">Cancel</button>'}</div>
   </form>`;
 }
 function profilePanelHTML() {
@@ -5999,11 +5999,11 @@ function profilePanelHTML() {
     return `<li class="pfRow${on ? ' on' : ''}"><button class="pfWho" data-pf="switch" data-id="${p.id}"${on ? ' aria-current="true"' : ''}>${avatarHTML(p)}${on ? '' : '<span class="sr">Switch to </span>'}<span class="pfName">${n}</span>${on ? '<span class="pfTag">Playing</span>' : ''}</button><button class="btn sm" data-pf="edit" data-id="${p.id}" aria-label="Edit ${n}">Edit</button>${many ? `<button class="btn sm" data-pf="del" data-id="${p.id}" aria-label="Delete ${n}">Delete</button>` : ''}</li>`;
   }).join('');
   const act = PS.active();
-  return `<div class="tpHead"><b>Players</b><span>Saved on this device. No password, no account.</span><button class="btn sm" data-pf="close">Done</button></div>
-    <ul class="pfList" aria-label="Players">${rows}${PF.edit === 'new' ? `<li class="pfRow">${pfFormHTML('new')}</li>` : ''}</ul>
-    ${PF.edit === 'new' ? '' : '<button class="btn sm" data-pf="new">+ New player</button>'}
+  return `<div class="tpHead"><b>Musicians</b><span>Saved on this device. No password, no account.</span><button class="btn sm" data-pf="close">Done</button></div>
+    <ul class="pfList" aria-label="Musicians">${rows}${PF.edit === 'new' ? `<li class="pfRow">${pfFormHTML('new')}</li>` : ''}</ul>
+    ${PF.edit === 'new' ? '' : '<button class="btn sm" data-pf="new">+ New musician</button>'}
     <div class="pfFoot"><div class="pfAct"><button class="btn sm" data-pf="export" data-id="${act.id}">Export ${esc(act.name)}</button><button class="btn sm" data-pf="import">Import a profile file</button></div>
-      <p class="pfNote">A profile file holds one player's settings, theme, quiz scores and lesson progress, so you can move to another device. Importing adds a new player; it never overwrites one.</p>
+      <p class="pfNote">A profile file holds one musician's settings, theme, quiz scores and lesson progress, so you can move to another device. Importing adds a new musician; it never overwrites one.</p>
       <div class="pfMsg" role="status" aria-live="polite">${PF.msg ? esc(PF.msg.text) + (PF.msg.id ? ` <button class="btn sm" data-pf="switch" data-id="${PF.msg.id}">Switch to ${esc(PF.msg.who)}</button>` : '') : ''}</div></div>`;
 }
 function welcomeHTML() {
@@ -6025,11 +6025,11 @@ function profileOpen(open) {
   if (open) { themeOpen(false); gatePanelOpen(false); PF.edit = null; PF.del = null; PF.err = ''; PF.msg = null; p.innerHTML = profilePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const f = $('.pfWho[aria-current]', p) || $('.pfWho', p); if (f) f.focus({ preventScroll: true }); }
   else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); PF.edit = null; PF.del = null; if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
 }
-function profileLeave() { try { sessionStorage.removeItem(GATE_KEY); } catch (e) {} location.replace(location.pathname); }   // fresh page, no hash / ?theme= carried over, the unlock gate asks again for the new player
+function profileLeave() { try { sessionStorage.removeItem(GATE_KEY); } catch (e) {} location.replace(location.pathname); }   // fresh page, no hash / ?theme= carried over, the unlock gate asks again for the new musician
 function profileSwitch(id) { save(); if (id === ME.id) { profileOpen(false); return; } if (PS.setActive(id)) profileLeave(); }
 function profileExport(id) {
   save(); const o = PS.exportProfile(id), m = PS.get(id); if (!o) return;
-  const slug = (m.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'player'), fn = `bpgw-profile-${slug}.json`;
+  const slug = (m.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'musician'), fn = `bpgw-profile-${slug}.json`;
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' })); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   PF.msg = { text: `Saved ${m.name} as ${fn}. Keep it somewhere safe; import it on the other device.` }; pfRender('[data-pf="export"]'); announce('Profile exported');
 }
@@ -6048,14 +6048,14 @@ async function profileImportFile(file) {
 }
 function pfSubmit(kind) {
   const name = cleanName(PF.name);
-  if (!name) { PF.err = kind === 'welcome' ? "Type a name, or choose Skip for now." : 'Give this player a name.'; pfRender('#pfName'); return; }
+  if (!name) { PF.err = kind === 'welcome' ? "Type a name, or choose Skip for now." : 'Give this musician a name.'; pfRender('#pfName'); return; }
   const ix = PS.index(), editId = kind === 'edit' ? PF.edit : kind === 'welcome' ? ME.id : null;
-  if (ix.list.some(p => p.id !== editId && p.name.toLowerCase() === name.toLowerCase())) { PF.err = 'Another player already has that name.'; pfRender('#pfName'); return; }
+  if (ix.list.some(p => p.id !== editId && p.name.toLowerCase() === name.toLowerCase())) { PF.err = 'Another musician already has that name.'; pfRender('#pfName'); return; }
   PF.err = '';
   if (kind === 'new') { const m = PS.create({ name, color: PF.color }); profileSwitch(m.id); return; }
   PS.update(editId, { name, color: PF.color });
   if (kind === 'welcome') { welcomeClose(); announce('Welcome, ' + name); profileBtnPaint(); return; }
-  PF.edit = null; PF.msg = { text: `Saved ${name}.` }; pfRender('.pfWho[data-id="' + editId + '"]'); announce('Player saved');
+  PF.edit = null; PF.msg = { text: `Saved ${name}.` }; pfRender('.pfWho[data-id="' + editId + '"]'); announce('Musician saved');
 }
 function pfClick(e) {
   const t = e.target.closest('[data-pf]'); if (!t) return; const a = t.dataset.pf, id = t.dataset.id;
@@ -6071,7 +6071,7 @@ function pfClick(e) {
     case 'delyes': {
       const m = PS.get(id), was = id === ME.id; save(); const na = PS.remove(id); PF.del = null;
       if (was) { profileLeave(); break; }
-      PF.msg = { text: `Deleted ${m ? m.name : 'player'}.` }; pfRender('.pfWho[aria-current]'); announce('Player deleted'); break;
+      PF.msg = { text: `Deleted ${m ? m.name : 'musician'}.` }; pfRender('.pfWho[aria-current]'); announce('Musician deleted'); break;
     }
     case 'export': profileExport(id); break;
     case 'import': $('#pfFile').click(); break;
