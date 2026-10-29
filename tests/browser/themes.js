@@ -16,7 +16,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const URL0 = process.env.BPGW_URL || 'http://localhost:8123/index.html';
 const ALL = ['silver', 'console', 'pedal', 'tube', 'minimal', 'navy-light', 'minimal-dark', 'synth', 'wood', 'sunburst', 'surf', 'rosewood', 'sheet'];
 const THEMES = (process.argv[2] || '').split(',').filter(Boolean).length ? process.argv[2].split(',') : ALL;
-const TABS = ['play', 'chord', 'circle', 'math', 'song', 'lessons', 'lessons-open', 'practice', 'piano-practice', 'identify-done', 'quiz-checked', 'gate', 'gate-menu'];
+const TABS = ['play', 'chord', 'circle', 'math', 'song', 'lessons', 'lessons-open', 'practice', 'piano-practice', 'identify-done', 'quiz-checked', 'gate', 'gate-menu', 'players', 'players-edit', 'welcome'];
 let checks = 0, bad = 0, soft = 0;
 const ok = (c, l) => { checks++; if (!c) { bad++; console.log('  ✗', l); } };
 
@@ -58,7 +58,7 @@ function contrastPass() {
     const tn = w.currentNode; const txt = tn.textContent.trim(); if (!txt) continue;
     const el = tn.parentElement; if (!el || seen.has(el)) continue;
     if (el.closest('[hidden],script,style,[aria-hidden="true"]')) { continue; }
-    if (document.body.classList.contains('gating') && !el.closest('#gate')) { continue; }   // the page behind the chord-unlock overlay is dimmed and inert
+    if (document.body.classList.contains('gating') && !el.closest('#gate,#welcome')) { continue; }   // the page behind the chord-unlock overlay is dimmed and inert
     const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none') continue;
     const r = el.getBoundingClientRect(); if (r.width <= 1.5 || r.height <= 1.5) continue;
     let op = 1; for (let e = el; e && e.nodeType === 1; e = e.parentElement) op *= parseFloat(getComputedStyle(e).opacity); if (op < .05) continue;
@@ -117,7 +117,7 @@ function swatchPass() {
       ok(await p.evaluate(i => (document.documentElement.getAttribute('data-theme') || 'silver') === i, id), `[${id} ${w}] ?theme= applied`);
       await p.evaluate(axeSrc);
       for (const tab of TABS) {
-        await p.evaluate(t => { if (t === 'lessons-open') { BPGW.setTab('lessons'); document.querySelector('[data-act="lopen"]').click(); } else if (t === 'practice') { BPGW.setTab('lessons'); const x = document.querySelector('[data-act="prtog"]'); x && x.click(); } else if (t === 'piano-practice') { BPGW.setTab('play'); const tb = document.querySelector('.tab.on'); if (tb.querySelector('.pprbody').hidden) tb.querySelector('.pprhead').click(); const tb2 = document.querySelector('.tab.on'); if (tb2.querySelector('#prac').hidden) tb2.querySelector('[data-act="prtog"]').click(); } else if (t === 'identify-done') { BPGW.idExit && BPGW.idExit(); BPGW.setTab('play'); BPGW.idEnter(false); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.idPress(5, 0); BPGW.idPress(0, 0); BPGW.idPress(0, 0); } else if (t === 'quiz-checked') { BPGW.idExit(); BPGW.idEnter(true); [[1, 3], [2, 2], [3, 0], [4, 1], [5, 2]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.quizCheck(); } else if (t === 'gate') { BPGW.idExit(); BPGW.gateOpen(true); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.gatePress(s, f)); } else if (t === 'gate-menu') { BPGW.gateClose(); document.querySelector('#gateBtn').click(); } else { if (!document.querySelector('#gatePanel').hidden) document.querySelector('#gateBtn').click(); BPGW.gateClose(); BPGW.idExit(); BPGW.setTab(t); } }, tab);
+        await p.evaluate(t => { if (t === 'lessons-open') { BPGW.setTab('lessons'); document.querySelector('[data-act="lopen"]').click(); } else if (t === 'practice') { BPGW.setTab('lessons'); const x = document.querySelector('[data-act="prtog"]'); x && x.click(); } else if (t === 'piano-practice') { BPGW.setTab('play'); const tb = document.querySelector('.tab.on'); if (tb.querySelector('.pprbody').hidden) tb.querySelector('.pprhead').click(); const tb2 = document.querySelector('.tab.on'); if (tb2.querySelector('#prac').hidden) tb2.querySelector('[data-act="prtog"]').click(); } else if (t === 'identify-done') { BPGW.idExit && BPGW.idExit(); BPGW.setTab('play'); BPGW.idEnter(false); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.idPress(5, 0); BPGW.idPress(0, 0); BPGW.idPress(0, 0); } else if (t === 'quiz-checked') { BPGW.idExit(); BPGW.idEnter(true); [[1, 3], [2, 2], [3, 0], [4, 1], [5, 2]].forEach(([s, f]) => BPGW.idPress(s, f)); BPGW.quizCheck(); } else if (t === 'gate') { BPGW.idExit(); BPGW.gateOpen(true); [[1, 3], [2, 2], [4, 1]].forEach(([s, f]) => BPGW.gatePress(s, f)); } else if (t === 'gate-menu') { BPGW.gateClose(); document.querySelector('#gateBtn').click(); } else if (t === 'players' || t === 'players-edit') { BPGW.setTab('play'); BPGW.gateClose(); if (BPGW.PS.index().list.length < 3) { BPGW.PS.create({ name: 'Sam', color: BPGW.AVATAR_COLORS[1].c }); BPGW.PS.create({ name: 'Priya', color: BPGW.AVATAR_COLORS[6].c }); } BPGW.profileOpen(false); BPGW.profileOpen(true); if (t === 'players-edit') document.querySelector('#profilePanel [data-pf="edit"]').click(); } else if (t === 'welcome') { BPGW.profileOpen(false); BPGW.welcomeOpen(); } else { if (!document.querySelector('#gatePanel').hidden) document.querySelector('#gateBtn').click(); BPGW.profileOpen(false); BPGW.welcomeClose(); BPGW.gateClose(); BPGW.idExit(); BPGW.setTab(t); } }, tab);
         await sleep(200);
         const lay = await p.evaluate(layoutPass);
         ok(lay.sw <= lay.cw + 1 && !lay.out.length, `[${id} ${w}/${tab}] no overflow (scrollWidth ${lay.sw}/${lay.cw}) ${lay.out.join('; ')}`);
@@ -143,7 +143,7 @@ function swatchPass() {
   const ctx = await (b.createBrowserContext ? b.createBrowserContext() : b.createIncognitoBrowserContext());
   const p = await ctx.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
   await p.goto(URL0, { waitUntil: 'load' }); await sleep(300);
-  ok(await p.evaluate(() => document.documentElement.getAttribute('data-theme') === 'minimal' && !localStorage.getItem('bpgw.theme')), 'default for a new user is Minimal Light, and nothing is saved until they pick');
+  ok(await p.evaluate(() => document.documentElement.getAttribute('data-theme') === 'minimal' && !BPGW.PS.readData(BPGW.ME.id).theme), 'default for a new user is Minimal Light, and nothing is saved until they pick');
   ok(await p.evaluate(() => document.querySelector('meta[name=theme-color]').content === '#f2f2f7'), 'browser chrome colour matches Minimal Light');
   ok(await p.evaluate(() => document.getElementById('themePanel').hidden && document.getElementById('themeBtn').getAttribute('aria-expanded') === 'false'), 'picker starts closed');
   await p.click('#themeBtn'); await sleep(150);
@@ -151,7 +151,7 @@ function swatchPass() {
   ok(cards.length >= 8 && ALL.every(i => cards.includes(i)), 'picker lists all themes: ' + cards.join(','));
   ok(await p.evaluate(() => document.activeElement.classList.contains('tpCard')), 'focus moves into the picker');
   await p.click('#themePanel [data-v="tube"]'); await sleep(150);
-  ok(await p.evaluate(() => document.documentElement.dataset.theme === 'tube' && localStorage.getItem('bpgw.theme') === 'tube' && /theme=tube/.test(location.search)), 'choosing a theme applies it, saves it and updates the URL');
+  ok(await p.evaluate(() => document.documentElement.dataset.theme === 'tube' && BPGW.PS.readData(BPGW.ME.id).theme === 'tube' && /theme=tube/.test(location.search)), 'choosing a theme applies it, saves it and updates the URL');
   ok(await p.evaluate(() => document.querySelector('#themePanel [data-v="tube"]').getAttribute('aria-checked') === 'true'), 'aria-checked follows the choice');
   await p.keyboard.press('Escape'); await sleep(100);
   ok(await p.evaluate(() => document.getElementById('themePanel').hidden && document.activeElement.id === 'themeBtn'), 'Escape closes the picker and returns focus to the button');
@@ -166,8 +166,8 @@ function swatchPass() {
   await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
   await p.click('#themeBtn'); await sleep(150); await p.click('#themePanel [data-v="silver"]'); await sleep(150);
   await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
-  ok(await p.evaluate(() => !document.documentElement.getAttribute('data-theme') && localStorage.getItem('bpgw.theme') === 'silver'), 'an explicit Silver choice is remembered across reloads');
-  await p.evaluate(() => localStorage.removeItem('bpgw.theme')); await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
+  ok(await p.evaluate(() => !document.documentElement.getAttribute('data-theme') && BPGW.PS.readData(BPGW.ME.id).theme === 'silver'), 'an explicit Silver choice is remembered across reloads');
+  await p.evaluate(() => BPGW.PS.writeData(BPGW.ME.id, { theme: null })); await p.goto(URL0.replace(/\?.*/, ''), { waitUntil: 'load' }); await sleep(300);
   ok(await p.evaluate(() => document.documentElement.dataset.theme === 'minimal'), 'with no saved theme the default is Minimal Light again');
   await ctx.close(); await b.close();
   console.log(`\nthemes.js: ${checks - bad}/${checks} checks passed` + (soft ? ` (Silver baseline: ${soft} decorative low-contrast text nodes reported, not asserted)` : ''));

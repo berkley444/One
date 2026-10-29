@@ -26,6 +26,10 @@ On the fretboard toolbar, **✎ Clear / Identify** wipes the board so you can pl
 
 Controls: the 12 **root buttons** (above the board on PLAY and CHORD, and in a Root + Scale bar on CIRCLE / MATH / SONG) set the one shared root. In the fretboard toolbar: Notes / Intervals / Fingers / Off, then the **scale** select (major, natural/harmonic/melodic minor, major/minor pentatonic, blues, 5 more modes), the **Chord | Scale** toggle and Clear / Identify. A small **tuning** select (standard, drop D, DADGAD, open G/D/E, half-step down, full-step down, 7-string, bass) sits at the top-left of the board. The **Music Control** panel at the very bottom of the page holds `PITCH` (A4 415–450) · `TIME SIG` · `TONE` · tempo and volume knobs · metronome switch · power.
 
+## Players (profiles)
+
+The round avatar button in the header (next to the lock and palette) opens **Players**: add players, change a name or colour, switch, delete (with a confirm), and **export / import** a player as a JSON file to move to another device. Each player keeps their own settings, theme, quiz score, lesson progress and unlock setting; nothing leaves the device and there are no passwords. Existing saved data becomes "Player 1" automatically. Cloud sync is planned (see `docs/NEXT.md`).
+
 ## Themes
 
 The look is a setting: tap the **theme button** (top right of the header) or add `?theme=<id>` to the URL. The choice is remembered. **Minimal Light** is the default; **Silver Hi-Fi** (the original brushed-metal look) is one tap away.

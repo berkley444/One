@@ -88,8 +88,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     ok(await q(() => !!document.querySelector('.idc')) && await text('.idbig') === 'C', `${tag} reload keeps the placement (${await text('.idbig')})`);
     await p.goto(URL + hash, { waitUntil: 'load' }); await sleep(300);
     ok(await shape() === 'x 3 2 0 1 0', `${tag} the hash link restores x32010`);
-    ok(await q(() => JSON.parse(localStorage.getItem('bpgw.v3')).idFrets.join() === '-1,3,2,0,1,0'), `${tag} placement is saved in bpgw.v3`);
-    ok(await q(() => JSON.parse(localStorage.getItem('bpgw.v3')).idOn === undefined || JSON.parse(localStorage.getItem('bpgw.v3')).idOn === false), `${tag} the mode itself is not persisted (app opens normally next time)`);
+    ok(await q(() => BPGW.stored().idFrets.join() === '-1,3,2,0,1,0'), `${tag} placement is saved in the active profile`);
+    ok(await q(() => BPGW.stored().idOn === undefined || BPGW.stored().idOn === false), `${tag} the mode itself is not persisted (app opens normally next time)`);
 
     /* ---- tuning change keeps the notes by fret and re-names them ---- */
     await q(() => { const s = document.querySelector('#tuningSel, select[data-sel="tuning"], #tunSel'); if (s) { s.value = 'dadgad'; s.dispatchEvent(new Event('change', { bubbles: true })); } else BPGW.S.tuning = 'dadgad', BPGW.render(); });
@@ -141,14 +141,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     await q(() => { const s = document.querySelector('#qPos'); s.value = 'any'; s.dispatchEvent(new Event('change', { bubbles: true })); });
     // score persists
     const sc = await q(() => JSON.stringify(BPGW.S.quiz)); await p.reload({ waitUntil: 'load' }); await sleep(250);
-    ok(await q(() => { const s = JSON.parse(localStorage.getItem('bpgw.v3')).quiz; return s.total >= 4 && s.best >= 1; }), `${tag} score and streak are saved in localStorage (${sc})`);
+    ok(await q(() => { const s = BPGW.stored().quiz; return s.total >= 4 && s.best >= 1; }), `${tag} score and streak are saved in localStorage (${sc})`);
     ok(await q(() => !document.querySelector('.idc')), `${tag} reload leaves quiz mode (the app opens normally)`);
     // exit from quiz
     await tap('[data-act="quiztoggle"]'); await tap('[data-act="idexit"]'); ok(await q(() => !document.querySelector('#idPanel')), `${tag} quiz Exit`);
 
     /* ---- chord unlock gate ---- */
     await fresh(); ok(await q(() => document.querySelector('#gate').hidden && !document.body.classList.contains('gating')), `${tag} the gate is OFF by default`);
-    ok(await q(() => JSON.parse(localStorage.getItem('bpgw.v3') || '{}').gateOn !== true), `${tag} gateOn is false by default`);
+    ok(await q(() => BPGW.stored().gateOn !== true), `${tag} gateOn is false by default`);
     await tap('#gateBtn'); ok(await q(() => !document.querySelector('#gatePanel').hidden && /not security/i.test(document.querySelector('#gatePanel').textContent)), `${tag} lock menu opens and says it is not security`);
     ok(await q(() => document.querySelector('#gateBtn').getAttribute('aria-expanded') === 'true'), `${tag} lock button aria-expanded`);
     await q(() => { const s = document.querySelector('#gRoot'); s.value = 'G'; s.dispatchEvent(new Event('change', { bubbles: true })); const t = document.querySelector('#gQ'); t.value = 'major'; t.dispatchEvent(new Event('change', { bubbles: true })); });

@@ -5,8 +5,8 @@
 <title>Big Pear Guitar Works — guitar theory, math & piano bridge</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f2f2f7" id="metaTheme">
-<script>/* theme before first paint: ?theme= wins, then the saved choice, then the default (Minimal Light). Silver Hi-Fi is the base stylesheet and sets nothing. */
-(function(){var id="minimal";try{var m=/[?&]theme=([\w-]+)/.exec(location.search),v=m?m[1].toLowerCase():localStorage.getItem("bpgw.theme");if(v)id=v}catch(e){}if(id!=="silver"&&/^[a-z-]+$/.test(id))document.documentElement.setAttribute("data-theme",id)})();</script>
+<script>/* theme before first paint: ?theme= wins, then the active profile's saved choice (bpgw.p.<id>), then the pre-profiles key, then the default (Minimal Light). Silver Hi-Fi is the base stylesheet and sets nothing. */
+(function(){var id="minimal";try{var m=/[?&]theme=([\w-]+)/.exec(location.search),v=m?m[1].toLowerCase():null;if(!v){var ix=JSON.parse(localStorage.getItem("bpgw.profiles")||"null");if(ix&&ix.active){var d=JSON.parse(localStorage.getItem("bpgw.p."+ix.active)||"null");v=d&&d.theme}else v=localStorage.getItem("bpgw.theme")}if(v)id=v}catch(e){}if(id!=="silver"&&/^[a-z-]+$/.test(id))document.documentElement.setAttribute("data-theme",id)})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -950,6 +950,55 @@ html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:
 /* labels above the fretboard row ("Root", "Position") sit on the page, not on a metal panel */
 html body .fbstrip .fgrp>.engr{color:var(--lab);text-shadow:none}
 
+/* ===== 23-profiles.raw.css ===== */
+/* on-device profiles: header avatar button, the Players panel and the first-visit "Who's playing?" welcome */
+.themebtn.profbtn{right:52px}
+.av{display:inline-grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;font:800 15px/1 var(--sans);text-transform:uppercase;letter-spacing:0;box-shadow:0 0 0 1px rgba(0,0,0,.22)}
+.av.big{width:56px;height:56px;font-size:26px}
+.themebtn.profbtn{overflow:hidden}
+.profbtn .av{width:100%;height:100%;font-size:18px;box-shadow:none}
+#profilePanel{width:min(460px,calc(100vw - 16px))}
+.pfList{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px}
+.pfRow{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 6px;border:1px solid var(--chip-bd);border-radius:12px;background:var(--chip);flex-wrap:wrap}
+.pfRow.on{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+.pfWho{flex:1 1 150px;min-width:0;display:flex;align-items:center;gap:10px;padding:4px 6px;margin:0;background:none;border:0;border-radius:9px;color:var(--ink);cursor:pointer;font:700 15px var(--sans);text-align:left}
+.pfName{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pfTag{margin-left:auto;padding-left:8px;font:700 10px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2,var(--dim));white-space:nowrap}
+.pfRow .btn.sm{padding:6px 10px}
+.pfRow.pfConfirm{border-color:var(--bad,#e5484d)}
+.pfRow.pfConfirm p{flex:1 1 100%;margin:0;font:500 13px/1.45 var(--sans);color:var(--ink)}
+.pfForm{display:flex;flex-direction:column;gap:12px;width:100%}
+.pfForm .field label,.pfForm .flab{font:700 10px var(--sans);letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.pfIn{width:100%;box-sizing:border-box;background:var(--chip);border:1px solid var(--chip-bd);color:var(--ink);border-radius:8px;padding:9px 11px;font:600 16px var(--sans)}
+.pfIn:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.pfCols{display:flex;flex-wrap:wrap;gap:8px}
+.pfSw{position:relative;width:36px;height:36px;border-radius:50%;padding:0;border:2px solid var(--card-bd);cursor:pointer;display:grid;place-items:center}
+.pfSw svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.pfSw[aria-checked="true"]{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ink)}
+.pfSw[aria-checked="true"] svg{opacity:1}
+.pfPrev{display:flex;align-items:center;gap:12px}
+.pfErr{margin:0;font:600 13px/1.4 var(--sans);color:var(--ink);padding:6px 10px;border-radius:8px;border-left:4px solid var(--bad,#e5484d);background:var(--chip)}
+.pfAct{display:flex;gap:8px;flex-wrap:wrap}
+.pfFoot{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--hair,var(--card-bd))}
+.pfFoot .hint,.pfNote{margin:0;font:500 12px/1.45 var(--sans);color:var(--dim)}
+.pfMsg{margin:8px 0 0;font:600 13px/1.4 var(--sans);color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pfMsg:empty{display:none}
+#welcome{position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(8,8,12,.78);overflow:auto;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#welcome[hidden]{display:none}
+.wcard{width:min(440px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 24px 70px rgba(0,0,0,.55);color:var(--ink)}
+.wcard h2{margin:0;font:700 30px/1.1 var(--hfont,var(--cond));color:var(--ink)}
+.wcard p{margin:0;font:500 14px/1.5 var(--sans);color:var(--ink2,var(--ink))}
+.wcard .pfAct .btn{flex:1 1 auto}
+.wcard .linkbtn{background:none;border:0;padding:6px 2px;color:var(--ink);font:600 13px var(--sans);text-decoration:underline;cursor:pointer;align-self:flex-start}
+@media(max-width:520px){
+  html header .themebtn,html[data-theme] header .themebtn{width:38px;height:38px}
+html header .themebtn.profbtn,html[data-theme] header .themebtn.profbtn{right:44px}
+html header .profbtn .av,html[data-theme] header .profbtn .av{font-size:16px}
+html header h1,html[data-theme] header h1{padding:0 88px}
+html header h1 small,html[data-theme] header h1 small{margin:4px -88px 0}
+.wcard h2{font-size:25px}
+}
+
 /* ===== 24-keycontrols.raw.css ===== */
 /* Scale + tuning selects (they used to be drums in the Music Control panel) and the Chord | Scale toggle in the fretboard toolbar. Every theme reads the same variables. */
 html body select.kc{background:var(--chip);border:1px solid var(--chip-bd);color:var(--ink);border-radius:8px;padding:4px 22px 4px 9px;height:28px;box-sizing:border-box;font:600 12px var(--sans);max-width:100%;cursor:pointer;
@@ -1812,6 +1861,8 @@ html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)
   --bar-n:#bfa27c; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#33160c; --hook-ink:#fbeed0; --code-ink:#f2e0be;
 }
 html[data-theme="sunburst"] h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.6);font-size:25px}
+@media(max-width:520px){html[data-theme="sunburst"] h1{font-size:20px}
+}
 html[data-theme="sunburst"] h1::after{content:"";display:block;width:150px;height:3px;margin:8px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#c25a14 25%,#ffb23e 50%,#c25a14 75%,transparent)}
 html[data-theme="sunburst"] h2{font-weight:700;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #6a331b;padding-bottom:4px}
 html[data-theme="sunburst"] .card,html[data-theme="sunburst"] .pfc,html[data-theme="sunburst"] .lcard{box-shadow:0 0 0 1px #0d0402,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,220,150,.08) inset}
@@ -1954,6 +2005,8 @@ html[data-theme="surf"] select,html[data-theme="surf"] option{color:#0a2e2b}
   --bar-n:#a898ac; --ok:#3f9a5a; --ok-bg:#12301c; --ok-ink:#a8f0b4; --hook-bg:#2d1617; --hook-ink:#f3eef4; --code-ink:#e6dce8;
 }
 html[data-theme="rosewood"] h1{font-weight:700;font-style:italic;font-size:32px;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+@media(max-width:520px){html[data-theme="rosewood"] h1{font-size:25px}
+}
 html[data-theme="rosewood"] h1::after{content:"◆  ◆  ◆";display:block;margin-top:3px;font-size:10px;letter-spacing:.3em;color:#e8e0ec;font-style:normal;font-weight:400;line-height:1}
 html[data-theme="rosewood"] h2{font-weight:700;font-style:italic;font-size:28px;letter-spacing:.02em}
 html[data-theme="rosewood"] .card,html[data-theme="rosewood"] .pfc,html[data-theme="rosewood"] .lcard{box-shadow:0 0 0 1px #0d0505,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.05) inset}
@@ -2039,6 +2092,8 @@ html[data-theme="sheet"] select,html[data-theme="sheet"] option{color:#17120a}
   <header><h1>Big Pear Guitar Works<small>GUITAR THEORY · MATH · PIANO BRIDGE</small></h1>
     <button class="themebtn" id="themeBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="themePanel" title="Change the look"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.6" cy="11" r="1.2"/><circle cx="10.4" cy="7.2" r="1.2"/><circle cx="15" cy="7.4" r="1.2"/></svg></button>
     <div class="themepanel" id="themePanel" role="dialog" aria-label="Choose a theme" hidden></div>
+    <button class="themebtn profbtn" id="profileBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="profilePanel" title="Players"></button>
+    <div class="themepanel" id="profilePanel" role="dialog" aria-label="Players" hidden></div>
     <button class="themebtn gatebtn" id="gateBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="gatePanel" title="Chord unlock (optional fun gate)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span class="sr">Chord unlock settings</span></button>
     <div class="themepanel" id="gatePanel" role="dialog" aria-label="Chord unlock settings" hidden></div>
   </header>
@@ -2072,6 +2127,8 @@ html[data-theme="sheet"] select,html[data-theme="sheet"] option{color:#17120a}
 </div>
 
 <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden></div>
+<div id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" hidden></div>
+<input type="file" id="pfFile" accept="application/json,.json" hidden tabindex="-1" aria-hidden="true">
 <nav class="dock" id="dock" aria-label="Sections"></nav>
 <script>
 // <THEORY>
@@ -3640,9 +3697,78 @@ const DEFAULTS = {
   quiz: { level: 'open', pos: 'any', right: 0, total: 0, streak: 0, best: 0 },
   gateOn: false, gateRoot: 'C', gateQ: 'major',                                // optional chord-unlock pop-up (off by default)
 };
+
+/* ================================================================
+   PROFILES — on-device players: no passwords, no server. Everything that used to live in bpgw.v3 / bpgw.theme now belongs to a profile.
+   ProfileStore is the interface the app talks to; LocalStore (browser localStorage) is the only implementation today. A cloud backend
+   (Firebase / Supabase) would implement the same methods; see docs/NEXT.md. Interface (all synchronous; a cloud store keeps a local cache and syncs behind it):
+     kind                         'local'
+     init() -> index              make sure an index exists (first run, or migrate the pre-profiles keys into a default profile)
+     index() -> {v, active, welcomed, list:[{id,name,color,created}]} | null
+     active() -> meta             setActive(id) -> bool          markWelcomed()
+     create({name,color,data}) -> meta     update(id,{name,color}) -> meta|null     remove(id) -> newActiveId
+     readData(id) -> {v,state,theme}|null  writeData(id,{state?,theme?}) -> bool (merges; false when the profile no longer exists)
+     exportProfile(id) -> file object      (importing = sanitise the file in the app, then create())
+   Storage layout: bpgw.profiles = the index; bpgw.p.<id> = one profile's data {v:1,state:<S>,theme}. The old keys are left untouched as a backup.
+   ================================================================ */
+const PROFILE_KEY = 'bpgw.profiles', PDATA_PREFIX = 'bpgw.p.', LEGACY_STATE = 'bpgw.v3', LEGACY_THEME = 'bpgw.theme';
+const hexLum = h => { const c = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => (v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4))); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const hexRatio = (a, b) => { const x = hexLum(a), y = hexLum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+const AVATAR_COLORS = [['Red', '#c92a2a'], ['Gold', '#f2b705'], ['Green', '#2f9e44'], ['Teal', '#0f766e'], ['Blue', '#1d4ed8'], ['Purple', '#7e3fc4'], ['Pink', '#d6336c'], ['Sky', '#0ea5e9']]
+  .map(([n, c]) => ({ n, c, ink: hexRatio(c, '#ffffff') >= hexRatio(c, '#15151a') ? '#ffffff' : '#15151a' }));
+function memStorage() { const m = new Map(); return { getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => { m.set(k, String(v)); }, removeItem: k => { m.delete(k); }, key: i => [...m.keys()][i] || null, get length() { return m.size; } }; }
+function pickStorage() { try { const k = '__bpgw_t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return localStorage; } catch (e) { return memStorage(); } }
+class LocalStore {
+  constructor(storage) { this.kind = 'local'; this.st = storage; }
+  _read(k) { try { const v = this.st.getItem(k); return v == null ? null : JSON.parse(v); } catch (e) { return null; } }
+  _write(k, v) { try { this.st.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  _newId(ix) { let id; do { id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); } while (ix.list.some(p => p.id === id)); return id; }
+  index() {
+    const ix = this._read(PROFILE_KEY); if (!ix || !Array.isArray(ix.list)) return null;
+    ix.list = ix.list.filter(p => p && typeof p.id === 'string' && /^[\w-]{1,32}$/.test(p.id)).map(p => ({ id: p.id, name: String(p.name || 'Player').slice(0, 24), color: typeof p.color === 'string' ? p.color : AVATAR_COLORS[4].c, created: +p.created || 0 }));
+    if (!ix.list.length) return null;
+    if (!ix.list.some(p => p.id === ix.active)) ix.active = ix.list[0].id;
+    ix.v = 1; ix.welcomed = ix.welcomed === true; return ix;
+  }
+  _save(ix) { return this._write(PROFILE_KEY, ix); }
+  init() {
+    const have = this.index(); if (have) return have;
+    const legacy = this._read(LEGACY_STATE); let lt = null; try { lt = this.st.getItem(LEGACY_THEME); } catch (e) {}
+    const had = !!(legacy && typeof legacy === 'object') || !!lt;                                  // an existing visitor: migrate, no welcome
+    const meta = { id: 'p1', name: 'Player 1', color: AVATAR_COLORS[4].c, created: Date.now() };
+    this._write(PDATA_PREFIX + meta.id, { v: 1, state: had && legacy && typeof legacy === 'object' ? legacy : {}, theme: lt || null });
+    const ix = { v: 1, active: meta.id, welcomed: had, list: [meta] }; this._save(ix); return ix;
+  }
+  active() { const ix = this.index(); return ix ? ix.list.find(p => p.id === ix.active) : null; }
+  get(id) { const ix = this.index(); return ix ? ix.list.find(p => p.id === id) || null : null; }
+  setActive(id) { const ix = this.index(); if (!ix || !ix.list.some(p => p.id === id)) return false; ix.active = id; return this._save(ix); }
+  markWelcomed() { const ix = this.index(); if (!ix) return; ix.welcomed = true; this._save(ix); }
+  create({ name, color, data }) {
+    const ix = this.index() || this.init(); const meta = { id: this._newId(ix), name: String(name || 'Player').slice(0, 24), color: color || AVATAR_COLORS[0].c, created: Date.now() };
+    this._write(PDATA_PREFIX + meta.id, { v: 1, state: data && data.state ? data.state : {}, theme: data && data.theme ? data.theme : null });
+    ix.list.push(meta); this._save(ix); return meta;
+  }
+  update(id, patch) { const ix = this.index(); const m = ix && ix.list.find(p => p.id === id); if (!m) return null; if (patch.name != null) m.name = String(patch.name).slice(0, 24); if (patch.color) m.color = patch.color; this._save(ix); return m; }
+  remove(id) {
+    const ix = this.index(); if (!ix) return null;
+    try { this.st.removeItem(PDATA_PREFIX + id); } catch (e) {}
+    ix.list = ix.list.filter(p => p.id !== id);
+    if (!ix.list.length) { const m = { id: this._newId(ix), name: 'Player 1', color: AVATAR_COLORS[4].c, created: Date.now() }; ix.list.push(m); this._write(PDATA_PREFIX + m.id, { v: 1, state: {}, theme: null }); }
+    if (!ix.list.some(p => p.id === ix.active)) ix.active = ix.list[0].id;
+    this._save(ix); return ix.active;
+  }
+  readData(id) { const d = this._read(PDATA_PREFIX + id); return d && typeof d === 'object' ? { v: 1, state: d.state && typeof d.state === 'object' ? d.state : {}, theme: typeof d.theme === 'string' ? d.theme : null } : null; }
+  writeData(id, patch) { if (!this.get(id)) return false; const cur = this.readData(id) || { v: 1, state: {}, theme: null }; return this._write(PDATA_PREFIX + id, Object.assign(cur, patch, { v: 1 })); }
+  exportProfile(id) {
+    const m = this.get(id), d = this.readData(id); if (!m || !d) return null;
+    return { app: 'bpgw', kind: 'profile', v: 1, exported: new Date().toISOString(), profile: { name: m.name, color: m.color }, data: { state: d.state, theme: d.theme } };
+  }
+}
+const PS = new LocalStore(pickStorage());
+PS.init();
+const ME = PS.active();                                                      // the profile this tab is playing as (switching reloads the page)
 const S = Object.assign({}, DEFAULTS);
-const STORE = 'bpgw.v3';
-try { Object.assign(S, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch (e) {}
+try { const d = PS.readData(ME.id); if (d) Object.assign(S, d.state); } catch (e) {}
 S.metro = false;                                   // never auto-start a click track
 S.idOn = false; S.qOn = false;
 S.quiz = Object.assign({}, DEFAULTS.quiz, S.quiz && typeof S.quiz === 'object' ? S.quiz : {});
@@ -3797,7 +3923,7 @@ const keyTitle = () => `${keyName()} ${T.SCALES[S.scale].name}`;
 const fmtHz = f => (f >= 1000 ? f.toFixed(1) : f >= 100 ? f.toFixed(2) : f.toFixed(3));
 const minus = n => (n < 0 ? '−' + Math.abs(n) : String(n));
 
-function save() { try { const { metro, idOn, qOn, ...rest } = S; localStorage.setItem(STORE, JSON.stringify(rest)); } catch (e) {} }
+function save() { try { const { metro, idOn, qOn, ...rest } = S; PS.writeData(ME.id, { state: rest }); } catch (e) {} }
 function updateHash() {
   const parts = [S.tab, 'root=' + encodeURIComponent(keyName()), 'scale=' + S.scale, 'tuning=' + S.tuning];
   if (S.scalePos != null) parts.push('sp=' + S.scalePos);
@@ -4252,7 +4378,7 @@ function gatePanelHTML() {
 function gatePanelOpen(open) {
   const p = $('#gatePanel'), b = $('#gateBtn'); if (!p) return;
   if (open === undefined) open = p.hidden;
-  if (open) { themeOpen(false); p.innerHTML = gatePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const f = $('[data-act="gatetoggle"]', p); if (f) f.focus({ preventScroll: true }); }
+  if (open) { themeOpen(false); profileOpen(false); p.innerHTML = gatePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const f = $('[data-act="gatetoggle"]', p); if (f) f.focus({ preventScroll: true }); }
   else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
 }
 
@@ -5735,7 +5861,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
 /* ================================================================
    THEMES — "Minimal Light" is the default (DEFAULT_THEME). "Silver Hi-Fi" is the original base stylesheet and sets no data-theme. Every other theme is a block of CSS custom properties plus
    per-theme control styling in <style id="themes"> (authored in themes/*.css and assembled by tools/build-themes.js).
-   The choice is saved in localStorage ("bpgw.theme", only once the user picks one) and can be forced with ?theme=<id>.
+   The choice is saved in the active profile (see PROFILES; only once the user picks one) and can be forced with ?theme=<id>.
    ================================================================ */
 const THEMES = [
   { id: 'silver',       name: 'Silver Hi-Fi',   note: 'The original look: brushed aluminium, drum selectors, a glowing power lamp.', color: '#050506' },
@@ -5752,7 +5878,7 @@ const THEMES = [
   { id: 'rosewood',     name: 'Rosewood & Pearl', note: 'Dark rosewood, pearl inlays and window drums, aqua shimmer.', color: '#140909', fonts: 'family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600;700' },
   { id: 'sheet',        name: 'Sheet Music',    note: 'Cream manuscript paper, black ink, oxblood accents, serif type.', color: '#f6efdc', fonts: 'family=Crimson+Pro:wght@500;600;700&family=Source+Sans+3:wght@500;600;700' },
 ];
-const THEME_KEY = 'bpgw.theme', DEFAULT_THEME = 'minimal';
+const DEFAULT_THEME = 'minimal';
 const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];
 const curThemeId = () => document.documentElement.getAttribute('data-theme') || 'silver';
 function themePreviewHTML(id) {
@@ -5772,7 +5898,7 @@ function setTheme(id, opts = {}) {
     const l = document.createElement('link'); l.id = 'font-' + id; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?' + t.fonts + '&display=swap'; document.head.appendChild(l);
   }
   if (!opts.noSave) {
-    try { localStorage.setItem(THEME_KEY, id); } catch (e) {}
+    try { PS.writeData(ME.id, { theme: id }); } catch (e) {}
     try { const u = new URL(location.href); u.searchParams.set('theme', id); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) {}
   }
   Meter.sync(); themePanelPaint();
@@ -5786,7 +5912,7 @@ function themePanelPaint() {
 function themeOpen(open) {
   const p = $('#themePanel'), b = $('#themeBtn'); if (!p) return;
   if (open === undefined) open = p.hidden;
-  if (open) { p.innerHTML = themePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const on = $('.tpCard.on', p) || $('.tpCard', p); if (on) on.focus({ preventScroll: true }); }
+  if (open) { profileOpen(false); p.innerHTML = themePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const on = $('.tpCard.on', p) || $('.tpCard', p); if (on) on.focus({ preventScroll: true }); }
   else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
 }
 // LED meter (Studio Console, Modular Synth): follows the real output level; costs nothing when the theme has no meter.
@@ -5818,6 +5944,168 @@ document.addEventListener('click', e => {
 });
 $('#themeBtn').addEventListener('click', () => themeOpen());
 
+/* ================================================================
+   PROFILES UI — header avatar button, the Players panel (switch / new / edit / delete with confirm / export / import),
+   and the skippable first-visit "Who's playing?" welcome. Switching reloads the page so no state can leak between players.
+   ================================================================ */
+const cleanName = v => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 24);
+const colorOf = c => AVATAR_COLORS.find(x => x.c === c) || AVATAR_COLORS[4];
+const initialOf = n => { const a = Array.from(String(n).trim())[0]; return a ? a.toUpperCase() : '?'; };
+const avatarHTML = (p, cls = '') => { const c = colorOf(p.color); return `<span class="av${cls ? ' ' + cls : ''}" style="background:${c.c};color:${c.ink}" aria-hidden="true">${esc(initialOf(p.name))}</span>`; };
+const PF = { edit: null, name: '', color: AVATAR_COLORS[0].c, del: null, err: '', msg: null };
+function uniqueName(name, skipId) {
+  const used = PS.index().list.filter(p => p.id !== skipId).map(p => p.name.toLowerCase()); if (!used.includes(name.toLowerCase())) return name;
+  for (let i = 2; i < 99; i++) { const t = cleanName(name.slice(0, 20) + ' (' + i + ')'); if (!used.includes(t.toLowerCase())) return t; }
+  return name;
+}
+function sanitizeState(st) {                                                  // only known keys with the right kind of value; the boot code normalises the rest
+  const out = {}; if (!st || typeof st !== 'object' || Array.isArray(st)) return out;
+  for (const k of Object.keys(DEFAULTS)) {
+    if (!(k in st) || k === 'metro' || k === 'idOn' || k === 'qOn') continue;
+    const d = DEFAULTS[k], v = st[k];
+    if (v === null ? d === null || ['scalePos', 'lesson', 'selDeg'].includes(k) : Array.isArray(d) ? Array.isArray(v) : (d === null ? typeof v === 'string' || typeof v === 'number' : typeof v === typeof d && !Array.isArray(v))) out[k] = v;
+  }
+  return out;
+}
+function profileFromFile(obj) {                                              // validate an exported profile file; throws a readable Error
+  if (!obj || typeof obj !== 'object' || obj.app !== 'bpgw' || obj.kind !== 'profile') throw new Error('That file is not a Big Pear Guitar Works profile.');
+  if (obj.v !== 1) throw new Error('That profile file comes from a different version of the app.');
+  const pr = obj.profile && typeof obj.profile === 'object' ? obj.profile : {}, d = obj.data && typeof obj.data === 'object' ? obj.data : {};
+  return { name: cleanName(pr.name) || 'Imported player', color: AVATAR_COLORS.some(c => c.c === pr.color) ? pr.color : AVATAR_COLORS[0].c,
+    data: { state: sanitizeState(d.state), theme: THEMES.some(t => t.id === d.theme) ? d.theme : null } };
+}
+function profileBtnPaint() {
+  const b = $('#profileBtn'); if (!b) return; const m = PS.active();
+  b.innerHTML = avatarHTML(m) + `<span class="sr">Players. Playing as ${esc(m.name)}</span>`; b.title = 'Players: ' + m.name;
+}
+function pfSwatchesHTML() {
+  return AVATAR_COLORS.map(c => `<button type="button" class="pfSw" role="radio" aria-checked="${c.c === PF.color}" tabindex="${c.c === PF.color ? 0 : -1}" data-pf="color" data-c="${c.c}" aria-label="${c.n}" style="background:${c.c};color:${c.ink}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>`).join('');
+}
+function pfFormHTML(kind) {
+  const welcome = kind === 'welcome';
+  return `<form class="pfForm" data-pf-form="${kind}" novalidate>
+    <div class="pfPrev">${avatarHTML({ name: PF.name, color: PF.color }, 'big')}<div class="field" style="flex:1;min-width:0"><label for="pfName">Name</label><input id="pfName" class="pfIn" type="text" maxlength="24" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Your name" value="${esc(PF.name)}"></div></div>
+    <div class="field"><span class="flab" id="pfColLab">Colour</span><div class="pfCols" role="radiogroup" aria-labelledby="pfColLab">${pfSwatchesHTML()}</div></div>
+    ${PF.err ? `<p class="pfErr" role="alert">${esc(PF.err)}</p>` : ''}
+    <div class="pfAct"><button type="submit" class="btn pri">${welcome ? 'Start' : kind === 'new' ? 'Add player' : 'Save'}</button>${welcome ? '<button type="button" class="btn" data-pf="skip">Skip for now</button>' : '<button type="button" class="btn" data-pf="cancel">Cancel</button>'}</div>
+  </form>`;
+}
+function profilePanelHTML() {
+  const ix = PS.index(), many = ix.list.length > 1;
+  const rows = ix.list.map(p => {
+    const on = p.id === ix.active, n = esc(p.name);
+    if (PF.edit === p.id) return `<li class="pfRow">${pfFormHTML('edit')}</li>`;
+    if (PF.del === p.id) return `<li class="pfRow pfConfirm">${avatarHTML(p)}<p role="alert">Delete <b>${n}</b>? Their settings, quiz scores and lesson progress are removed from this device. You can export them first.</p><button class="btn sm" data-pf="delyes" data-id="${p.id}">Delete ${n}</button><button class="btn sm" data-pf="delno" data-id="${p.id}">Keep</button></li>`;
+    return `<li class="pfRow${on ? ' on' : ''}"><button class="pfWho" data-pf="switch" data-id="${p.id}"${on ? ' aria-current="true"' : ''}>${avatarHTML(p)}${on ? '' : '<span class="sr">Switch to </span>'}<span class="pfName">${n}</span>${on ? '<span class="pfTag">Playing</span>' : ''}</button><button class="btn sm" data-pf="edit" data-id="${p.id}" aria-label="Edit ${n}">Edit</button>${many ? `<button class="btn sm" data-pf="del" data-id="${p.id}" aria-label="Delete ${n}">Delete</button>` : ''}</li>`;
+  }).join('');
+  const act = PS.active();
+  return `<div class="tpHead"><b>Players</b><span>Saved on this device. No password, no account.</span><button class="btn sm" data-pf="close">Done</button></div>
+    <ul class="pfList" aria-label="Players">${rows}${PF.edit === 'new' ? `<li class="pfRow">${pfFormHTML('new')}</li>` : ''}</ul>
+    ${PF.edit === 'new' ? '' : '<button class="btn sm" data-pf="new">+ New player</button>'}
+    <div class="pfFoot"><div class="pfAct"><button class="btn sm" data-pf="export" data-id="${act.id}">Export ${esc(act.name)}</button><button class="btn sm" data-pf="import">Import a profile file</button></div>
+      <p class="pfNote">A profile file holds one player's settings, theme, quiz scores and lesson progress, so you can move to another device. Importing adds a new player; it never overwrites one.</p>
+      <div class="pfMsg" role="status" aria-live="polite">${PF.msg ? esc(PF.msg.text) + (PF.msg.id ? ` <button class="btn sm" data-pf="switch" data-id="${PF.msg.id}">Switch to ${esc(PF.msg.who)}</button>` : '') : ''}</div></div>`;
+}
+function welcomeHTML() {
+  return `<div class="card wcard" role="document"><h2 id="welcomeTitle" tabindex="-1">Who's playing?</h2>
+    <p>Add your name and a colour and the app keeps your settings, quiz scores and lesson progress for you. It stays on this device: no password, no account. You can change this any time with the round button at the top.</p>
+    ${pfFormHTML('welcome')}
+    <button type="button" class="linkbtn" data-pf="import">I have a profile file to import</button>
+    <div class="pfMsg" role="status" aria-live="polite"></div></div>`;
+}
+function pfRender(focusSel) {
+  const w = PF.edit === 'welcome', host = w ? $('#welcome') : $('#profilePanel'); if (!host) return;
+  if (w) { const c = $('.wcard', host); const keep = c ? c.scrollTop : 0; host.innerHTML = welcomeHTML(); const n = $('.wcard', host); if (n) n.scrollTop = keep; } else host.innerHTML = profilePanelHTML();
+  profileBtnPaint();
+  const f = focusSel && $(focusSel, host); if (f) f.focus({ preventScroll: true });
+}
+function profileOpen(open) {
+  const p = $('#profilePanel'), b = $('#profileBtn'); if (!p) return;
+  if (open === undefined) open = p.hidden;
+  if (open) { themeOpen(false); gatePanelOpen(false); PF.edit = null; PF.del = null; PF.err = ''; PF.msg = null; p.innerHTML = profilePanelHTML(); p.hidden = false; b.setAttribute('aria-expanded', 'true'); const f = $('.pfWho[aria-current]', p) || $('.pfWho', p); if (f) f.focus({ preventScroll: true }); }
+  else { const had = !p.hidden; p.hidden = true; b.setAttribute('aria-expanded', 'false'); PF.edit = null; PF.del = null; if (had && p.contains(document.activeElement)) b.focus({ preventScroll: true }); }
+}
+function profileLeave() { try { sessionStorage.removeItem(GATE_KEY); } catch (e) {} location.replace(location.pathname); }   // fresh page, no hash / ?theme= carried over, the unlock gate asks again for the new player
+function profileSwitch(id) { save(); if (id === ME.id) { profileOpen(false); return; } if (PS.setActive(id)) profileLeave(); }
+function profileExport(id) {
+  save(); const o = PS.exportProfile(id), m = PS.get(id); if (!o) return;
+  const slug = (m.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'player'), fn = `bpgw-profile-${slug}.json`;
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' })); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  PF.msg = { text: `Saved ${m.name} as ${fn}. Keep it somewhere safe; import it on the other device.` }; pfRender('[data-pf="export"]'); announce('Profile exported');
+}
+async function profileImportText(txt) {                                       // returns the new meta, or throws a readable Error
+  let obj; try { obj = JSON.parse(txt); } catch (e) { throw new Error('That file is not valid JSON.'); }
+  const pf = profileFromFile(obj); return PS.create({ name: uniqueName(pf.name), color: pf.color, data: pf.data });
+}
+async function profileImportFile(file) {
+  const w = PF.edit === 'welcome';
+  try {
+    if (!file) return; if (file.size > 2e6) throw new Error('That file is too big to be a profile.');
+    const meta = await profileImportText(await file.text());
+    if (w) { const old = PS.active(); PS.setActive(meta.id); PS.markWelcomed(); PS.remove(old.id); profileLeave(); return; }
+    PF.msg = { text: `Added ${meta.name}.`, id: meta.id, who: meta.name }; pfRender('[data-pf="switch"][data-id="' + meta.id + '"]'); announce('Profile imported: ' + meta.name);
+  } catch (e) { if (w) PF.err = e.message; else PF.msg = { text: e.message }; pfRender(w ? '#pfName' : '[data-pf="import"]'); }
+}
+function pfSubmit(kind) {
+  const name = cleanName(PF.name);
+  if (!name) { PF.err = kind === 'welcome' ? "Type a name, or choose Skip for now." : 'Give this player a name.'; pfRender('#pfName'); return; }
+  const ix = PS.index(), editId = kind === 'edit' ? PF.edit : kind === 'welcome' ? ME.id : null;
+  if (ix.list.some(p => p.id !== editId && p.name.toLowerCase() === name.toLowerCase())) { PF.err = 'Another player already has that name.'; pfRender('#pfName'); return; }
+  PF.err = '';
+  if (kind === 'new') { const m = PS.create({ name, color: PF.color }); profileSwitch(m.id); return; }
+  PS.update(editId, { name, color: PF.color });
+  if (kind === 'welcome') { welcomeClose(); announce('Welcome, ' + name); profileBtnPaint(); return; }
+  PF.edit = null; PF.msg = { text: `Saved ${name}.` }; pfRender('.pfWho[data-id="' + editId + '"]'); announce('Player saved');
+}
+function pfClick(e) {
+  const t = e.target.closest('[data-pf]'); if (!t) return; const a = t.dataset.pf, id = t.dataset.id;
+  switch (a) {
+    case 'close': profileOpen(false); break;
+    case 'switch': profileSwitch(id); break;
+    case 'edit': { const m = PS.get(id); PF.edit = id; PF.name = m.name; PF.color = m.color; PF.err = ''; PF.del = null; PF.msg = null; pfRender('#pfName'); break; }
+    case 'new': PF.edit = 'new'; PF.name = ''; PF.err = ''; PF.del = null; PF.msg = null; { const used = PS.index().list.map(p => p.color); PF.color = (AVATAR_COLORS.find(c => !used.includes(c.c)) || AVATAR_COLORS[0]).c; } pfRender('#pfName'); break;
+    case 'cancel': PF.edit = null; PF.err = ''; pfRender('[data-pf="new"]'); break;
+    case 'color': PF.color = t.dataset.c; pfRender('.pfSw[aria-checked="true"]'); break;
+    case 'del': PF.del = id; PF.edit = null; PF.msg = null; pfRender('[data-pf="delno"]'); break;
+    case 'delno': PF.del = null; pfRender('[data-pf="del"][data-id="' + id + '"]'); break;
+    case 'delyes': {
+      const m = PS.get(id), was = id === ME.id; save(); const na = PS.remove(id); PF.del = null;
+      if (was) { profileLeave(); break; }
+      PF.msg = { text: `Deleted ${m ? m.name : 'player'}.` }; pfRender('.pfWho[aria-current]'); announce('Player deleted'); break;
+    }
+    case 'export': profileExport(id); break;
+    case 'import': $('#pfFile').click(); break;
+    case 'skip': welcomeClose(); break;
+  }
+}
+function pfKeys(e) {
+  const sw = e.target.closest && e.target.closest('.pfSw'); if (!sw || !/^Arrow(Left|Right|Up|Down)$/.test(e.key)) return;
+  e.preventDefault(); const all = [...sw.parentElement.children], i = all.indexOf(sw), d = /Left|Up/.test(e.key) ? -1 : 1, n = all[(i + d + all.length) % all.length];
+  PF.color = n.dataset.c; pfRender('.pfSw[aria-checked="true"]');
+}
+function welcomeOpen() {
+  const w = $('#welcome'); if (!w) return; PF.edit = 'welcome'; PF.name = ''; PF.err = ''; PF.color = AVATAR_COLORS[(Math.floor(Math.random() * AVATAR_COLORS.length))].c;
+  w.innerHTML = welcomeHTML(); w.hidden = false; document.body.classList.add('gating');
+  ['.wrap', '#dock', '.skip'].forEach(sel => { const e = $(sel); if (e) e.inert = true; });
+  const h = $('#welcomeTitle'); if (h) h.focus({ preventScroll: true });
+}
+function welcomeClose() {
+  const w = $('#welcome'); if (!w) return; PS.markWelcomed(); PF.edit = null; w.hidden = true; w.innerHTML = '';
+  if (!(GATE && GATE.open)) { document.body.classList.remove('gating'); ['.wrap', '#dock', '.skip'].forEach(sel => { const e = $(sel); if (e) e.inert = false; }); }
+  const b = $('#profileBtn'); if (b) b.focus({ preventScroll: true });
+}
+['#profilePanel', '#welcome'].forEach(sel => {
+  const h = $(sel);
+  h.addEventListener('click', pfClick);
+  h.addEventListener('submit', e => { e.preventDefault(); const f = e.target.closest('[data-pf-form]'); if (f) pfSubmit(f.dataset.pfForm); });
+  h.addEventListener('input', e => { if (e.target.id !== 'pfName') return; PF.name = e.target.value; const av = $('.pfPrev .av', h); if (av) av.textContent = initialOf(PF.name); });
+  h.addEventListener('keydown', pfKeys);
+});
+$('#pfFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; profileImportFile(f); });
+$('#profileBtn').addEventListener('click', () => profileOpen());
+document.addEventListener('click', e => { const p = $('#profilePanel'); if (!p || p.hidden) return; const path = e.composedPath ? e.composedPath() : []; if (!path.includes(p) && !path.includes($('#profileBtn'))) profileOpen(false); });
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if ($('#welcome') && !$('#welcome').hidden) { welcomeClose(); return; } const p = $('#profilePanel'); if (p && !p.hidden) profileOpen(false); });
+
 /* ---------- boot ---------- */
 applyHash();
 buildDock();
@@ -5826,9 +6114,11 @@ UI.wantFocus = true;
 setTab(S.tab, { keepMode: true, noScroll: true });
 setTheme(THEMES.some(t => t.id === curThemeId()) ? curThemeId() : DEFAULT_THEME, { noSave: true });
 UI.booted = true; pwaPaint(); document.body.classList.add('ready');
+profileBtnPaint();
 if (gateNeeded()) gateOpen(false);
+else if (!PS.index().welcomed && !navigator.webdriver) welcomeOpen();      // first visit: a skippable "Who's playing?" (automated browsers are never asked)
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { idEnter, idExit, idPress, idResult, idFretsNow, quizNew, quizCheck, quizReveal, quizNext, gateOpen, gateClose, gatePress, gateShow, GATE, THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
+window.BPGW = { PS, LocalStore, ME, stored: () => (PS.readData(ME.id) || {}).state, AVATAR_COLORS, PF, profileSwitch, profileOpen, profileExport, profileImportText, profileFromFile, welcomeOpen, welcomeClose, memStorage, idEnter, idExit, idPress, idResult, idFretsNow, quizNew, quizCheck, quizReveal, quizNext, gateOpen, gateClose, gatePress, gateShow, GATE, THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>
 </body>
 </html>

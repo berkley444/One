@@ -41,6 +41,7 @@
   --bar-n:#bfa27c; --ok:#5a9a3a; --ok-bg:#1d2a12; --ok-ink:#b6ec96; --hook-bg:#33160c; --hook-ink:#fbeed0; --code-ink:#f2e0be;
 }
 h1{font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.6);font-size:25px}
+@media(max-width:520px){h1{font-size:20px}}
 h1::after{content:"";display:block;width:150px;height:3px;margin:8px auto 0;border-radius:2px;background:linear-gradient(90deg,transparent,#c25a14 25%,#ffb23e 50%,#c25a14 75%,transparent)}
 h2{font-weight:700;font-size:22px;letter-spacing:.06em;border-bottom:1px solid #6a331b;padding-bottom:4px}
 .card,.pfc,.lcard{box-shadow:0 0 0 1px #0d0402,0 6px 14px rgba(0,0,0,.4),0 1px 0 rgba(255,220,150,.08) inset}
