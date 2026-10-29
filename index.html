@@ -255,6 +255,18 @@ table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:v
 .chip.rt{min-width:0;padding:5px 0 4px;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1.1}
 .chip.rt b{font:800 13px var(--sans)}
 .chip.rt small{font:600 9.5px var(--sans);opacity:.6}
+/* the single row above the fretboard: roots + positions (one line; scrolls sideways when the screen is too narrow) */
+.fbstrip{display:flex;align-items:flex-end;gap:26px;flex-wrap:nowrap;overflow-x:auto;margin:2px 0 10px;padding:2px 2px 4px;scrollbar-width:thin}
+.fbstrip .fgrp{display:flex;flex-direction:column;gap:4px;flex:0 0 auto;min-width:0}
+.fbstrip .fgrp.fpos{flex:1 1 auto}
+.fbstrip .fgrp>.engr{margin-left:2px}
+.fbstrip .rootstrip{display:flex;gap:3px}
+.fbstrip .chip.rt{flex:0 0 auto;width:38px;height:44px;box-sizing:border-box;justify-content:center;padding:0}
+.fbstrip .posrow{gap:3px;flex-wrap:nowrap}
+.fbstrip .pos{flex:1 0 auto;min-width:50px;height:44px;box-sizing:border-box;padding:0 6px}
+.fbstrip .pos .full{display:none}.fbstrip .pos .abb{display:inline}
+@media (min-width:760px){.fbstrip .pos .full{display:inline}.fbstrip .pos .abb{display:none}.fbstrip .pos{min-width:58px}}
+@media (max-width:480px){.fbstrip{gap:14px}.fbstrip .chip.rt{width:34px;height:42px}.fbstrip .pos{min-width:46px;height:42px}}
 .qgrp{margin-top:10px}
 .qlab{font:600 10.5px var(--sans);color:#8f919a;letter-spacing:.08em;text-transform:uppercase;margin:0 0 5px}
 .chips.q{gap:5px}
@@ -3873,9 +3885,9 @@ function pianoFocusScroll() {                                         // bring t
   const lo = Math.min(...PP.notes.map(n => n.midi));
   return Math.max(0, whitesBelow(lo) * 24 - 36);
 }
-function instrumentsHTML({ mid = '' } = {}) {
+function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
   const idm = idActive();
-  if (idm) mid = idPanelHTML();                                                    // Clear / Identify or Chord Quiz replaces the position block
+  if (idm) { mid = idPanelHTML(); strip = ''; }       // note-placing has no positions to pick                                                    // Clear / Identify or Chord Quiz replaces the position block
   const t = curTuning(), chordMode = S.mode === 'chord', ch = curChord();
   const where = SEL ? (SEL.kind === 'chord' ? ` · position ${S.chordPos + 1}` : ` · position ${S.scalePos + 1}`) : '';
   const ctx = idm ? `${S.qOn ? 'Chord Quiz' : 'Clear / Identify'} — ${t.name}` : (chordMode ? `${ch.name} — ${t.name}` : `${keyTitle()} — ${t.name}`) + where;
@@ -3891,9 +3903,11 @@ function instrumentsHTML({ mid = '' } = {}) {
     ${idm ? '' : `<button class="btn sm" data-act="playScale">${playLbl}</button>
     <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>`}
   </div>
+  ${strip}
   <div class="fbwrap${idm ? ' idmode' : ''}" id="fbWrap" tabindex="0" role="region" aria-label="${idm ? 'Note-placing fretboard (scrolls sideways; arrow keys move between cells, Enter places or removes a note)' : 'Fretboard (scrolls sideways; arrow keys move between notes)'}">${fretboardSVG(idm ? idBoardCfg() : null)}</div>
   <div class="legend" style="margin-top:8px">${idm ? `<span><i data-tone="root" style="background:${RED}"></i>root</span><span><i data-tone="third" style="background:${AMBER}"></i>3rd / sus</span><span><i data-tone="fifth" style="background:${GREEN}"></i>5th</span><span><i data-tone="seventh" style="background:${BLUE}"></i>7th</span><span><i data-tone="ext" style="background:${VIOLET}"></i>extension / bass</span>` : legendHTML()}<span style="margin-left:auto">${idm ? 'tap a fret to place a note · tap again to remove · scroll sideways on a phone' : 'tap any note to hear it · scroll sideways on a phone'}</span></div>
   ${mid}
+  ${after}
   <h2>Piano <span class="ctx">${esc(PP.title)} · ${esc(PP.hand === 'auto' ? 'both hands' : HANDS[PP.hand] || '')}</span></h2>
   ${pianoPanelHTML()}
   <div class="pianolab"><span>Keyboard — the number on each key is the finger, the colour is the hand. Scroll sideways for the full range.</span><span style="color:var(--amber)">▼ amber arrows = your guitar's open strings (${tuningNames(t).map((n, i) => n + Math.floor(t.strings[i] / 12 - 1)).join(' · ')})</span></div>
@@ -4162,20 +4176,33 @@ function diatonicHTML() {
   <div class="toolbar"><div class="seg"><button data-act="sev" data-v="0" class="${!S.sevenths ? 'on' : ''}">TRIADS</button><button data-act="sev" data-v="1" class="${S.sevenths ? 'on' : ''}">7THS</button></div><span class="hint">tap a chord to hear it and light it up on the fretboard &amp; piano</span></div>
   <div class="chords">${cs.map(c => `<div class="cc${S.mode === 'chord' && S.selDeg === c.degree ? ' sel' : ''}" data-act="dia" data-deg="${c.degree}" role="button" tabindex="0"><div class="rn">${esc(c.roman)}</div><div class="nm">${esc(c.name)}</div><div class="nt">${esc(c.notes.join(' '))}</div><div class="fn">${esc(c.fn)}</div></div>`).join('')}</div>`;
 }
-function renderPlay() { return scaleReadoutHTML() + instrumentsHTML({ mid: S.mode === 'chord' ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML(); }
+function renderPlay() {
+  const chordMode = S.mode === 'chord';
+  return scaleReadoutHTML() + instrumentsHTML({ strip: fbStripHTML(chordMode ? chordPosGroupHTML() : scalePosGroupHTML()), mid: chordMode ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML();
+}
+/* ---------- the one row directly above the fretboard: [root] [position] ---------- */
+function fbStripHTML(...groups) { const g = groups.filter(Boolean).join(''); return g ? `<div class="fbstrip" id="fbStrip">${g}</div>` : ''; }
 
 /* ---------- position buttons (shared by chords and scales) ---------- */
 function posRowHTML(items, selected, act, label) {
   return `<div class="posrow" role="group" aria-label="${esc(label)}">${items.map(it => `<button class="pos${it.cls ? ' ' + it.cls : ''}${it.v === selected ? ' on' : ''}" data-act="${act}" data-v="${it.v}" title="${esc(it.title)}" aria-label="${esc(it.title)}" aria-pressed="${it.v === selected}"><b>${esc(it.big)}</b><span class="full">${esc(it.full)}</span><span class="abb">${esc(it.abbr)}</span></button>`).join('')}</div>`;
 }
+function scalePosItems() {
+  const ps = curScalePositions(), hepta = T.isHepta(S.scale);
+  return [{ v: 'all', big: 'All', full: 'whole neck', abbr: 'neck', title: 'Show the whole neck' }].concat(ps.map(p => ({
+    v: String(p.index), big: String(p.index + 1), full: p.mode, abbr: p.abbr,
+    title: `Position ${p.index + 1} — starts on ${p.startName}${hepta ? ' (' + p.mode + ')' : ''}`,
+  })));
+}
+function scalePosGroupHTML() {
+  if (!curScalePositions().length) return '';
+  const sel = S.scalePos;
+  return `<div class="fgrp fpos"><span class="engr sm">Position</span>${posRowHTML(scalePosItems(), sel == null ? 'all' : String(sel), 'spos', 'Scale positions')}</div>`;
+}
 function scalePosBlockHTML() {
   const ps = curScalePositions(), t = curTuning();
   if (!ps.length) return '';
   const hepta = T.isHepta(S.scale), sel = S.scalePos;
-  const items = [{ v: 'all', big: 'All', full: 'whole neck', abbr: 'neck', title: 'Show the whole neck' }].concat(ps.map(p => ({
-    v: String(p.index), big: String(p.index + 1), full: p.mode, abbr: p.abbr,
-    title: `Position ${p.index + 1} — starts on ${p.startName}${hepta ? ' (' + p.mode + ')' : ''}`,
-  })));
   let cap, detail = '';
   if (sel == null) {
     cap = hepta ? `<b>${ps.length} positions</b> — each box starts on a different note of the scale, so the seven boxes are the seven modes of the same notes. Pick one to isolate it.`
@@ -4194,7 +4221,6 @@ function scalePosBlockHTML() {
   }
   return `<div class="posblock">
     <div class="poshead"><span class="engr sm">Position</span><span class="sp"></span><button class="btn sm" data-act="playScale">${sel == null ? '▶ Play scale' : '▶ Play position ' + (sel + 1) + ' ↑↓'}</button></div>
-    ${posRowHTML(items, sel == null ? 'all' : String(sel), 'spos', 'Scale positions')}
     <div class="poscap">${cap}</div>${detail}</div>`;
 }
 
@@ -4232,10 +4258,15 @@ function chordDiagramSVG(v, tuning, chord) {
   });
   return s + '</svg>';
 }
+function chordPosGroupHTML() {
+  const ps = curPositions();
+  if (!ps.length) return '';
+  const items = ps.map((v, i) => ({ v: String(i), big: String(i + 1), full: v.base === 0 ? 'open' : 'fret ' + v.base, abbr: v.base === 0 ? 'open' : 'fr ' + v.base, title: `Position ${i + 1} — ${v.frets.map(f => f < 0 ? 'x' : f).join(' ')}` }));
+  return `<div class="fgrp fpos"><span class="engr sm">Position</span>${posRowHTML(items, String(S.chordPos), 'cpos', 'Chord positions')}</div>`;
+}
 function chordPosBlockHTML() {
   const ch = curChord(), t = curTuning(), ps = curPositions();
   if (!ps.length) return `<div class="posblock"><div class="poshead"><span class="engr sm">Position</span></div><div class="card hint">No comfortable shape for ${esc(ch.name)} fits ${esc(t.name)} (${t.strings.length} strings) — every voicing needs ${ess_count(ch)} strings or more within a 4-fret reach. The chord's notes are still lit on the fretboard.</div></div>`;
-  const items = ps.map((v, i) => ({ v: String(i), big: String(i + 1), full: v.base === 0 ? 'open' : 'fret ' + v.base, abbr: v.base === 0 ? 'open' : 'fr ' + v.base, title: `Position ${i + 1} — ${v.frets.map(f => f < 0 ? 'x' : f).join(' ')}` }));
   const v = ps[S.chordPos], ess = T.essentialTones(ch);
   const omitted = ch.tones.filter(x => !ess.includes(x)).filter(x => !v.midi.some(m => m != null && ((m % 12) + 12) % 12 === x.pc)).map(x => x.label === '5' ? '5th' : x.label);
   const bassM = v.midi.find(m => m != null), bt = ch.tones.find(x => x.pc === ((bassM % 12) + 12) % 12);
@@ -4251,7 +4282,6 @@ function chordPosBlockHTML() {
     </div></div>`;
   return `<div class="posblock">
     <div class="poshead"><span class="engr sm">Position</span><span class="hint">${ps.length} voicing${ps.length === 1 ? '' : 's'} of ${esc(ch.name)} up the neck in ${esc(t.name)}</span></div>
-    ${posRowHTML(items, String(S.chordPos), 'cpos', 'Chord positions')}
     ${detail}</div>`;
 }
 const ess_count = ch => Math.max(3, T.essentialTones(ch).length);
@@ -4273,11 +4303,11 @@ function renderChord() {
     return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${st.bg};margin-right:8px"></span>${esc(tn.name)}</td><td>${esc(tn.label)}</td><td>${tn.semis}</td><td>${fmtHz(T.freq(m, S.a4))}</td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
   }).join('');
   const ess = T.essentialTones(ch), skip = ch.tones.filter(x => !ess.includes(x)).map(x => x.label === '5' ? '5th' : x.label);
-  return `
-  <h2>Chord Builder <span class="ctx">pick a root and a quality — one tap each</span></h2>
+  const rootGroup = `<div class="fgrp froot"><span class="engr sm">Root</span><div class="rootstrip" role="group" aria-label="Chord root">${rootChips}</div></div>`;
+  const builder = `
+  <h2>Chord Builder <span class="ctx">the root is picked above the fretboard — choose a quality here</span></h2>
   <div class="card">
-    <div class="engr sm" style="color:var(--dim);margin-bottom:6px">Root</div><div class="rootstrip">${rootChips}</div>
-    <div class="engr sm" style="color:var(--dim);margin:14px 0 2px">Quality <span style="text-transform:none;letter-spacing:0;font-weight:500">· ${T.CHORD_ORDER.length} chord types</span></div>${qGroups}
+    <div class="engr sm" style="color:var(--dim);margin:0 0 2px">Quality <span style="text-transform:none;letter-spacing:0;font-weight:500">· ${T.CHORD_ORDER.length} chord types</span></div>${qGroups}
     <div class="readout" style="margin-top:14px">
       <div class="ro"><div class="k">Chord</div><div class="v big">${esc(ch.name)}</div><div class="hint">${esc(ch.root)} ${esc(ch.qualityName)}</div></div>
       <div class="ro"><div class="k">Formula</div><div class="v big" style="word-spacing:.08em">${esc(ch.formula)}</div><div class="hint">${ch.tones.map(x => x.semis).join(' · ')} semitones above the root</div></div>
@@ -4285,8 +4315,8 @@ function renderChord() {
     </div>
     <div class="toolbar"><button class="btn pri" data-act="playChordNow">▶ Play chord</button><button class="btn" data-act="strum">Strum ↓</button><button class="btn" data-act="arp">Arpeggio</button><span class="sp"></span><span class="hint">guitar buttons · the piano has its own controls below</span></div>
     <details class="det"><summary>Notes · intervals · frequencies</summary><div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semitones</th><th>Hz (oct 4)</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${rows}</tbody></table></div></details>
-  </div>
-  ${instrumentsHTML({ mid: chordPosBlockHTML() })}`;
+  </div>`;
+  return instrumentsHTML({ strip: fbStripHTML(rootGroup, chordPosGroupHTML()), mid: chordPosBlockHTML(), after: builder });
 }
 
 /* ================================================================
@@ -4873,9 +4903,11 @@ function buildDock() {
 function render() {
   const el = $('#tab-' + S.tab), y = window.scrollY;
   normalizePos(); SEL = selection(); PP = pianoPlan(); clearPianoTimers();
-  const fk = focusKey(el);
+  const fk = focusKey(el), oldStrip = $('#fbStrip', el), stripX = oldStrip ? oldStrip.scrollLeft : null;
   el.innerHTML = RENDER[S.tab]();
   a11yPass(el);
+  const strip = $('#fbStrip', el);
+  if (strip) strip.scrollLeft = stripX == null ? 0 : stripX;
   const fb = $('#fbWrap', el), pw = $('#pianoWrap', el);
   if (fb && UI.wantFocus && UI.focusFrac != null) { const w = fb.querySelector('svg').getBoundingClientRect().width; UI.fbScroll = Math.max(0, UI.focusFrac * w - 8); }
   UI.wantFocus = false;

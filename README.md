@@ -14,8 +14,8 @@
 
 | Tab | What it shows |
 |---|---|
-| **PLAY** | Pick a root, scale/mode and tuning on the brushed-metal panel. See the notes, formula, W/H step pattern and key signature; the same notes on a 0–15-fret fretboard **and** an 88-key piano; the harmonised chords with roman numerals. **Position buttons** (All, 1–7 modes or 1–5 boxes) isolate one box of the scale with finger suggestions. Tap anything to hear it. |
-| **CHORD** | 51 chord qualities on any root (one-tap grid). Formula, notes, intervals, and **six generated guitar positions** (buttons 1–6, numbered-finger diagrams, strum/arpeggio) for the current tuning, with the same voicing on the piano. |
+| **PLAY** | Pick a root, scale/mode and tuning on the brushed-metal panel. See the notes, formula, W/H step pattern and key signature; the same notes on a 0–15-fret fretboard **and** an 88-key piano; the harmonised chords with roman numerals. **Position buttons** (All, 1–7 modes or 1–5 boxes) sit in one row just above the fretboard and isolate one box of the scale with finger suggestions. Tap anything to hear it. |
+| **CHORD** | The fretboard comes first, with one row above it: the 12 roots and the position buttons. Below it, the Chord Builder: 51 chord qualities (one-tap grid). Formula, notes, intervals, and **six generated guitar positions** (buttons 1–6, numbered-finger diagrams, strum/arpeggio) for the current tuning, with the same voicing on the piano. |
 | **CIRCLE** | Interactive circle of fifths — tap a key to set it; relative minor, key signature, neighbours, and "walk the circle". |
 | **ƒ(x) MATH** | `f(n) = 440 × 2^(n/12)` with `n` worked out step by step; every note of the scale vs. just intonation; open strings; fret-by-fret frequencies. |
 | **SONG** | Time signature + tempo + metronome, and a **Generate progression** button: 4–8 bars in the key, played back. |
