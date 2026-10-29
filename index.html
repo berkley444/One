@@ -263,10 +263,13 @@ table.t .play{background:none;border:1px solid #34353d;border-radius:6px;color:v
 .fbstrip .rootstrip{display:flex;gap:3px}
 .fbstrip .chip.rt{flex:0 0 auto;width:38px;height:44px;box-sizing:border-box;justify-content:center;padding:0}
 .fbstrip .posrow{gap:3px;flex-wrap:nowrap}
-.fbstrip .pos{flex:1 0 auto;min-width:50px;height:44px;box-sizing:border-box;padding:0 6px}
+.fbstrip .fgrp.fpos{flex:0 0 auto}
+.fbstrip .pos{flex:0 0 auto;min-width:36px;height:30px;box-sizing:border-box;padding:0 5px;gap:0;border-radius:6px}
+.fbstrip .pos b{font:800 12px var(--sans);line-height:1.1}
+.fbstrip .pos span{font:600 8.5px var(--sans);line-height:1.1}
 .fbstrip .pos .full{display:none}.fbstrip .pos .abb{display:inline}
-@media (min-width:760px){.fbstrip .pos .full{display:inline}.fbstrip .pos .abb{display:none}.fbstrip .pos{min-width:58px}}
-@media (max-width:480px){.fbstrip{gap:14px}.fbstrip .chip.rt{width:34px;height:42px}.fbstrip .pos{min-width:46px;height:42px}}
+.fbstrip .fgrp.fscale{flex:0 0 auto}
+@media (max-width:480px){.fbstrip{gap:14px}.fbstrip .chip.rt{width:34px;height:42px}.fbstrip .pos{min-width:34px}}
 .qgrp{margin-top:10px}
 .qlab{font:600 10.5px var(--sans);color:#8f919a;letter-spacing:.08em;text-transform:uppercase;margin:0 0 5px}
 .chips.q{gap:5px}
@@ -356,7 +359,6 @@ footer a{color:#7b8aa8}
   body{padding-left:8px;padding-right:8px}
   .row,.row.r6{grid-template-columns:repeat(6,1fr)}
   .row>.slot{grid-column:span 2}
-  #row1>.slot:nth-child(n+4){grid-column:span 3}
   .drum .val{font-size:16px}
   .eq{font-size:19px}
   .ro .v{font-size:18px}
@@ -407,7 +409,7 @@ footer a{color:#7b8aa8}
 @media (max-width:480px){.pc-prac{gap:5px}.pc-prac .btn{font-size:12px}.midistat{font-size:10.5px}.prtarget{font-size:12px}}
 
 /* lessons */
-body[data-tab="lessons"] section[aria-label="Music control"]{display:none}
+body[data-tab="lessons"] #musicControl{display:none}
 .lspeed{display:flex;align-items:center;gap:8px;margin-top:9px;font:700 11px var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--engrave)}
 .lspeed .seg{display:flex;gap:4px;flex:1}.lspeed .seg button{flex:1;padding:6px 2px;border-radius:7px;border:1px solid #5a5b62;background:linear-gradient(180deg,#e9eaee,#a9abb2);color:#26272b;font:700 12px var(--sans);cursor:pointer}.lspeed .seg button.on{background:linear-gradient(180deg,#2a2b31,#0b0b0e);color:var(--amber);border-color:var(--amber)}
 .lintro p{margin:0 0 8px;font-size:14px;line-height:1.55;color:#cfd0d6}.lintro p b{color:var(--ink)}
@@ -917,6 +919,26 @@ header h1 small{margin:4px -50px 0}
 html body .idcard .engr.sm,html body .idcard .engr{color:var(--dim);text-shadow:none}
 /* labels above the fretboard row ("Root", "Position") sit on the page, not on a metal panel */
 html body .fbstrip .fgrp>.engr{color:var(--lab);text-shadow:none}
+
+/* ===== 24-keycontrols.raw.css ===== */
+/* Scale + tuning selects (they used to be drums in the Music Control panel) and the Chord | Scale toggle in the fretboard toolbar. Every theme reads the same variables. */
+html body select.kc{background:var(--chip);border:1px solid var(--chip-bd);color:var(--ink);border-radius:8px;padding:4px 22px 4px 9px;height:28px;box-sizing:border-box;font:600 12px var(--sans);max-width:100%;cursor:pointer;
+  -webkit-appearance:none;appearance:none;text-overflow:ellipsis;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 12px) 12px,calc(100% - 8px) 12px;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+html body select.kc:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.kcl{display:inline-flex;align-items:center;margin:0}
+/* the tuning picker sits over the empty strip at the top-left of the board, right above the string names */
+.fbframe{position:relative}
+.fbframe .tunepick{position:absolute;z-index:2;top:7px;left:8px}
+.fbframe .tunepick select.kc{width:124px;font-size:11px;height:26px;background-position:calc(100% - 12px) 10px,calc(100% - 8px) 10px}
+@media (max-width:480px){.fbframe .tunepick select.kc{width:116px}
+}
+.toolbar .kcl select.kc{height:30px}
+.fgrp.fscale select.kc{height:30px}
+/* Root + Scale bar on the tabs that only read the key (Circle, Math, Song): wraps instead of scrolling so the Scale select is always in view */
+.fbstrip.keybar{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
+.fbstrip.keybar .fgrp{max-width:100%}
+.fbstrip.keybar .rootstrip{flex-wrap:wrap}
 
 /* ===== 25-silver.css ===== */
 [data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}
@@ -1536,17 +1558,6 @@ html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)
     <div class="themepanel" id="gatePanel" role="dialog" aria-label="Chord unlock settings" hidden></div>
   </header>
 
-  <!-- ===== MUSIC CONTROL PANEL ===== -->
-  <section class="metal panel" aria-label="Music control">
-    <div class="panel-top">
-      <span class="engr">Music Control</span>
-      <span class="meter" id="meter" aria-hidden="true"></span>
-      <button class="power on" id="power" aria-pressed="true" title="Sound on / off"><span class="engr sm">Power</span><span class="led"></span></button>
-    </div>
-    <div class="row" id="row1"></div>
-    <div class="row" id="row2"></div>
-  </section>
-
   <!-- ===== TABS ===== -->
   <main id="main" tabindex="-1">
   <div id="tab-play" class="tab"><div class="stack" id="stack-play"></div></div>
@@ -1556,6 +1567,16 @@ html[data-theme="wood"] .lspeed{color:#f1e3c4;text-shadow:0 1px 0 rgba(0,0,0,.5)
   <div id="tab-song" class="tab"></div>
   <div id="tab-lessons" class="tab"></div>
   </main>
+
+  <!-- ===== MUSIC CONTROL PANEL (pitch, time signature, tone, tempo, volume, metronome, power) — temporarily at the very bottom of the page ===== -->
+  <section class="metal panel" id="musicControl" aria-label="Music control: pitch, time signature, tone, tempo, volume, metronome">
+    <div class="panel-top">
+      <span class="engr">Music Control</span>
+      <span class="meter" id="meter" aria-hidden="true"></span>
+      <button class="power on" id="power" aria-pressed="true" title="Sound on / off"><span class="engr sm">Power</span><span class="led"></span></button>
+    </div>
+    <div class="row" id="row2"></div>
+  </section>
 
   <footer>
     Big Pear Guitar Works · web edition · <a href="https://github.com/berkley444/One">github.com/berkley444/One</a><br>
@@ -3376,18 +3397,12 @@ function drumHTML(id, label, small) {
 }
 const DRUMS = {
   pitch:  { label: 'Pitch',  opts: () => [415,420,430,432,435,438,440,442,444,445,450].map(v => ({ v, l: v + ' Hz' })), get: () => S.a4, show: () => String(S.a4), set: v => { S.a4 = +v; } },
-  root:   { label: 'Root',   opts: () => Array.from({ length: 12 }, (_, pc) => ({ v: pc, l: T.pcBoth(pc) })), get: () => S.rootPc, show: () => keyName(), set: v => { S.rootPc = +v; } },
-  scale:  { label: 'Scale',  opts: () => T.SCALE_ORDER.map(id => ({ v: id, l: T.SCALES[id].long })), get: () => S.scale, show: () => T.SCALES[S.scale].name, set: v => { S.scale = v; } },
-  tuning: { label: 'Tuning', opts: () => T.TUNINGS.map(t => ({ v: t.id, l: `${t.name} — ${tuningNames(t).join(' ')}` })), get: () => S.tuning, show: () => curTuning().name, set: v => { S.tuning = v; } },
-  mode:   { label: 'Mode',   opts: () => [{ v: 'scale', l: 'Scale' }, { v: 'chord', l: 'Chord' }], get: () => S.mode, show: () => (S.mode === 'scale' ? 'Scale' : 'Chord'), set: v => { S.mode = v; if (v === 'scale') S.selDeg = null; } },
   meter:  { label: 'Time Sig', opts: () => Object.keys(T.METERS).map(m => ({ v: m, l: m })), get: () => S.meter, show: () => S.meter, set: v => { S.meter = v; } },
   tone:   { label: 'Tone',   opts: () => [{ v: 'pluck', l: 'Guitar pluck' }, { v: 'keys', l: 'Electric keys' }, { v: 'synth', l: 'Soft synth' }], get: () => S.tone, show: () => ({ pluck: 'Pluck', keys: 'Keys', synth: 'Synth' }[S.tone]), set: v => { S.tone = v; } },
-  spell:  { label: 'Spelling', opts: () => [{ v: 'auto', l: 'Auto (sensible for the key)' }, { v: '♯', l: 'Prefer sharps ♯' }, { v: '♭', l: 'Prefer flats ♭' }], get: () => S.pref, show: () => ({ auto: 'Auto', '♯': '♯ Sharps', '♭': '♭ Flats' }[S.pref]), set: v => { S.pref = v; } },
 };
 function buildPanel() {
-  $('#row1').innerHTML = ['pitch', 'root', 'scale', 'tuning', 'mode'].map(id => drumHTML(id, DRUMS[id].label)).join('');
   $('#row2').className = 'row r6';
-  $('#row2').innerHTML = ['meter', 'tone', 'spell'].map(id => drumHTML(id, DRUMS[id].label, true)).join('') +
+  $('#row2').innerHTML = ['pitch', 'meter', 'tone'].map(id => drumHTML(id, DRUMS[id].label, id !== 'pitch')).join('') +
     `<div class="slot knobwrap"><span class="engr sm">Tempo</span><div class="knob" id="knob-tempo" tabindex="0" role="slider" aria-label="Tempo"></div><div class="knobread" id="read-tempo"></div></div>
      <div class="slot knobwrap"><span class="engr sm">Volume</span><div class="knob" id="knob-vol" tabindex="0" role="slider" aria-label="Volume"></div><div class="knobread" id="read-vol"></div></div>
      <div class="slot switch"><span class="engr sm">Metronome</span><button class="toggle" id="metro" aria-label="Metronome"></button></div>`;
@@ -3445,7 +3460,8 @@ function fretboardSVG(cfg = null) {
   const t = cfg ? cfg.tuning : curTuning(), n = t.strings.length, act = cfg ? new Map() : activeNotes();
   const W = 1000, nutX = 80, L = (985 - nutX) / (1 - Math.pow(2, -FRETS / 12));
   const fx = f => nutX + L * (1 - Math.pow(2, -f / 12));
-  const top = 24, gap = n > 6 ? 32 : n < 6 ? 44 : 36, H = top + gap * (n - 1) + 48;
+  const band = cfg && cfg.board === 'gate' ? 0 : 34;               // headroom above the strings for the tuning picker (HTML, drawn over the board's top-left)
+  const top = 24 + band, gap = n > 6 ? 32 : n < 6 ? 44 : 36, H = top + gap * (n - 1) + 48;
   const yRow = si => top + (n - 1 - si) * gap;
   const mid = top + gap * (n - 1) / 2;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="${cfg ? 'Note-placing fretboard' : 'Fretboard'}, frets 0 to ${FRETS}, ${t.name} tuning. ${cfg ? 'Arrow keys move between cells, Enter places or removes a note.' : 'Arrow keys move between notes, Enter plays.'}">`;
@@ -3887,6 +3903,26 @@ function pianoFocusScroll() {                                         // bring t
   const lo = Math.min(...PP.notes.map(n => n.midi));
   return Math.max(0, whitesBelow(lo) * 24 - 36);
 }
+/* ---------- key + tuning controls that used to live in the Music Control panel ---------- */
+function scaleSelectHTML() {
+  return `<label class="kcl"><span class="sr">Scale</span><select class="kc" data-kc="scale" aria-label="Scale" title="${esc(T.SCALES[S.scale].long)}">${T.SCALE_ORDER.map(id => `<option value="${esc(id)}"${id === S.scale ? ' selected' : ''}>${esc(T.SCALES[id].name)}</option>`).join('')}</select></label>`;
+}
+function tuningSelectHTML() {
+  return `<label class="kcl tunepick"><span class="sr">Tuning</span><select class="kc" data-kc="tuning" aria-label="Tuning" title="Tuning: ${esc(tuningNames(curTuning()).join(' '))}">${T.TUNINGS.map(t => `<option value="${esc(t.id)}"${t.id === S.tuning ? ' selected' : ''}>${esc(t.name)}</option>`).join('')}</select></label>`;
+}
+function rootGroupHTML(selPc) {
+  const chips = Array.from({ length: 12 }, (_, pc) => {
+    const both = T.pcBoth(pc).split(' / ');
+    return `<button class="chip rt${pc === selPc ? ' on' : ''}" data-act="croot" data-pc="${pc}" aria-pressed="${pc === selPc}" aria-label="${esc(T.pcBoth(pc))}"><b>${esc(both[0])}</b><small>${both[1] ? esc(both[1]) : '&nbsp;'}</small></button>`;
+  }).join('');
+  return `<div class="fgrp froot"><span class="engr sm">Root</span><div class="rootstrip" role="group" aria-label="Root note">${chips}</div></div>`;
+}
+const keyBarHTML = () => fbStripHTML(rootGroupHTML(S.rootPc), `<div class="fgrp fscale"><span class="engr sm">Scale</span>${scaleSelectHTML()}</div>`).replace('class="fbstrip"', 'class="fbstrip keybar"');
+function setRoot(pc) {                                   // ONE root for the whole app: the key, the chord builder and every tab share it
+  S.rootPc = pc; S.pref = 'auto'; S.chordPos = 0;
+  if (S.tab === 'play' && S.selDeg != null) refreshSelDeg();      // a harmonised chord is selected: re-pick it in the new key
+  else { S.chordRoot = chordRootFor(pc); S.selDeg = null; }
+}
 function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
   const idm = idActive();
   if (idm) { mid = idPanelHTML(); strip = ''; }       // note-placing has no positions to pick                                                    // Clear / Identify or Chord Quiz replaces the position block
@@ -3899,14 +3935,16 @@ function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
   <h2>${t.strings.length < 6 ? 'Bass' : t.strings.length > 6 ? t.strings.length + '-String' : 'Guitar'} <span class="ctx">${esc(ctx)}</span></h2>
   <div class="toolbar">
     <div class="seg" role="group" aria-label="Labels">${seg('notes', 'NOTES')}${seg('intervals', 'INTERVALS')}${SEL ? seg('fingers', 'FINGERS') : ''}${seg('off', 'OFF')}</div>
+    ${scaleSelectHTML()}
     <span class="sp"></span>
+    <div class="seg" role="group" aria-label="Mode"><button data-act="mode" data-v="chord" class="${chordMode ? 'on' : ''}" aria-pressed="${chordMode}">CHORD</button><button data-act="mode" data-v="scale" class="${!chordMode ? 'on' : ''}" aria-pressed="${!chordMode}">SCALE</button></div>
     <button class="btn sm tog${idm && !S.qOn ? ' on' : ''}" data-act="idtoggle" aria-pressed="${idm && !S.qOn}" title="Clear the fretboard, place notes, and have the chord named">✎ Clear / Identify</button>
     <button class="btn sm tog${idm && S.qOn ? ' on' : ''}" data-act="quiztoggle" aria-pressed="${idm && S.qOn}" title="Name a chord, you build it, it is graded">? Chord Quiz</button>
     ${idm ? '' : `<button class="btn sm" data-act="playScale">${playLbl}</button>
     <button class="btn sm" data-act="playChordNow">▶ Chord ${esc(ch.name)}</button>`}
   </div>
   ${strip}
-  <div class="fbwrap${idm ? ' idmode' : ''}" id="fbWrap" tabindex="0" role="region" aria-label="${idm ? 'Note-placing fretboard (scrolls sideways; arrow keys move between cells, Enter places or removes a note)' : 'Fretboard (scrolls sideways; arrow keys move between notes)'}">${fretboardSVG(idm ? idBoardCfg() : null)}</div>
+  <div class="fbframe">${tuningSelectHTML()}<div class="fbwrap${idm ? ' idmode' : ''}" id="fbWrap" tabindex="0" role="region" aria-label="${idm ? 'Note-placing fretboard (scrolls sideways; arrow keys move between cells, Enter places or removes a note)' : 'Fretboard (scrolls sideways; arrow keys move between notes)'}">${fretboardSVG(idm ? idBoardCfg() : null)}</div></div>
   <div class="legend" style="margin-top:8px">${idm ? `<span><i data-tone="root" style="background:${RED}"></i>root</span><span><i data-tone="third" style="background:${AMBER}"></i>3rd / sus</span><span><i data-tone="fifth" style="background:${GREEN}"></i>5th</span><span><i data-tone="seventh" style="background:${BLUE}"></i>7th</span><span><i data-tone="ext" style="background:${VIOLET}"></i>extension / bass</span>` : legendHTML()}<span style="margin-left:auto">${idm ? 'tap a fret to place a note · tap again to remove · scroll sideways on a phone' : 'tap any note to hear it · scroll sideways on a phone'}</span></div>
   ${mid}
   ${after}
@@ -4180,7 +4218,7 @@ function diatonicHTML() {
 }
 function renderPlay() {
   const chordMode = S.mode === 'chord';
-  return scaleReadoutHTML() + instrumentsHTML({ strip: fbStripHTML(chordMode ? chordPosGroupHTML() : scalePosGroupHTML()), mid: chordMode ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML();
+  return scaleReadoutHTML() + instrumentsHTML({ strip: fbStripHTML(rootGroupHTML(S.rootPc), chordMode ? chordPosGroupHTML() : scalePosGroupHTML()), mid: chordMode ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML();
 }
 /* ---------- the one row directly above the fretboard: [root] [position] ---------- */
 function fbStripHTML(...groups) { const g = groups.filter(Boolean).join(''); return g ? `<div class="fbstrip" id="fbStrip">${g}</div>` : ''; }
@@ -4295,17 +4333,13 @@ function chordRootFor(pc, q = S.chordQ) { return T.rootName(pc, T.isMinorQuality
 function renderChord() {
   const ch = curChord(), t = curTuning();
   const rootPcSel = ch.rootPc;
-  const rootChips = Array.from({ length: 12 }, (_, pc) => {
-    const both = T.pcBoth(pc).split(' / ');
-    return `<button class="chip rt${pc === rootPcSel ? ' on' : ''}" data-act="croot" data-pc="${pc}" aria-label="${esc(T.pcBoth(pc))}"><b>${esc(both[0])}</b><small>${both[1] ? esc(both[1]) : '&nbsp;'}</small></button>`;
-  }).join('');
   const qGroups = T.CHORD_GROUPS.map(g => `<div class="qgrp"><div class="qlab">${esc(g.name)}</div><div class="chips q">${g.ids.map(id => `<button class="chip${id === S.chordQ ? ' on' : ''}" data-act="cq" data-q="${id}" title="${esc(T.CHORDS[id].name)}" aria-label="${esc(T.CHORDS[id].name)}">${esc(T.CHORDS[id].sym || 'maj')}</button>`).join('')}</div></div>`).join('');
   const rows = ch.tones.map(tn => {
     const m = T.midiOf(ch.rootPc, 4) + tn.semis, st = toneStyle(tn.deg, tn.semis === 0);
     return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${st.bg};margin-right:8px"></span>${esc(tn.name)}</td><td>${esc(tn.label)}</td><td>${tn.semis}</td><td>${fmtHz(T.freq(m, S.a4))}</td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
   }).join('');
   const ess = T.essentialTones(ch), skip = ch.tones.filter(x => !ess.includes(x)).map(x => x.label === '5' ? '5th' : x.label);
-  const rootGroup = `<div class="fgrp froot"><span class="engr sm">Root</span><div class="rootstrip" role="group" aria-label="Chord root">${rootChips}</div></div>`;
+  const rootGroup = rootGroupHTML(rootPcSel);
   const builder = `
   <h2>Chord Builder <span class="ctx">the root is picked above the fretboard — choose a quality here</span></h2>
   <div class="card">
@@ -4652,7 +4686,7 @@ function songGenHTML() {
   return `
   <h2>Song generator <span class="ctx">${esc(keyTitle())} · ${S.meter} · ${S.tempo} BPM · ${esc(t.name)}</span></h2>
   <div class="card">
-    <div class="hint" style="margin-bottom:12px"><b style="color:var(--ink)">Key + scale + time signature + tuning → a whole song.</b> Intro, verse, chorus and bridge, each with a chord per bar, a strum pattern that fits ${S.meter}, a melody made only of ${esc(T.SCALES[S.scale].name)} notes (chord tones land on the strong beats), the melody as guitar tab in ${esc(t.name)}, and piano fingering for every chord. Change anything in the panel and the song follows; the same idea number always gives the same song.</div>
+    <div class="hint" style="margin-bottom:12px"><b style="color:var(--ink)">Key + scale + time signature + tuning → a whole song.</b> Intro, verse, chorus and bridge, each with a chord per bar, a strum pattern that fits ${S.meter}, a melody made only of ${esc(T.SCALES[S.scale].name)} notes (chord tones land on the strong beats), the melody as guitar tab in ${esc(t.name)}, and piano fingering for every chord. Change the key, scale, time signature or tuning and the song follows; the same idea number always gives the same song.</div>
     <div class="ctrls">
       <div class="field"><label>Form</label><select data-chg="songform">${selOpts([['full', 'Full song (7 parts)'], ['short', 'Short (verse + chorus)']], S.songForm)}</select></div>
       <div class="field"><label>Chords</label><select data-chg="songstyle">${selOpts([['smart', 'Smart (functional)'], ['pop', 'Pop loops']], S.songStyle)}</select></div>
@@ -4890,7 +4924,7 @@ UI.lessonDoneKey = null;
 /* ================================================================
    WIRING
    ================================================================ */
-const RENDER = { play: renderPlay, chord: renderChord, circle: renderCircle, math: renderMath, song: renderSong, lessons: renderLessons };
+const RENDER = { play: renderPlay, chord: renderChord, circle: () => keyBarHTML() + renderCircle(), math: () => keyBarHTML() + renderMath(), song: () => keyBarHTML() + renderSong(), lessons: renderLessons };   // tabs that read the key get the same Root + Scale row
 const TABS = [
   ['play', 'PLAY', '<rect x="3" y="6" width="20" height="14" rx="2"/><path d="M9 6v14M15 6v14M3 11h20M3 15h20" stroke-width="1.2"/>'],
   ['chord', 'CHORD', '<path d="M7 4v18M13 4v18M19 4v18M4 9h18M4 15h18" stroke-width="1.2"/><circle cx="13" cy="12" r="2.6" fill="currentColor"/><circle cx="7" cy="18" r="2.2" fill="currentColor"/>'],
@@ -4940,7 +4974,7 @@ function refreshSelDeg() {
 }
 function onChange(id) {
   UI.piFocus = true;
-  if (id === 'root' || id === 'scale' || id === 'spell') refreshSelDeg();
+  if (id === 'scale') refreshSelDeg();
   if (id === 'meter') Player.reset();
   syncPanel(); render(); save(); updateHash();
 }
@@ -4971,7 +5005,10 @@ document.addEventListener('click', e => {
     case 'vstrum': case 'varp': case 'vblock': { const vv = curVoicing(); if (vv) playFrets(vv, A === 'varp' ? 'arp' : A === 'vblock' ? 'block' : 'strum'); break; }
     case 'spos': S.scalePos = v === 'all' ? null : +v; UI.wantFocus = true; render(); save(); updateHash(); break;
     case 'cpos': { S.chordPos = +v; UI.wantFocus = true; render(); save(); updateHash(); const vv = curVoicing(); if (vv) playFrets(vv); break; }
-    case 'croot': S.chordRoot = chordRootFor(+act.dataset.pc); S.chordPos = 0; S.selDeg = null; UI.wantFocus = true; render(); save(); updateHash(); { const vv = curVoicing(); if (vv) playFrets(vv); else playChord(curChord(), 'strum'); } break;
+    case 'croot': setRoot(+act.dataset.pc); UI.wantFocus = true; render(); save(); updateHash(); { if (S.tab === 'chord' || S.mode === 'chord') { const vv = curVoicing(); if (vv) playFrets(vv); else playChord(curChord(), 'strum'); } else playMidi(T.midiOf(S.rootPc, 3)); } break;
+    case 'mode':                                          // Chord | Scale toggle in the fretboard toolbar. On the CHORD tab "Scale" means the PLAY tab (which is the scale view)
+      if (v === 'scale' && S.tab === 'chord') { setTab('play'); announce('Scale mode, play tab'); break; }
+      S.mode = v === 'scale' ? 'scale' : 'chord'; if (S.mode === 'scale') S.selDeg = null; onChange('mode'); break;
     case 'cq': {
       const pc = T.parseName(S.chordRoot).pc; S.chordQ = act.dataset.q; S.chordRoot = chordRootFor(pc, S.chordQ); S.chordPos = 0; S.selDeg = null;
       if (S.inv >= curChord().tones.length) S.inv = -1;
@@ -5072,6 +5109,11 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-act]')) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent('click', { bubbles: true })); }
 });
+document.addEventListener('change', e => {                // scale + tuning selects (they used to be drums in the Music Control panel)
+  const k = e.target.closest('[data-kc]'); if (!k) return;
+  if (k.dataset.kc === 'scale') { if (!T.SCALES[k.value]) return; S.scale = k.value; onChange('scale'); }
+  else if (k.dataset.kc === 'tuning') { if (!T.TUNINGS.some(t => t.id === k.value)) return; S.tuning = k.value; onChange('tuning'); }
+});
 document.addEventListener('change', e => {
   const c = e.target.closest('[data-chg]'); if (!c) return;
   const v = c.type === 'checkbox' ? c.checked : c.value;
@@ -5134,6 +5176,7 @@ function a11yPass(el) {
 // Piano / fretboard by keyboard: Tab onto the instrument, arrows move between notes, Enter or Space plays.
 document.addEventListener('keydown', e => {
   const t = e.target; if (!t || !t.closest || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (t.closest('select')) return;
   const host = t.closest('#pianoWrap, #fbWrap, #gateWrap'); if (!host) return;
   const piano = host.id === 'pianoWrap', k = e.key;
   const kSel = piano ? '.pk' : host.querySelector('.idc') ? '.idc' : '.dot';

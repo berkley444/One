@@ -15,7 +15,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     ok(await q(()=>document.querySelectorAll('#dock button').length===6 && !!document.querySelector('#dock [data-v="lessons"].on')),`[${w}] dock has 6 tabs and LEARN is active`);
     ok(await q(n=>document.querySelectorAll('#tab-lessons .lcard').length===n,nL),`[${w}] one card per lesson (${nL})`);
     ok(await q(n=>new RegExp('0 of '+n+' parts').test(document.querySelector('#tab-lessons .lall').textContent),nParts),`[${w}] overall progress 0 of ${nParts}`);
-    ok(await q(()=>getComputedStyle(document.querySelector('section[aria-label="Music control"]')).display==='none'),`[${w}] big control panel hidden on the lessons tab`);
+    ok(await q(()=>getComputedStyle(document.querySelector('#musicControl')).display==='none'),`[${w}] big control panel hidden on the lessons tab`);
     ok(await q(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),`[${w}] list: no horizontal overflow`);
     ok(await q(()=>[...document.querySelectorAll('#tab-lessons .lcard h3')].map(x=>x.textContent).join('|').includes('Finger numbers')),`[${w}] lesson titles shown`);
     // ---- open the first lesson
@@ -81,7 +81,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     // ---- leaving the tab turns practice off
     await q(()=>BPGW.setTab('chord')); await sleep(150);
     ok(await q(()=>BPGW.UI.pr.on===false && !document.querySelector('#tab-chord #prac:not([hidden])')),`[${w}] leaving Learn turns practice off`);
-    ok(await q(()=>getComputedStyle(document.querySelector('section[aria-label="Music control"]')).display!=='none'),`[${w}] control panel back on other tabs`);
+    ok(await q(()=>getComputedStyle(document.querySelector('#musicControl')).display!=='none'),`[${w}] control panel back on other tabs`);
     await q(()=>BPGW.setTab('lessons')); await sleep(150);
     ok(await q(()=>BPGW.S.lesson==='fivefinger' && BPGW.S.lpart===2),`[${w}] returning to Learn restores the lesson`);
     // ---- tab strip + deep link

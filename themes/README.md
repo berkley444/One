@@ -14,6 +14,7 @@ fails if the pasted copy is stale (`tests/browser/themes.js` runs it).
 | `00-defaults.raw.css` | `:root,[data-theme]{...}` - every semantic variable with its Silver value, so an unset variable falls back to Silver |
 | `10-engine.css` | Rules (all prefixed `html[data-theme]`) that read those variables: knobs, drums, buttons, panels, fretboard, piano, chips, positions, charts. This is where a theme gets its *structure*; the per-theme files mostly set variables plus a few structural overrides |
 | `20-picker.raw.css` | The Theme picker panel and its preview chips (visible in every theme, including Silver) |
+| `24-keycontrols.raw.css` | The Scale / Tuning selects (`select.kc`), the tuning picker over the board's top corner and the wrapping Root + Scale bar on CIRCLE / MATH / SONG; reads the same semantic variables in every theme |
 | `25-silver.css` | Silver's variables for `[data-theme="silver"]` only, so the picker's Silver preview chip can use them (the page itself never gets this attribute) |
 | `30-console.css` ... `80-wood.css` | One theme each |
 | `60-minimal.css` / `65-minimal-dark.css` | Minimal Light; Minimal Dark. The first line of `60-minimal.css`, `/*@also minimal-dark*/`, makes the build emit that file for both ids, then `65-` overrides only the colours |

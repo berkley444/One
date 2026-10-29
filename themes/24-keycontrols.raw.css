@@ -1,0 +1,16 @@
+/* Scale + tuning selects (they used to be drums in the Music Control panel) and the Chord | Scale toggle in the fretboard toolbar. Every theme reads the same variables. */
+html body select.kc{background:var(--chip);border:1px solid var(--chip-bd);color:var(--ink);border-radius:8px;padding:4px 22px 4px 9px;height:28px;box-sizing:border-box;font:600 12px var(--sans);max-width:100%;cursor:pointer;
+  -webkit-appearance:none;appearance:none;text-overflow:ellipsis;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 12px) 12px,calc(100% - 8px) 12px;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+html body select.kc:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.kcl{display:inline-flex;align-items:center;margin:0}
+/* the tuning picker sits over the empty strip at the top-left of the board, right above the string names */
+.fbframe{position:relative}
+.fbframe .tunepick{position:absolute;z-index:2;top:7px;left:8px}
+.fbframe .tunepick select.kc{width:124px;font-size:11px;height:26px;background-position:calc(100% - 12px) 10px,calc(100% - 8px) 10px}
+@media (max-width:480px){.fbframe .tunepick select.kc{width:116px}}
+.toolbar .kcl select.kc{height:30px}
+.fgrp.fscale select.kc{height:30px}
+/* Root + Scale bar on the tabs that only read the key (Circle, Math, Song): wraps instead of scrolling so the Scale select is always in view */
+.fbstrip.keybar{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
+.fbstrip.keybar .fgrp{max-width:100%}.fbstrip.keybar .rootstrip{flex-wrap:wrap}

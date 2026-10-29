@@ -24,7 +24,7 @@
 
 On the fretboard toolbar, **✎ Clear / Identify** wipes the board so you can place notes yourself: tap a fret to place a note (one per string, tap again to remove), tap the left column to cycle open ○ / muted ×. The app names the chord as you go (root, quality, bass, inversion, other names, interval for two notes), shows note names and intervals on the dots, and can show it on the piano. **? Chord Quiz** gives you a chord name and grades what you place (missing / extra notes explained, score and streak saved). The lock icon in the header turns on an optional *chord unlock* pop-up (**just for fun, not security**, off by default).
 
-Panel controls: `PITCH` (A4 415–450) · `ROOT` · `SCALE` (major, natural/harmonic/melodic minor, major/minor pentatonic, blues, 5 more modes) · `TUNING` (standard, drop D, DADGAD, open G/D/E, half-step down, full-step down, 7-string, bass) · `MODE` · `TIME SIG` · `TONE` · `SPELLING` · tempo and volume knobs · metronome switch.
+Controls: the 12 **root buttons** (above the board on PLAY and CHORD, and in a Root + Scale bar on CIRCLE / MATH / SONG) set the one shared root. In the fretboard toolbar: Notes / Intervals / Fingers / Off, then the **scale** select (major, natural/harmonic/melodic minor, major/minor pentatonic, blues, 5 more modes), the **Chord | Scale** toggle and Clear / Identify. A small **tuning** select (standard, drop D, DADGAD, open G/D/E, half-step down, full-step down, 7-string, bass) sits at the top-left of the board. The **Music Control** panel at the very bottom of the page holds `PITCH` (A4 415–450) · `TIME SIG` · `TONE` · tempo and volume knobs · metronome switch · power.
 
 ## Themes
 
