@@ -4,6 +4,14 @@ Newest first. One entry per decision: what, why, and what it costs.
 
 ---
 
+## 2026-10-28 — Piano section redesigned: the keyboard is the showpiece; the big Piano Control panel is gone
+**Decision (Jeremy via the parent):** The Piano section now reads like the guitar's: header, one compact toolbar (R | L | L+R hand toggle, octave select with ‹ ›, 1|2 octave length toggle in scale mode, small Scale / Up / Arpeggio play buttons), a slim position/mode button row (1 Ion … 7 Loc, G match guitar; reuses `posRowHTML`), then the keyboard, then the fingering line (RH: D(1) E(2)…) as a slim caption. Practice, Exact octave, MIDI, Echo and the step panel moved into one collapsible strip below the keyboard; it opens when Practice is switched on and can be folded or opened by hand (`UI.pStrip`, not saved in the hash). Every `data-act` handler, the hash state and the independence from the guitar are unchanged. Lessons keeps its own `.pcontrol.lprac` panel.
+**Why:** The keyboard sat under a tall panel of controls; most of the time only hand, octave and position matter.
+**Cost / caveats:** The phone toolbar wraps to about three rows. The old `.pcontrol` / `.pc-*` CSS stays because Lessons uses it. The MIDI status text takes `--dim` / `--good` / `--bad` on the page (not the panel ink), so pedal, tube and synth stay readable.
+**Tests:** `layout.js` gains a PIANO block (toolbar order, position row, keyboard directly after, caption, strip collapsed / opens with Practice, phone and desktop); `smoke.js`, `prac.js`, `lessons.js` follow the new selectors; `themes.js` adds a `piano-practice` view (13 themes x 2 widths).
+
+---
+
 ## 2026-10-28 — Five more themes: Navy Light, Sunburst, Surf Green, Rosewood & Pearl, Sheet Music (13 in all)
 **Decision (Jeremy: "add themes as you see fit"):** (1) **Navy Light** is Minimal Light's structure in blue and white, with all text `#000055`, secondary text a navy tint and cobalt accents. It is a separate theme (`66-navy-light.css`, sharing `60-minimal.css` through `@also`), so **Minimal Light, the default, is unchanged**. This replaces the parked local `navy` branch idea (the branch at `eb65b92` stays local and is never pushed). (2) Four guitar-flavoured themes, each with its own knobs, controls, fretboard and piano and its own picker card: **Sunburst** (honey-to-cherry lacquer, cream binding, gold top-hat knobs, dark rosewood board), **Surf Green** (seafoam lacquer and chrome, cream pickguard cards, maple neck with black dots), **Rosewood & Pearl** (dark rosewood grain, pearl window drums, abalone knobs, pearl inlays, aqua highlights), **Sheet Music** (cream manuscript paper, black ink, oxblood accents, serif type; shares Minimal's structure).
 **Why:** The picker was the most-liked feature; more distinct looks, tied to the instrument, give it more to offer without touching the default.

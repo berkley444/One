@@ -50,7 +50,7 @@ const puppeteer=require('puppeteer-core');
     ok(await q(()=>!document.querySelector('[data-act="inv"]')),`[${w}] old inversion seg removed`);
     // ---- piano control (chord tab) ----
     await p.evaluate(()=>{BPGW.S.chordRoot='C';BPGW.S.chordQ='major';BPGW.S.pcPos=0;BPGW.S.chHand='B';BPGW.S.pOct=4;BPGW.render();});
-    ok(await q(()=>document.querySelectorAll('#tab-chord .pcontrol').length===1),`[${w}] piano control panel on chord tab`);
+    ok(await q(()=>document.querySelectorAll('#tab-chord .ptool').length===1&&document.querySelectorAll('#tab-chord .pstrip').length===1&&!document.querySelector('#tab-chord .pcontrol')),`[${w}] piano toolbar + mode strip on chord tab (no big panel)`);
     let c=await q(()=>({R:document.querySelectorAll('#tab-chord .pk .fd.R').length,L:document.querySelectorAll('#tab-chord .pk .fd.L').length,txt:document.querySelector('#tab-chord .pfing').textContent.replace(/\s+/g,' ')}));
     ok(c.R===3&&c.L===1&&/RH: C\(1\) E\(3\) G\(5\)/.test(c.txt)&&/LH: C\(5\)/.test(c.txt),`[${w}] C major Both: RH 1-3-5, LH root 5 :: ${c.txt}`);
     await p.evaluate(()=>document.querySelector('#tab-chord [data-act="phand"][data-v="S"]').click());
@@ -60,7 +60,7 @@ const puppeteer=require('puppeteer-core');
     c=await q(()=>document.querySelector('#tab-chord .pfing').textContent.replace(/\s+/g,' ')); ok(/RH: E\(1\) G\(2\) C\(5\)/.test(c),`[${w}] 1st inversion RH 1-2-5 :: ${c}`);
     await p.evaluate(()=>document.querySelector('#tab-chord [data-act="ppos"][data-v="2"]').click());
     c=await q(()=>document.querySelector('#tab-chord .pfing').textContent.replace(/\s+/g,' ')); ok(/RH: G\(1\) C\(3\) E\(5\)/.test(c)&&/LH: G\(5\) C\(2\) E\(1\)/.test(c),`[${w}] 2nd inversion RH 1-3-5, LH 5-2-1 :: ${c}`);
-    for (const sel of ['#tab-chord [data-act="phand"]','#tab-chord [data-act="ppos"]','#tab-chord .pc-play .btn']) ok(await oneLine(sel),`[${w}] ${sel} on one line`);
+    for (const sel of ['#tab-chord [data-act="phand"]','#tab-chord [data-act="ppos"]','#tab-chord .ptool .ptplay .btn']) ok(await oneLine(sel),`[${w}] ${sel} on one line`);
     ok(await q(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),`[${w}] no horizontal overflow with piano panel`);
     // octave stepper
     await p.evaluate(()=>document.querySelector('#tab-chord [data-act="poct"][data-v="1"]').click()); ok(await q(()=>BPGW.S.pOct===5),`[${w}] octave up`);
@@ -73,7 +73,7 @@ const puppeteer=require('puppeteer-core');
     ok(await q(()=>document.querySelectorAll('#tab-chord .pk.now').length===6),`[${w}] block chord lights all six keys (both same, 2nd inv)`);
     // match guitar
     await p.evaluate(()=>document.querySelector('#tab-chord [data-act="ppos"][data-v="g"]').click());
-    c=await q(()=>({n:document.querySelectorAll('#tab-chord .pk .fd').length,g:BPGW.Theory.chordPositions(BPGW.Theory.buildChord('C','major'),BPGW.Theory.TUNINGS[0].strings)[BPGW.S.chordPos].midi.filter(m=>m!=null).length,dis:!!document.querySelector('#tab-chord .pcontrol .dis')}));
+    c=await q(()=>({n:document.querySelectorAll('#tab-chord .pk .fd').length,g:BPGW.Theory.chordPositions(BPGW.Theory.buildChord('C','major'),BPGW.Theory.TUNINGS[0].strings)[BPGW.S.chordPos].midi.filter(m=>m!=null).length,dis:!!document.querySelector('#tab-chord .ptool .phandseg.dis')}));
     ok(c.n===c.g&&c.dis,`[${w}] Match guitar lights exactly the guitar pitches (${c.n}/${c.g}), hand seg disabled`);
     // every quality: piano panel renders sensible dots
     for (const id of qs){
@@ -84,11 +84,11 @@ const puppeteer=require('puppeteer-core');
     }
     // ---- piano control (play tab, scales) ----
     await p.evaluate(()=>{BPGW.S.rootPc=2;BPGW.S.pref='auto';BPGW.S.scale='dorian';BPGW.S.mode='scale';BPGW.S.psPos=0;BPGW.S.scHand='R';BPGW.S.pOcts=1;BPGW.S.scalePos=null;BPGW.setTab('play',{keepMode:true});});
-    ok(await q(()=>document.querySelectorAll('#tab-play .pcontrol').length===1),`[${w}] piano control panel on play tab`);
+    ok(await q(()=>document.querySelectorAll('#tab-play .ptool').length===1&&document.querySelectorAll('#tab-play .pstrip').length===1&&!document.querySelector('#tab-play .pcontrol')),`[${w}] piano toolbar + mode strip on play tab (no big panel)`);
     c=await q(()=>({fd:document.querySelectorAll('#tab-play .pk .fd.R').length,txt:document.querySelector('#tab-play .pfing').textContent.replace(/\s+/g,' ')}));
     ok(c.fd===8&&/RH: D\(2\) E\(3\) F\(1\) G\(2\) A\(3\) B\(4\) C\(1\) D\(2\)/.test(c.txt),`[${w}] D Dorian RH fingering :: ${c.txt}`);
     for (const k of [0,1,2,3,4,5,6]) { await p.evaluate(k=>document.querySelector(`#tab-play [data-act="ppos"][data-v="${k}"]`).click(),k); ok(await q(k=>document.querySelectorAll('#tab-play .pk .fd.R').length===8 && BPGW.S.psPos===k,k),`[${w}] scale position ${k+1} lights 8 keys`); }
-    for (const sel of ['#tab-play [data-act="phand"]','#tab-play [data-act="ppos"]','#tab-play .pc-play .btn','#tab-play [data-act="poctn"]']) ok(await oneLine(sel),`[${w}] ${sel} on one line`);
+    for (const sel of ['#tab-play [data-act="phand"]','#tab-play [data-act="ppos"]','#tab-play .ptool .ptplay .btn','#tab-play [data-act="poctn"]']) ok(await oneLine(sel),`[${w}] ${sel} on one line`);
     await p.evaluate(()=>document.querySelector('#tab-play [data-act="poctn"][data-v="2"]').click()); ok(await q(()=>document.querySelectorAll('#tab-play .pk .fd.R').length===15),`[${w}] two octaves = 15 keys`);
     await p.evaluate(()=>document.querySelector('#tab-play [data-act="phand"][data-v="B"]').click()); ok(await q(()=>document.querySelectorAll('#tab-play .pk .fd.L').length>=14),`[${w}] hands together lights LH too`);
     await p.evaluate(()=>document.querySelector('#tab-play [data-act="pplay"][data-v="scale"]').click()); await new Promise(r=>setTimeout(r,500));

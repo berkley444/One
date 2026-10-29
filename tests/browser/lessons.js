@@ -129,7 +129,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     ok(true,`[${w}] Enter on a staff note does not throw`);
     // ---- other tabs untouched
     await q(()=>BPGW.setTab('play')); await sleep(100);
-    ok(await q(()=>!!document.querySelector('#tab-play .pcontrol [data-act="prtog"]') && !document.querySelector('#tab-play .lcol')),`[${w}] Play tab unchanged`);
+    ok(await q(()=>!!document.querySelector('#tab-play .pprac [data-act="prtog"]') && !document.querySelector('#tab-play .lcol')),`[${w}] Play tab unchanged`);
     ok(errs.length===0,`[${w}] no console errors (${errs.join(' | ')})`);
     await p.close();
   }

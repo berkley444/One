@@ -176,6 +176,36 @@ button{font:inherit;color:inherit}
 .plegend b.hR{background:#3fcf6e;color:#04210f}.plegend b.hL{background:#4f8dff;color:#fff}
 .plegend .rr{display:inline-block;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 2px #e8463e;margin-right:6px;background:#777;vertical-align:0}
 @media (max-width:480px){.pcontrol .posrow{gap:3px}.pc-grid{gap:8px}.pread .ptitle{font-size:16px}.pread .pfing{font-size:12px}}
+/* piano section: guitar-style toolbar + mode strip, keyboard, slim caption, collapsible practice strip */
+.ptool{margin:0 0 6px;row-gap:6px}
+.ptool .ptplay{display:inline-flex;gap:6px;flex-wrap:wrap}
+.ptool .dis,.pstrip.dis{opacity:.4;pointer-events:none;filter:saturate(.5)}
+.pstrip{margin:0 0 8px;overflow-x:auto}
+.pstrip .pos.match{border-style:dashed}
+.seg.ostep{align-items:center}
+.seg.ostep button{padding:4px 10px;font-size:15px;line-height:1;font-weight:700;letter-spacing:0}
+.seg.ostep .kcl select.kc{height:26px}
+html body .seg.ostep select.kc{border-color:transparent;background-color:transparent;min-width:60px}
+.pcap{margin-top:8px;padding:8px 12px}
+.pcap .ptitle{font-size:15px}
+.pcap .pfing{line-height:1.6;margin-top:1px}
+.pcap .pfing div+div{margin-top:0}
+.pcap .pdesc{font-size:11.5px;margin:2px 0 0}
+.pcap .nowline{margin-top:5px;padding-top:5px;min-height:16px}
+.pianolab+.plegend{margin:0 2px 8px}
+.pprac{margin:2px 0 14px;border-top:1px solid var(--hair2,#444)}
+.pprhead{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;padding:9px 2px;font:700 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);cursor:pointer;text-align:left}
+.pprhead:hover{color:var(--ink)}
+.pprhead:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.pprhead .chev{display:inline-block;width:12px}
+.pprhead .pron{color:var(--amber);letter-spacing:.04em;margin-left:6px;text-transform:none}
+.pprbody[hidden]{display:none}
+.pprbtns{margin:0 0 6px}
+@media (max-width:480px){.pprbtns{gap:5px}.pprbtns .btn.sm{padding:6px 8px;font-size:11.5px;letter-spacing:0}}
+.pprac .midistat{margin:0 0 8px}html[data-theme] .pprac .midistat{color:var(--dim)}html[data-theme] .pprac .midistat.good{color:var(--good)}html[data-theme] .pprac .midistat.warn{color:var(--bad)}
+.pprlcd{margin-top:0;padding:0}
+.pprlcd:has(.prac[hidden]){display:none}
+.pprlcd .prac{margin-top:0;padding:10px 12px}
 .pk .strlab{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:700 9px var(--sans);color:var(--amber);white-space:nowrap;pointer-events:none}
 
 /* chord cards */
@@ -4300,33 +4330,35 @@ function pianoPanelHTML() {
     posItems.push({ v: 'g', big: 'G', full: 'Match guitar', abbr: 'Guitar', cls: 'match', title: S.scalePos == null ? 'Pick a guitar position (1–7) first, then this matches it' : 'Show exactly the pitches of the guitar position picked above' });
   }
   const sel = chordMode ? S.pcPos : S.psPos;
-  const octOpts = [2, 3, 4, 5, 6].map(o => `<option value="${o}"${o === S.pOct ? ' selected' : ''}>C${o}${o === 4 ? ' · middle C' : ''}</option>`).join('');
-  const drum = `<div class="slot"><span class="engr sm">Octave <span class="soft">· right hand starts</span></span><div class="drum small"><button class="edge l" data-act="poct" data-v="-1" aria-label="Octave down"></button><div class="val">C${S.pOct}${S.pOct === 4 ? ' · middle C' : ''}</div><select data-chg="poct" aria-label="Piano octave">${octOpts}</select><button class="edge r" data-act="poct" data-v="1" aria-label="Octave up"></button></div></div>`;
-  const octs = chordMode ? '' : `<div class="slot"><span class="engr sm">Length</span>${posRowHTML([{ v: '1', big: '1', full: 'octave', abbr: 'octave', title: 'One octave' }, { v: '2', big: '2', full: 'octaves', abbr: 'octaves', title: 'Two octaves' }], String(S.pOcts), 'poctn', 'Octaves')}</div>`;
+  const octOpts = [2, 3, 4, 5, 6].map(o => `<option value="${o}"${o === S.pOct ? ' selected' : ''}>C${o}</option>`).join('');
+  const segBtns = (items, cur, act) => items.map(it => `<button data-act="${act}" data-v="${it.v}" class="${it.v === cur ? 'on' : ''}" aria-pressed="${it.v === cur}" title="${esc(it.title)}" aria-label="${esc(it.title)}">${esc(it.big)}</button>`).join('');
+  const handSeg = `<div class="seg phandseg${P.match ? ' dis' : ''}" role="group" aria-label="Hand"${P.match ? ' title="Match guitar splits the hands automatically"' : ''}>${segBtns(handItems, P.match ? 'none' : hand, 'phand')}</div>`;
+  const octSeg = `<div class="seg ostep${P.id ? ' dis' : ''}" role="group" aria-label="Octave, where the right hand starts"><button data-act="poct" data-v="-1" aria-label="Octave down" title="Octave down">‹</button><label class="kcl"><span class="sr">Octave (right hand starts)</span><select class="kc" data-chg="poct" aria-label="Piano octave" title="Octave where the right hand starts (C4 is middle C)">${octOpts}</select></label><button data-act="poct" data-v="1" aria-label="Octave up" title="Octave up">›</button></div>`;
+  const lenSeg = chordMode ? '' : `<div class="seg" role="group" aria-label="Octaves">${segBtns([{ v: '1', big: '1 oct', title: 'One octave' }, { v: '2', big: '2 oct', title: 'Two octaves' }], String(S.pOcts), 'poctn')}</div>`;
   const plays = chordMode
-    ? `<button class="btn pri" data-act="pplay" data-v="block">▶ Play chord</button><button class="btn" data-act="pplay" data-v="arp">Arpeggio ↑↓</button>`
-    : `<button class="btn pri" data-act="pplay" data-v="scale">▶ Scale ↑↓</button><button class="btn" data-act="pplay" data-v="up">Up ↑</button><button class="btn" data-act="pplay" data-v="arp">Arpeggio</button>`;
-  const handRow = P.match ? `<div class="dis" title="Match guitar splits the hands automatically">${posRowHTML(handItems, 'none', 'phand', 'Hand')}</div>` : posRowHTML(handItems, hand, 'phand', 'Hand');
-  return `<section class="metal panel pcontrol" aria-label="Piano control">
-    <div class="panel-top"><span class="engr">Piano Control</span><span class="engr sm">separate from the guitar</span></div>
-    <div class="pc-sec"><span class="engr sm">Hand${P.match ? ' <span class="soft">· automatic with Match guitar</span>' : ''}</span>${handRow}</div>
-    <div class="pc-grid${chordMode ? ' one' : ''}${P.id ? ' dis' : ''}">${drum}${octs}</div>
-    <div class="pc-sec${P.id ? ' dis' : ''}"><span class="engr sm">${esc(posLab)}${P.id ? ' <span class="soft">· your own notes from the fretboard</span>' : ''}</span>${posRowHTML(posItems, P.id ? 'none' : String(sel), 'ppos', 'Piano positions')}</div>
-    <div class="pc-play">${plays}</div>
-    <div class="pc-sec"><span class="engr sm">Practice <span class="soft">· MIDI piano, on-screen keys or computer keys</span></span>
-      <div class="pc-prac"><button class="btn tog${UI.pr.on ? ' on' : ''}" data-act="prtog" aria-pressed="${UI.pr.on}" title="Wait for you to play each note or chord, and score it">● Practice</button><button class="btn tog${S.prExact ? ' on' : ''}" data-act="prexact" aria-pressed="${!!S.prExact}" title="On: the key must be the exact one lit. Off: any octave counts.">Exact octave</button>${chordMode ? `<button class="btn tog" data-act="prhow" title="Play the whole chord at once, or its notes one by one">${S.prHow === 'single' ? 'One by one' : 'Together'}</button>` : ''}<button class="btn tog midi" data-act="midi" aria-pressed="false" title="Connect a MIDI piano (Chrome / Edge, USB or Bluetooth)">MIDI</button></div>
-      <div class="midirow"><div class="midistat" role="status">${esc(midiStatusText())}</div><button class="btn sm tog" data-act="midisnd" title="Also play the sound of your MIDI keys through this device (leave off if the piano makes its own sound)">🔊 Echo</button></div>
-    </div>
-    <div class="pread" aria-live="polite">
+    ? `<button class="btn sm pri" data-act="pplay" data-v="block">▶ Play chord</button><button class="btn sm" data-act="pplay" data-v="arp">Arpeggio ↑↓</button>`
+    : `<button class="btn sm pri" data-act="pplay" data-v="scale">▶ Scale ↑↓</button><button class="btn sm" data-act="pplay" data-v="up">Up ↑</button><button class="btn sm" data-act="pplay" data-v="arp">Arpeggio</button>`;
+  const tool = `<div class="toolbar ptool" aria-label="Piano controls">${handSeg}${octSeg}${lenSeg}<span class="sp"></span><span class="ptplay">${plays}</span></div>`;
+  const strip = `<div class="fbstrip pstrip${P.id ? ' dis' : ''}"><div class="fgrp fpos"><span class="engr sm">${esc(posLab)}${P.id ? ' <span class="soft">· your own notes from the fretboard</span>' : ''}</span>${posRowHTML(posItems, P.id ? 'none' : String(sel), 'ppos', 'Piano positions')}</div></div>`;
+  const cap = `<div class="pread pcap" aria-live="polite">
       <div class="ptitle">${esc(P.title)} <span class="phand">${P.hand === 'auto' ? 'hands split automatically' : esc(HANDS[P.hand] || '')}${P.kind === 'scale' && !P.match ? ' · ' + S.pOcts + ' octave' + (S.pOcts > 1 ? 's' : '') : ''}</span></div>
-      <div class="pdesc">${P.desc}</div>
       <div class="pfing">${fingerLine(P)}</div>
-      <div class="prac" id="prac" hidden><div class="prhead"><span class="prstep"></span><span class="prtime"></span><button class="btn sm" data-act="prreset">Start over</button></div><div class="prtarget"></div><div class="prres" aria-live="assertive"></div><div class="prscore"></div><div class="prkeys"></div></div>
+      <div class="pdesc">${P.desc}</div>
       <div class="nowline" data-idle="Press ▶ — each key lights up with its finger number as it sounds.">Press ▶ — each key lights up with its finger number as it sounds.</div>
-      <div class="plegend"><span><b class="hR">R</b> = right hand</span><span><b class="hL">L</b> = left hand</span><span>1 thumb · 2 index · 3 middle · 4 ring · 5 pinky</span><span><i class="rr"></i>root</span></div>
+    </div>`;
+  const legend = `<div class="plegend"><span><b class="hR">R</b> = right hand</span><span><b class="hL">L</b> = left hand</span><span>1 thumb · 2 index · 3 middle · 4 ring · 5 pinky</span><span><i class="rr"></i>root</span></div>`;
+  const open = pracStripOpen();
+  const prac = `<div class="pprac${open ? ' open' : ''}">
+    <button class="pprhead" data-act="pstrip" aria-expanded="${open}" aria-controls="pprBody-${S.tab}"><span class="chev" aria-hidden="true">${open ? '▾' : '▸'}</span> Practice · MIDI · Echo${UI.pr.on ? ' <b class="pron">● practising</b>' : ''}</button>
+    <div class="pprbody" id="pprBody-${S.tab}"${open ? '' : ' hidden'}>
+      <div class="toolbar pprbtns"><button class="btn sm tog${UI.pr.on ? ' on' : ''}" data-act="prtog" aria-pressed="${UI.pr.on}" title="Wait for you to play each note or chord, and score it">● Practice</button><button class="btn sm tog${S.prExact ? ' on' : ''}" data-act="prexact" aria-pressed="${!!S.prExact}" title="On: the key must be the exact one lit. Off: any octave counts.">Exact octave</button>${chordMode ? `<button class="btn sm tog" data-act="prhow" title="Play the whole chord at once, or its notes one by one">${S.prHow === 'single' ? 'One by one' : 'Together'}</button>` : ''}<button class="btn sm tog midi" data-act="midi" aria-pressed="false" title="Connect a MIDI piano (Chrome / Edge, USB or Bluetooth)">MIDI</button><button class="btn sm tog" data-act="midisnd" title="Also play the sound of your MIDI keys through this device (leave off if the piano makes its own sound)">🔊 Echo</button></div>
+      <div class="midistat" role="status">${esc(midiStatusText())}</div>
+      <div class="pread pprlcd" aria-live="polite"><div class="prac" id="prac" hidden><div class="prhead"><span class="prstep"></span><span class="prtime"></span><button class="btn sm" data-act="prreset">Start over</button></div><div class="prtarget"></div><div class="prres" aria-live="assertive"></div><div class="prscore"></div><div class="prkeys"></div></div></div>
     </div>
-  </section>`;
+  </div>`;
+  return { tool, strip, cap, legend, prac };
 }
+function pracStripOpen() { return UI.pStrip != null ? UI.pStrip : !!UI.pr.on; }
 function pianoHTML() {
   const t = curTuning(), act = PP.kind === 'lesson' ? new Map() : activeNotes(), WK = 24, BK = 15, blind = lBlind();
   const open = new Map(t.strings.map(m => [m, true]));
@@ -4385,6 +4417,7 @@ function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
   const where = SEL ? (SEL.kind === 'chord' ? ` · position ${S.chordPos + 1}` : ` · position ${S.scalePos + 1}`) : '';
   const ctx = idm ? `${S.qOn ? 'Chord Quiz' : 'Clear / Identify'} — ${t.name}` : (chordMode ? `${ch.name} — ${t.name}` : `${keyTitle()} — ${t.name}`) + where;
   const lm = LM(), seg = (v, l) => `<button data-act="labels" data-v="${v}" class="${lm === v ? 'on' : ''}">${l}</button>`;
+  const pn = pianoPanelHTML();
   const playLbl = SEL && SEL.kind === 'scale' ? `▶ Position ${S.scalePos + 1}` : '▶ Scale';
   return `
   <h2>${t.strings.length < 6 ? 'Bass' : t.strings.length > 6 ? t.strings.length + '-String' : 'Guitar'} <span class="ctx">${esc(ctx)}</span></h2>
@@ -4404,9 +4437,13 @@ function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
   ${mid}
   ${after}
   <h2>Piano <span class="ctx">${esc(PP.title)} · ${esc(PP.hand === 'auto' ? 'both hands' : HANDS[PP.hand] || '')}</span></h2>
-  ${pianoPanelHTML()}
-  <div class="pianolab"><span>Keyboard — the number on each key is the finger, the colour is the hand. Scroll sideways for the full range.</span><span style="color:var(--amber)">▼ amber arrows = your guitar's open strings (${tuningNames(t).map((n, i) => n + Math.floor(t.strings[i] / 12 - 1)).join(' · ')})</span></div>
-  ${pianoHTML()}`;
+  ${pn.tool}
+  ${pn.strip}
+  ${pianoHTML()}
+  ${pn.cap}
+  <div class="pianolab"><span style="color:var(--amber)">▼ amber arrows = your guitar's open strings (${tuningNames(t).map((n, i) => n + Math.floor(t.strings[i] / 12 - 1)).join(' · ')})</span><span>scroll the keyboard sideways for the full range</span></div>
+  ${pn.legend}
+  ${pn.prac}`;
 }
 
 /* ---------- follow-along playback ---------- */
@@ -5477,7 +5514,8 @@ document.addEventListener('click', e => {
       render(); save(); updateHash(); if (S.mode === 'chord') playPiano('block'); break;
     }
     case 'pplay': playPiano(v); break;
-    case 'prtog': prToggle(); break;
+    case 'prtog': if (!UI.pr.on) UI.pStrip = true; prToggle(); break;
+    case 'pstrip': UI.pStrip = !pracStripOpen(); render(); { const b = $('.tab.on .pprhead'); if (b) b.focus(); } break;
     case 'lopen': lessonGo(act.dataset.id); break;
     case 'lback': lessonGo(null); break;
     case 'lpart': lessonGo(S.lesson, +act.dataset.i); break;

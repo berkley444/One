@@ -17,9 +17,11 @@ const puppeteer=require('puppeteer-core');
     await p.goto((process.env.BPGW_URL||'file:///workspace/One_repo/index.html')+'#chord&root=C&scale=major&chord=C&q=major&cp=0&pp=0&hd=R&po=4&mode=chord');
     await p.evaluate(()=>localStorage.clear()); await p.reload({waitUntil:'load'}); await new Promise(r=>setTimeout(r,400));
     const q=(f,a)=>p.evaluate(f,a);
-    ok(await q(()=>document.querySelectorAll('#tab-chord .pcontrol [data-act="prtog"]').length===1&&document.querySelectorAll('#tab-chord [data-act="midi"]').length===1),`[${w}] practice + midi buttons`);
+    ok(await q(()=>document.querySelectorAll('#tab-chord .pprac [data-act="prtog"]').length===1&&document.querySelectorAll('#tab-chord [data-act="midi"]').length===1),`[${w}] practice + midi buttons`);
     const oneLine=async sel=>q(sel=>{const bs=[...document.querySelectorAll(sel)]; return bs.length>0&&new Set(bs.map(x=>Math.round(x.getBoundingClientRect().top))).size===1;},sel);
-    ok(await oneLine('#tab-chord .pc-prac .btn'),`[${w}] practice buttons on one line`);
+    await q(()=>document.querySelector('#tab-chord .pprhead').click());
+    ok(await q(()=>document.querySelector('#tab-chord .pprbody').hidden===false&&document.querySelector('#tab-chord .pprhead').getAttribute('aria-expanded')==='true'),`[${w}] practice strip opens from its header`);
+    ok(await oneLine('#tab-chord .pprbtns .btn'),`[${w}] practice buttons on one line`);
     ok(await q(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),`[${w}] no overflow`);
     // MIDI connect
     await q(()=>document.querySelector('#tab-chord [data-act="midi"]').click()); await new Promise(r=>setTimeout(r,200));
@@ -54,7 +56,8 @@ const puppeteer=require('puppeteer-core');
     // scale practice on play tab
     await p.goto((process.env.BPGW_URL||'file:///workspace/One_repo/index.html')+'#play&root=D&scale=dorian&mode=scale&pp=0&hd=R&po=4&pn=1&x=1'); await p.reload({waitUntil:'load'}); await new Promise(r=>setTimeout(r,300));
     ok(await q(()=>document.querySelectorAll('#tab-play [data-act="prtog"]').length===1),`[${w}] practice on play tab`);
-    ok(await oneLine('#tab-play .pc-prac .btn'),`[${w}] play-tab practice buttons on one line`);
+    await q(()=>{const h=document.querySelector('#tab-play .pprhead'); if(document.querySelector('#tab-play .pprbody').hidden) h.click();});
+    ok(await oneLine('#tab-play .pprbtns .btn'),`[${w}] play-tab practice buttons on one line`);
     await q(()=>document.querySelector('#tab-play [data-act="prtog"]').click());
     const seq=[62,64,65,67,69,71,72,74,72,71,69,67,65,64,62];
     for (const m of seq){ await q(m=>{__midi.send(0x90,m,80);__midi.send(0x80,m,0);},m); }

@@ -27,7 +27,7 @@ const THEMES = ['silver', 'console', 'pedal', 'tube', 'minimal', 'navy-light', '
         tops: strip ? [...strip.querySelectorAll('button')].map(b => Math.round(b.getBoundingClientRect().bottom)).filter((v, i, a) => a.indexOf(v) === i) : [],
         roots: strip ? strip.querySelectorAll('[data-act="croot"]').length : 0, cpos: strip ? strip.querySelectorAll('[data-act="cpos"]').length : 0, spos: strip ? strip.querySelectorAll('[data-act="spos"]').length : 0,
         sw: strip ? strip.scrollWidth : 0, cw: strip ? strip.clientWidth : 0,
-        posrowsBelowBoard: [...document.querySelectorAll('.tab.on .posrow')].filter(e => !e.closest('#fbStrip') && !e.closest('.pcontrol')).length,
+        posrowsBelowBoard: [...document.querySelectorAll('.tab.on .posrow')].filter(e => !e.closest('#fbStrip') && !e.closest('.pcontrol') && !e.closest('.pstrip')).length,
         overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       };
     });
@@ -160,6 +160,45 @@ const THEMES = ['silver', 'console', 'pedal', 'tube', 'minimal', 'navy-light', '
       await p.select('.tab.on .keybar select[data-kc="scale"]', 'dorian'); await sleep(200);
       ok(await q(() => BPGW.S.scale === 'dorian'), `${tag} ${tb}: Scale select changes the scale`);
       await p.select('.tab.on .keybar select[data-kc="scale"]', 'major');
+    }
+    /* ---- PIANO section: guitar-style toolbar + mode strip, keyboard, slim caption, collapsible practice strip ---- */
+    for (const [hash, kind] of [['#play&root=A&scale=dorian&sp=2&pp=1&mode=scale', 'scale'], ['#chord&chord=G&q=maj7&cp=1&pp=0&mode=chord', 'chord']]) {
+      await go(hash); await p.reload({ waitUntil: 'load' }); await sleep(450);      // hash-only navigation does not reload: start each pass from a fresh UI
+      const r = await q(() => {
+        const t = document.querySelector('.tab.on'), rc = s => { const e = t.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { top: b.top + scrollY, bottom: b.bottom + scrollY, h: b.height }; };
+        const pos = [...t.querySelectorAll('.pstrip .pos')];
+        return { tool: rc('.ptool'), strip: rc('.pstrip'), pw: rc('#pianoWrap'), cap: rc('.pcap'), prac: rc('.pprac'), big: !!t.querySelector('.pcontrol'),
+          hand: [...t.querySelectorAll('.ptool .phandseg button')].map(b => b.dataset.v).join(''), octsel: !!t.querySelector('.ptool select[data-chg="poct"]'),
+          len: t.querySelectorAll('.ptool [data-act="poctn"]').length, plays: t.querySelectorAll('.ptool .ptplay .btn').length, fing: !!t.querySelector('.pcap .pfing .hR'),
+          pos: pos.map(b => b.dataset.v).join(','), lines: new Set(pos.map(b => Math.round(b.getBoundingClientRect().top))).size, hidden: t.querySelector('.pprbody').hidden, exp: t.querySelector('.pprhead').getAttribute('aria-expanded'),
+          ov: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1, btnsInTool: t.querySelectorAll('.ptool .btn, .ptool .seg').length };
+      });
+      const T = `${tag} piano (${kind})`;
+      ok(r.tool && r.strip && r.pw && r.cap && r.prac && !r.big, `${T}: toolbar, mode strip, keyboard, caption and practice strip exist; the big Piano Control panel is gone`);
+      ok(r.tool.bottom <= r.strip.top + 1 && r.strip.bottom <= r.pw.top + 1 && r.pw.top - r.strip.bottom < 36, `${T}: order is toolbar, mode strip, then the keyboard directly (strip to keys ${Math.round(r.pw.top - r.strip.bottom)}px)`);
+      ok(r.pw.bottom <= r.cap.top + 1 && r.cap.top - r.pw.bottom < 24 && r.cap.bottom <= r.prac.top + 1, `${T}: fingering caption sits right under the keys, practice strip last`);
+      ok(r.cap.h < 150 && r.tool.h < (mobile ? 140 : 50) && r.strip.h < 70, `${T}: compact (toolbar ${Math.round(r.tool.h)}px, strip ${Math.round(r.strip.h)}px, caption ${Math.round(r.cap.h)}px)`);
+      ok(r.hand === (kind === 'scale' ? 'RLB' : 'RLBS') && r.octsel && r.len === (kind === 'scale' ? 2 : 0) && r.plays === (kind === 'scale' ? 3 : 2), `${T}: hand ${r.hand}, octave select, ${r.len} length buttons, ${r.plays} play buttons`);
+      ok(r.fing && /(^|,)g$/.test(r.pos) && r.lines === 1, `${T}: fingering line present; positions ${r.pos} on one line`);
+      ok(r.hidden && r.exp === 'false', `${T}: practice strip is collapsed by default`);
+      ok(!r.ov, `${T}: no page overflow`);
+      const before = await q(() => ({ rp: BPGW.S.rootPc, sp: BPGW.S.scalePos, cp: BPGW.S.chordPos }));
+      await q(() => document.querySelector('.tab.on .ptool [data-act="phand"][data-v="L"]').click()); await sleep(120);
+      ok(await q(k => (k === 'scale' ? BPGW.S.scHand : BPGW.S.chHand) === 'L' && document.querySelector('.tab.on .ptool [data-act="phand"][data-v="L"]').classList.contains('on'), kind), `${T}: hand toggle works`);
+      await p.select('.tab.on .ptool select[data-chg="poct"]', '3'); await sleep(120);
+      ok(await q(() => BPGW.S.pOct === 3), `${T}: octave select works`);
+      await q(() => document.querySelector('.tab.on .ptool [data-act="poct"][data-v="1"]').click()); await sleep(120);
+      ok(await q(() => BPGW.S.pOct === 4), `${T}: octave stepper works`);
+      await q(() => document.querySelector('.tab.on .pstrip [data-act="ppos"][data-v="1"]').click()); await sleep(120);
+      ok(await q(k => (k === 'scale' ? BPGW.S.psPos : BPGW.S.pcPos) === 1, kind), `${T}: mode/position button works`);
+      if (kind === 'scale') { await q(() => document.querySelector('.tab.on .ptool [data-act="poctn"][data-v="2"]').click()); await sleep(120); ok(await q(() => BPGW.S.pOcts === 2), `${T}: 1|2 octave toggle works`); }
+      const after = await q(() => ({ rp: BPGW.S.rootPc, sp: BPGW.S.scalePos, cp: BPGW.S.chordPos }));
+      ok(JSON.stringify(before) === JSON.stringify(after), `${T}: the piano controls leave the guitar's key and position alone`);
+      await q(() => document.querySelector('.tab.on .pprhead').click()); await sleep(120);
+      ok(await q(() => !document.querySelector('.tab.on .pprbody').hidden && document.querySelector('.tab.on .pprhead').getAttribute('aria-expanded') === 'true' && ['prtog', 'prexact', 'midi', 'midisnd'].every(a => document.querySelector('.tab.on .pprbody [data-act="' + a + '"]'))), `${T}: the practice strip opens with Practice, Exact octave, MIDI and Echo`);
+      await q(() => document.querySelector('.tab.on [data-act="prtog"]').click()); await sleep(200);
+      ok(await q(() => !document.querySelector('.tab.on .pprbody').hidden && !document.querySelector('.tab.on #prac').hidden), `${T}: Practice on keeps the strip open and shows the step panel`);
+      await q(() => document.querySelector('.tab.on [data-act="prtog"]').click()); await sleep(100);
     }
     await q(() => BPGW.setTab('lessons')); await sleep(250);
     ok(await q(() => getComputedStyle(document.querySelector('#musicControl')).display === 'none'), `${tag} lessons: the (bottom) panel stays hidden there`);
