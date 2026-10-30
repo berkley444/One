@@ -1018,6 +1018,46 @@ html body select.kc:focus-visible{outline:2px solid var(--amber);outline-offset:
 .fbstrip.keybar{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
 .fbstrip.keybar .fgrp{max-width:100%}
 .fbstrip.keybar .rootstrip{flex-wrap:wrap}
+/* ---- the combined key row (PLAY + CHORD): heading, 12 colour-coded note buttons with interval labels + step marks, then the position buttons on their own row ---- */
+.fbstrip.keyrow{display:block;overflow:visible;padding:2px 2px 4px}
+.keyrow .kr-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 10px;margin:0 2px 7px}
+.keyrow .kr-name{font:800 17px/1.2 var(--sans);color:var(--ink)}
+.keyrow .kr-cap{font:600 12px/1.3 var(--sans);color:var(--dim)}
+.keyrow .fgrp.froot{display:block}
+.keyrow .rootstrip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.keyrow .rc{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+html body .keyrow .chip.rt{width:100%;height:46px;padding:0;box-sizing:border-box;flex:none}
+html body .keyrow .chip.rt b{font:800 14px/1.1 var(--sans)}
+html body .keyrow .chip.rt small{font:700 10px/1.1 var(--sans);opacity:1}
+html body .keyrow .chip.rt.out{background:transparent;box-shadow:none;border-style:dashed;color:var(--dim)}
+html body .keyrow .chip.rt.out b{font-weight:700}
+html body .keyrow .chip.rt.out small{font-weight:600}
+html body .keyrow .chip.rt.on{outline:2.5px solid var(--ink);outline-offset:1px}
+html body .keyrow .chip.rt[data-tone="root"]{background:var(--t-root);border-color:var(--t-root);color:var(--t-root-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="third"]{background:var(--t-third);border-color:var(--t-third);color:var(--t-third-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="fifth"]{background:var(--t-fifth);border-color:var(--t-fifth);color:var(--t-fifth-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="seventh"]{background:var(--t-seventh);border-color:var(--t-seventh);color:var(--t-seventh-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="ext"]{background:var(--t-ext);border-color:var(--t-ext);color:var(--t-ext-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="scale"]{background:var(--t-scale);border-color:var(--t-scale);color:var(--t-scale-fg);box-shadow:none}
+.keyrow .st{font:800 10px/12px var(--sans);height:12px;color:var(--dim);letter-spacing:0}
+.keyrow .st.W{color:var(--hr-txt)}
+.keyrow .st.H{color:var(--t-root-txt)}
+.keyrow .st.WH{color:var(--amber)}
+.keyrow .kr-legend{font:500 11px/1.35 var(--sans);color:var(--dim);margin:3px 2px 0}
+.keyrow .kr-legend span{font-weight:800;color:var(--ink)}
+/* position buttons: their own row directly under the notes, wrapping instead of scrolling */
+.keyrow .fgrp.fpos{display:flex;flex-direction:column;gap:4px;margin-top:9px}
+.keyrow .posrow{flex-wrap:wrap;gap:4px}
+@media (max-width:480px){html body .keyrow .chip.rt b{font-size:12.5px}
+.keyrow .kr-name{font-size:16px}
+}
+@media (min-width:700px){.keyrow .rootstrip{max-width:640px;gap:4px}
+.keyrow .kr-legend{max-width:640px}
+html body .keyrow .chip.rt b{font-size:15px}
+}
+/* Silver Hi-Fi is the base CSS (no data-theme): its dot reds/blues are too light for white 12px text, so the note buttons use deeper ones */
+html:not([data-theme]) body .keyrow .chip.rt[data-tone="root"]{background:#c62828;border-color:#c62828}
+html:not([data-theme]) body .keyrow .chip.rt[data-tone="seventh"]{background:#2a62c8;border-color:#2a62c8}
 
 /* ===== 25-silver.css ===== */
 [data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}
@@ -4813,16 +4853,36 @@ function playFrets(v, how = 'strum') {
 /* ================================================================
    PLAY TAB
    ================================================================ */
-function scaleReadoutHTML() {
-  const k = keyNotes(), sc = T.SCALES[S.scale], sig = T.signatureFor(keyName(), S.scale);
-  const pat = T.stepPattern(sc.semis);
-  const sigTxt = !sig ? '—' : sig.count === 0 ? 'no ♯ or ♭' : `${sig.count}${sig.type} (${sig.accidentals.join(' ')})`;
-  const sigNote = sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? ` <span style="font-size:11px;color:var(--dim)">as ${esc(sig.parent)} major</span>` : '';
-  return `<div class="readout">
-    <div class="ro" style="grid-column:span 2"><div class="k">${esc(keyTitle())}</div><div class="v big">${k.map(n => `<span style="color:${n.semis === 0 ? 'var(--t-root-txt)' : 'var(--ink)'}">${esc(n.name)}</span>`).join(' ')}</div></div>
-    <div class="ro"><div class="k">Formula</div><div class="v" style="font-size:16px;letter-spacing:.02em;word-spacing:.1em">${k.map(n => esc(n.label)).join(' ')}</div></div>
-    <div class="ro"><div class="k">Key signature</div><div class="v" style="font:600 18px var(--sans)">${esc(sigTxt)}${sigNote}</div></div>
-    <div class="ro" style="grid-column:span 2"><div class="k">Step pattern</div><div class="pat" style="margin-top:6px">${pat.map(p => `<span class="${p}">${p}</span>`).join('')}</div></div>
+/* ---------- the combined key row: heading + 12 colour-coded note buttons + steps, then the position buttons on their own row ----------
+   It replaces the old notes / formula / key-signature / step-pattern cards and the plain root row. */
+function keyRowHTML(posGroup) {
+  const chordMode = S.mode === 'chord' || S.tab === 'chord';
+  const byPc = new Map(); let selPc, head, cap, legend = '';
+  if (chordMode) {
+    const ch = curChord(); selPc = ch.rootPc; head = ch.name;
+    cap = `${esc(ch.notes.join(' '))} · ${esc(ch.formula)}`;
+    ch.tones.forEach(t => byPc.set(t.pc, { name: t.name, label: t.label, tone: t.semis === 0 ? 'root' : toneStyle(t.deg, false).tone }));
+  } else {
+    const k = keyNotes(), pat = T.stepPattern(T.SCALES[S.scale].semis), sig = T.signatureFor(keyName(), S.scale);
+    selPc = S.rootPc; head = keyTitle();
+    const sigTxt = !sig ? '—' : sig.count === 0 ? 'no ♯ or ♭' : `${sig.count}${sig.type} (${sig.accidentals.join(' ')})`;
+    cap = `Key signature: ${esc(sigTxt)}${sig && S.scale !== 'major' && S.scale !== 'naturalMinor' ? ` · as ${esc(sig.parent)} major` : ''}`;
+    k.forEach((n, i) => byPc.set(n.pc, { name: n.name, label: n.label, tone: n.semis === 0 ? 'root' : 'scale', step: pat[i] }));
+    legend = `<div class="kr-legend">Tap a note to make it the root. Under each note: the step up to the next one — <span class="W">W</span> whole, <span class="H">H</span> half, <span class="WH">WH</span> whole + half.</div>`;
+  }
+  const cells = Array.from({ length: 12 }, (_, pc) => {
+    const hit = byPc.get(pc), both = T.pcBoth(pc).split(' / ');
+    const on = pc === selPc;
+    const lab = hit ? `${hit.name}, ${hit.label === '1' ? 'root' : hit.label}${hit.step ? ', step to next note ' + hit.step : ''}` : `${T.pcBoth(pc)}, not in ${chordMode ? 'the chord' : 'the scale'}`;
+    const btn = hit
+      ? `<button class="chip rt in${on ? ' on' : ''}" data-act="croot" data-pc="${pc}" data-tone="${hit.tone}" aria-pressed="${on}" aria-label="${esc(lab)}"><b>${esc(hit.name)}</b><small>${esc(hit.label)}</small></button>`
+      : `<button class="chip rt out${on ? ' on' : ''}" data-act="croot" data-pc="${pc}" aria-pressed="${on}" aria-label="${esc(lab)}"><b>${esc(both[0])}</b><small>${both[1] ? esc(both[1]) : '&nbsp;'}</small></button>`;
+    return `<div class="rc">${btn}<span class="st${hit && hit.step ? ' ' + hit.step : ''}" aria-hidden="true">${hit && hit.step ? esc(hit.step) : '&nbsp;'}</span></div>`;
+  }).join('');
+  return `<div class="fbstrip keyrow" id="fbStrip">
+    <div class="kr-head"><b class="kr-name">${esc(head)}</b><span class="kr-cap">${cap}</span></div>
+    <div class="fgrp froot"><div class="rootstrip" role="group" aria-label="Root note: the notes of ${esc(head)} are coloured and labelled with their interval">${cells}</div></div>
+    ${legend}${posGroup || ''}
   </div>`;
 }
 function diatonicHTML() {
@@ -4836,7 +4896,7 @@ function diatonicHTML() {
 }
 function renderPlay() {
   const chordMode = S.mode === 'chord';
-  return scaleReadoutHTML() + instrumentsHTML({ strip: fbStripHTML(rootGroupHTML(S.rootPc), chordMode ? chordPosGroupHTML() : scalePosGroupHTML()), mid: chordMode ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML();
+  return instrumentsHTML({ strip: keyRowHTML(chordMode ? chordPosGroupHTML() : scalePosGroupHTML()), mid: chordMode ? chordPosBlockHTML() : scalePosBlockHTML() }) + diatonicHTML();
 }
 /* ---------- the one row directly above the fretboard: [root] [position] ---------- */
 function fbStripHTML(...groups) { const g = groups.filter(Boolean).join(''); return g ? `<div class="fbstrip" id="fbStrip">${g}</div>` : ''; }
@@ -4950,14 +5010,12 @@ const ess_count = ch => Math.max(3, T.essentialTones(ch).length);
 function chordRootFor(pc, q = S.chordQ) { return T.rootName(pc, T.isMinorQuality(q) ? 'naturalMinor' : 'major', S.pref); }
 function renderChord() {
   const ch = curChord(), t = curTuning();
-  const rootPcSel = ch.rootPc;
   const qGroups = T.CHORD_GROUPS.map(g => `<div class="qgrp"><div class="qlab">${esc(g.name)}</div><div class="chips q">${g.ids.map(id => `<button class="chip${id === S.chordQ ? ' on' : ''}" data-act="cq" data-q="${id}" title="${esc(T.CHORDS[id].name)}" aria-label="${esc(T.CHORDS[id].name)}">${esc(T.CHORDS[id].sym || 'maj')}</button>`).join('')}</div></div>`).join('');
   const rows = ch.tones.map(tn => {
     const m = T.midiOf(ch.rootPc, 4) + tn.semis, st = toneStyle(tn.deg, tn.semis === 0);
     return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${st.bg};margin-right:8px"></span>${esc(tn.name)}</td><td>${esc(tn.label)}</td><td>${tn.semis}</td><td>${fmtHz(T.freq(m, S.a4))}</td><td><button class="play" data-act="pm" data-m="${m}">▶</button></td></tr>`;
   }).join('');
   const ess = T.essentialTones(ch), skip = ch.tones.filter(x => !ess.includes(x)).map(x => x.label === '5' ? '5th' : x.label);
-  const rootGroup = rootGroupHTML(rootPcSel);
   const builder = `
   <h2>Chord Builder <span class="ctx">the root is picked above the fretboard — choose a quality here</span></h2>
   <div class="card">
@@ -4970,7 +5028,7 @@ function renderChord() {
     <div class="toolbar"><button class="btn pri" data-act="playChordNow">▶ Play chord</button><button class="btn" data-act="strum">Strum ↓</button><button class="btn" data-act="arp">Arpeggio</button><span class="sp"></span><span class="hint">guitar buttons · the piano has its own controls below</span></div>
     <details class="det"><summary>Notes · intervals · frequencies</summary><div class="tablewrap"><table class="t"><thead><tr><th>Note</th><th>Interval</th><th>Semitones</th><th>Hz (oct 4)</th><th><span class="sr">Hear it</span></th></tr></thead><tbody>${rows}</tbody></table></div></details>
   </div>`;
-  return instrumentsHTML({ strip: fbStripHTML(rootGroup, chordPosGroupHTML()), mid: chordPosBlockHTML(), after: builder });
+  return instrumentsHTML({ strip: keyRowHTML(chordPosGroupHTML()), mid: chordPosBlockHTML(), after: builder });
 }
 
 /* ================================================================

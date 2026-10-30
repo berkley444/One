@@ -14,3 +14,37 @@ html body select.kc:focus-visible{outline:2px solid var(--amber);outline-offset:
 /* Root + Scale bar on the tabs that only read the key (Circle, Math, Song): wraps instead of scrolling so the Scale select is always in view */
 .fbstrip.keybar{flex-wrap:wrap;overflow-x:visible;row-gap:8px}
 .fbstrip.keybar .fgrp{max-width:100%}.fbstrip.keybar .rootstrip{flex-wrap:wrap}
+
+/* ---- the combined key row (PLAY + CHORD): heading, 12 colour-coded note buttons with interval labels + step marks, then the position buttons on their own row ---- */
+.fbstrip.keyrow{display:block;overflow:visible;padding:2px 2px 4px}
+.keyrow .kr-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:1px 10px;margin:0 2px 7px}
+.keyrow .kr-name{font:800 17px/1.2 var(--sans);color:var(--ink)}
+.keyrow .kr-cap{font:600 12px/1.3 var(--sans);color:var(--dim)}
+.keyrow .fgrp.froot{display:block}
+.keyrow .rootstrip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+.keyrow .rc{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+html body .keyrow .chip.rt{width:100%;height:46px;padding:0;box-sizing:border-box;flex:none}
+html body .keyrow .chip.rt b{font:800 14px/1.1 var(--sans)}
+html body .keyrow .chip.rt small{font:700 10px/1.1 var(--sans);opacity:1}
+html body .keyrow .chip.rt.out{background:transparent;box-shadow:none;border-style:dashed;color:var(--dim)}
+html body .keyrow .chip.rt.out b{font-weight:700}
+html body .keyrow .chip.rt.out small{font-weight:600}
+html body .keyrow .chip.rt.on{outline:2.5px solid var(--ink);outline-offset:1px}
+html body .keyrow .chip.rt[data-tone="root"]{background:var(--t-root);border-color:var(--t-root);color:var(--t-root-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="third"]{background:var(--t-third);border-color:var(--t-third);color:var(--t-third-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="fifth"]{background:var(--t-fifth);border-color:var(--t-fifth);color:var(--t-fifth-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="seventh"]{background:var(--t-seventh);border-color:var(--t-seventh);color:var(--t-seventh-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="ext"]{background:var(--t-ext);border-color:var(--t-ext);color:var(--t-ext-fg);box-shadow:none}
+html body .keyrow .chip.rt[data-tone="scale"]{background:var(--t-scale);border-color:var(--t-scale);color:var(--t-scale-fg);box-shadow:none}
+.keyrow .st{font:800 10px/12px var(--sans);height:12px;color:var(--dim);letter-spacing:0}
+.keyrow .st.W{color:var(--hr-txt)}.keyrow .st.H{color:var(--t-root-txt)}.keyrow .st.WH{color:var(--amber)}
+.keyrow .kr-legend{font:500 11px/1.35 var(--sans);color:var(--dim);margin:3px 2px 0}
+.keyrow .kr-legend span{font-weight:800;color:var(--ink)}
+/* position buttons: their own row directly under the notes, wrapping instead of scrolling */
+.keyrow .fgrp.fpos{display:flex;flex-direction:column;gap:4px;margin-top:9px}
+.keyrow .posrow{flex-wrap:wrap;gap:4px}
+@media (max-width:480px){html body .keyrow .chip.rt b{font-size:12.5px}.keyrow .kr-name{font-size:16px}}
+@media (min-width:700px){.keyrow .rootstrip{max-width:640px;gap:4px}.keyrow .kr-legend{max-width:640px}html body .keyrow .chip.rt b{font-size:15px}}
+/* Silver Hi-Fi is the base CSS (no data-theme): its dot reds/blues are too light for white 12px text, so the note buttons use deeper ones */
+html:not([data-theme]) body .keyrow .chip.rt[data-tone="root"]{background:#c62828;border-color:#c62828}
+html:not([data-theme]) body .keyrow .chip.rt[data-tone="seventh"]{background:#2a62c8;border-color:#2a62c8}

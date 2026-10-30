@@ -10,6 +10,7 @@ for t in smoke prac song lessons identify; do node tests/browser/$t.js; done
 node tests/browser/polish.js           # PWA + offline + keyboard + reduced motion (uses http://localhost:8123/)
 node tests/browser/identify.js         # Clear / Identify, Chord Quiz and the chord-unlock pop-up: real mouse clicks (1280) and touch taps (390), keyboard, URL hash, localStorage, 13 themes
 node tests/browser/layout.js           # CHORD/PLAY order: root + position row directly above the fretboard, Chord Builder below it, nothing under the tab bar; Music Control at the bottom, mode/scale/tuning controls, shared root; 8 themes, 1280 + 390
+node tests/browser/keyrow.js          # the combined key row (PLAY + CHORD): 12 colour-coded note buttons with interval labels, key-aware spelling, W/H marks, key-signature caption, position row below it; chord mode; 13 themes x 390/1280 (contrast, distinct colours, no overflow)
 node tests/browser/profiles.js         # on-device profiles: migration, welcome, isolation, create/rename/delete, export/import (incl. hostile files), the LocalStore interface, axe; phone + desktop
 node tests/browser/axe.js $BPGW_URL    # axe-core on every tab and on the identify / quiz / unlock views, phone + desktop widths
 node tests/browser/themes.js [id,id]   # every theme x 390/1280 x 16 views (incl. musicians panel / edit form / welcome, piano with practice strip open, identify, quiz, unlock, lock menu): axe, overflow, contrast pass, finger colours, picker (~6 min for all)
