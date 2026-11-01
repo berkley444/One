@@ -1080,6 +1080,8 @@ html:not([data-theme]) body .keyrow .chip.rt[data-tone="seventh"]{background:#2a
 .hnd .hb[data-under="1"] .b{stroke-dasharray:3 2.2;stroke-width:1.8}
 /* Silver (base theme): its left-hand blue is too light for white numbers (3.2:1), so the hand uses a deeper blue like the key dots do */
 html:not([data-theme]) .hnd.L{--hc:#2559c9}
+/* wrist + forearm, and the wrist roll (transform set from JS; none under prefers-reduced-motion) */
+.hnd .arm{fill:var(--hc-soft);fill-opacity:.72;stroke:var(--hc-ln);stroke-width:1.6;stroke-linejoin:round}
 
 /* ===== 30-console.css ===== */
 /* Studio Console — a charcoal mixing desk: colour-coded channel strips, rubber-capped knobs with LED value rings, a live LED meter,
@@ -4685,8 +4687,9 @@ function playMidi(m) { Snd.ensure(); Snd.note(m, undefined, 1.6, 0.85); flash(m)
    Tests and screenshots read Hand.log / Hand.info() and listen for the 'bpgw-hand' event on document.
    ================================================================ */
 const Hand = (() => {
-  const K = 24, YW = 138, YB = 90;                                    // white-key spacing; fingertip height on a white / black key
-  const KX = [-31, -16, 0, 16, 31], KY = [24, 2, 0, 3, 12], FL = [24, 34, 38, 34, 27], FW = [12, 10.5, 11, 10.5, 9.5];   // per finger 1..5: knuckle x/y offsets, length, width
+  const K = 24, YW = 120, YB = 82;                                    // white-key spacing; fingertip height on a white / black key
+  const KX = [-31, -16, 0, 16, 31], KY = [24, 2, 0, 3, 12], FL = [21, 30, 33, 30, 24], FW = [12, 10.5, 11, 10.5, 9.5];   // per finger 1..5: knuckle x/y offsets, length, width
+  const ROLL_UNDER = 10, ROLL_OVER = 8, SQUEEZE = 0.88;               // wrist roll (degrees) and palm foreshortening: toward the thumb on a cross-under, the other way on a cross-over
   const NS = 'http://www.w3.org/2000/svg';
   const sg = h => (h === 'R' ? 1 : -1);                               // right hand: thumb on the left, fingers climb to the right
   const thumbSide = h => (h === 'R' ? -1 : 1);                        // which way (in pitch) the thumb points
@@ -4707,31 +4710,41 @@ const Hand = (() => {
   function build(h) {
     const el = document.createElementNS(NS, 'g'); el.setAttribute('class', 'hnd ' + h); el.dataset.hand = h;
     const palm = document.createElementNS(NS, 'g'); palm.setAttribute('class', 'palm'); palm.innerHTML = '<rect rx="17"/><circle class="tb"/>';
+    const arm = document.createElementNS(NS, 'path'); arm.setAttribute('class', 'arm');   // wrist + forearm, drawn first so the palm overlaps it
     const fs = [1, 2, 3, 4, 5].map(mkFinger);
-    el.appendChild(palm); [5, 4, 3, 2].forEach(g => el.appendChild(fs[g - 1])); el.appendChild(fs[0]);
+    const body = document.createElementNS(NS, 'g'); body.setAttribute('class', 'body'); el.appendChild(body);     // everything that rolls with the wrist; the numbered tips are placed through the same transform instead, so the digits never get squashed
+    body.appendChild(arm); body.appendChild(palm); [5, 4, 3, 2].forEach(g => body.appendChild(fs[g - 1])); body.appendChild(fs[0]);
     const bs = [1, 2, 3, 4, 5].map(g => {                             // the numbered fingertips live in their own top layer, so the number stays legible even while the thumb is tucked under the palm
       const b = document.createElementNS(NS, 'g'); b.setAttribute('class', 'hb b' + g); b.dataset.f = g;
       b.innerHTML = '<circle class="b" r="8"/><text class="n" text-anchor="middle" dominant-baseline="central">' + g + '</text>'; el.appendChild(b); return b;
     });
     svg.appendChild(el);
-    return { h, el, palm, fs, bs, thumbUnder: false, cur: null, raf: 0, press: new Set() };
+    return { h, el, body, arm, palm, fs, bs, thumbUnder: false, cur: null, raf: 0, press: new Set() };
   }
   function setUnder(o, u) {                                           // the thumb is drawn beneath the palm while it tucks, on top otherwise
     if (o.thumbUnder === u) return; o.thumbUnder = u;
     const th = o.fs[0]; th.dataset.under = o.bs[0].dataset.under = u ? '1' : '0';
-    if (u) o.el.insertBefore(th, o.palm); else o.el.appendChild(th);
+    if (u) o.body.insertBefore(th, o.palm); else o.body.appendChild(th);
   }
   function draw(o, p) {
     const sgn = sg(o.h);
+    const calm = reduced(), ang = calm ? 0 : (p.roll || 0) + (p.tilt || 0), sxv = calm ? 1 : (p.sx || 1), ca = Math.cos(ang * Math.PI / 180), sa = Math.sin(ang * Math.PI / 180);
+    const tf = (x, y) => { const dx = (x - p.px) * sxv, dy = y - p.py; return [p.px + ca * dx - sa * dy, p.py + sa * dx + ca * dy]; };     // the same transform as the body's, for the badges
     const r = o.palm.querySelector('rect'); r.setAttribute('x', (p.xc - 37).toFixed(1)); r.setAttribute('y', (p.yc - 7).toFixed(1)); r.setAttribute('width', 74); r.setAttribute('height', 46);
     const tb = o.palm.querySelector('.tb'); tb.setAttribute('cx', (p.xc + KX[0] * sgn).toFixed(1)); tb.setAttribute('cy', (p.yc + KY[0]).toFixed(1)); tb.setAttribute('r', 11);
     for (let i = 0; i < 5; i++) {
       const f = o.fs[i], t = p.tips[i], kx = p.xc + KX[i] * sgn, ky = p.yc + KY[i];
       const [lo, li] = f.querySelectorAll('line'), c = o.bs[i].querySelector('.b'), tx = o.bs[i].querySelector('.n');
       for (const [ln, w] of [[lo, FW[i] + 3.2], [li, FW[i]]]) { ln.setAttribute('x1', kx.toFixed(1)); ln.setAttribute('y1', ky.toFixed(1)); ln.setAttribute('x2', t.x.toFixed(1)); ln.setAttribute('y2', t.y.toFixed(1)); ln.setAttribute('stroke-width', w); }
-      c.setAttribute('cx', t.x.toFixed(1)); c.setAttribute('cy', t.y.toFixed(1)); c.setAttribute('r', t.r.toFixed(1));
-      tx.setAttribute('x', t.x.toFixed(1)); tx.setAttribute('y', (t.y + 0.5).toFixed(1)); tx.style.fontSize = (t.r * 1.15).toFixed(1) + 'px';
+      const [bx, by] = tf(t.x, t.y);
+      c.setAttribute('cx', bx.toFixed(1)); c.setAttribute('cy', by.toFixed(1)); c.setAttribute('r', t.r.toFixed(1));
+      tx.setAttribute('x', bx.toFixed(1)); tx.setAttribute('y', (by + 0.5).toFixed(1)); tx.style.fontSize = (t.r * 1.15).toFixed(1) + 'px';
     }
+    o.arm.setAttribute('d', 'M' + (p.xc - 24).toFixed(1) + ' ' + (p.yc + 30).toFixed(1) + ' L' + (p.xc - 17).toFixed(1) + ' ' + (p.yc + 84).toFixed(1) + ' L' + (p.xc + 17).toFixed(1) + ' ' + (p.yc + 84).toFixed(1) + ' L' + (p.xc + 24).toFixed(1) + ' ' + (p.yc + 30).toFixed(1) + ' Z');
+    /* wrist roll: rotate + narrow the whole hand about the fingertip that is holding the key, plus a small lean in the direction of travel */
+    const a = ang;
+    o.body.setAttribute('transform', a || sxv !== 1 ? 'translate(' + p.px.toFixed(1) + ' ' + p.py.toFixed(1) + ') rotate(' + a.toFixed(2) + ') scale(' + sxv.toFixed(3) + ' 1) translate(' + (-p.px).toFixed(1) + ' ' + (-p.py).toFixed(1) + ')' : '');
+    o.roll = { a: Math.round(a * 100) / 100, sx: Math.round(sxv * 1000) / 1000, tilt: Math.round((calm ? 0 : p.tilt || 0) * 100) / 100 }; o.el.dataset.roll = o.roll.a;
     o.cur = p;
   }
   function poseFor(h, anchors, thumbOv, fallbackX) {
@@ -4744,15 +4757,19 @@ const Hand = (() => {
       return { x: xc + (g - 3) * K * sgn, y: yc + KY[g - 1] - FL[g - 1], r: 7.5, u: 0 };
     });
     if (thumbOv) tips[0] = { x: keyCx(thumbOv.m), y: yc + 7, r: 8.5, u: 1 };
-    return { xc, yc, tips };
+    const held = anchors.filter(a => a.press), pv = held.length ? held : anchors;       // pivot = the finger(s) holding the key, so that finger stays on its key while the wrist rolls
+    const px = pv.length ? pv.reduce((t, a) => t + keyCx(a.m), 0) / pv.length : xc, py = pv.length ? pv.reduce((t, a) => t + keyY(a.m), 0) / pv.length : yc + 20;
+    const kind = thumbOv && thumbOv.kind;
+    return { xc, yc, px, py, roll: kind === 'under' ? -ROLL_UNDER * sgn : kind === 'over' ? ROLL_OVER * sgn : 0, sx: kind === 'under' ? SQUEEZE : kind === 'over' ? 1.05 : 1, tilt: 0, tips };
   }
   function go(o, pose, ms) {
     cancelAnimationFrame(o.raf); o.raf = 0;
     if (!o.cur || !ms) { draw(o, pose); setUnder(o, !!pose.tips[0].u); return; }
     const from = JSON.parse(JSON.stringify(o.cur)), t0 = performance.now(), mix = (a, b, e) => a + (b - a) * e;
+    const dx = pose.xc - from.xc, lean = Math.abs(dx) > 6 ? Math.sign(dx) * Math.min(5, Math.abs(dx) / 18) : 0;      // lean into the slide, like a real wrist
     const tick = now => {
-      const k = Math.min(1, (now - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
-      draw(o, { xc: mix(from.xc, pose.xc, e), yc: mix(from.yc, pose.yc, e), tips: pose.tips.map((t, i) => ({ x: mix(from.tips[i].x, t.x, e), y: mix(from.tips[i].y, t.y, e), r: mix(from.tips[i].r, t.r, e), u: 0 })) });
+      const k = Math.min(1, (now - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, er = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+      draw(o, { xc: mix(from.xc, pose.xc, e), yc: mix(from.yc, pose.yc, e), px: mix(from.px, pose.px, e), py: mix(from.py, pose.py, e), roll: mix(from.roll || 0, pose.roll, er), sx: mix(from.sx || 1, pose.sx, er), tilt: lean * Math.sin(Math.PI * e), tips: pose.tips.map((t, i) => ({ x: mix(from.tips[i].x, t.x, e), y: mix(from.tips[i].y, t.y, e), r: mix(from.tips[i].r, t.r, e), u: 0 })) });
       setUnder(o, k < .5 ? !!from.tips[0].u : !!pose.tips[0].u);
       if (k < 1) o.raf = requestAnimationFrame(tick); else { o.raf = 0; o.cur.tips[0].u = pose.tips[0].u; }
     };
@@ -4805,8 +4822,8 @@ const Hand = (() => {
       if (PP.kind === 'scale') {
         const sq = plan.seqs[h], k = plan.at[h].get(i), cur = sq[k], nx = sq[k + 1], pv = sq[k - 1];
         anchors = [toA(cur, true)];
-        if (isUnder(cur, nx, h)) { ov = { m: nx.midi }; emit('tuck', h, cur, { to: nx.midi, toFinger: nx.finger }); }
-        else if (isOver(pv, cur, h)) { ov = { m: pv.midi }; emit('cross-over', h, cur, { over: pv.midi }); }
+        if (isUnder(cur, nx, h)) { ov = { m: nx.midi, kind: 'under' }; emit('tuck', h, cur, { to: nx.midi, toFinger: nx.finger }); }
+        else if (isOver(pv, cur, h)) { ov = { m: pv.midi, kind: 'over' }; emit('cross-over', h, cur, { over: pv.midi }); }
         if (isUnder(pv, cur, h)) emit('cross-under', h, cur, { from: pv.midi, fromFinger: pv.finger });
       } else {
         const all = asc(PP.notes, h), pressed = new Set(mine.map(n => n.midi));
@@ -4835,12 +4852,12 @@ const Hand = (() => {
   api.preview = function (h, k) {
     if (!hands || !hands[h] || PP.kind !== 'scale') return null;
     const sq = asc(PP.notes, h), cur = sq[k], nx = sq[k + 1], pv = sq[k - 1]; let ov = null;
-    if (isUnder(cur, nx, h)) ov = { m: nx.midi }; else if (isOver(pv, cur, h)) ov = { m: pv.midi };
+    if (isUnder(cur, nx, h)) ov = { m: nx.midi, kind: 'under' }; else if (isOver(pv, cur, h)) ov = { m: pv.midi, kind: 'over' };
     go(hands[h], poseFor(h, [toA(cur, true)], ov, 0), 0); follow(hands[h].cur.xc); return { finger: cur.finger, midi: cur.midi, under: !!ov };
   };
   api.info = function () {
     const out = { on: !!hands, hands: {} };
-    if (hands) Object.keys(hands).forEach(h => { const o = hands[h]; out.hands[h] = { xc: o.cur && o.cur.xc, thumbUnder: o.thumbUnder, pressed: [...o.press].sort(), tips: o.cur ? o.cur.tips.map(t => ({ x: Math.round(t.x * 10) / 10, y: Math.round(t.y * 10) / 10 })) : [] }; });
+    if (hands) Object.keys(hands).forEach(h => { const o = hands[h]; out.hands[h] = { xc: o.cur && o.cur.xc, roll: o.roll || { a: 0, sx: 1, tilt: 0 }, transform: o.body.getAttribute('transform') || '', thumbUnder: o.thumbUnder, pressed: [...o.press].sort(), tips: o.cur ? o.cur.tips.map(t => ({ x: Math.round(t.x * 10) / 10, y: Math.round(t.y * 10) / 10 })) : [] }; });
     return out;
   };
   return api;

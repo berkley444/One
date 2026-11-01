@@ -15,3 +15,5 @@
 .hnd .hb[data-under="1"] .b{stroke-dasharray:3 2.2;stroke-width:1.8}
 /* Silver (base theme): its left-hand blue is too light for white numbers (3.2:1), so the hand uses a deeper blue like the key dots do */
 html:not([data-theme]) .hnd.L{--hc:#2559c9}
+/* wrist + forearm, and the wrist roll (transform set from JS; none under prefers-reduced-motion) */
+.hnd .arm{fill:var(--hc-soft);fill-opacity:.72;stroke:var(--hc-ln);stroke-width:1.6;stroke-linejoin:round}

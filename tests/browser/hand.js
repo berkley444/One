@@ -1,5 +1,5 @@
 /* The animated piano hand: a stylised top-down hand (SVG) over the keys, five numbered fingers, left hand mirrored, driven by the same fingering data as the number dots.
-   Checks: hand present; the right finger on the right key for C major (RH 1-2-3-1-2-3-4-5, LH 5-4-3-2-1-3-2-1); the thumb tucks UNDER and a finger crosses OVER (events + geometry);
+   Checks: hand present, with a wrist / forearm; the wrist ROLLS (pronates toward the thumb and narrows on a cross-under, rolls the other way on a cross-over, leans into slides, returns level; mirrored for the left hand; none under reduced motion); the right finger on the right key for C major (RH 1-2-3-1-2-3-4-5, LH 5-4-3-2-1-3-2-1); the thumb tucks UNDER and a finger crosses OVER (events + geometry);
    the hand really slides between positions; chords press together; the Hand toggle (default on, persisted); prefers-reduced-motion jumps instead of sliding;
    every theme x 390 / 1280: finger numbers readable, nothing overflows, keys still tappable through the hand.
    Run:  python3 -m http.server 8123   then   BPGW_URL=http://localhost:8123/index.html NODE_PATH=/path/to/puppeteer-core/.. node tests/browser/hand.js */
@@ -38,6 +38,7 @@ const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.
     await set(p, {});
     ok(await p.evaluate(() => BPGW.Hand.reduced()), 'prefers-reduced-motion is seen by the hand');
     const n = await p.evaluate(() => ({ svg: document.querySelectorAll('.pianowrap .piano > svg.handlay').length, hands: document.querySelectorAll('.handlay .hnd').length, fingers: document.querySelectorAll('.handlay .hnd.R .hf').length, nums: [...document.querySelectorAll('.handlay .hnd.R .hb .n')].map(t => t.textContent).join(''), aria: document.querySelector('.handlay').getAttribute('aria-hidden') }));
+    ok(await p.evaluate(() => !!document.querySelector('.handlay .hnd.R .arm') && document.querySelector('.handlay .hnd.R .arm').getAttribute('d').length > 20), 'the hand has a visible wrist / forearm segment');
     ok(n.svg === 1 && n.hands === 1 && n.fingers === 5 && n.nums === '12345' && n.aria === 'true', `a hand is drawn over the keys: one right hand, five fingers numbered 1-5, hidden from screen readers (${JSON.stringify(n)})`);
 
     let ev = await record(p, '[data-act="pplay"][data-v="up"]', 2600);
@@ -45,6 +46,7 @@ const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.
     const pr = ev.filter(e => e.type === 'press');
     ok(pr.length === 8 && pr.every(e => { const t = e.info.hands.R.tips[e.finger - 1]; return Math.abs(t.x - e.cx) < 0.6 && e.info.hands.R.pressed.includes(e.finger); }), 'at every note the numbered finger sits on that key (fingertip x = key centre) and is the one pressed');
     ok(pr.map(e => e.midi).join(' ') === '60 62 64 65 67 69 71 72', `...on the right notes: ${pr.map(e => e.midi).join(' ')}`);
+    ok(ev.every(e => e.info.hands.R.roll.a === 0 && e.info.hands.R.roll.sx === 1 && e.info.hands.R.transform === ''), 'reduced motion: no wrist roll at all (every pose level, no transform), the hand just jumps');
     const tuck = ev.find(e => e.type === 'tuck'), cu = ev.find(e => e.type === 'cross-under');
     ok(tuck && tuck.finger === 3 && tuck.midi === 64 && tuck.to === 65 && tuck.toFinger === 1, `the thumb tucks under while finger 3 plays E: ${JSON.stringify(tuck && { f: tuck.finger, m: tuck.midi, to: tuck.to })}`);
     const tp = pr.find(e => e.midi === 64);
@@ -94,15 +96,39 @@ const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.
     await set(p, { tempo: 60 });
     const x = await p.evaluate(() => new Promise(res => {
       const seen = []; let before = null;
-      document.addEventListener('bpgw-hand', e => { const d = e.detail; if (d.type === 'press' && d.midi === 64) before = BPGW.Hand.info().hands.R.xc;
+      const lis = e => { if (!BPGW.Hand.info().hands.R) return; const d = e.detail; if (d.type === 'press' && d.midi === 64) before = BPGW.Hand.info().hands.R.xc;
         if (d.type === 'cross-under') { setTimeout(() => { seen.push(BPGW.Hand.info().hands.R.xc); }, 110); setTimeout(() => { seen.push(BPGW.Hand.info().hands.R.xc); }, 600);
-          setTimeout(() => res({ before, mid: seen[0], end: seen[1] }), 700); } });
+          setTimeout(() => { document.removeEventListener('bpgw-hand', lis); res({ before, mid: seen[0], end: seen[1] }); }, 700); } };
+      document.addEventListener('bpgw-hand', lis);
       document.querySelector('[data-act="pplay"][data-v="up"]').click();
     }));
     ok(x.before !== null && x.mid > x.before + 1 && x.mid < x.end - 1 && x.end - x.before > 40, `the hand glides rather than jumps: ${Math.round(x.before)} → ${Math.round(x.mid)} (mid-slide) → ${Math.round(x.end)}`);
     ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'no horizontal page overflow at 390 while the hand moves');
     const vis = await p.evaluate(() => { const pw = document.querySelector('.pianowrap'), h = BPGW.Hand.info().hands.R.xc; return h >= pw.scrollLeft - 40 && h <= pw.scrollLeft + pw.clientWidth + 40; });
     ok(vis, 'the keyboard scrolled to keep the hand in view on the phone');
+    await sleep(6500);
+    /* wrist roll: sample the live hand for a whole scale up and down, for each hand */
+    for (const [hand, uSign, oSign] of [['R', -1, 1], ['L', 1, -1]]) {
+      await set(p, { tempo: 60, scHand: hand, pOct: hand === 'L' ? 3 : 4 });
+      const smp = await p.evaluate(h => new Promise(res => {
+        const out = [], t0 = performance.now(); document.querySelector('[data-act="pplay"][data-v="scale"]').click();
+        const iv = setInterval(() => { const i = BPGW.Hand.info().hands[h]; out.push({ t: performance.now() - t0, a: i.roll.a, sx: i.roll.sx, tilt: i.roll.tilt, tr: i.transform, xc: i.xc }); }, 25);
+        setTimeout(() => { clearInterval(iv); res(out); }, 8600);
+      }), hand);
+      const as = smp.map(x => x.a), mn = Math.min(...as), mx = Math.max(...as), under = uSign < 0 ? mn : mx, over = oSign > 0 ? mx : mn;
+      const RR = `[${hand}H]`;
+      ok(Math.abs(under) >= 9 && Math.sign(under) === uSign, `${RR} cross-under: the wrist pronates toward the thumb (${under}° — ${hand === 'R' ? 'counter-clockwise' : 'clockwise, mirrored'})`);
+      ok(Math.min(...smp.map(x => x.sx)) <= 0.9 && Math.min(...smp.map(x => x.sx)) >= 0.8, `${RR} the palm narrows (scaleX ${Math.min(...smp.map(x => x.sx))}) while the thumb is under`);
+      ok(Math.abs(over) >= 7 && Math.sign(over) === oSign, `${RR} cross-over: the roll goes the OTHER way (${over}°)`);
+      ok(smp.some(x => /rotate\(/.test(x.tr) && /scale\(/.test(x.tr)), `${RR} a rotate + scale transform is really applied to the hand`);
+      const lean = smp.filter(x => Math.abs(x.tilt) > 0.4); ok(lean.length > 5 && lean.some(x => x.tilt > 0) && lean.some(x => x.tilt < 0), `${RR} it leans into the slide, right while travelling up, left coming down`);
+      const iU = as.findIndex(a => Math.sign(a) === uSign && Math.abs(a) >= 9), after = as.slice(iU).findIndex(a => Math.abs(a) < 2);
+      ok(iU >= 0 && after > 0, `${RR} after the cross-under the roll eases back toward level`);
+      const mid = as.slice(iU).filter(a => Math.abs(a) > 2.5 && Math.abs(a) < 9 && Math.sign(a) === uSign);
+      ok(mid.length >= 3, `${RR} the return is a smooth ease, not a snap (${mid.length} in-between samples)`);
+      const last = smp[smp.length - 1]; ok(Math.abs(last.a) < 0.6 && last.sx === 1 && last.tr === '', `${RR} at the end the hand is level again (a=${last.a}, no transform)`);
+      await sleep(300);
+    }
     await ctx.close();
   }
 
