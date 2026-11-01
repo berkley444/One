@@ -1,0 +1,17 @@
+/* The animated piano hand (Hand in index.html): a stylised top-down hand over the keys, drawn from each theme's own left / right hand colours (--h-r / --h-l).
+   Colours are mixed from those variables, so all 13 themes follow; the finger numbers use the same foreground (--h-r-fg / --h-l-fg) as the number dots on the keys. */
+.handlay{position:absolute;left:0;top:0;z-index:5;pointer-events:none;overflow:visible}
+.hnd.R{--hc:var(--h-r);--hc-fg:var(--h-r-fg)}
+.hnd.L{--hc:var(--h-l);--hc-fg:var(--h-l-fg)}
+.hnd{--hc-soft:color-mix(in srgb,var(--hc) 34%,#fff);--hc-ln:color-mix(in srgb,var(--hc) 62%,#000)}
+.hnd .palm rect,.hnd .palm .tb{fill:var(--hc-soft);fill-opacity:.78;stroke:var(--hc-ln);stroke-width:1.6}
+.hnd .palm .tb{stroke-width:0}
+.hnd .hf line{stroke-linecap:round;fill:none}
+.hnd .hf line.o{stroke:var(--hc-ln)}
+.hnd .hf line.i{stroke:var(--hc-soft);stroke-opacity:.92}
+.hnd .hb .b{fill:var(--hc);stroke:var(--hc-ln);stroke-width:1.3}
+.hnd .hb .n{fill:var(--hc-fg);font-family:var(--sans);font-weight:800;pointer-events:none}
+.hnd .hf[data-under="1"] .i{stroke-opacity:.75}
+.hnd .hb[data-under="1"] .b{stroke-dasharray:3 2.2;stroke-width:1.8}
+/* Silver (base theme): its left-hand blue is too light for white numbers (3.2:1), so the hand uses a deeper blue like the key dots do */
+html:not([data-theme]) .hnd.L{--hc:#2559c9}

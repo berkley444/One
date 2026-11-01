@@ -1062,6 +1062,25 @@ html:not([data-theme]) body .keyrow .chip.rt[data-tone="seventh"]{background:#2a
 /* ===== 25-silver.css ===== */
 [data-theme="silver"]{--bg:#050506;--ink:#e9eaee;--dim:#8b8d96;--amber:#f0a035}
 
+/* ===== 26-hand.raw.css ===== */
+/* The animated piano hand (Hand in index.html): a stylised top-down hand over the keys, drawn from each theme's own left / right hand colours (--h-r / --h-l).
+   Colours are mixed from those variables, so all 13 themes follow; the finger numbers use the same foreground (--h-r-fg / --h-l-fg) as the number dots on the keys. */
+.handlay{position:absolute;left:0;top:0;z-index:5;pointer-events:none;overflow:visible}
+.hnd.R{--hc:var(--h-r);--hc-fg:var(--h-r-fg)}
+.hnd.L{--hc:var(--h-l);--hc-fg:var(--h-l-fg)}
+.hnd{--hc-soft:color-mix(in srgb,var(--hc) 34%,#fff);--hc-ln:color-mix(in srgb,var(--hc) 62%,#000)}
+.hnd .palm rect,.hnd .palm .tb{fill:var(--hc-soft);fill-opacity:.78;stroke:var(--hc-ln);stroke-width:1.6}
+.hnd .palm .tb{stroke-width:0}
+.hnd .hf line{stroke-linecap:round;fill:none}
+.hnd .hf line.o{stroke:var(--hc-ln)}
+.hnd .hf line.i{stroke:var(--hc-soft);stroke-opacity:.92}
+.hnd .hb .b{fill:var(--hc);stroke:var(--hc-ln);stroke-width:1.3}
+.hnd .hb .n{fill:var(--hc-fg);font-family:var(--sans);font-weight:800;pointer-events:none}
+.hnd .hf[data-under="1"] .i{stroke-opacity:.75}
+.hnd .hb[data-under="1"] .b{stroke-dasharray:3 2.2;stroke-width:1.8}
+/* Silver (base theme): its left-hand blue is too light for white numbers (3.2:1), so the hand uses a deeper blue like the key dots do */
+html:not([data-theme]) .hnd.L{--hc:#2559c9}
+
 /* ===== 30-console.css ===== */
 /* Studio Console — a charcoal mixing desk: colour-coded channel strips, rubber-capped knobs with LED value rings, a live LED meter,
    chunky lit buttons, white-on-black readouts. Accent = SSL-style yellow. */
@@ -3728,7 +3747,7 @@ const T = Theory;
 const DEFAULTS = {
   tab: 'play', rootPc: 0, pref: 'auto', scale: 'major', tuning: 'standard', mode: 'scale', a4: 440,
   labels: 'notes', tone: 'pluck', vol: 0.7, tempo: 100, meter: '4/4', metro: false, power: true,
-  chordRoot: 'C', chordQ: 'major', chHand: 'B', scHand: 'R', pOct: 4, pOcts: 1, pcPos: 0, psPos: 0, scalePos: null, chordPos: 0, sevenths: false, seed: 7, bars: 4, style: 'smart', feel: 'strum', loop: true,
+  chordRoot: 'C', chordQ: 'major', pHand: true, chHand: 'B', scHand: 'R', pOct: 4, pOcts: 1, pcPos: 0, psPos: 0, scalePos: null, chordPos: 0, sevenths: false, seed: 7, bars: 4, style: 'smart', feel: 'strum', loop: true,
   mathOct: 4, mathString: 0, selDeg: null,
   prExact: false, prHow: 'together', midiSound: false, midiOn: false,
   songSeed: 11, songForm: 'full', songStyle: 'smart', songLoop: false,
@@ -4501,10 +4520,11 @@ function pianoPanelHTML() {
   const handSeg = `<div class="seg phandseg${P.match ? ' dis' : ''}" role="group" aria-label="Hand"${P.match ? ' title="Match guitar splits the hands automatically"' : ''}>${segBtns(handItems, P.match ? 'none' : hand, 'phand')}</div>`;
   const octSeg = `<div class="seg ostep${P.id ? ' dis' : ''}" role="group" aria-label="Octave, where the right hand starts"><button data-act="poct" data-v="-1" aria-label="Octave down" title="Octave down">‹</button><label class="kcl"><span class="sr">Octave (right hand starts)</span><select class="kc" data-chg="poct" aria-label="Piano octave" title="Octave where the right hand starts (C4 is middle C)">${octOpts}</select></label><button data-act="poct" data-v="1" aria-label="Octave up" title="Octave up">›</button></div>`;
   const lenSeg = chordMode ? '' : `<div class="seg" role="group" aria-label="Octaves">${segBtns([{ v: '1', big: '1 oct', title: 'One octave' }, { v: '2', big: '2 oct', title: 'Two octaves' }], String(S.pOcts), 'poctn')}</div>`;
+  const handTog = `<button class="btn sm tog${S.pHand !== false ? ' on' : ''}" data-act="phtog" aria-pressed="${S.pHand !== false}" title="Show or hide the animated hand: it follows the fingering and plays along with the ▶ buttons">✋ Hand</button>`;
   const plays = chordMode
     ? `<button class="btn sm pri" data-act="pplay" data-v="block">▶ Play chord</button><button class="btn sm" data-act="pplay" data-v="arp">Arpeggio ↑↓</button>`
     : `<button class="btn sm pri" data-act="pplay" data-v="scale">▶ Scale ↑↓</button><button class="btn sm" data-act="pplay" data-v="up">Up ↑</button><button class="btn sm" data-act="pplay" data-v="arp">Arpeggio</button>`;
-  const tool = `<div class="toolbar ptool" aria-label="Piano controls">${handSeg}${octSeg}${lenSeg}<span class="sp"></span><span class="ptplay">${plays}</span></div>`;
+  const tool = `<div class="toolbar ptool" aria-label="Piano controls">${handSeg}${octSeg}${lenSeg}${handTog}<span class="sp"></span><span class="ptplay">${plays}</span></div>`;
   const strip = `<div class="fbstrip pstrip${P.id ? ' dis' : ''}"><div class="fgrp fpos"><span class="engr sm">${esc(posLab)}${P.id ? ' <span class="soft">· your own notes from the fretboard</span>' : ''}</span>${posRowHTML(posItems, P.id ? 'none' : String(sel), 'ppos', 'Piano positions')}</div></div>`;
   const cap = `<div class="pread pcap" aria-live="polite">
       <div class="ptitle">${esc(P.title)} <span class="phand">${P.hand === 'auto' ? 'hands split automatically' : esc(HANDS[P.hand] || '')}${P.kind === 'scale' && !P.match ? ' · ' + S.pOcts + ' octave' + (S.pOcts > 1 ? 's' : '') : ''}</span></div>
@@ -4613,7 +4633,7 @@ function instrumentsHTML({ strip = '', mid = '', after = '' } = {}) {
 }
 
 /* ---------- follow-along playback ---------- */
-function clearPianoTimers() { (UI.pTimers || []).forEach(clearTimeout); UI.pTimers = []; $$('.pk.now, .lcol.hear').forEach(e => e.classList.remove('now', 'hear')); $$('.nowline').forEach(e => { e.textContent = e.dataset.idle || ''; e.classList.remove('live'); }); }
+function clearPianoTimers() { (UI.pTimers || []).forEach(clearTimeout); UI.pTimers = []; Hand.end(); $$('.pk.now, .lcol.hear').forEach(e => e.classList.remove('now', 'hear')); $$('.nowline').forEach(e => { e.textContent = e.dataset.idle || ''; e.classList.remove('live'); }); }
 function pianoEvents(how) {
   const P = PP, N = P.notes, by = (a, b) => a.midi - b.midi;
   if (P.kind === 'chord') {
@@ -4633,11 +4653,13 @@ function pianoEvents(how) {
 function playPiano(how) {
   Snd.ensure(); clearPianoTimers();
   const ev = pianoEvents(how), step = how === 'block' ? 0 : 60 / (S.tempo * 2), t0 = Snd.now() + 0.05;
-  const hold = how === 'block' ? 2.4 : Math.max(0.5, step * 1.9);
+  const hold = how === 'block' ? 2.4 : Math.max(0.5, step * 1.9), hms = how === 'block' ? 160 : Math.min(380, step * 1000 * 0.85);
+  Hand.begin(ev);
   ev.forEach((moment, i) => {
     moment.forEach((n, j) => Snd.note(n.midi, t0 + i * step + (how === 'block' ? j * 0.012 : 0), hold, 0.78, 'keys'));
     UI.pTimers.push(setTimeout(() => {
       $$('.pk.now').forEach(e => e.classList.remove('now'));
+      Hand.moment(i, hms);
       moment.forEach(n => $$(`.pk[data-midi="${n.midi}"]`).forEach(e => e.classList.add('now')));
       const txt = moment.slice().sort((a, b) => (a.hand === 'R' ? 1 : 0) - (b.hand === 'R' ? 1 : 0) || a.midi - b.midi).map(n => `${HAND_ABBR[n.hand]} ${n.finger} · ${n.name}`).join('    ');
       $$('.nowline').forEach(e => { e.textContent = how === 'block' ? 'Together: ' + txt.replace(/    /g, ' · ') : 'Now: ' + txt; e.classList.add('live'); });
@@ -4653,6 +4675,176 @@ function flash(midi, delay = 0, ms = 280) {
   }, delay);
 }
 function playMidi(m) { Snd.ensure(); Snd.note(m, undefined, 1.6, 0.85); flash(m); }
+
+/* ================================================================
+   ANIMATED HAND — a stylised top-down hand (SVG) over the keys: five fingers numbered 1-5, left hand mirrored.
+   It follows the same fingering data as the number dots (PP.notes / PP.steps) and is driven by the playback timers (playPiano, lessonHear, practice target):
+   each moment moves the hand so the right finger sits on the right key and presses it; chords press together; in scales the thumb tucks under
+   the 3rd/4th finger BEFORE the note it plays (cross-under) and a finger crosses over the thumb on the way down (cross-over, mirrored for the left hand).
+   Reduced-motion users get the same hand, but it jumps between poses instead of sliding. S.pHand (default on) hides it.
+   Tests and screenshots read Hand.log / Hand.info() and listen for the 'bpgw-hand' event on document.
+   ================================================================ */
+const Hand = (() => {
+  const K = 24, YW = 138, YB = 90;                                    // white-key spacing; fingertip height on a white / black key
+  const KX = [-31, -16, 0, 16, 31], KY = [24, 2, 0, 3, 12], FL = [24, 34, 38, 34, 27], FW = [12, 10.5, 11, 10.5, 9.5];   // per finger 1..5: knuckle x/y offsets, length, width
+  const NS = 'http://www.w3.org/2000/svg';
+  const sg = h => (h === 'R' ? 1 : -1);                               // right hand: thumb on the left, fingers climb to the right
+  const thumbSide = h => (h === 'R' ? -1 : 1);                        // which way (in pitch) the thumb points
+  const cxCache = new Map();
+  const keyCx = m => { let v = cxCache.get(m); if (v == null) { const w = whitesBelow(m); v = isBlackPc(((m % 12) + 12) % 12) ? w * 24 : w * 24 + 12; cxCache.set(m, v); } return v; };
+  const keyY = m => (isBlackPc(((m % 12) + 12) % 12) ? YB : YW);
+  const reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isUnder = (a, b, h) => !!(a && b && b.finger === 1 && a.finger > 1 && Math.sign(b.midi - a.midi) === -thumbSide(h));
+  const isOver = (a, b, h) => !!(a && b && a.finger === 1 && b.finger > 1 && Math.sign(b.midi - a.midi) === thumbSide(h));
+  const api = { log: [], on: () => S.pHand !== false && !lBlind(), isUnder, isOver, keyCx, reduced };
+  let svg = null, hands = null, plan = null;
+
+  function mkFinger(g) {
+    const f = document.createElementNS(NS, 'g'); f.setAttribute('class', 'hf f' + g); f.dataset.f = g;
+    f.innerHTML = '<line class="o"/><line class="i"/>';
+    return f;
+  }
+  function build(h) {
+    const el = document.createElementNS(NS, 'g'); el.setAttribute('class', 'hnd ' + h); el.dataset.hand = h;
+    const palm = document.createElementNS(NS, 'g'); palm.setAttribute('class', 'palm'); palm.innerHTML = '<rect rx="17"/><circle class="tb"/>';
+    const fs = [1, 2, 3, 4, 5].map(mkFinger);
+    el.appendChild(palm); [5, 4, 3, 2].forEach(g => el.appendChild(fs[g - 1])); el.appendChild(fs[0]);
+    const bs = [1, 2, 3, 4, 5].map(g => {                             // the numbered fingertips live in their own top layer, so the number stays legible even while the thumb is tucked under the palm
+      const b = document.createElementNS(NS, 'g'); b.setAttribute('class', 'hb b' + g); b.dataset.f = g;
+      b.innerHTML = '<circle class="b" r="8"/><text class="n" text-anchor="middle" dominant-baseline="central">' + g + '</text>'; el.appendChild(b); return b;
+    });
+    svg.appendChild(el);
+    return { h, el, palm, fs, bs, thumbUnder: false, cur: null, raf: 0, press: new Set() };
+  }
+  function setUnder(o, u) {                                           // the thumb is drawn beneath the palm while it tucks, on top otherwise
+    if (o.thumbUnder === u) return; o.thumbUnder = u;
+    const th = o.fs[0]; th.dataset.under = o.bs[0].dataset.under = u ? '1' : '0';
+    if (u) o.el.insertBefore(th, o.palm); else o.el.appendChild(th);
+  }
+  function draw(o, p) {
+    const sgn = sg(o.h);
+    const r = o.palm.querySelector('rect'); r.setAttribute('x', (p.xc - 37).toFixed(1)); r.setAttribute('y', (p.yc - 7).toFixed(1)); r.setAttribute('width', 74); r.setAttribute('height', 46);
+    const tb = o.palm.querySelector('.tb'); tb.setAttribute('cx', (p.xc + KX[0] * sgn).toFixed(1)); tb.setAttribute('cy', (p.yc + KY[0]).toFixed(1)); tb.setAttribute('r', 11);
+    for (let i = 0; i < 5; i++) {
+      const f = o.fs[i], t = p.tips[i], kx = p.xc + KX[i] * sgn, ky = p.yc + KY[i];
+      const [lo, li] = f.querySelectorAll('line'), c = o.bs[i].querySelector('.b'), tx = o.bs[i].querySelector('.n');
+      for (const [ln, w] of [[lo, FW[i] + 3.2], [li, FW[i]]]) { ln.setAttribute('x1', kx.toFixed(1)); ln.setAttribute('y1', ky.toFixed(1)); ln.setAttribute('x2', t.x.toFixed(1)); ln.setAttribute('y2', t.y.toFixed(1)); ln.setAttribute('stroke-width', w); }
+      c.setAttribute('cx', t.x.toFixed(1)); c.setAttribute('cy', t.y.toFixed(1)); c.setAttribute('r', t.r.toFixed(1));
+      tx.setAttribute('x', t.x.toFixed(1)); tx.setAttribute('y', (t.y + 0.5).toFixed(1)); tx.style.fontSize = (t.r * 1.15).toFixed(1) + 'px';
+    }
+    o.cur = p;
+  }
+  function poseFor(h, anchors, thumbOv, fallbackX) {
+    const sgn = sg(h), n = anchors.length; let xs = 0, ys = 0;
+    anchors.forEach(a => { xs += keyCx(a.m) - (a.g - 3) * K * sgn; ys += keyY(a.m) + FL[a.g - 1] - KY[a.g - 1]; });
+    const xc = n ? xs / n : fallbackX, yc = n ? ys / n : YW + 36;
+    const tips = [1, 2, 3, 4, 5].map(g => {
+      const a = anchors.find(x => x.g === g);
+      if (a) return { x: keyCx(a.m), y: keyY(a.m), r: a.press ? 11 : 9, u: 0 };
+      return { x: xc + (g - 3) * K * sgn, y: yc + KY[g - 1] - FL[g - 1], r: 7.5, u: 0 };
+    });
+    if (thumbOv) tips[0] = { x: keyCx(thumbOv.m), y: yc + 7, r: 8.5, u: 1 };
+    return { xc, yc, tips };
+  }
+  function go(o, pose, ms) {
+    cancelAnimationFrame(o.raf); o.raf = 0;
+    if (!o.cur || !ms) { draw(o, pose); setUnder(o, !!pose.tips[0].u); return; }
+    const from = JSON.parse(JSON.stringify(o.cur)), t0 = performance.now(), mix = (a, b, e) => a + (b - a) * e;
+    const tick = now => {
+      const k = Math.min(1, (now - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      draw(o, { xc: mix(from.xc, pose.xc, e), yc: mix(from.yc, pose.yc, e), tips: pose.tips.map((t, i) => ({ x: mix(from.tips[i].x, t.x, e), y: mix(from.tips[i].y, t.y, e), r: mix(from.tips[i].r, t.r, e), u: 0 })) });
+      setUnder(o, k < .5 ? !!from.tips[0].u : !!pose.tips[0].u);
+      if (k < 1) o.raf = requestAnimationFrame(tick); else { o.raf = 0; o.cur.tips[0].u = pose.tips[0].u; }
+    };
+    o.raf = requestAnimationFrame(tick);
+  }
+  function emit(type, h, n, extra) { const d = Object.assign({ type, hand: h, finger: n && n.finger, midi: n && n.midi, t: Math.round(performance.now()) }, extra || {}); api.log.push(d); if (api.log.length > 400) api.log.shift(); document.dispatchEvent(new CustomEvent('bpgw-hand', { detail: d })); }
+  function follow(x) {                                                // keep the hand inside the visible part of the keyboard
+    const pw = svg && svg.closest('.pianowrap'); if (!pw) return;
+    if (x < pw.scrollLeft + 50 || x > pw.scrollLeft + pw.clientWidth - 50) pw.scrollTo({ left: Math.max(0, x - pw.clientWidth / 2), behavior: reduced() ? 'auto' : SMOOTH });
+  }
+  const handsOf = notes => ['R', 'L'].filter(h => notes.some(n => n.hand === h && n.finger));
+  const asc = (notes, h) => notes.filter(n => n.hand === h && n.finger).slice().sort((a, b) => a.midi - b.midi);
+  const toA = (n, press) => ({ g: n.finger, m: n.midi, press: !!press });
+
+  /* ---- public: (re)build after every render ---- */
+  api.attach = function (pw) {
+    api.detach();
+    const piano = pw && pw.querySelector('.piano'); if (!piano || !api.on() || !PP) return;
+    const notes = PP.kind === 'lesson' ? ((PP.steps[0] && PP.steps[0].notes) || []) : PP.notes, hs = handsOf(notes); if (!hs.length) return;
+    svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'handlay'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+    svg.setAttribute('width', piano.offsetWidth || parseInt(piano.style.width) || 2000); svg.setAttribute('height', 216);
+    piano.appendChild(svg); hands = {};
+    hs.forEach(h => { hands[h] = build(h); });
+    api.rest(0);
+  };
+  /* the resting pose: hovering over where the exercise starts */
+  api.rest = function (ms) {
+    if (!hands) return;
+    Object.keys(hands).forEach(h => {
+      let anchors;
+      if (PP.kind === 'lesson') anchors = (PP.steps[0] ? PP.steps[0].notes : []).filter(n => n.hand === h && n.finger).map(n => toA(n, false));
+      else if (PP.kind === 'scale') { const a = asc(PP.notes, h); anchors = a.length ? [toA(a[0], false)] : []; }
+      else anchors = asc(PP.notes, h).map(n => toA(n, false));
+      hands[h].press = new Set(); hands[h].lastAnch = anchors; hands[h].lastOv = null;
+      go(hands[h], poseFor(h, anchors, null, keyCx(60)), reduced() ? 0 : ms == null ? 260 : ms);
+    });
+  };
+  /* playback of a list of moments (each an array of {hand, midi, finger}) — called by playPiano */
+  api.begin = function (ev) {
+    if (!hands) return; plan = { ev, seqs: { R: [], L: [] }, ptr: { R: -1, L: -1 }, at: { R: new Map(), L: new Map() } };
+    ev.forEach((mo, i) => mo.forEach(n => { if (n.finger && plan.seqs[n.hand]) { plan.at[n.hand].set(i, plan.seqs[n.hand].length); plan.seqs[n.hand].push(n); } }));
+  };
+  api.moment = function (i, ms) {
+    if (!hands || !plan) return; const mo = plan.ev[i]; if (!mo) return;
+    if (ms == null) ms = 220; if (reduced()) ms = 0;
+    Object.keys(hands).forEach(h => {
+      const o = hands[h], mine = mo.filter(n => n.hand === h && n.finger);
+      if (!mine.length) { o.press = new Set(); if (o.cur) go(o, poseFor(h, (o.lastAnch || []).map(a => Object.assign({}, a, { press: false })), o.lastOv || null, o.cur.xc), ms); return; }
+      let anchors, ov = null;
+      if (PP.kind === 'scale') {
+        const sq = plan.seqs[h], k = plan.at[h].get(i), cur = sq[k], nx = sq[k + 1], pv = sq[k - 1];
+        anchors = [toA(cur, true)];
+        if (isUnder(cur, nx, h)) { ov = { m: nx.midi }; emit('tuck', h, cur, { to: nx.midi, toFinger: nx.finger }); }
+        else if (isOver(pv, cur, h)) { ov = { m: pv.midi }; emit('cross-over', h, cur, { over: pv.midi }); }
+        if (isUnder(pv, cur, h)) emit('cross-under', h, cur, { from: pv.midi, fromFinger: pv.finger });
+      } else {
+        const all = asc(PP.notes, h), pressed = new Set(mine.map(n => n.midi));
+        anchors = all.map(n => toA(n, pressed.has(n.midi)));
+      }
+      o.lastAnch = anchors; o.lastOv = ov; o.press = new Set(anchors.filter(a => a.press).map(a => a.g));
+      const pose = poseFor(h, anchors, ov, 0); go(o, pose, ms);
+      mine.forEach(n => emit('press', h, n));
+      follow(pose.xc);
+    });
+  };
+  /* one-off pose (lesson steps, practice target): notes = [{hand, midi, finger}] */
+  api.show = function (notes, press, ms) {
+    if (!hands) return; if (ms == null) ms = 260; if (reduced()) ms = 0;
+    Object.keys(hands).forEach(h => {
+      const mine = (notes || []).filter(n => n.hand === h && n.finger); if (!mine.length) return;
+      const anchors = mine.map(n => toA(n, press)); hands[h].lastAnch = anchors; hands[h].lastOv = null;
+      hands[h].press = new Set(press ? mine.map(n => n.finger) : []);
+      const pose = poseFor(h, anchors, null, 0); go(hands[h], pose, ms); follow(pose.xc);
+      if (press) mine.forEach(n => emit('press', h, n));
+    });
+  };
+  api.detach = function () { if (hands) Object.values(hands).forEach(o => cancelAnimationFrame(o.raf)); svg = null; hands = null; plan = null; };
+  api.end = function () { plan = null; if (svg && svg.isConnected) api.rest(); };
+  /* a still frame of the k-th note of a scale for one hand (screenshots, tests) */
+  api.preview = function (h, k) {
+    if (!hands || !hands[h] || PP.kind !== 'scale') return null;
+    const sq = asc(PP.notes, h), cur = sq[k], nx = sq[k + 1], pv = sq[k - 1]; let ov = null;
+    if (isUnder(cur, nx, h)) ov = { m: nx.midi }; else if (isOver(pv, cur, h)) ov = { m: pv.midi };
+    go(hands[h], poseFor(h, [toA(cur, true)], ov, 0), 0); follow(hands[h].cur.xc); return { finger: cur.finger, midi: cur.midi, under: !!ov };
+  };
+  api.info = function () {
+    const out = { on: !!hands, hands: {} };
+    if (hands) Object.keys(hands).forEach(h => { const o = hands[h]; out.hands[h] = { xc: o.cur && o.cur.xc, thumbUnder: o.thumbUnder, pressed: [...o.press].sort(), tips: o.cur ? o.cur.tips.map(t => ({ x: Math.round(t.x * 10) / 10, y: Math.round(t.y * 10) / 10 })) : [] }; });
+    return out;
+  };
+  return api;
+})();
 
 /* ================================================================
    PRACTICE + MIDI INPUT
@@ -4778,6 +4970,7 @@ function prPaint(res, midi) {
     if (run && !run.done) {
       const cur = run.current(), have = run.have();
       cur.midis.forEach(m => { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('target'); });
+      Hand.show(cur.notes, false, 240);
       UI.held.forEach((s, m) => { const k = prEx() ? m : m % 12; if (have.has(k)) { const e = piano.querySelector(`.pk[data-midi="${m}"]`); if (e) e.classList.add('hit'); } });
     }
     if (res && midi != null && (res.type === 'wrong' || res.type === 'step' || res.type === 'done' || res.type === 'ok')) {
@@ -5575,6 +5768,7 @@ function lessonHear() {
     UI.pTimers.push(setTimeout(() => {
       $$('.pk.now').forEach(e => e.classList.remove('now')); $$('.lcol.hear').forEach(e => e.classList.remove('hear'));
       s.midis.forEach(m => $$(`#tab-lessons .pk[data-midi="${m}"]`).forEach(e => e.classList.add('now')));
+      Hand.show(s.notes, true, Math.min(380, step * 1000 * 0.8));
       const col = $(`#tab-lessons .lcol[data-i="${i}"]`); if (col) col.classList.add('hear');
       $$('.nowline').forEach(e => { e.textContent = `Step ${i + 1}: ` + s.notes.map(x => `${HAND_ABBR[x.hand]}${x.finger ? ' ' + x.finger : ''} · ${x.name}`).join('   '); e.classList.add('live'); });
     }, 60 + i * step * 1000));
@@ -5585,6 +5779,7 @@ function lessonHearUI(on) { const b = $('#lhearBtn'); if (b) { b.classList.toggl
 function lessonStep(i) {                                   // click a note on the staff: hear it
   const s = PP.steps[i]; if (!s) return; Snd.ensure();
   s.midis.forEach((m, j) => { Snd.note(m, Snd.now() + 0.02 + j * 0.01, 1.4, 0.8, 'keys'); flash(m, 0); });
+  Hand.show(s.notes, true, 200);
 }
 UI.onPracticeDone = summary => {
   if (S.tab !== 'lessons') return;
@@ -5614,7 +5809,7 @@ function buildDock() {
 }
 function render() {
   const el = $('#tab-' + S.tab), y = window.scrollY;
-  normalizePos(); SEL = selection(); PP = pianoPlan(); clearPianoTimers();
+  normalizePos(); SEL = selection(); PP = pianoPlan(); Hand.detach(); clearPianoTimers();
   const fk = focusKey(el), oldStrip = $('#fbStrip', el), stripX = oldStrip ? oldStrip.scrollLeft : null;
   el.innerHTML = RENDER[S.tab]();
   a11yPass(el);
@@ -5624,7 +5819,7 @@ function render() {
   if (fb && UI.wantFocus && UI.focusFrac != null) { const w = fb.querySelector('svg').getBoundingClientRect().width; UI.fbScroll = Math.max(0, UI.focusFrac * w - 8); }
   UI.wantFocus = false;
   if (fb) { fb.scrollLeft = UI.fbScroll ?? 0; fb.addEventListener('scroll', () => { UI.fbScroll = fb.scrollLeft; }); }
-  if (pw) { pw.scrollLeft = (UI.piFocus || UI.piScroll == null) ? pianoFocusScroll() : UI.piScroll; UI.piFocus = false; pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); }
+  if (pw) { pw.scrollLeft = (UI.piFocus || UI.piScroll == null) ? pianoFocusScroll() : UI.piScroll; UI.piFocus = false; pw.addEventListener('scroll', () => { UI.piScroll = pw.scrollLeft; }); Hand.attach(pw); }
   restoreFocus(el, fk);
   window.scrollTo(0, y);
   $$('#dock button').forEach(b => { const on = b.dataset.v === S.tab; b.classList.toggle('on', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
@@ -5662,7 +5857,7 @@ document.addEventListener('click', e => {
   const act = e.target.closest('[data-act]');
   if (!act) { const m = e.target.closest('[data-midi]'); if (m) { if (m.classList.contains('pk')) tapNote(+m.dataset.midi); else playMidi(+m.dataset.midi); } return; }
   const v = act.dataset.v, A = act.dataset.act;
-  if (!['labels', 'pm', 'pplay', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed', 'theme', 'themeclose'].includes(A) && !/^(id|q[a-z]|gate)/.test(A)) UI.piFocus = true;
+  if (!['labels', 'pm', 'pplay', 'phtog', 'midi', 'midisnd', 'prreset', 'lhear', 'lstep', 'lspeed', 'theme', 'themeclose'].includes(A) && !/^(id|q[a-z]|gate)/.test(A)) UI.piFocus = true;
   switch (A) {
     case 'tab': setTab(v); break;
     case 'labels': S.labels = v; render(); save(); break;
@@ -5698,6 +5893,7 @@ document.addEventListener('click', e => {
       render(); save(); updateHash(); if (S.mode === 'chord') playPiano('block'); break;
     }
     case 'pplay': playPiano(v); break;
+    case 'phtog': S.pHand = S.pHand === false; render(); save(); break;
     case 'prtog': if (!UI.pr.on) UI.pStrip = true; prToggle(); break;
     case 'pstrip': UI.pStrip = !pracStripOpen(); render(); { const b = $('.tab.on .pprhead'); if (b) b.focus(); } break;
     case 'lopen': lessonGo(act.dataset.id); break;
@@ -6176,7 +6372,7 @@ profileBtnPaint();
 if (gateNeeded()) gateOpen(false);
 else if (!PS.index().welcomed && !navigator.webdriver) welcomeOpen();      // first visit: a skippable "Who's playing?" (automated browsers are never asked)
 if (S.midiOn && MIDI.supported && MIDI.secure) midiConnect(true);
-window.BPGW = { PS, LocalStore, ME, stored: () => (PS.readData(ME.id) || {}).state, AVATAR_COLORS, PF, profileSwitch, profileOpen, profileExport, profileImportText, profileFromFile, welcomeOpen, welcomeClose, memStorage, idEnter, idExit, idPress, idResult, idFretsNow, quizNew, quizCheck, quizReveal, quizNext, gateOpen, gateClose, gatePress, gateShow, GATE, THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
+window.BPGW = { Hand, PS, LocalStore, ME, stored: () => (PS.readData(ME.id) || {}).state, AVATAR_COLORS, PF, profileSwitch, profileOpen, profileExport, profileImportText, profileFromFile, welcomeOpen, welcomeClose, memStorage, idEnter, idExit, idPress, idResult, idFretsNow, quizNew, quizCheck, quizReveal, quizNext, gateOpen, gateClose, gatePress, gateShow, GATE, THEMES, setTheme, S, Theory, Snd, Player, SongPlay, currentSong, setTab, render, UI, MIDI, inputNote, prToggle, prSteps, lessonCur, lessonGo };
 </script>
 </body>
 </html>
